@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "25",
+  "slug": "25-kql-distributed-tracing",
+  "title": "Query logs and correlate distributed traces",
+  "domain": "instrumentation",
+  "minutes": 120,
+  "cost": "billable; explicit acknowledgement",
+  "platforms": [
+    "local",
+    "azure"
+  ],
+  "objectives": [
+    "D5.1.2",
+    "D5.2.1",
+    "D5.2.2",
+    "D5.2.3",
+    "D5.2.4"
+  ],
+  "scenario": "Operators see a slow request but lack correlated evidence. Use explicit KQL datatables and trace tests to practise aggregation, joins, and instrumentation boundaries.",
+  "role": "Site reliability engineer",
+  "outcome": "Query logs and correlate distributed traces.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Create an isolated workspace for KQL evaluation",
+      "commands": "$w=az monitor log-analytics workspace create --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"query-$RunId\" --location $Location --retention-time 30 --sku PerGB2018 -o json|ConvertFrom-Json\n $w.customerId|Set-Content (Join-Path $WorkRoot 'workspace-customer-id.txt')\n $w|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'query-workspace.json')\n",
+      "expected": "A dedicated workspace provides a query endpoint; sample datatables require no application-data ingestion.",
+      "positive": "$w=az monitor log-analytics workspace show --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"query-$RunId\" -o json|ConvertFrom-Json\n if($w.customerId -ne (Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt'))){throw 'Query workspace identity mismatch.'}\n",
+      "negative": "$w=Get-Content (Join-Path $WorkRoot 'query-workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Query workspace escaped run boundary.'}\n",
+      "validate": "$w=az monitor log-analytics workspace show --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"query-$RunId\" -o json|ConvertFrom-Json\n if($w.customerId -ne (Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt'))){throw 'Query workspace identity mismatch.'}\n\n$w=Get-Content (Join-Path $WorkRoot 'query-workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Query workspace escaped run boundary.'}\n",
+      "evidence": "Workspace ID locally and declared synthetic-data scope.",
+      "fix": "Wait for workspace query availability and confirm Log Analytics Reader/query permission before retrying."
+    },
+    {
+      "id": "CP2",
+      "title": "Calculate latency and failure rate with KQL",
+      "commands": "$q='datatable(operation:string,durationMs:real,success:bool)[\"read\",10.0,true,\"read\",30.0,true,\"write\",100.0,false] | summarize requests=count(), failures=countif(success == false), p95Ms=percentile(durationMs,95)'\n $q|Set-Content (Join-Path $WorkRoot 'latency.kql')\n $id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt')\n az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query $q -o json|Set-Content (Join-Path $WorkRoot 'latency-results.json')\n",
+      "expected": "Three synthetic operations produce one failure and a measured latency percentile.",
+      "positive": "$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 1 -or [int]$r[0].requests -ne 3 -or [int]$r[0].failures -ne 1){throw 'KQL aggregation mismatch.'}\n",
+      "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if([double]$r[0].p95Ms -lt 30){throw 'Percentile lost the slow operation.'}\n",
+      "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 1 -or [int]$r[0].requests -ne 3 -or [int]$r[0].failures -ne 1){throw 'KQL aggregation mismatch.'}\n\n$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if([double]$r[0].p95Ms -lt 30){throw 'Percentile lost the slow operation.'}\n",
+      "evidence": "Query text, synthetic row count, and result; real small-sample percentiles need caution.",
+      "fix": "Use countif on a Boolean comparison and retain units in metric names."
+    },
+    {
+      "id": "CP3",
+      "title": "Prove the sample emits a distributed trace span",
+      "commands": "dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --filter 'FullyQualifiedName~CreatesTraceSpanForTodoWrite' --logger \"trx;LogFileName=trace.trx\" --results-directory (Join-Path $WorkRoot 'trace-tests')\n if($LASTEXITCODE -ne 0){throw 'Trace instrumentation test failed.'}\n",
+      "expected": "An ActivityListener observes the sample application span without requiring an Azure exporter.",
+      "positive": "$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'No trace test selected.'}\n",
+      "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Trace propagation regression.'}\n",
+      "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'No trace test selected.'}\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Trace propagation regression.'}\n",
+      "evidence": "Span test name/result; test instrumentation is distinct from a live Azure export.",
+      "fix": "Ensure ActivitySource names match listeners/exporters and propagate W3C trace context across services."
+    },
+    {
+      "id": "CP4",
+      "title": "Join synthetic requests and dependencies by operation identity",
+      "commands": "$q='let requests=datatable(operation_Id:string,name:string)[\"op1\",\"POST /todos\",\"op2\",\"GET /todos\"]; let dependencies=datatable(operation_Id:string,target:string,durationMs:real)[\"op1\",\"sqlite\",12.0]; requests | join kind=leftouter dependencies on operation_Id | project operation_Id,name,target,durationMs'\n $q|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n az monitor log-analytics query --subscription $SubscriptionId --workspace (Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt')) --analytics-query $q -o json|Set-Content (Join-Path $WorkRoot 'correlation-results.json')\n",
+      "expected": "Left-outer correlation retains the request that has no dependency row.",
+      "positive": "$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object target -eq 'sqlite').Count -ne 1){throw 'Trace correlation mismatch.'}\n",
+      "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if('op2' -notin $r.operation_Id){throw 'An inner join incorrectly dropped an unlinked request.'}\n",
+      "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object target -eq 'sqlite').Count -ne 1){throw 'Trace correlation mismatch.'}\n\n$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if('op2' -notin $r.operation_Id){throw 'An inner join incorrectly dropped an unlinked request.'}\n",
+      "evidence": "Operation IDs, join kind, and retained unmatched request count.",
+      "fix": "Use trace/operation identity rather than timestamp coincidence; account for sampling and missing instrumentation."
+    },
+    {
+      "id": "CP5",
+      "title": "Review production query tables and infrastructure signals",
+      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/operations.kql') (Join-Path $WorkRoot 'operations.kql')\n $signals=[ordered]@{CPU='percentage';memory='bytes or percent; identify source';disk='latency and free capacity';network='throughput and failures';application='requests, dependencies, exceptions';exportVerified=$false}\n $signals|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'signal-interpretation.json')\n",
+      "expected": "Real-table queries and infrastructure signal units are reviewable without inventing ingested data.",
+      "positive": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.application -notmatch 'dependencies' -or $s.disk -notmatch 'latency'){throw 'Signal interpretation incomplete.'}\n",
+      "negative": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.exportVerified){throw 'Local span/KQL datatable tests do not prove live export.'}\n",
+      "validate": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.application -notmatch 'dependencies' -or $s.disk -notmatch 'latency'){throw 'Signal interpretation incomplete.'}\n\n$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.exportVerified){throw 'Local span/KQL datatable tests do not prove live export.'}\n",
+      "evidence": "Query digest, table schema, signal units, and explicitly pending export verification.",
+      "fix": "Workspace-based tables can use AppRequests/AppDependencies; adapt query schema using actual tables rather than assuming classic names."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('leftouter','inner')|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n",
+    "diagnose": "$id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt');az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query (Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw) -o json\n",
+    "repair": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('kind=inner','kind=leftouter')|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n"
+  },
+  "challenge": "With approved real telemetry, find one slow request, follow its dependency span, relate infrastructure saturation, and write a hypothesis supported by exact query results.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview",
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data",
+    "https://learn.microsoft.com/en-us/kusto/query/join-leftouter"
+  ],
+  "primer": "Trace identity correlates a request with dependencies; timestamp proximity does not. Sampling and unmatched rows affect joins; units and observed windows matter when interpreting infrastructure signals.",
+  "extensions": [
+    "log-analytics"
+  ],
+  "architecture": {
+    "title": "Local trace observation and cloud KQL correlation",
+    "nodes": [
+      {
+        "id": "api",
+        "label": "Sample API request",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "activity",
+        "label": "W3C ActivitySource span",
+        "kind": "data",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "listener",
+        "label": "xUnit ActivityListener",
+        "kind": "evidence",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "workspace",
+        "label": "Owned Log Analytics workspace",
+        "kind": "platform",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "kql",
+        "label": "KQL query engine",
+        "kind": "code",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "tables",
+        "label": "Synthetic request / dependency rows",
+        "kind": "data",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "api",
+        "to": "activity",
+        "label": "instrumented application span"
+      },
+      {
+        "from": "activity",
+        "to": "listener",
+        "label": "local trace assertion"
+      },
+      {
+        "from": "tables",
+        "to": "kql",
+        "label": "datatable / operation IDs"
+      },
+      {
+        "from": "workspace",
+        "to": "kql",
+        "label": "authorized query endpoint"
+      },
+      {
+        "from": "kql",
+        "to": "listener",
+        "label": "aggregation / join evidence"
+      }
+    ],
+    "topology": "A local ActivityListener proves that the sample emits the expected application span. Separately, an owned Log Analytics workspace evaluates explicit synthetic KQL datatables for latency and request/dependency correlation. These two evidence lanes do not imply that a live Azure exporter has ingested traces; real-table schema and export verification belong to the additional integration challenge."
+  },
+  "providers": [
+    "Microsoft.OperationalInsights"
+  ]
+}

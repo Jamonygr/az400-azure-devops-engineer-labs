@@ -1,0 +1,13 @@
+flowchart LR
+  desired["Desired-state JSON"]
+  reconciler["PowerShell reconciler"]
+  file["Owned local service.conf"]
+  report["Before / after compliance JSON"]
+  catalog["Versioned environment catalog"]
+  ade["Azure Deployment Environments"]
+  desired -->|declared content / owner| reconciler
+  reconciler -->|bounded repair| file
+  file -->|independent audit| report
+  desired -->|expected value| report
+  catalog -.->|separate approved sync| ade
+  catalog -->|versioned configuration intent| desired

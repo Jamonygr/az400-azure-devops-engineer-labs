@@ -1,0 +1,1931 @@
+{
+  "schemaVersion": 1,
+  "labId": "14",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages?view=azure-devops"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L14-Q001",
+      "checkpointId": "CP4",
+      "caseId": "L14-C01",
+      "task": "remedy",
+      "caseContext": "Schema race: Application deployment starts while the required new database column has not yet been created.",
+      "objectiveIds": [
+        "D3.4.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Schema race: Application deployment starts while the required new database column has not yet been created. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use an expand-and-contract migration sequence",
+          "rationale": "Transitional schemas support old and new application versions. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Stop promotion and apply the documented compatibility recovery path",
+          "rationale": "The partial state needs an explicit safe response. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Declare the schema prerequisite before dependent application rollout",
+          "rationale": "Deployment order should follow actual compatibility dependencies. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Deployment order should follow actual compatibility dependencies. The selected answer is declare the schema prerequisite before dependent application rollout.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q002",
+      "checkpointId": "CP4",
+      "caseId": "L14-C01",
+      "task": "diagnosis",
+      "caseContext": "Schema race: Application deployment starts while the required new database column has not yet been created.",
+      "objectiveIds": [
+        "D3.4.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Schema race: Application deployment starts while the required new database column has not yet been created. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The schema change immediately breaks an active consumer",
+          "rationale": "Rolling deployments create mixed-version periods. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A multistep release is not automatically an atomic transaction",
+          "rationale": "Success in one subsystem can outlive another's failure. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The pipeline graph omits a required dependency",
+          "rationale": "Parallel scheduling exposes an unavailable schema. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Parallel scheduling exposes an unavailable schema. The selected answer is the pipeline graph omits a required dependency.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q003",
+      "checkpointId": "CP4",
+      "caseId": "L14-C01",
+      "task": "verification",
+      "caseContext": "Schema race: Application deployment starts while the required new database column has not yet been created.",
+      "objectiveIds": [
+        "D3.4.2"
+      ],
+      "difficulty": "applied",
+      "question": "Schema race: Application deployment starts while the required new database column has not yet been created. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Both application versions work during the migration window",
+          "rationale": "Compatibility must cover concurrent deployed versions. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The old application remains functional or recovery restores compatibility",
+          "rationale": "The outcome must validate the actual partial state. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The compatible schema exists before the dependent application starts",
+          "rationale": "Ordering evidence must follow the real prerequisite. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Ordering evidence must follow the real prerequisite. The selected answer is the compatible schema exists before the dependent application starts.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q004",
+      "checkpointId": "CP4",
+      "caseId": "L14-C01",
+      "task": "safeguard",
+      "caseContext": "Schema race: Application deployment starts while the required new database column has not yet been created.",
+      "objectiveIds": [
+        "D3.4.2"
+      ],
+      "difficulty": "applied",
+      "question": "Schema race: Application deployment starts while the required new database column has not yet been created. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate backward compatibility before modifying shared schema",
+          "rationale": "Old instances may run during the transition. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Delay destructive contraction until old consumers are retired",
+          "rationale": "Premature removal defeats the compatibility bridge. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use backward-compatible intermediate states and failure checkpoints",
+          "rationale": "These reduce the risk of stranded deployments. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Old instances may run during the transition. The selected answer is validate backward compatibility before modifying shared schema.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q005",
+      "checkpointId": "CP4",
+      "caseId": "L14-C01",
+      "task": "tradeoff",
+      "caseContext": "Schema race: Application deployment starts while the required new database column has not yet been created.",
+      "objectiveIds": [
+        "D3.4.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Schema race: Application deployment starts while the required new database column has not yet been created. The team selects this remedy: \"Declare the schema prerequisite before dependent application rollout.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Expand-and-contract requires multiple coordinated releases",
+          "rationale": "Temporary duplication trades simplicity for safer rollout. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Cross-system releases may need compensating actions",
+          "rationale": "A single universal rollback operation is often unavailable. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Strict ordering can extend deployment duration",
+          "rationale": "Safe parallelism is limited by real dependencies. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Safe parallelism is limited by real dependencies. The selected answer is strict ordering can extend deployment duration.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q006",
+      "checkpointId": "CP4",
+      "caseId": "L14-C02",
+      "task": "remedy",
+      "caseContext": "Breaking migration: A new release renames a column while old application instances are still serving traffic.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Breaking migration: A new release renames a column while old application instances are still serving traffic. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a reviewed idempotent or state-aware migration mechanism",
+          "rationale": "Retries must account for already-applied schema changes. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Declare the schema prerequisite before dependent application rollout",
+          "rationale": "Deployment order should follow actual compatibility dependencies. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use an expand-and-contract migration sequence",
+          "rationale": "Transitional schemas support old and new application versions. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Transitional schemas support old and new application versions. The selected answer is use an expand-and-contract migration sequence.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q007",
+      "checkpointId": "CP4",
+      "caseId": "L14-C02",
+      "task": "diagnosis",
+      "caseContext": "Breaking migration: A new release renames a column while old application instances are still serving traffic.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Breaking migration: A new release renames a column while old application instances are still serving traffic. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The script cannot distinguish completed work from missing work",
+          "rationale": "Timeout leaves execution outcome potentially ambiguous. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The pipeline graph omits a required dependency",
+          "rationale": "Parallel scheduling exposes an unavailable schema. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The schema change immediately breaks an active consumer",
+          "rationale": "Rolling deployments create mixed-version periods. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Rolling deployments create mixed-version periods. The selected answer is the schema change immediately breaks an active consumer.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q008",
+      "checkpointId": "CP4",
+      "caseId": "L14-C02",
+      "task": "verification",
+      "caseContext": "Breaking migration: A new release renames a column while old application instances are still serving traffic.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Breaking migration: A new release renames a column while old application instances are still serving traffic. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A repeated deployment safely recognizes the existing migration state",
+          "rationale": "The retry should not repeat destructive side effects. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The compatible schema exists before the dependent application starts",
+          "rationale": "Ordering evidence must follow the real prerequisite. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Both application versions work during the migration window",
+          "rationale": "Compatibility must cover concurrent deployed versions. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Compatibility must cover concurrent deployed versions. The selected answer is both application versions work during the migration window.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q009",
+      "checkpointId": "CP4",
+      "caseId": "L14-C02",
+      "task": "safeguard",
+      "caseContext": "Breaking migration: A new release renames a column while old application instances are still serving traffic.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Breaking migration: A new release renames a column while old application instances are still serving traffic. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Back up and test recovery before high-risk schema changes",
+          "rationale": "Idempotency does not prevent every data-loss scenario. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Validate backward compatibility before modifying shared schema",
+          "rationale": "Old instances may run during the transition. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Delay destructive contraction until old consumers are retired",
+          "rationale": "Premature removal defeats the compatibility bridge. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Premature removal defeats the compatibility bridge. The selected answer is delay destructive contraction until old consumers are retired.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q010",
+      "checkpointId": "CP4",
+      "caseId": "L14-C02",
+      "task": "tradeoff",
+      "caseContext": "Breaking migration: A new release renames a column while old application instances are still serving traffic.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "advanced",
+      "question": "Breaking migration: A new release renames a column while old application instances are still serving traffic. The team selects this remedy: \"Use an expand-and-contract migration sequence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Strict ordering can extend deployment duration",
+          "rationale": "Safe parallelism is limited by real dependencies. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Expand-and-contract requires multiple coordinated releases",
+          "rationale": "Temporary duplication trades simplicity for safer rollout. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Database rollback may require forward repair or restore",
+          "rationale": "Schema changes are not always safely reversible. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Temporary duplication trades simplicity for safer rollout. The selected answer is expand-and-contract requires multiple coordinated releases.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q011",
+      "checkpointId": "CP2",
+      "caseId": "L14-C03",
+      "task": "remedy",
+      "caseContext": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a reviewed idempotent or state-aware migration mechanism",
+          "rationale": "Retries must account for already-applied schema changes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Deploy the approved immutable image digest",
+          "rationale": "A digest identifies the validated image content. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use an expand-and-contract migration sequence",
+          "rationale": "Transitional schemas support old and new application versions. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Retries must account for already-applied schema changes. The selected answer is use a reviewed idempotent or state-aware migration mechanism.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q012",
+      "checkpointId": "CP2",
+      "caseId": "L14-C03",
+      "task": "diagnosis",
+      "caseContext": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A moving tag is not stable content provenance",
+          "rationale": "Registry names can be reassigned to different images. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The schema change immediately breaks an active consumer",
+          "rationale": "Rolling deployments create mixed-version periods. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The script cannot distinguish completed work from missing work",
+          "rationale": "Timeout leaves execution outcome potentially ambiguous. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Timeout leaves execution outcome potentially ambiguous. The selected answer is the script cannot distinguish completed work from missing work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q013",
+      "checkpointId": "CP2",
+      "caseId": "L14-C03",
+      "task": "verification",
+      "caseContext": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A repeated deployment safely recognizes the existing migration state",
+          "rationale": "The retry should not repeat destructive side effects. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The running workload reports the approved digest",
+          "rationale": "Runtime evidence must match the release candidate. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Both application versions work during the migration window",
+          "rationale": "Compatibility must cover concurrent deployed versions. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The retry should not repeat destructive side effects. The selected answer is a repeated deployment safely recognizes the existing migration state.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q014",
+      "checkpointId": "CP2",
+      "caseId": "L14-C03",
+      "task": "safeguard",
+      "caseContext": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify image origin and scan results before promotion",
+          "rationale": "Immutable identity alone does not establish safety. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Delay destructive contraction until old consumers are retired",
+          "rationale": "Premature removal defeats the compatibility bridge. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Back up and test recovery before high-risk schema changes",
+          "rationale": "Idempotency does not prevent every data-loss scenario. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Idempotency does not prevent every data-loss scenario. The selected answer is back up and test recovery before high-risk schema changes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q015",
+      "checkpointId": "CP2",
+      "caseId": "L14-C03",
+      "task": "tradeoff",
+      "caseContext": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "advanced",
+      "question": "Migration retry: A timed-out deployment reruns its database script and fails because the script assumes an empty database. The team selects this remedy: \"Use a reviewed idempotent or state-aware migration mechanism.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Expand-and-contract requires multiple coordinated releases",
+          "rationale": "Temporary duplication trades simplicity for safer rollout. That addresses a different requirement: Breaking migration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Database rollback may require forward repair or restore",
+          "rationale": "Schema changes are not always safely reversible. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Digest pinning requires deliberate upgrade management",
+          "rationale": "New images do not arrive automatically under a fixed digest. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Schema changes are not always safely reversible. The selected answer is database rollback may require forward repair or restore.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q016",
+      "checkpointId": "CP1",
+      "caseId": "L14-C04",
+      "task": "remedy",
+      "caseContext": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a reviewed idempotent or state-aware migration mechanism",
+          "rationale": "Retries must account for already-applied schema changes. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Deploy the approved immutable image digest",
+          "rationale": "A digest identifies the validated image content. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Select the artifact from the approved producing run",
+          "rationale": "The release must use its verified input. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A digest identifies the validated image content. The selected answer is deploy the approved immutable image digest.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q017",
+      "checkpointId": "CP1",
+      "caseId": "L14-C04",
+      "task": "diagnosis",
+      "caseContext": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The script cannot distinguish completed work from missing work",
+          "rationale": "Timeout leaves execution outcome potentially ambiguous. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A moving tag is not stable content provenance",
+          "rationale": "Registry names can be reassigned to different images. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Newest available does not mean correct release candidate",
+          "rationale": "Global ordering ignores source and approval context. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Registry names can be reassigned to different images. The selected answer is a moving tag is not stable content provenance.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q018",
+      "checkpointId": "CP1",
+      "caseId": "L14-C04",
+      "task": "verification",
+      "caseContext": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The running workload reports the approved digest",
+          "rationale": "Runtime evidence must match the release candidate. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The deployed binary matches the approved artifact checksum",
+          "rationale": "The comparison binds delivery to the tested bytes. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A repeated deployment safely recognizes the existing migration state",
+          "rationale": "The retry should not repeat destructive side effects. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Runtime evidence must match the release candidate. The selected answer is the running workload reports the approved digest.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q019",
+      "checkpointId": "CP1",
+      "caseId": "L14-C04",
+      "task": "safeguard",
+      "caseContext": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify image origin and scan results before promotion",
+          "rationale": "Immutable identity alone does not establish safety. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Retain source and run provenance with the deployment record",
+          "rationale": "A checksum needs a trusted reference to be meaningful. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Back up and test recovery before high-risk schema changes",
+          "rationale": "Idempotency does not prevent every data-loss scenario. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Immutable identity alone does not establish safety. The selected answer is verify image origin and scan results before promotion.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q020",
+      "checkpointId": "CP1",
+      "caseId": "L14-C04",
+      "task": "tradeoff",
+      "caseContext": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "advanced",
+      "question": "Mutable container: A deployment uses an image tag reused by several builds, and the runtime pulls different bytes on retry. The team selects this remedy: \"Deploy the approved immutable image digest.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Digest pinning requires deliberate upgrade management",
+          "rationale": "New images do not arrive automatically under a fixed digest. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Artifact retention becomes a deployment dependency",
+          "rationale": "Deleting approved inputs can block redeployment. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Database rollback may require forward repair or restore",
+          "rationale": "Schema changes are not always safely reversible. That addresses a different requirement: Migration retry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "New images do not arrive automatically under a fixed digest. The selected answer is digest pinning requires deliberate upgrade management.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q021",
+      "checkpointId": "CP1",
+      "caseId": "L14-C05",
+      "task": "remedy",
+      "caseContext": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Select the artifact from the approved producing run",
+          "rationale": "The release must use its verified input. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Remove the unnecessary dependency while keeping real prerequisites",
+          "rationale": "The stage graph should encode required data flow. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Deploy the approved immutable image digest",
+          "rationale": "A digest identifies the validated image content. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The release must use its verified input. The selected answer is select the artifact from the approved producing run.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q022",
+      "checkpointId": "CP1",
+      "caseId": "L14-C05",
+      "task": "diagnosis",
+      "caseContext": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An artificial edge serializes unrelated operations",
+          "rationale": "The delay is unrelated to a technical dependency. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A moving tag is not stable content provenance",
+          "rationale": "Registry names can be reassigned to different images. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Newest available does not mean correct release candidate",
+          "rationale": "Global ordering ignores source and approval context. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Global ordering ignores source and approval context. The selected answer is newest available does not mean correct release candidate.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q023",
+      "checkpointId": "CP1",
+      "caseId": "L14-C05",
+      "task": "verification",
+      "caseContext": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The running workload reports the approved digest",
+          "rationale": "Runtime evidence must match the release candidate. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The deployed binary matches the approved artifact checksum",
+          "rationale": "The comparison binds delivery to the tested bytes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Independent stages overlap and required consumers still wait",
+          "rationale": "Performance improvement must preserve necessary ordering. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The comparison binds delivery to the tested bytes. The selected answer is the deployed binary matches the approved artifact checksum.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q024",
+      "checkpointId": "CP1",
+      "caseId": "L14-C05",
+      "task": "safeguard",
+      "caseContext": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retain source and run provenance with the deployment record",
+          "rationale": "A checksum needs a trusted reference to be meaningful. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Keep sensitive promotion dependent on required quality evidence",
+          "rationale": "Removing unrelated edges must not remove genuine gates. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Verify image origin and scan results before promotion",
+          "rationale": "Immutable identity alone does not establish safety. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A checksum needs a trusted reference to be meaningful. The selected answer is retain source and run provenance with the deployment record.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q025",
+      "checkpointId": "CP1",
+      "caseId": "L14-C05",
+      "task": "tradeoff",
+      "caseContext": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "advanced",
+      "question": "Binary mismatch: The release downloads a build output from another branch because it selects the newest artifact globally. The team selects this remedy: \"Select the artifact from the approved producing run.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel execution can increase peak capacity use",
+          "rationale": "Shorter elapsed time may consume more simultaneous workers. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Digest pinning requires deliberate upgrade management",
+          "rationale": "New images do not arrive automatically under a fixed digest. That addresses a different requirement: Mutable container. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Artifact retention becomes a deployment dependency",
+          "rationale": "Deleting approved inputs can block redeployment. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Deleting approved inputs can block redeployment. The selected answer is artifact retention becomes a deployment dependency.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q026",
+      "checkpointId": "CP4",
+      "caseId": "L14-C06",
+      "task": "remedy",
+      "caseContext": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output.",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "foundational",
+      "question": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Remove the unnecessary dependency while keeping real prerequisites",
+          "rationale": "The stage graph should encode required data flow. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Scope a dedicated deployment identity to required database actions",
+          "rationale": "Migration privilege should match the reviewed operation. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Select the artifact from the approved producing run",
+          "rationale": "The release must use its verified input. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The stage graph should encode required data flow. The selected answer is remove the unnecessary dependency while keeping real prerequisites.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q027",
+      "checkpointId": "CP4",
+      "caseId": "L14-C06",
+      "task": "diagnosis",
+      "caseContext": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output.",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "applied",
+      "question": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An artificial edge serializes unrelated operations",
+          "rationale": "The delay is unrelated to a technical dependency. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The identity grants broader control than the migration needs",
+          "rationale": "Compromised pipeline code could misuse excess permissions. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Newest available does not mean correct release candidate",
+          "rationale": "Global ordering ignores source and approval context. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The delay is unrelated to a technical dependency. The selected answer is an artificial edge serializes unrelated operations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q028",
+      "checkpointId": "CP4",
+      "caseId": "L14-C06",
+      "task": "verification",
+      "caseContext": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output.",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "applied",
+      "question": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployed binary matches the approved artifact checksum",
+          "rationale": "The comparison binds delivery to the tested bytes. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Independent stages overlap and required consumers still wait",
+          "rationale": "Performance improvement must preserve necessary ordering. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The migration succeeds while unrelated administrative actions are denied",
+          "rationale": "The test should demonstrate both capability and limit. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Performance improvement must preserve necessary ordering. The selected answer is independent stages overlap and required consumers still wait.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q029",
+      "checkpointId": "CP4",
+      "caseId": "L14-C06",
+      "task": "safeguard",
+      "caseContext": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output.",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "applied",
+      "question": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use protected credentials and controlled migration approval",
+          "rationale": "Database write authority is a sensitive release capability. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Retain source and run provenance with the deployment record",
+          "rationale": "A checksum needs a trusted reference to be meaningful. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Keep sensitive promotion dependent on required quality evidence",
+          "rationale": "Removing unrelated edges must not remove genuine gates. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Removing unrelated edges must not remove genuine gates. The selected answer is keep sensitive promotion dependent on required quality evidence.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q030",
+      "checkpointId": "CP4",
+      "caseId": "L14-C06",
+      "task": "tradeoff",
+      "caseContext": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output.",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "advanced",
+      "question": "Independent stages: Documentation publication waits for database deployment although neither consumes the other's output. The team selects this remedy: \"Remove the unnecessary dependency while keeping real prerequisites.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Some migrations require elevated capabilities temporarily",
+          "rationale": "Design explicit bounded elevation when necessary. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Artifact retention becomes a deployment dependency",
+          "rationale": "Deleting approved inputs can block redeployment. That addresses a different requirement: Binary mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Parallel execution can increase peak capacity use",
+          "rationale": "Shorter elapsed time may consume more simultaneous workers. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Shorter elapsed time may consume more simultaneous workers. The selected answer is parallel execution can increase peak capacity use.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q031",
+      "checkpointId": "CP3",
+      "caseId": "L14-C07",
+      "task": "remedy",
+      "caseContext": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Plan data recovery separately from application rollback",
+          "rationale": "Changing application bytes does not restore deleted data. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Remove the unnecessary dependency while keeping real prerequisites",
+          "rationale": "The stage graph should encode required data flow. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Scope a dedicated deployment identity to required database actions",
+          "rationale": "Migration privilege should match the reviewed operation. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Migration privilege should match the reviewed operation. The selected answer is scope a dedicated deployment identity to required database actions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q032",
+      "checkpointId": "CP3",
+      "caseId": "L14-C07",
+      "task": "diagnosis",
+      "caseContext": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The rollback plan covered only one deployment layer",
+          "rationale": "Database state has an independent lifecycle. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "An artificial edge serializes unrelated operations",
+          "rationale": "The delay is unrelated to a technical dependency. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The identity grants broader control than the migration needs",
+          "rationale": "Compromised pipeline code could misuse excess permissions. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Compromised pipeline code could misuse excess permissions. The selected answer is the identity grants broader control than the migration needs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q033",
+      "checkpointId": "CP3",
+      "caseId": "L14-C07",
+      "task": "verification",
+      "caseContext": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A rehearsal restores a usable application and compatible data",
+          "rationale": "Recovery must validate the whole service contract. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Independent stages overlap and required consumers still wait",
+          "rationale": "Performance improvement must preserve necessary ordering. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The migration succeeds while unrelated administrative actions are denied",
+          "rationale": "The test should demonstrate both capability and limit. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The test should demonstrate both capability and limit. The selected answer is the migration succeeds while unrelated administrative actions are denied.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q034",
+      "checkpointId": "CP3",
+      "caseId": "L14-C07",
+      "task": "safeguard",
+      "caseContext": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep sensitive promotion dependent on required quality evidence",
+          "rationale": "Removing unrelated edges must not remove genuine gates. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use protected credentials and controlled migration approval",
+          "rationale": "Database write authority is a sensitive release capability. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Test backups and recovery objectives before destructive changes",
+          "rationale": "An untested backup is weak recovery evidence. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Database write authority is a sensitive release capability. The selected answer is use protected credentials and controlled migration approval.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q035",
+      "checkpointId": "CP3",
+      "caseId": "L14-C07",
+      "task": "tradeoff",
+      "caseContext": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change.",
+      "objectiveIds": [
+        "D3.4.8"
+      ],
+      "difficulty": "advanced",
+      "question": "Production credentials: A migration step runs with unrestricted database administrator rights although it only applies a known schema change. The team selects this remedy: \"Scope a dedicated deployment identity to required database actions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Some migrations require elevated capabilities temporarily",
+          "rationale": "Design explicit bounded elevation when necessary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Restoring data can lose later writes",
+          "rationale": "Recovery planning must consider the acceptable data-loss window. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Parallel execution can increase peak capacity use",
+          "rationale": "Shorter elapsed time may consume more simultaneous workers. That addresses a different requirement: Independent stages. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Design explicit bounded elevation when necessary. The selected answer is some migrations require elevated capabilities temporarily.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q036",
+      "checkpointId": "CP5",
+      "caseId": "L14-C08",
+      "task": "remedy",
+      "caseContext": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Make the script converge to an explicit desired configuration",
+          "rationale": "Repeated execution should not accumulate unintended permissions. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Scope a dedicated deployment identity to required database actions",
+          "rationale": "Migration privilege should match the reviewed operation. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Plan data recovery separately from application rollback",
+          "rationale": "Changing application bytes does not restore deleted data. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Changing application bytes does not restore deleted data. The selected answer is plan data recovery separately from application rollback.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q037",
+      "checkpointId": "CP5",
+      "caseId": "L14-C08",
+      "task": "diagnosis",
+      "caseContext": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The rollback plan covered only one deployment layer",
+          "rationale": "Database state has an independent lifecycle. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The script is imperative without state reconciliation",
+          "rationale": "Each retry adds another side effect. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The identity grants broader control than the migration needs",
+          "rationale": "Compromised pipeline code could misuse excess permissions. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Database state has an independent lifecycle. The selected answer is the rollback plan covered only one deployment layer.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q038",
+      "checkpointId": "CP5",
+      "caseId": "L14-C08",
+      "task": "verification",
+      "caseContext": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A rehearsal restores a usable application and compatible data",
+          "rationale": "Recovery must validate the whole service contract. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Repeated runs produce the same intended rule set",
+          "rationale": "Convergence demonstrates safe retry behavior. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The migration succeeds while unrelated administrative actions are denied",
+          "rationale": "The test should demonstrate both capability and limit. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Recovery must validate the whole service contract. The selected answer is a rehearsal restores a usable application and compatible data.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q039",
+      "checkpointId": "CP5",
+      "caseId": "L14-C08",
+      "task": "safeguard",
+      "caseContext": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use protected credentials and controlled migration approval",
+          "rationale": "Database write authority is a sensitive release capability. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Test backups and recovery objectives before destructive changes",
+          "rationale": "An untested backup is weak recovery evidence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Validate the exact target and diff before applying changes",
+          "rationale": "A correct script can still affect the wrong environment. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "An untested backup is weak recovery evidence. The selected answer is test backups and recovery objectives before destructive changes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q040",
+      "checkpointId": "CP5",
+      "caseId": "L14-C08",
+      "task": "tradeoff",
+      "caseContext": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "advanced",
+      "question": "Rollback illusion: The application is rolled back successfully, but a destructive database migration has removed data the older version needs. The team selects this remedy: \"Plan data recovery separately from application rollback.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Some migrations require elevated capabilities temporarily",
+          "rationale": "Design explicit bounded elevation when necessary. That addresses a different requirement: Production credentials. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Restoring data can lose later writes",
+          "rationale": "Recovery planning must consider the acceptable data-loss window. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Convergent scripts require state inspection and error handling",
+          "rationale": "Idempotency needs deliberate implementation effort. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Recovery planning must consider the acceptable data-loss window. The selected answer is restoring data can lose later writes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q041",
+      "checkpointId": "CP3",
+      "caseId": "L14-C09",
+      "task": "remedy",
+      "caseContext": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Make the script converge to an explicit desired configuration",
+          "rationale": "Repeated execution should not accumulate unintended permissions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Stop promotion and apply the documented compatibility recovery path",
+          "rationale": "The partial state needs an explicit safe response. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Plan data recovery separately from application rollback",
+          "rationale": "Changing application bytes does not restore deleted data. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Repeated execution should not accumulate unintended permissions. The selected answer is make the script converge to an explicit desired configuration.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q042",
+      "checkpointId": "CP3",
+      "caseId": "L14-C09",
+      "task": "diagnosis",
+      "caseContext": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The script is imperative without state reconciliation",
+          "rationale": "Each retry adds another side effect. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A multistep release is not automatically an atomic transaction",
+          "rationale": "Success in one subsystem can outlive another's failure. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The rollback plan covered only one deployment layer",
+          "rationale": "Database state has an independent lifecycle. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Each retry adds another side effect. The selected answer is the script is imperative without state reconciliation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q043",
+      "checkpointId": "CP3",
+      "caseId": "L14-C09",
+      "task": "verification",
+      "caseContext": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A rehearsal restores a usable application and compatible data",
+          "rationale": "Recovery must validate the whole service contract. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Repeated runs produce the same intended rule set",
+          "rationale": "Convergence demonstrates safe retry behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The old application remains functional or recovery restores compatibility",
+          "rationale": "The outcome must validate the actual partial state. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Convergence demonstrates safe retry behavior. The selected answer is repeated runs produce the same intended rule set.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q044",
+      "checkpointId": "CP3",
+      "caseId": "L14-C09",
+      "task": "safeguard",
+      "caseContext": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate the exact target and diff before applying changes",
+          "rationale": "A correct script can still affect the wrong environment. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Use backward-compatible intermediate states and failure checkpoints",
+          "rationale": "These reduce the risk of stranded deployments. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Test backups and recovery objectives before destructive changes",
+          "rationale": "An untested backup is weak recovery evidence. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A correct script can still affect the wrong environment. The selected answer is validate the exact target and diff before applying changes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q045",
+      "checkpointId": "CP3",
+      "caseId": "L14-C09",
+      "task": "tradeoff",
+      "caseContext": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "advanced",
+      "question": "Unsafe deployment script: A retry appends duplicate firewall rules and grants each rule broader access than the previous run. The team selects this remedy: \"Make the script converge to an explicit desired configuration.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Restoring data can lose later writes",
+          "rationale": "Recovery planning must consider the acceptable data-loss window. That addresses a different requirement: Rollback illusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Convergent scripts require state inspection and error handling",
+          "rationale": "Idempotency needs deliberate implementation effort. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Cross-system releases may need compensating actions",
+          "rationale": "A single universal rollback operation is often unavailable. That addresses a different requirement: Partial release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Idempotency needs deliberate implementation effort. The selected answer is convergent scripts require state inspection and error handling.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q046",
+      "checkpointId": "CP5",
+      "caseId": "L14-C10",
+      "task": "remedy",
+      "caseContext": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "foundational",
+      "question": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Stop promotion and apply the documented compatibility recovery path",
+          "rationale": "The partial state needs an explicit safe response. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Declare the schema prerequisite before dependent application rollout",
+          "rationale": "Deployment order should follow actual compatibility dependencies. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Make the script converge to an explicit desired configuration",
+          "rationale": "Repeated execution should not accumulate unintended permissions. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The partial state needs an explicit safe response. The selected answer is stop promotion and apply the documented compatibility recovery path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q047",
+      "checkpointId": "CP5",
+      "caseId": "L14-C10",
+      "task": "diagnosis",
+      "caseContext": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pipeline graph omits a required dependency",
+          "rationale": "Parallel scheduling exposes an unavailable schema. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The script is imperative without state reconciliation",
+          "rationale": "Each retry adds another side effect. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A multistep release is not automatically an atomic transaction",
+          "rationale": "Success in one subsystem can outlive another's failure. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Success in one subsystem can outlive another's failure. The selected answer is a multistep release is not automatically an atomic transaction.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q048",
+      "checkpointId": "CP5",
+      "caseId": "L14-C10",
+      "task": "verification",
+      "caseContext": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The old application remains functional or recovery restores compatibility",
+          "rationale": "The outcome must validate the actual partial state. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The compatible schema exists before the dependent application starts",
+          "rationale": "Ordering evidence must follow the real prerequisite. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Repeated runs produce the same intended rule set",
+          "rationale": "Convergence demonstrates safe retry behavior. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The outcome must validate the actual partial state. The selected answer is the old application remains functional or recovery restores compatibility.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q049",
+      "checkpointId": "CP5",
+      "caseId": "L14-C10",
+      "task": "safeguard",
+      "caseContext": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "applied",
+      "question": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate the exact target and diff before applying changes",
+          "rationale": "A correct script can still affect the wrong environment. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use backward-compatible intermediate states and failure checkpoints",
+          "rationale": "These reduce the risk of stranded deployments. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Validate backward compatibility before modifying shared schema",
+          "rationale": "Old instances may run during the transition. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "These reduce the risk of stranded deployments. The selected answer is use backward-compatible intermediate states and failure checkpoints.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L14-Q050",
+      "checkpointId": "CP5",
+      "caseId": "L14-C10",
+      "task": "tradeoff",
+      "caseContext": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application.",
+      "objectiveIds": [
+        "D3.4.2",
+        "D3.4.8"
+      ],
+      "difficulty": "advanced",
+      "question": "Partial release: Database deployment succeeds but application rollout fails, leaving a new schema with the old application. The team selects this remedy: \"Stop promotion and apply the documented compatibility recovery path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Convergent scripts require state inspection and error handling",
+          "rationale": "Idempotency needs deliberate implementation effort. That addresses a different requirement: Unsafe deployment script. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Cross-system releases may need compensating actions",
+          "rationale": "A single universal rollback operation is often unavailable. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Strict ordering can extend deployment duration",
+          "rationale": "Safe parallelism is limited by real dependencies. That addresses a different requirement: Schema race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A single universal rollback operation is often unavailable. The selected answer is cross-system releases may need compensating actions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

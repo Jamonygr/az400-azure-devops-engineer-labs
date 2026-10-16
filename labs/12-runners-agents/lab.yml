@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "12",
+  "slug": "12-runners-agents",
+  "title": "Select and operate runners and agents",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "github",
+    "azure-devops"
+  ],
+  "objectives": [
+    "D3.3.2",
+    "D3.3.7"
+  ],
+  "scenario": "Some jobs need public hosted workers while others need private network access. Assess capabilities, outbound access, isolation, maintenance, and compute cost.",
+  "role": "Agent platform engineer",
+  "outcome": "Select and operate runners and agents.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inventory the local runner capability baseline",
+      "commands": "$caps=[ordered]@{os=[System.Runtime.InteropServices.RuntimeInformation]::OSDescription;architecture=[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString();dotnet=(dotnet --version);git=(git --version);ephemeralRequired=$true}\n $caps|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'agent-capabilities.json')\n",
+      "expected": "The selected host architecture and required tool versions are explicit.",
+      "positive": "$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if($c.dotnet -notmatch '^10\\.' -or -not $c.architecture){throw 'Runner lacks selected runtime/architecture.'}\n",
+      "negative": "$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if(-not $c.ephemeralRequired){throw 'Untrusted work must not reuse persistent credentials.'}\n",
+      "validate": "$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if($c.dotnet -notmatch '^10\\.' -or -not $c.architecture){throw 'Runner lacks selected runtime/architecture.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if(-not $c.ephemeralRequired){throw 'Untrusted work must not reuse persistent credentials.'}\n",
+      "evidence": "OS/architecture and tool versions, excluding machine/user identity.",
+      "fix": "Select a hosted image or ephemeral self-hosted image with the required SDK; pin important tools."
+    },
+    {
+      "id": "CP2",
+      "title": "Read GitHub runner inventory without registering a machine",
+      "commands": "gh api \"repos/$GhRepo/actions/runners\"|Set-Content (Join-Path $WorkRoot 'github-runners.json')\n Get-Content (Join-Path $WorkRoot 'github-runners.json')\n",
+      "expected": "The repository runner inventory is known; zero self-hosted runners is valid.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if($null -eq $r.total_count){throw 'Runner inventory did not return total_count.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if(@($r.runners|Where-Object { $_.status -notin @('online','offline') }).Count){throw 'Unknown self-hosted runner status.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if($null -eq $r.total_count){throw 'Runner inventory did not return total_count.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if(@($r.runners|Where-Object { $_.status -notin @('online','offline') }).Count){throw 'Unknown self-hosted runner status.'}\n",
+      "evidence": "Runner count/status with names and IDs redacted.",
+      "fix": "Repository admin/read access is needed; hosted runners do not appear in this endpoint."
+    },
+    {
+      "id": "CP3",
+      "title": "Read Azure DevOps agent pools and hosted availability",
+      "commands": "az pipelines pool list --organization $AdoOrganization --query '[].{id:id,name:name,isHosted:isHosted}' -o json|Set-Content (Join-Path $WorkRoot 'agent-pools.json')\n Get-Content (Join-Path $WorkRoot 'agent-pools.json')\n",
+      "expected": "Organization pool inventory distinguishes hosted and self-hosted execution.",
+      "positive": "$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if($p.Count -lt 1){throw 'No readable agent pool; external authorization required.'}\n",
+      "negative": "$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { -not $_.name }).Count){throw 'Pool inventory contains unnamed entries.'}\n",
+      "validate": "$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if($p.Count -lt 1){throw 'No readable agent pool; external authorization required.'}\n\n$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { -not $_.name }).Count){throw 'Pool inventory contains unnamed entries.'}\n",
+      "evidence": "Pool types and the separate hosted-parallelism gate.",
+      "fix": "Pool visibility does not prove available parallel jobs; verify the grant or use an approved disposable agent."
+    },
+    {
+      "id": "CP4",
+      "title": "Test outbound control-plane reachability",
+      "commands": "$r=@();foreach($hostName in @('api.github.com','dev.azure.com')){$c=[Net.Sockets.TcpClient]::new();try{$task=$c.ConnectAsync($hostName,443);if(-not $task.Wait(10000)){throw 'TCP timeout'};$r+=[ordered]@{host=$hostName;port=443;reachable=$c.Connected}}finally{$c.Dispose()}}\n $r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connectivity.json')\n",
+      "expected": "The candidate host can reach both HTTPS control planes without disabling TLS checks.",
+      "positive": "$r=@(Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object reachable -ne $true).Count){throw 'Required control plane unavailable.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json\n if(@($r|Where-Object port -ne 443).Count){throw 'Unexpected outbound port.'}\n",
+      "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object reachable -ne $true).Count){throw 'Required control plane unavailable.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json\n if(@($r|Where-Object port -ne 443).Count){throw 'Unexpected outbound port.'}\n",
+      "evidence": "Host/port success only; no bearer tokens or proxy credentials.",
+      "fix": "Ask the sandbox network owner to permit required endpoints; do not disable certificate validation."
+    },
+    {
+      "id": "CP5",
+      "title": "Choose an isolation and cost model",
+      "commands": "$design=[ordered]@{untrustedPR='hosted ephemeral';privateNetworkBuild='ephemeral self-hosted in isolated subnet';credentialLifetime='job';parallelJobs=1;estimatedIdleHours=0;persistentRegistration=$false}\n $design|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n",
+      "expected": "Public PRs and private-network workloads use separate trust boundaries.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.untrustedPR -ne 'hosted ephemeral' -or $d.credentialLifetime -ne 'job'){throw 'Runner trust design mismatch.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.persistentRegistration -or $d.parallelJobs -lt 1){throw 'Unbounded persistent agent design.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.untrustedPR -ne 'hosted ephemeral' -or $d.credentialLifetime -ne 'job'){throw 'Runner trust design mismatch.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.persistentRegistration -or $d.parallelJobs -lt 1){throw 'Unbounded persistent agent design.'}\n",
+      "evidence": "Decision record, estimated concurrency, and cost assumptions.",
+      "fix": "Keep self-hosted registration tokens short-lived and outside artifacts; destroy worker instances after the job."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='persistent privileged host';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'runner-design.json')\n",
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='hosted ephemeral';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n"
+  },
+  "challenge": "Design a hybrid pipeline with a public test job and a private deployment job, explicitly separating credentials, networks, image maintenance, and cost.",
+  "sources": [
+    "https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/licensing/concurrent-jobs"
+  ],
+  "primer": "A runner is a trust boundary with code execution and credentials. Untrusted pull requests should use ephemeral isolated workers; pool inventory does not establish available parallelism.",
+  "architecture": {
+    "title": "Agent trust boundaries and outbound control planes",
+    "nodes": [
+      {
+        "id": "github",
+        "label": "GitHub Actions control plane",
+        "kind": "platform",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "ado",
+        "label": "Azure DevOps control plane",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "https",
+        "label": "Outbound HTTPS boundary",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "hosted",
+        "label": "Hosted ephemeral worker",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "private",
+        "label": "Private-network worker design",
+        "kind": "code",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "image",
+        "label": "Pinned tool / image baseline",
+        "kind": "data",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "github",
+        "to": "https",
+        "label": "job / runner API"
+      },
+      {
+        "from": "ado",
+        "to": "https",
+        "label": "pool / agent API"
+      },
+      {
+        "from": "https",
+        "to": "hosted",
+        "label": "controlled outbound access"
+      },
+      {
+        "from": "https",
+        "to": "private",
+        "label": "approved private job path",
+        "style": "dashed"
+      },
+      {
+        "from": "image",
+        "to": "hosted",
+        "label": "known toolchain"
+      },
+      {
+        "from": "image",
+        "to": "private",
+        "label": "maintained image contract",
+        "style": "dashed"
+      }
+    ],
+    "topology": "GitHub and Azure DevOps control planes communicate through explicit outbound HTTPS boundaries. Hosted ephemeral workers handle untrusted code; a separately designed private-network worker handles approved private jobs. Both depend on a maintained pinned tool/image baseline. Inventory and TCP reachability checks do not register a machine or prove hosted parallelism availability."
+  }
+}

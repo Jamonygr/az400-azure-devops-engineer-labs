@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "03",
+  "slug": "03-collaboration-documentation",
+  "title": "Publish documentation and configure integrations",
+  "domain": "process",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "azure-devops"
+  ],
+  "objectives": [
+    "D1.3.1",
+    "D1.3.2",
+    "D1.3.3",
+    "D1.3.4",
+    "D1.3.5",
+    "D1.3.6"
+  ],
+  "scenario": "A change is ready for review but operational handoff and external integration ownership are unclear. Generate a reproducible release handoff and a bounded integration proposal.",
+  "role": "Release coordinator",
+  "outcome": "Publish documentation and configure integrations.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Generate release notes from Git history",
+      "commands": "git -C $RepoRoot log -10 --pretty=format:'- %h %s' | Set-Content (Join-Path $WorkRoot 'release-notes.md')\n Get-Content (Join-Path $WorkRoot 'release-notes.md')\n",
+      "expected": "Recent committed changes become a reproducible release-note draft.",
+      "positive": "$n=Get-Content (Join-Path $WorkRoot 'release-notes.md') -Raw\n if ($n -notmatch '[0-9a-f]{7}') { throw 'No commit identities in release notes.' }\n",
+      "negative": "$n=Get-Content (Join-Path $WorkRoot 'release-notes.md') -Raw\n if ($n -match '(?i)ghp_[a-z0-9]{20}') { throw 'Credential-like value in release draft.' }\n",
+      "validate": "$n=Get-Content (Join-Path $WorkRoot 'release-notes.md') -Raw\n if ($n -notmatch '[0-9a-f]{7}') { throw 'No commit identities in release notes.' }\n\n$n=Get-Content (Join-Path $WorkRoot 'release-notes.md') -Raw\n if ($n -match '(?i)ghp_[a-z0-9]{20}') { throw 'Credential-like value in release draft.' }\n",
+      "evidence": "Draft notes and exact source commit range.",
+      "fix": "Create notes from committed sandbox changes and review text before publication."
+    },
+    {
+      "id": "CP2",
+      "title": "Author a process diagram and API handoff",
+      "commands": "@('# Release handoff','```mermaid','flowchart LR','  Commit --> Build','  Build --> Test','  Test --> Approval','  Approval --> Deploy','```','API: GET /health/ready returns readiness status.')|Set-Content (Join-Path $WorkRoot 'handoff.md')\n",
+      "expected": "Markdown captures both release sequence and a concrete API contract.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'handoff.md') -Raw\n if ($d -notmatch 'flowchart LR' -or $d -notmatch '/health/ready') { throw 'Handoff lacks process/API contract.' }\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'handoff.md') -Raw\n if ($d -match 'password=|client_secret=') { throw 'Sensitive configuration in documentation.' }\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'handoff.md') -Raw\n if ($d -notmatch 'flowchart LR' -or $d -notmatch '/health/ready') { throw 'Handoff lacks process/API contract.' }\n\n$d=Get-Content (Join-Path $WorkRoot 'handoff.md') -Raw\n if ($d -match 'password=|client_secret=') { throw 'Sensitive configuration in documentation.' }\n",
+      "evidence": "handoff.md and an explanation of approval ownership.",
+      "fix": "Keep Mermaid syntax supported by your renderer and document status codes, not screenshots."
+    },
+    {
+      "id": "CP3",
+      "title": "Prepare a least-privilege webhook subscription",
+      "commands": "$hook=[ordered]@{name='web';active=$false;events=@('workflow_run');config=@{url='https://receiver.example.invalid/az400';content_type='json';insecure_ssl='0'}}\n $hook|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')\n",
+      "expected": "An inactive webhook proposal uses HTTPS and one delivery event; no request is sent.",
+      "positive": "$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json\n if ($h.active -or $h.config.content_type -ne 'json' -or $h.events[0] -ne 'workflow_run') { throw 'Webhook review contract violated.' }\n",
+      "negative": "$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json\n if ($h.config.insecure_ssl -ne '0' -or '*' -in $h.events) { throw 'Unbounded or TLS-insecure webhook.' }\n",
+      "validate": "$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json\n if ($h.active -or $h.config.content_type -ne 'json' -or $h.events[0] -ne 'workflow_run') { throw 'Webhook review contract violated.' }\n\n$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json\n if ($h.config.insecure_ssl -ne '0' -or '*' -in $h.events) { throw 'Unbounded or TLS-insecure webhook.' }\n",
+      "evidence": "Inactive payload and HMAC-secret storage plan, excluding the secret.",
+      "fix": "Use an approved receiver with HMAC verification before activating a separately authorized hook."
+    },
+    {
+      "id": "CP4",
+      "title": "Create a sandbox project wiki from Markdown",
+      "commands": "$page=Join-Path $WorkRoot 'handoff.md'\n $wiki=az devops wiki create --organization $AdoOrganization --project $AdoProject --name \"handoff-$RunId\" --type projectWiki -o json|ConvertFrom-Json\n $wiki.id|Set-Content (Join-Path $WorkRoot 'wiki-id.txt')\n az devops wiki page create --organization $AdoOrganization --project $AdoProject --wiki $wiki.id --path '/Release handoff' --file-path $page -o json|Set-Content (Join-Path $WorkRoot 'wiki-page.json')\n",
+      "expected": "A sandbox wiki contains the process handoff.",
+      "positive": "$id=Get-Content (Join-Path $WorkRoot 'wiki-id.txt')\n $p=az devops wiki page show --organization $AdoOrganization --project $AdoProject --wiki $id --path '/Release handoff' --include-content -o json|ConvertFrom-Json\n if ($p.page.content -notmatch 'flowchart LR') { throw 'Wiki omitted process diagram.' }\n",
+      "negative": "$w=Get-Content (Join-Path $WorkRoot 'wiki-page.json') -Raw|ConvertFrom-Json\n if (-not $w.page.path -or $w.page.path -notmatch 'Release handoff') { throw 'Wrong wiki page boundary.' }\n",
+      "validate": "$id=Get-Content (Join-Path $WorkRoot 'wiki-id.txt')\n $p=az devops wiki page show --organization $AdoOrganization --project $AdoProject --wiki $id --path '/Release handoff' --include-content -o json|ConvertFrom-Json\n if ($p.page.content -notmatch 'flowchart LR') { throw 'Wiki omitted process diagram.' }\n\n$w=Get-Content (Join-Path $WorkRoot 'wiki-page.json') -Raw|ConvertFrom-Json\n if (-not $w.page.path -or $w.page.path -notmatch 'Release handoff') { throw 'Wrong wiki page boundary.' }\n",
+      "evidence": "Wiki ID/path and content digest.",
+      "fix": "Use the fresh project wiki; do not replace an organization knowledge base."
+    },
+    {
+      "id": "CP5",
+      "title": "Review Teams and Boards integration before authorization",
+      "commands": "$review=[ordered]@{boardsProject=$AdoProject;githubRepository=$GhRepo;teamsChannel='UNCONFIGURED';notifications=@('release failure');externalAuthorizationRequired=$true;messagesSent=0}\n $review|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'integration-review.json')\n",
+      "expected": "An explicit integration contract identifies authorization and filters; no Teams message is sent.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json\n if (-not $r.externalAuthorizationRequired -or $r.notifications[0] -ne 'release failure') { throw 'Integration needs explicit authorization and event selection.' }\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json\n if ($r.messagesSent -ne 0) { throw 'This review must not send external notifications.' }\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json\n if (-not $r.externalAuthorizationRequired -or $r.notifications[0] -ne 'release failure') { throw 'Integration needs explicit authorization and event selection.' }\n\n$r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json\n if ($r.messagesSent -ne 0) { throw 'This review must not send external notifications.' }\n",
+      "evidence": "integration-review.json plus the bootstrap authorization checklist.",
+      "fix": "Authorize external applications only through the separate account-bootstrap procedure, then test with approved recipients."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json;$h.config.insecure_ssl='1';$h|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json|Select-Object -ExpandProperty config\n",
+    "repair": "$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json;$h.config.insecure_ssl='0';$h|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')\n"
+  },
+  "challenge": "Produce release notes with changes, migration requirements, rollback, and links to accepted work without exposing internal identifiers.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/devops/project/wiki/wiki-create-repo",
+    "https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks",
+    "https://learn.microsoft.com/en-us/azure/devops/boards/github/connect-to-github"
+  ],
+  "primer": "Documentation is a versioned delivery artifact. Webhooks need authenticated receivers and narrow event subscriptions; external app authorization is a separate privileged action.",
+  "architecture": {
+    "title": "Documentation publication and integration contracts",
+    "nodes": [
+      {
+        "id": "git",
+        "label": "Git history + Markdown",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "notes",
+        "label": "Release / API handoff",
+        "kind": "evidence",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "wiki",
+        "label": "Azure DevOps wiki",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "hook",
+        "label": "Inactive webhook JSON",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "receiver",
+        "label": "Approved receiver / Teams",
+        "kind": "platform",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "owner",
+        "label": "Integration owner",
+        "kind": "identity",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "git",
+        "to": "notes",
+        "label": "generate and review"
+      },
+      {
+        "from": "notes",
+        "to": "wiki",
+        "label": "owned wiki API"
+      },
+      {
+        "from": "notes",
+        "to": "hook",
+        "label": "event contract"
+      },
+      {
+        "from": "hook",
+        "to": "receiver",
+        "label": "future signed delivery",
+        "style": "dashed"
+      },
+      {
+        "from": "owner",
+        "to": "receiver",
+        "label": "separate app consent",
+        "style": "dashed"
+      },
+      {
+        "from": "owner",
+        "to": "hook",
+        "label": "scope and HMAC review"
+      }
+    ],
+    "topology": "Git history and Markdown become a versioned release/API handoff published to the disposable Azure DevOps wiki. An inactive webhook payload defines a separate notification contract. Activating a signed receiver or Teams integration requires its owner and separate bootstrap consent; this lab sends no external messages."
+  }
+}

@@ -1,0 +1,16 @@
+trigger:
+  branches:
+    include: [main]
+pr: none
+parameters:
+  - name: serviceConnection
+    type: string
+    default: az400-wif
+  - name: appName
+    type: string
+    default: replace-with-managed-webapp-name
+extends:
+  template: ../../14-ordered-releases-databases/artifacts/release-stages.yml
+  parameters:
+    serviceConnection: ${{ parameters.serviceConnection }}
+    appName: ${{ parameters.appName }}

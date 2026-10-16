@@ -1,0 +1,1931 @@
+{
+  "schemaVersion": 1,
+  "labId": "24",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview"
+    },
+    {
+      "id": "S3",
+      "url": "https://docs.github.com/en/issues/planning-and-tracking-with-projects/viewing-insights-from-your-project/about-insights-for-projects"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L24-Q001",
+      "checkpointId": "CP5",
+      "caseId": "L24-C01",
+      "task": "remedy",
+      "caseContext": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check telemetry freshness and collection health",
+          "rationale": "Missing data is not evidence of healthy behavior. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Connect runtime monitoring to the delivery feedback loop",
+          "rationale": "Pipeline success is distinct from application health. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Instrument the application with supported Application Insights telemetry",
+          "rationale": "Request and dependency context need application instrumentation. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Pipeline success is distinct from application health. The selected answer is connect runtime monitoring to the delivery feedback loop.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q002",
+      "checkpointId": "CP5",
+      "caseId": "L24-C01",
+      "task": "diagnosis",
+      "caseContext": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Infrastructure metrics do not describe application call relationships",
+          "rationale": "Host health cannot explain every request failure. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The collection path may have stopped reporting",
+          "rationale": "An empty result can mean no observations. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The monitoring design observes automation rather than user experience",
+          "rationale": "An unhealthy deployment can follow a successful build. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An unhealthy deployment can follow a successful build. The selected answer is the monitoring design observes automation rather than user experience.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q003",
+      "checkpointId": "CP5",
+      "caseId": "L24-C01",
+      "task": "verification",
+      "caseContext": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A recent synthetic request produces timely telemetry",
+          "rationale": "The test proves the monitoring path is active. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A deployed test failure appears in the operational view",
+          "rationale": "The feedback loop must include runtime behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A test request produces correlated request and dependency records",
+          "rationale": "The proof should cover the application execution path. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The feedback loop must include runtime behavior. The selected answer is a deployed test failure appears in the operational view.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q004",
+      "checkpointId": "CP5",
+      "caseId": "L24-C01",
+      "task": "safeguard",
+      "caseContext": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Alert on critical collection gaps where appropriate",
+          "rationale": "Blindness itself can require operational response. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Assign an owner and response procedure to the signal",
+          "rationale": "A chart alone does not resolve incidents. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Avoid collecting credentials or sensitive payloads in telemetry",
+          "rationale": "Instrumentation can expose application data. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A chart alone does not resolve incidents. The selected answer is assign an owner and response procedure to the signal.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q005",
+      "checkpointId": "CP5",
+      "caseId": "L24-C01",
+      "task": "tradeoff",
+      "caseContext": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Pipeline-only health: The build is green while customers receive HTTP errors, and operations has no runtime service telemetry. The team selects this remedy: \"Connect runtime monitoring to the delivery feedback loop.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Runtime telemetry adds ingestion and retention cost",
+          "rationale": "Collect signals tied to useful service decisions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Sampling and instrumentation coverage affect trace completeness",
+          "rationale": "Not every request is necessarily retained. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Freshness checks add their own monitoring work",
+          "rationale": "Observability must include the telemetry pipeline. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Collect signals tied to useful service decisions. The selected answer is runtime telemetry adds ingestion and retention cost.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q006",
+      "checkpointId": "CP2",
+      "caseId": "L24-C02",
+      "task": "remedy",
+      "caseContext": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Instrument the application with supported Application Insights telemetry",
+          "rationale": "Request and dependency context need application instrumentation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Add the appropriate container monitoring collection",
+          "rationale": "Different infrastructure layers need relevant telemetry sources. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Connect runtime monitoring to the delivery feedback loop",
+          "rationale": "Pipeline success is distinct from application health. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Request and dependency context need application instrumentation. The selected answer is instrument the application with supported Application Insights telemetry.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q007",
+      "checkpointId": "CP2",
+      "caseId": "L24-C02",
+      "task": "diagnosis",
+      "caseContext": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Application instrumentation does not automatically provide all container signals",
+          "rationale": "The missing view is workload infrastructure behavior. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The monitoring design observes automation rather than user experience",
+          "rationale": "An unhealthy deployment can follow a successful build. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Infrastructure metrics do not describe application call relationships",
+          "rationale": "Host health cannot explain every request failure. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Host health cannot explain every request failure. The selected answer is infrastructure metrics do not describe application call relationships.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q008",
+      "checkpointId": "CP2",
+      "caseId": "L24-C02",
+      "task": "verification",
+      "caseContext": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A deployed test failure appears in the operational view",
+          "rationale": "The feedback loop must include runtime behavior. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A test request produces correlated request and dependency records",
+          "rationale": "The proof should cover the application execution path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The container's expected resource and health data appears",
+          "rationale": "The test should target the workload layer. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The proof should cover the application execution path. The selected answer is a test request produces correlated request and dependency records.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q009",
+      "checkpointId": "CP2",
+      "caseId": "L24-C02",
+      "task": "safeguard",
+      "caseContext": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Avoid collecting credentials or sensitive payloads in telemetry",
+          "rationale": "Instrumentation can expose application data. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Scope collection and retention to the learning environment",
+          "rationale": "Container logs can produce high ingestion volume. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Assign an owner and response procedure to the signal",
+          "rationale": "A chart alone does not resolve incidents. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Instrumentation can expose application data. The selected answer is avoid collecting credentials or sensitive payloads in telemetry.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q010",
+      "checkpointId": "CP2",
+      "caseId": "L24-C02",
+      "task": "tradeoff",
+      "caseContext": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Missing application trace: VM CPU metrics are available, but a failing API request cannot be followed through application dependencies. The team selects this remedy: \"Instrument the application with supported Application Insights telemetry.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Runtime telemetry adds ingestion and retention cost",
+          "rationale": "Collect signals tied to useful service decisions. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Sampling and instrumentation coverage affect trace completeness",
+          "rationale": "Not every request is necessarily retained. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "More detailed container telemetry increases volume and cost",
+          "rationale": "Choose data that supports the intended diagnosis. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Not every request is necessarily retained. The selected answer is sampling and instrumentation coverage affect trace completeness.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q011",
+      "checkpointId": "CP3",
+      "caseId": "L24-C03",
+      "task": "remedy",
+      "caseContext": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Instrument the application with supported Application Insights telemetry",
+          "rationale": "Request and dependency context need application instrumentation. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Add the appropriate container monitoring collection",
+          "rationale": "Different infrastructure layers need relevant telemetry sources. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Collect the relevant Azure Storage resource telemetry",
+          "rationale": "Dependency resources need their own diagnostic signals. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Different infrastructure layers need relevant telemetry sources. The selected answer is add the appropriate container monitoring collection.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q012",
+      "checkpointId": "CP3",
+      "caseId": "L24-C03",
+      "task": "diagnosis",
+      "caseContext": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Application instrumentation does not automatically provide all container signals",
+          "rationale": "The missing view is workload infrastructure behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Application averages cannot describe every storage-side condition",
+          "rationale": "The failing dependency lacks direct evidence. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Infrastructure metrics do not describe application call relationships",
+          "rationale": "Host health cannot explain every request failure. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The missing view is workload infrastructure behavior. The selected answer is application instrumentation does not automatically provide all container signals.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q013",
+      "checkpointId": "CP3",
+      "caseId": "L24-C03",
+      "task": "verification",
+      "caseContext": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A test request produces correlated request and dependency records",
+          "rationale": "The proof should cover the application execution path. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The container's expected resource and health data appears",
+          "rationale": "The test should target the workload layer. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The storage resource exposes relevant errors and performance signals",
+          "rationale": "The evidence should correlate with the application incident. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test should target the workload layer. The selected answer is the container's expected resource and health data appears.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q014",
+      "checkpointId": "CP3",
+      "caseId": "L24-C03",
+      "task": "safeguard",
+      "caseContext": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Avoid collecting credentials or sensitive payloads in telemetry",
+          "rationale": "Instrumentation can expose application data. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Scope collection and retention to the learning environment",
+          "rationale": "Container logs can produce high ingestion volume. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Check supported metrics diagnostic settings and access scope",
+          "rationale": "Different resources expose different monitoring capabilities. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Container logs can produce high ingestion volume. The selected answer is scope collection and retention to the learning environment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q015",
+      "checkpointId": "CP3",
+      "caseId": "L24-C03",
+      "task": "tradeoff",
+      "caseContext": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Container blind spot: Application request metrics exist, but operators cannot inspect the resource behavior of the container workload. The team selects this remedy: \"Add the appropriate container monitoring collection.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "More detailed container telemetry increases volume and cost",
+          "rationale": "Choose data that supports the intended diagnosis. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Resource diagnostics do not automatically explain application intent",
+          "rationale": "Correlate both sides of the dependency boundary. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Sampling and instrumentation coverage affect trace completeness",
+          "rationale": "Not every request is necessarily retained. That addresses a different requirement: Missing application trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Choose data that supports the intended diagnosis. The selected answer is more detailed container telemetry increases volume and cost.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q016",
+      "checkpointId": "CP3",
+      "caseId": "L24-C04",
+      "task": "remedy",
+      "caseContext": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add the appropriate container monitoring collection",
+          "rationale": "Different infrastructure layers need relevant telemetry sources. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Collect the relevant Azure Storage resource telemetry",
+          "rationale": "Dependency resources need their own diagnostic signals. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Configure failure alerts with an accountable response destination",
+          "rationale": "A failed run needs an owned operational path. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Dependency resources need their own diagnostic signals. The selected answer is collect the relevant Azure Storage resource telemetry.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q017",
+      "checkpointId": "CP3",
+      "caseId": "L24-C04",
+      "task": "diagnosis",
+      "caseContext": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The automation lacks event-to-responder routing",
+          "rationale": "Failure visibility in the UI is insufficient. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Application instrumentation does not automatically provide all container signals",
+          "rationale": "The missing view is workload infrastructure behavior. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Application averages cannot describe every storage-side condition",
+          "rationale": "The failing dependency lacks direct evidence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The failing dependency lacks direct evidence. The selected answer is application averages cannot describe every storage-side condition.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q018",
+      "checkpointId": "CP3",
+      "caseId": "L24-C04",
+      "task": "verification",
+      "caseContext": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The storage resource exposes relevant errors and performance signals",
+          "rationale": "The evidence should correlate with the application incident. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A controlled failed run reaches the intended responder channel",
+          "rationale": "The test must verify delivery and meaningful content. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The container's expected resource and health data appears",
+          "rationale": "The test should target the workload layer. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence should correlate with the application incident. The selected answer is the storage resource exposes relevant errors and performance signals.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q019",
+      "checkpointId": "CP3",
+      "caseId": "L24-C04",
+      "task": "safeguard",
+      "caseContext": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check supported metrics diagnostic settings and access scope",
+          "rationale": "Different resources expose different monitoring capabilities. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Avoid placing secrets or excessive logs in notifications",
+          "rationale": "Alerts can cross a broader communication boundary. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Scope collection and retention to the learning environment",
+          "rationale": "Container logs can produce high ingestion volume. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Different resources expose different monitoring capabilities. The selected answer is check supported metrics diagnostic settings and access scope.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q020",
+      "checkpointId": "CP3",
+      "caseId": "L24-C04",
+      "task": "tradeoff",
+      "caseContext": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Storage outage diagnosis: API errors point to storage access, but only application averages are collected and storage behavior is absent. The team selects this remedy: \"Collect the relevant Azure Storage resource telemetry.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Resource diagnostics do not automatically explain application intent",
+          "rationale": "Correlate both sides of the dependency boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Unfiltered alerts create fatigue",
+          "rationale": "Route meaningful events rather than every routine transition. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "More detailed container telemetry increases volume and cost",
+          "rationale": "Choose data that supports the intended diagnosis. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Correlate both sides of the dependency boundary. The selected answer is resource diagnostics do not automatically explain application intent.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q021",
+      "checkpointId": "CP5",
+      "caseId": "L24-C05",
+      "task": "remedy",
+      "caseContext": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification.",
+      "objectiveIds": [
+        "D5.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Repair and test the action group's response path",
+          "rationale": "Detection and notification delivery are separate stages. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Collect the relevant Azure Storage resource telemetry",
+          "rationale": "Dependency resources need their own diagnostic signals. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Configure failure alerts with an accountable response destination",
+          "rationale": "A failed run needs an owned operational path. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A failed run needs an owned operational path. The selected answer is configure failure alerts with an accountable response destination.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q022",
+      "checkpointId": "CP5",
+      "caseId": "L24-C05",
+      "task": "diagnosis",
+      "caseContext": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification.",
+      "objectiveIds": [
+        "D5.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The automation lacks event-to-responder routing",
+          "rationale": "Failure visibility in the UI is insufficient. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A fired rule does not prove a human was reached",
+          "rationale": "The downstream destination is part of the alert lifecycle. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Application averages cannot describe every storage-side condition",
+          "rationale": "The failing dependency lacks direct evidence. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Failure visibility in the UI is insufficient. The selected answer is the automation lacks event-to-responder routing.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q023",
+      "checkpointId": "CP5",
+      "caseId": "L24-C05",
+      "task": "verification",
+      "caseContext": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification.",
+      "objectiveIds": [
+        "D5.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A controlled failed run reaches the intended responder channel",
+          "rationale": "The test must verify delivery and meaningful content. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A test alert reaches the current owned destination",
+          "rationale": "The proof should include the final delivery hop. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The storage resource exposes relevant errors and performance signals",
+          "rationale": "The evidence should correlate with the application incident. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The test must verify delivery and meaningful content. The selected answer is a controlled failed run reaches the intended responder channel.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q024",
+      "checkpointId": "CP5",
+      "caseId": "L24-C05",
+      "task": "safeguard",
+      "caseContext": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification.",
+      "objectiveIds": [
+        "D5.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review recipients and automation permissions before changing actions",
+          "rationale": "Notifications can disclose operational information. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Check supported metrics diagnostic settings and access scope",
+          "rationale": "Different resources expose different monitoring capabilities. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid placing secrets or excessive logs in notifications",
+          "rationale": "Alerts can cross a broader communication boundary. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Alerts can cross a broader communication boundary. The selected answer is avoid placing secrets or excessive logs in notifications.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q025",
+      "checkpointId": "CP5",
+      "caseId": "L24-C05",
+      "task": "tradeoff",
+      "caseContext": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification.",
+      "objectiveIds": [
+        "D5.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Silent failed run: A production pipeline fails outside working hours, but no responder receives an actionable notification. The team selects this remedy: \"Configure failure alerts with an accountable response destination.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Resource diagnostics do not automatically explain application intent",
+          "rationale": "Correlate both sides of the dependency boundary. That addresses a different requirement: Storage outage diagnosis. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Unfiltered alerts create fatigue",
+          "rationale": "Route meaningful events rather than every routine transition. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Response routing requires ongoing ownership maintenance",
+          "rationale": "Team and contact changes can break healthy rules. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Route meaningful events rather than every routine transition. The selected answer is unfiltered alerts create fatigue.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q026",
+      "checkpointId": "CP4",
+      "caseId": "L24-C06",
+      "task": "remedy",
+      "caseContext": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Configure failure alerts with an accountable response destination",
+          "rationale": "A failed run needs an owned operational path. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Repair and test the action group's response path",
+          "rationale": "Detection and notification delivery are separate stages. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use project insights with the appropriate project fields",
+          "rationale": "The requested metric belongs to the planning dataset. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Detection and notification delivery are separate stages. The selected answer is repair and test the action group's response path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q027",
+      "checkpointId": "CP4",
+      "caseId": "L24-C06",
+      "task": "diagnosis",
+      "caseContext": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A fired rule does not prove a human was reached",
+          "rationale": "The downstream destination is part of the alert lifecycle. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Repository traffic and project work status are different data",
+          "rationale": "A graph is useful only for its actual source. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The automation lacks event-to-responder routing",
+          "rationale": "Failure visibility in the UI is insufficient. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The downstream destination is part of the alert lifecycle. The selected answer is a fired rule does not prove a human was reached.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q028",
+      "checkpointId": "CP4",
+      "caseId": "L24-C06",
+      "task": "verification",
+      "caseContext": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A controlled failed run reaches the intended responder channel",
+          "rationale": "The test must verify delivery and meaningful content. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A test alert reaches the current owned destination",
+          "rationale": "The proof should include the final delivery hop. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The chart groups project items by the intended status field",
+          "rationale": "The evidence must use the correct population. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The proof should include the final delivery hop. The selected answer is a test alert reaches the current owned destination.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q029",
+      "checkpointId": "CP4",
+      "caseId": "L24-C06",
+      "task": "safeguard",
+      "caseContext": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review recipients and automation permissions before changing actions",
+          "rationale": "Notifications can disclose operational information. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Document chart filters and access expectations",
+          "rationale": "Hidden filters can mislead planning decisions. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid placing secrets or excessive logs in notifications",
+          "rationale": "Alerts can cross a broader communication boundary. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Notifications can disclose operational information. The selected answer is review recipients and automation permissions before changing actions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q030",
+      "checkpointId": "CP4",
+      "caseId": "L24-C06",
+      "task": "tradeoff",
+      "caseContext": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination.",
+      "objectiveIds": [
+        "D5.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Alert without action: An Azure Monitor rule fires correctly, but the configured action group contains an obsolete destination. The team selects this remedy: \"Repair and test the action group's response path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Project chart capabilities depend on supported data and access",
+          "rationale": "Not every report matches a general analytics tool. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Unfiltered alerts create fatigue",
+          "rationale": "Route meaningful events rather than every routine transition. That addresses a different requirement: Silent failed run. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Response routing requires ongoing ownership maintenance",
+          "rationale": "Team and contact changes can break healthy rules. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Team and contact changes can break healthy rules. The selected answer is response routing requires ongoing ownership maintenance.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q031",
+      "checkpointId": "CP5",
+      "caseId": "L24-C07",
+      "task": "remedy",
+      "caseContext": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board.",
+      "objectiveIds": [
+        "D5.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Collect the relevant network monitoring signals",
+          "rationale": "Host compute metrics cannot establish network-path health. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Repair and test the action group's response path",
+          "rationale": "Detection and notification delivery are separate stages. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use project insights with the appropriate project fields",
+          "rationale": "The requested metric belongs to the planning dataset. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The requested metric belongs to the planning dataset. The selected answer is use project insights with the appropriate project fields.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q032",
+      "checkpointId": "CP5",
+      "caseId": "L24-C07",
+      "task": "diagnosis",
+      "caseContext": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board.",
+      "objectiveIds": [
+        "D5.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A fired rule does not prove a human was reached",
+          "rationale": "The downstream destination is part of the alert lifecycle. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Repository traffic and project work status are different data",
+          "rationale": "A graph is useful only for its actual source. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The measured layer does not cover the suspected fault",
+          "rationale": "Normal CPU does not rule out connectivity failure. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A graph is useful only for its actual source. The selected answer is repository traffic and project work status are different data.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q033",
+      "checkpointId": "CP5",
+      "caseId": "L24-C07",
+      "task": "verification",
+      "caseContext": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board.",
+      "objectiveIds": [
+        "D5.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The chart groups project items by the intended status field",
+          "rationale": "The evidence must use the correct population. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Network evidence identifies the affected path or resource",
+          "rationale": "The verification should match the suspected boundary. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A test alert reaches the current owned destination",
+          "rationale": "The proof should include the final delivery hop. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence must use the correct population. The selected answer is the chart groups project items by the intended status field.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q034",
+      "checkpointId": "CP5",
+      "caseId": "L24-C07",
+      "task": "safeguard",
+      "caseContext": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board.",
+      "objectiveIds": [
+        "D5.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use authorized bounded connectivity probes",
+          "rationale": "Diagnostic traffic should not disrupt unrelated networks. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Review recipients and automation permissions before changing actions",
+          "rationale": "Notifications can disclose operational information. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Document chart filters and access expectations",
+          "rationale": "Hidden filters can mislead planning decisions. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Hidden filters can mislead planning decisions. The selected answer is document chart filters and access expectations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q035",
+      "checkpointId": "CP5",
+      "caseId": "L24-C07",
+      "task": "tradeoff",
+      "caseContext": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board.",
+      "objectiveIds": [
+        "D5.1.3"
+      ],
+      "difficulty": "advanced",
+      "question": "GitHub project chart: A team wants work-status counts, but expects repository traffic graphs to summarize its project board. The team selects this remedy: \"Use project insights with the appropriate project fields.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Response routing requires ongoing ownership maintenance",
+          "rationale": "Team and contact changes can break healthy rules. That addresses a different requirement: Alert without action. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Project chart capabilities depend on supported data and access",
+          "rationale": "Not every report matches a general analytics tool. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Network monitoring often needs several correlated views",
+          "rationale": "One metric rarely explains the entire path. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Not every report matches a general analytics tool. The selected answer is project chart capabilities depend on supported data and access.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q036",
+      "checkpointId": "CP3",
+      "caseId": "L24-C08",
+      "task": "remedy",
+      "caseContext": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Tune duration aggregation and meaningful thresholds",
+          "rationale": "Alert criteria should distinguish expected spikes from actionable conditions. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use project insights with the appropriate project fields",
+          "rationale": "The requested metric belongs to the planning dataset. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Collect the relevant network monitoring signals",
+          "rationale": "Host compute metrics cannot establish network-path health. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Host compute metrics cannot establish network-path health. The selected answer is collect the relevant network monitoring signals.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q037",
+      "checkpointId": "CP3",
+      "caseId": "L24-C08",
+      "task": "diagnosis",
+      "caseContext": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The rule treats transient normal behavior as an incident",
+          "rationale": "Noise undermines responder trust. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Repository traffic and project work status are different data",
+          "rationale": "A graph is useful only for its actual source. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The measured layer does not cover the suspected fault",
+          "rationale": "Normal CPU does not rule out connectivity failure. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Normal CPU does not rule out connectivity failure. The selected answer is the measured layer does not cover the suspected fault.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q038",
+      "checkpointId": "CP3",
+      "caseId": "L24-C08",
+      "task": "verification",
+      "caseContext": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Normal deployment spikes stay quiet while sustained saturation alerts",
+          "rationale": "Positive and negative probes demonstrate useful discrimination. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The chart groups project items by the intended status field",
+          "rationale": "The evidence must use the correct population. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Network evidence identifies the affected path or resource",
+          "rationale": "The verification should match the suspected boundary. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The verification should match the suspected boundary. The selected answer is network evidence identifies the affected path or resource.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q039",
+      "checkpointId": "CP3",
+      "caseId": "L24-C08",
+      "task": "safeguard",
+      "caseContext": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use authorized bounded connectivity probes",
+          "rationale": "Diagnostic traffic should not disrupt unrelated networks. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Record why the new threshold matches service objectives",
+          "rationale": "Tuning should not merely suppress inconvenient evidence. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Document chart filters and access expectations",
+          "rationale": "Hidden filters can mislead planning decisions. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Diagnostic traffic should not disrupt unrelated networks. The selected answer is use authorized bounded connectivity probes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q040",
+      "checkpointId": "CP3",
+      "caseId": "L24-C08",
+      "task": "tradeoff",
+      "caseContext": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem.",
+      "objectiveIds": [
+        "D5.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Network visibility gap: VM CPU is normal during a service outage, but connection failures point to a networking problem. The team selects this remedy: \"Collect the relevant network monitoring signals.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Project chart capabilities depend on supported data and access",
+          "rationale": "Not every report matches a general analytics tool. That addresses a different requirement: GitHub project chart. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Network monitoring often needs several correlated views",
+          "rationale": "One metric rarely explains the entire path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Longer evaluation windows increase detection delay",
+          "rationale": "Noise reduction trades against response speed. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "One metric rarely explains the entire path. The selected answer is network monitoring often needs several correlated views.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L24-C09",
+      "task": "remedy",
+      "caseContext": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation.",
+      "objectiveIds": [
+        "D1.2.7",
+        "D5.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Tune duration aggregation and meaningful thresholds",
+          "rationale": "Alert criteria should distinguish expected spikes from actionable conditions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Check telemetry freshness and collection health",
+          "rationale": "Missing data is not evidence of healthy behavior. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Collect the relevant network monitoring signals",
+          "rationale": "Host compute metrics cannot establish network-path health. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Alert criteria should distinguish expected spikes from actionable conditions. The selected answer is tune duration aggregation and meaningful thresholds.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L24-C09",
+      "task": "diagnosis",
+      "caseContext": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation.",
+      "objectiveIds": [
+        "D1.2.7",
+        "D5.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The measured layer does not cover the suspected fault",
+          "rationale": "Normal CPU does not rule out connectivity failure. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The rule treats transient normal behavior as an incident",
+          "rationale": "Noise undermines responder trust. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The collection path may have stopped reporting",
+          "rationale": "An empty result can mean no observations. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Noise undermines responder trust. The selected answer is the rule treats transient normal behavior as an incident.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L24-C09",
+      "task": "verification",
+      "caseContext": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation.",
+      "objectiveIds": [
+        "D1.2.7",
+        "D5.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Normal deployment spikes stay quiet while sustained saturation alerts",
+          "rationale": "Positive and negative probes demonstrate useful discrimination. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A recent synthetic request produces timely telemetry",
+          "rationale": "The test proves the monitoring path is active. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Network evidence identifies the affected path or resource",
+          "rationale": "The verification should match the suspected boundary. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Positive and negative probes demonstrate useful discrimination. The selected answer is normal deployment spikes stay quiet while sustained saturation alerts.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L24-C09",
+      "task": "safeguard",
+      "caseContext": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation.",
+      "objectiveIds": [
+        "D1.2.7",
+        "D5.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use authorized bounded connectivity probes",
+          "rationale": "Diagnostic traffic should not disrupt unrelated networks. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Record why the new threshold matches service objectives",
+          "rationale": "Tuning should not merely suppress inconvenient evidence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Alert on critical collection gaps where appropriate",
+          "rationale": "Blindness itself can require operational response. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Tuning should not merely suppress inconvenient evidence. The selected answer is record why the new threshold matches service objectives.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L24-C09",
+      "task": "tradeoff",
+      "caseContext": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation.",
+      "objectiveIds": [
+        "D1.2.7",
+        "D5.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Noisy threshold: A CPU alert fires briefly on every deployment and responders mute it, missing later sustained saturation. The team selects this remedy: \"Tune duration aggregation and meaningful thresholds.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Longer evaluation windows increase detection delay",
+          "rationale": "Noise reduction trades against response speed. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Freshness checks add their own monitoring work",
+          "rationale": "Observability must include the telemetry pipeline. That addresses a different requirement: Telemetry stopped. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Network monitoring often needs several correlated views",
+          "rationale": "One metric rarely explains the entire path. That addresses a different requirement: Network visibility gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Noise reduction trades against response speed. The selected answer is longer evaluation windows increase detection delay.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q046",
+      "checkpointId": "CP1",
+      "caseId": "L24-C10",
+      "task": "remedy",
+      "caseContext": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors.",
+      "objectiveIds": [
+        "D5.1.1",
+        "D5.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check telemetry freshness and collection health",
+          "rationale": "Missing data is not evidence of healthy behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Connect runtime monitoring to the delivery feedback loop",
+          "rationale": "Pipeline success is distinct from application health. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Tune duration aggregation and meaningful thresholds",
+          "rationale": "Alert criteria should distinguish expected spikes from actionable conditions. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Missing data is not evidence of healthy behavior. The selected answer is check telemetry freshness and collection health.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q047",
+      "checkpointId": "CP1",
+      "caseId": "L24-C10",
+      "task": "diagnosis",
+      "caseContext": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors.",
+      "objectiveIds": [
+        "D5.1.1",
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The monitoring design observes automation rather than user experience",
+          "rationale": "An unhealthy deployment can follow a successful build. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The rule treats transient normal behavior as an incident",
+          "rationale": "Noise undermines responder trust. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The collection path may have stopped reporting",
+          "rationale": "An empty result can mean no observations. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An empty result can mean no observations. The selected answer is the collection path may have stopped reporting.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q048",
+      "checkpointId": "CP1",
+      "caseId": "L24-C10",
+      "task": "verification",
+      "caseContext": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors.",
+      "objectiveIds": [
+        "D5.1.1",
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A deployed test failure appears in the operational view",
+          "rationale": "The feedback loop must include runtime behavior. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Normal deployment spikes stay quiet while sustained saturation alerts",
+          "rationale": "Positive and negative probes demonstrate useful discrimination. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A recent synthetic request produces timely telemetry",
+          "rationale": "The test proves the monitoring path is active. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The test proves the monitoring path is active. The selected answer is a recent synthetic request produces timely telemetry.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q049",
+      "checkpointId": "CP1",
+      "caseId": "L24-C10",
+      "task": "safeguard",
+      "caseContext": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors.",
+      "objectiveIds": [
+        "D5.1.1",
+        "D5.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Record why the new threshold matches service objectives",
+          "rationale": "Tuning should not merely suppress inconvenient evidence. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Alert on critical collection gaps where appropriate",
+          "rationale": "Blindness itself can require operational response. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Assign an owner and response procedure to the signal",
+          "rationale": "A chart alone does not resolve incidents. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Blindness itself can require operational response. The selected answer is alert on critical collection gaps where appropriate.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L24-Q050",
+      "checkpointId": "CP1",
+      "caseId": "L24-C10",
+      "task": "tradeoff",
+      "caseContext": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors.",
+      "objectiveIds": [
+        "D5.1.1",
+        "D5.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Telemetry stopped: The dashboard is empty after a deployment, and the team assumes the service has no errors. The team selects this remedy: \"Check telemetry freshness and collection health.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Runtime telemetry adds ingestion and retention cost",
+          "rationale": "Collect signals tied to useful service decisions. That addresses a different requirement: Pipeline-only health. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Longer evaluation windows increase detection delay",
+          "rationale": "Noise reduction trades against response speed. That addresses a different requirement: Noisy threshold. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Freshness checks add their own monitoring work",
+          "rationale": "Observability must include the telemetry pipeline. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Observability must include the telemetry pipeline. The selected answer is freshness checks add their own monitoring work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

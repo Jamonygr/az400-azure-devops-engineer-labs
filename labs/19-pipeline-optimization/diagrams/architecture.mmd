@@ -1,0 +1,14 @@
+flowchart LR
+  yaml["Versioned pipeline YAML"]
+  worker["Bounded CI worker jobs"]
+  cache["SDK + lock-keyed NuGet cache"]
+  tests["Build / test execution"]
+  artifacts["Release artifacts + logs"]
+  policy["Metrics / retention policy"]
+  yaml -->|execution DAG| worker
+  worker -->|scoped cache lookup| cache
+  cache -->|restored dependencies| tests
+  worker -->|controlled concurrency| tests
+  tests -->|versioned output| artifacts
+  artifacts -->|recovery / evidence lifetime| policy
+  tests -->|duration and failure data| policy

@@ -1,0 +1,13 @@
+flowchart LR
+  shell["PowerShell 7 host"]
+  tools["Git, gh, az, .NET 10"]
+  accounts["GitHub / DevOps / Entra"]
+  scope["Disposable run scopes"]
+  journal["Local ownership journal"]
+  tests["Local API test host"]
+  shell -->|CLI commands| tools
+  tools -->|identity reads| accounts
+  accounts -->|explicit account scope| scope
+  scope -->|exact owned IDs| journal
+  shell -->|build and test| tests
+  tests -->|redacted evidence| journal

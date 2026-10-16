@@ -1,0 +1,19 @@
+// Workspace-based Application Insights. Set the portal time picker to the release window.
+let ReleaseStart = ago(1h);
+AppRequests
+| where TimeGenerated >= ReleaseStart
+| summarize Requests=count(), Failed=countif(Success == false), P95DurationMs=percentile(DurationMs,95) by bin(TimeGenerated,5m), AppRoleName
+| extend FailureRate = todouble(Failed)/Requests
+| order by TimeGenerated asc
+;
+// Find a slow operation and correlate request/dependency/trace data by OperationId.
+let SlowOperation = toscalar(AppRequests | where TimeGenerated > ago(1h) | top 1 by DurationMs desc | project OperationId);
+union withsource=SourceTable AppRequests, AppDependencies, AppTraces
+| where TimeGenerated > ago(1h) and OperationId == SlowOperation
+| project TimeGenerated, SourceTable, OperationId, ParentId, AppRoleName, Properties
+| order by TimeGenerated asc
+;
+// Investigate the custom counter without putting titles or other user content in telemetry.
+AppMetrics
+| where TimeGenerated > ago(1h) and Name == 'todos.created'
+| summarize Created=sum(Sum) by bin(TimeGenerated,5m), AppRoleName

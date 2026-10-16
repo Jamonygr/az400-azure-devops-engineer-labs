@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "16",
+  "slug": "16-feature-flags-resilience",
+  "title": "Control feature exposure and deployment resilience",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "Developer store; explicit acknowledgement",
+  "platforms": [
+    "local",
+    "azure"
+  ],
+  "objectives": [
+    "D3.4.5",
+    "D3.4.6"
+  ],
+  "scenario": "The team wants a kill switch and progressive cohorts without rebuilding binaries. Test feature behavior, define exposure, and model bounded failure handling.",
+  "role": "Resilience engineer",
+  "outcome": "Control feature exposure and deployment resilience.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inspect the sample feature-management defaults",
+      "commands": "$config=Get-Content (Join-Path $RepoRoot 'samples/DevOps.Api/appsettings.json') -Raw|ConvertFrom-Json\n $config|ConvertTo-Json -Depth 10|Set-Content (Join-Path $WorkRoot 'feature-defaults.json')\n Copy-Item (Join-Path $LabRoot 'artifacts/feature-flags.json') (Join-Path $WorkRoot 'feature-flags.json')\n",
+      "expected": "Feature defaults are separated from deployment artifact identity.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'feature-defaults.json') -Raw\n if($t -notmatch 'FeatureManagement|feature_management'){throw 'Feature-management defaults absent.'}\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'feature-defaults.json') -Raw\n if($t -match 'InstrumentationKey=[0-9a-f]{8}-'){throw 'Real telemetry credential in sample defaults.'}\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'feature-defaults.json') -Raw\n if($t -notmatch 'FeatureManagement|feature_management'){throw 'Feature-management defaults absent.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'feature-defaults.json') -Raw\n if($t -match 'InstrumentationKey=[0-9a-f]{8}-'){throw 'Real telemetry credential in sample defaults.'}\n",
+      "evidence": "Default flag names and configuration scope.",
+      "fix": "Keep flags in configuration; do not rebuild the application merely to alter exposure."
+    },
+    {
+      "id": "CP2",
+      "title": "Run the feature behavior tests",
+      "commands": "dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --filter 'FullyQualifiedName~DisabledFlagRejectsWritesWhileReadsRemainHealthy' --logger \"trx;LogFileName=feature.trx\" --results-directory (Join-Path $WorkRoot 'features')\n if($LASTEXITCODE -ne 0){throw 'Feature tests failed.'}\n",
+      "expected": "Tests exercise enabled and disabled feature behavior.",
+      "positive": "$f=Get-ChildItem (Join-Path $WorkRoot 'features') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Feature test filter selected no tests.'}\n",
+      "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'features') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Feature behavior regression.'}\n",
+      "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'features') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Feature test filter selected no tests.'}\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'features') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Feature behavior regression.'}\n",
+      "evidence": "Feature test names and TRX counts.",
+      "fix": "Use the exact test names in the sample; zero tests is a failed gate."
+    },
+    {
+      "id": "CP3",
+      "title": "Create an Entra-only store and scoped data role",
+      "commands": "$name=\"flags-l16-$RunId\"\n $store=az appconfig create --subscription $SubscriptionId --resource-group $ResourceGroup --location $Location --name $name --sku Developer --disable-local-auth true --retention-days 0 --enable-purge-protection false --tags \"az400-run=$RunId\" -o json|ConvertFrom-Json\n $store|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'appconfiguration-store.json')\n $learner=az ad signed-in-user show --query id -o tsv\n if(-not $learner){throw 'An interactive authorized Entra learner is required for the data lane.'}\n az role assignment create --subscription $SubscriptionId --assignee-object-id $learner --assignee-principal-type User --role 'App Configuration Data Owner' --scope $store.id -o json|Set-Content (Join-Path $WorkRoot 'appconfiguration-role.json')\n",
+      "expected": "A Developer store uses Entra authentication, zero-day soft-delete retention, and a data role at the store scope.",
+      "positive": "$s=az appconfig show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"flags-l16-$RunId\" -o json|ConvertFrom-Json\n if(-not $s.disableLocalAuth -or $s.tags.'az400-run' -ne $RunId){throw 'Store auth/ownership mismatch.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'appconfiguration-role.json') -Raw|ConvertFrom-Json\n $s=Get-Content (Join-Path $WorkRoot 'appconfiguration-store.json') -Raw|ConvertFrom-Json\n if($r.scope -ne $s.id){throw 'Data role assigned outside exact store scope.'}\n",
+      "validate": "$s=az appconfig show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"flags-l16-$RunId\" -o json|ConvertFrom-Json\n if(-not $s.disableLocalAuth -or $s.tags.'az400-run' -ne $RunId){throw 'Store auth/ownership mismatch.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'appconfiguration-role.json') -Raw|ConvertFrom-Json\n $s=Get-Content (Join-Path $WorkRoot 'appconfiguration-store.json') -Raw|ConvertFrom-Json\n if($r.scope -ne $s.id){throw 'Data role assigned outside exact store scope.'}\n",
+      "evidence": "Store SKU/auth/retention and exact data-role scope, with identifiers redacted.",
+      "fix": "Developer pricing and role-assignment permission are explicit gates; do not switch to key auth if RBAC propagation takes time."
+    },
+    {
+      "id": "CP4",
+      "title": "Create and enable TodoWrites through identity-based CLI",
+      "commands": "$name=\"flags-l16-$RunId\"\n az appconfig feature set --subscription $SubscriptionId --name $name --feature TodoWrites --auth-mode login --yes -o json\n az appconfig feature enable --subscription $SubscriptionId --name $name --feature TodoWrites --auth-mode login --yes -o json\n az appconfig feature show --subscription $SubscriptionId --name $name --feature TodoWrites --auth-mode login -o json|Set-Content (Join-Path $WorkRoot 'feature-enabled.json')\n",
+      "expected": "The store contains the same TodoWrites flag used by the tested application; an enabled-state observation is retained.",
+      "positive": "$f=az appconfig feature show --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login -o json|ConvertFrom-Json\n if($f.name -ne 'TodoWrites'){throw 'Expected feature absent.'}\n",
+      "negative": "$e=Get-Content (Join-Path $WorkRoot 'feature-enabled.json') -Raw|ConvertFrom-Json\n if($e.state -ne 'on'){throw 'Feature enable observation missing.'}\n",
+      "validate": "$f=az appconfig feature show --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login -o json|ConvertFrom-Json\n if($f.name -ne 'TodoWrites'){throw 'Expected feature absent.'}\n\n$e=Get-Content (Join-Path $WorkRoot 'feature-enabled.json') -Raw|ConvertFrom-Json\n if($e.state -ne 'on'){throw 'Feature enable observation missing.'}\n",
+      "evidence": "Feature key/state and identity-auth mode; no store access keys are retrieved.",
+      "fix": "Allow scoped data RBAC to propagate and retry the read; a management-plane Contributor role alone does not grant feature writes."
+    },
+    {
+      "id": "CP5",
+      "title": "Exercise the kill switch and bounded resilience decision",
+      "commands": "az appconfig feature disable --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login --yes -o json\n $exposure=[ordered]@{flag='TodoWrites';rings=@(5,20,100);killSwitchEnabled=$true;owner='release-engineer';expiresAfterDays=14}\n $exposure|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'exposure.json')\n $responses=@(200,200,503,503,503)\n [ordered]@{window=5;failures=3;threshold=0.5;open=(@($responses|Where-Object {$_ -ge 500}).Count/5 -ge 0.5);retryBudget=2}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'resilience.json')\n",
+      "expected": "The real flag is off, and the synthetic60%failure window opens a breaker with a bounded retry budget.",
+      "positive": "$f=az appconfig feature show --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login -o json|ConvertFrom-Json\n if($f.state -ne 'off'){throw 'Kill switch did not disable exposure.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'resilience.json') -Raw|ConvertFrom-Json\n if(-not $r.open -or $r.retryBudget -gt 3){throw 'Unbounded/incorrect resilience decision.'}\n",
+      "validate": "$f=az appconfig feature show --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login -o json|ConvertFrom-Json\n if($f.state -ne 'off'){throw 'Kill switch did not disable exposure.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'resilience.json') -Raw|ConvertFrom-Json\n if(-not $r.open -or $r.retryBudget -gt 3){throw 'Unbounded/incorrect resilience decision.'}\n",
+      "evidence": "Before/after flag state, exposure owner/expiry, and breaker window.",
+      "fix": "A configured store flag does not prove application refresh; the optional challenge wires the tested app endpoint and proves both live states."
+    }
+  ],
+  "breakFix": {
+    "trigger": "az appconfig feature enable --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login --yes -o none\n",
+    "diagnose": "az appconfig feature show --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login --query state -o tsv\n",
+    "repair": "az appconfig feature disable --subscription $SubscriptionId --name \"flags-l16-$RunId\" --feature TodoWrites --auth-mode login --yes -o none\n"
+  },
+  "challenge": "Connect an approved disposable App Configuration store, toggle one flag using Entra data authorization, and prove both feature states without republishing the binary.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/azure-app-configuration/feature-management-overview",
+    "https://learn.microsoft.com/en-us/azure/azure-app-configuration/quickstart-feature-flag-aspnet-core",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+  ],
+  "primer": "Deployment and feature exposure are independent. Cohort policy needs ownership/expiry; circuit breakers reduce amplification while bounded retries address transient failures.",
+  "requiresTenantChange": true,
+  "providers": [
+    "Microsoft.AppConfiguration",
+    "Microsoft.Authorization"
+  ],
+  "architecture": {
+    "title": "Feature-management store, identity, and kill switch",
+    "nodes": [
+      {
+        "id": "api",
+        "label": "Sample ASP.NET API",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "manager",
+        "label": "FeatureManagement library",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "store",
+        "label": "Azure App Configuration",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "rbac",
+        "label": "Entra learner + scoped data RBAC",
+        "kind": "identity",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "switch",
+        "label": "TodoWrites feature flag",
+        "kind": "data",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "tests",
+        "label": "Local feature / resilience tests",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "api",
+        "to": "manager",
+        "label": "application feature decision"
+      },
+      {
+        "from": "manager",
+        "to": "store",
+        "label": "optional live refresh path",
+        "style": "dashed"
+      },
+      {
+        "from": "rbac",
+        "to": "store",
+        "label": "identity-based data access"
+      },
+      {
+        "from": "store",
+        "to": "switch",
+        "label": "named flag state"
+      },
+      {
+        "from": "rbac",
+        "to": "switch",
+        "label": "CLI enable / kill switch"
+      },
+      {
+        "from": "tests",
+        "to": "manager",
+        "label": "enabled / disabled behavior"
+      }
+    ],
+    "topology": "The sample FeatureManagement library controls application behavior, and local tests prove both enabled and disabled paths. The owned App Configuration store contains the same TodoWrites key, changed through Entra authentication with a data role scoped to that store. Wiring and observing live application refresh is an explicit additional integration; the core proves actual store writes/reads and the kill switch."
+  }
+}

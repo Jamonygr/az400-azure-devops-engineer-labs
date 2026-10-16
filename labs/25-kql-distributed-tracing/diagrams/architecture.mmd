@@ -1,0 +1,12 @@
+flowchart LR
+  api["Sample API request"]
+  activity["W3C ActivitySource span"]
+  listener["xUnit ActivityListener"]
+  workspace["Owned Log Analytics workspace"]
+  kql["KQL query engine"]
+  tables["Synthetic request / dependency rows"]
+  api -->|instrumented application span| activity
+  activity -->|local trace assertion| listener
+  tables -->|datatable / operation IDs| kql
+  workspace -->|authorized query endpoint| kql
+  kql -->|aggregation / join evidence| listener

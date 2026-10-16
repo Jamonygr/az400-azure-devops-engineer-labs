@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "05",
+  "slug": "05-repository-administration",
+  "title": "Administer repositories, large files, and access",
+  "domain": "source",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "github",
+    "azure-devops"
+  ],
+  "objectives": [
+    "D2.2.1",
+    "D2.2.2",
+    "D2.2.3",
+    "D2.2.4"
+  ],
+  "scenario": "A repository is growing while release tags and contributor access are inconsistent. Separate large-file storage, immutable versions, optimization, and least privilege.",
+  "role": "Source platform engineer",
+  "outcome": "Administer repositories, large files, and access.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inspect repository capabilities and effective permissions",
+      "commands": "gh repo view $GhRepo --json nameWithOwner,visibility,viewerPermission,isArchived,hasIssuesEnabled|Set-Content (Join-Path $WorkRoot 'repository.json')\n az repos list --organization $AdoOrganization --project $AdoProject --query '[].{id:id,name:name,isDisabled:isDisabled}' -o json|Set-Content (Join-Path $WorkRoot 'ado-repositories.json')\n",
+      "expected": "The fresh GitHub repository and project repository inventory are identified.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'repository.json') -Raw|ConvertFrom-Json\n if ($r.nameWithOwner -ne $GhRepo -or $r.viewerPermission -notin @('ADMIN','MAINTAIN','WRITE')) { throw 'Insufficient sandbox repository access.' }\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'repository.json') -Raw|ConvertFrom-Json\n if ($r.isArchived) { throw 'Sandbox must not be archived.' }\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'repository.json') -Raw|ConvertFrom-Json\n if ($r.nameWithOwner -ne $GhRepo -or $r.viewerPermission -notin @('ADMIN','MAINTAIN','WRITE')) { throw 'Insufficient sandbox repository access.' }\n\n$r=Get-Content (Join-Path $WorkRoot 'repository.json') -Raw|ConvertFrom-Json\n if ($r.isArchived) { throw 'Sandbox must not be archived.' }\n",
+      "evidence": "Effective permission, visibility, and repository IDs.",
+      "fix": "Use the sandbox repository; repository administration requires a suitable role."
+    },
+    {
+      "id": "CP2",
+      "title": "Create an LFS-aware local repository",
+      "commands": "$p=Join-Path $WorkRoot 'repository-admin';git init --initial-branch=main $p\n git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n '*.bin filter=lfs diff=lfs merge=lfs -text'|Set-Content (Join-Path $p '.gitattributes')\n 'artifacts/'|Set-Content (Join-Path $p '.gitignore')\n git -C $p add .gitattributes .gitignore;git -C $p commit -m 'Define large-file and artifact policies'\n",
+      "expected": "Attributes assign binary files to LFS and exclude transient build artifacts.",
+      "positive": "$p=Join-Path $WorkRoot 'repository-admin'\n $a=git -C $p check-attr filter -- model.bin\n if ($a -notmatch 'lfs$') { throw 'Binary tracking policy missing.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p ls-files) -match '^artifacts/') { throw 'Transient build artifacts were committed.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'repository-admin'\n $a=git -C $p check-attr filter -- model.bin\n if ($a -notmatch 'lfs$') { throw 'Binary tracking policy missing.' }\n\n$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p ls-files) -match '^artifacts/') { throw 'Transient build artifacts were committed.' }\n",
+      "evidence": "Attributes and tracked file list; Git LFS installation is a separate tool prerequisite.",
+      "fix": "Install Git LFS before storing real large files. git-fat is syllabus context; compare support and security before adoption."
+    },
+    {
+      "id": "CP3",
+      "title": "Tag an immutable release candidate",
+      "commands": "$p=Join-Path $WorkRoot 'repository-admin'\n git -C $p tag -a 'v0.1.0-rc.1' -m \"Run $RunId release candidate\"\n git -C $p show --no-patch 'v0.1.0-rc.1'|Set-Content (Join-Path $WorkRoot 'tag.txt')\n",
+      "expected": "An annotated semantic-version tag resolves to an exact commit.",
+      "positive": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p cat-file -t 'v0.1.0-rc.1') -ne 'tag') { throw 'Release tag must be annotated.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p rev-parse 'v0.1.0-rc.1^{}') -ne (git -C $p rev-parse HEAD)) { throw 'Tag does not identify selected commit.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p cat-file -t 'v0.1.0-rc.1') -ne 'tag') { throw 'Release tag must be annotated.' }\n\n$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p rev-parse 'v0.1.0-rc.1^{}') -ne (git -C $p rev-parse HEAD)) { throw 'Tag does not identify selected commit.' }\n",
+      "evidence": "Tag name, target SHA, and annotation.",
+      "fix": "Use a new version for a changed artifact; avoid moving published release tags."
+    },
+    {
+      "id": "CP4",
+      "title": "Measure object storage and enable local maintenance",
+      "commands": "$p=Join-Path $WorkRoot 'repository-admin'\n git -C $p count-objects -v|Set-Content (Join-Path $WorkRoot 'git-size.txt')\n git -C $p config maintenance.strategy incremental\n git -C $p config core.untrackedCache true\n git -C $p config --local --list|Set-Content (Join-Path $WorkRoot 'local-git-config.txt')\n",
+      "expected": "Local settings and object counters support repository scale analysis.",
+      "positive": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p config --local --get maintenance.strategy) -ne 'incremental') { throw 'Maintenance strategy missing.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p config --local --get core.untrackedCache) -ne 'true') { throw 'Untracked cache was not enabled locally.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p config --local --get maintenance.strategy) -ne 'incremental') { throw 'Maintenance strategy missing.' }\n\n$p=Join-Path $WorkRoot 'repository-admin'\n if ((git -C $p config --local --get core.untrackedCache) -ne 'true') { throw 'Untracked cache was not enabled locally.' }\n",
+      "evidence": "Object count and local configuration; compare Scalar when a real monorepo justifies it.",
+      "fix": "Keep optimization repository-local; test sparse checkout and Scalar on a separate copy."
+    },
+    {
+      "id": "CP5",
+      "title": "Produce an access and sharing decision record",
+      "commands": "$decision=[ordered]@{repository=$GhRepo;humanRole='write';automationRole='contents:read';largeFiles='LFS';sharing='versioned package';tag='v0.1.0-rc.1';reason='Consumers receive immutable versions instead of copied source.'}\n $decision|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'repository-decisions.json')\n",
+      "expected": "Access and cross-repository sharing choices are explicit.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'repository-decisions.json') -Raw|ConvertFrom-Json\n if ($d.automationRole -ne 'contents:read' -or $d.sharing -ne 'versioned package') { throw 'Least-privilege/sharing decision changed.' }\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'repository-decisions.json') -Raw|ConvertFrom-Json\n if ($d.humanRole -eq 'organization owner') { throw 'Repository contribution does not need organization ownership.' }\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'repository-decisions.json') -Raw|ConvertFrom-Json\n if ($d.automationRole -ne 'contents:read' -or $d.sharing -ne 'versioned package') { throw 'Least-privilege/sharing decision changed.' }\n\n$d=Get-Content (Join-Path $WorkRoot 'repository-decisions.json') -Raw|ConvertFrom-Json\n if ($d.humanRole -eq 'organization owner') { throw 'Repository contribution does not need organization ownership.' }\n",
+      "evidence": "Decision record linked to observed repository capabilities.",
+      "fix": "Grant narrow repository permissions; evaluate outside collaborators separately from organization membership."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$p=Join-Path $WorkRoot 'repository-admin';'*.bin -filter'|Set-Content (Join-Path $p '.gitattributes')\n",
+    "diagnose": "$p=Join-Path $WorkRoot 'repository-admin';git -C $p check-attr filter -- model.bin\n",
+    "repair": "$p=Join-Path $WorkRoot 'repository-admin';git -C $p restore .gitattributes\n"
+  },
+  "challenge": "Compare LFS, package feeds, submodules, and source vendoring for a real binary dependency; quantify clone cost and access implications.",
+  "sources": [
+    "https://git-scm.com/docs/gitattributes",
+    "https://git-scm.com/docs/git-maintenance",
+    "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage"
+  ],
+  "primer": "LFS stores pointers in Git and content separately. Artifact/package sharing is often more stable than copied source; annotated tags identify exact release commits.",
+  "architecture": {
+    "title": "Repository content, large files, and immutable references",
+    "nodes": [
+      {
+        "id": "hosts",
+        "label": "GitHub / Azure Repos",
+        "kind": "platform",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "git",
+        "label": "Local Git object store",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "lfs",
+        "label": "LFS content service",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "tags",
+        "label": "Annotated version tag",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "policy",
+        "label": "Access / sharing record",
+        "kind": "evidence",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "consumer",
+        "label": "Versioned package consumer",
+        "kind": "code",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "hosts",
+        "to": "git",
+        "label": "clone and access metadata"
+      },
+      {
+        "from": "git",
+        "to": "lfs",
+        "label": "pointer / object split",
+        "style": "dashed"
+      },
+      {
+        "from": "git",
+        "to": "tags",
+        "label": "exact commit identity"
+      },
+      {
+        "from": "hosts",
+        "to": "policy",
+        "label": "effective role inventory"
+      },
+      {
+        "from": "tags",
+        "to": "policy",
+        "label": "release identity"
+      },
+      {
+        "from": "policy",
+        "to": "consumer",
+        "label": "approved sharing contract",
+        "style": "dashed"
+      }
+    ],
+    "topology": "Hosted repository APIs supply visibility and effective-access metadata; the local Git store holds source and annotated tags. The attributes file defines the LFS pointer/content split, while using a real LFS content service remains a separate integration. The sharing decision recommends immutable packages for consumers rather than untracked source copies."
+  }
+}

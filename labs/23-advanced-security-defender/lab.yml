@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "23",
+  "slug": "23-advanced-security-defender",
+  "title": "Connect advanced security and Defender",
+  "domain": "security",
+  "minutes": 120,
+  "cost": "paid features gated; core inspection only",
+  "platforms": [
+    "local",
+    "github",
+    "azure-devops",
+    "azure"
+  ],
+  "objectives": [
+    "D4.3.2",
+    "D4.3.3",
+    "D4.3.4"
+  ],
+  "scenario": "Security products and Defender connectors are proposed without entitlement or scope review. Establish explicit license, billing, connector, and triage boundaries.",
+  "role": "Security platform owner",
+  "outcome": "Connect advanced security and Defender.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inspect repository security capability metadata",
+      "commands": "gh api \"repos/$GhRepo\" --jq '{name:.full_name,visibility:.visibility,security:.security_and_analysis}'|Set-Content (Join-Path $WorkRoot 'security-capabilities.json')\n",
+      "expected": "Repository visibility and exposed security feature capabilities are recorded.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'security-capabilities.json') -Raw|ConvertFrom-Json\n if($r.name -ne $GhRepo){throw 'Security review targeted another repository.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'security-capabilities.json') -Raw|ConvertFrom-Json\n if($r.visibility -notin @('public','private','internal')){throw 'Unknown capability/visibility context.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'security-capabilities.json') -Raw|ConvertFrom-Json\n if($r.name -ne $GhRepo){throw 'Security review targeted another repository.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'security-capabilities.json') -Raw|ConvertFrom-Json\n if($r.visibility -notin @('public','private','internal')){throw 'Unknown capability/visibility context.'}\n",
+      "evidence": "Feature metadata and plan/license constraints.",
+      "fix": "Capabilities depend on repository ownership/visibility and account licensing; unavailable access is a gate."
+    },
+    {
+      "id": "CP2",
+      "title": "Prepare an explicit Advanced Security entitlement review",
+      "commands": "$entitlement=[ordered]@{github='public-repository supported features; verify current licensing';azureDevOps='GitHub Advanced Security for Azure DevOps requires eligible paid entitlement';approvedPaidActivation=$false;billingOwnerApprovalRequired=$true}\n $entitlement|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'entitlements.json')\n",
+      "expected": "Paid activation remains blocked until an authorized billing owner approves it.",
+      "positive": "$e=Get-Content (Join-Path $WorkRoot 'entitlements.json') -Raw|ConvertFrom-Json\n if(-not $e.billingOwnerApprovalRequired){throw 'Paid entitlement approval absent.'}\n",
+      "negative": "$e=Get-Content (Join-Path $WorkRoot 'entitlements.json') -Raw|ConvertFrom-Json\n if($e.approvedPaidActivation){throw 'This offline review grants no paid entitlement.'}\n",
+      "validate": "$e=Get-Content (Join-Path $WorkRoot 'entitlements.json') -Raw|ConvertFrom-Json\n if(-not $e.billingOwnerApprovalRequired){throw 'Paid entitlement approval absent.'}\n\n$e=Get-Content (Join-Path $WorkRoot 'entitlements.json') -Raw|ConvertFrom-Json\n if($e.approvedPaidActivation){throw 'This offline review grants no paid entitlement.'}\n",
+      "evidence": "Product feature/entitlement matrix dated to the current review.",
+      "fix": "Check current product names, pricing, and eligible repositories before enabling billable scanning."
+    },
+    {
+      "id": "CP3",
+      "title": "Inspect Microsoft Defender pricing state without changing plans",
+      "commands": "az security pricing list --subscription $SubscriptionId --query 'value[].{name:name,tier:pricingTier,subPlan:subPlan}' -o json|Set-Content (Join-Path $WorkRoot 'defender-plans.json')\n",
+      "expected": "Current subscription plan state is read; no Defender plan is enabled.",
+      "positive": "$p=@(Get-Content (Join-Path $WorkRoot 'defender-plans.json') -Raw|ConvertFrom-Json)\n if($p.Count -lt 1){throw 'No readable Defender pricing inventory.'}\n",
+      "negative": "$p=@(Get-Content (Join-Path $WorkRoot 'defender-plans.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { $_.tier -notin @('Free','Standard') }).Count){throw 'Unknown Defender plan tier requires review.'}\n",
+      "validate": "$p=@(Get-Content (Join-Path $WorkRoot 'defender-plans.json') -Raw|ConvertFrom-Json)\n if($p.Count -lt 1){throw 'No readable Defender pricing inventory.'}\n\n$p=@(Get-Content (Join-Path $WorkRoot 'defender-plans.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { $_.tier -notin @('Free','Standard') }).Count){throw 'Unknown Defender plan tier requires review.'}\n",
+      "evidence": "Plan names/tier, with subscription identity redacted.",
+      "fix": "Security Reader permission may be needed. Never call pricing create/update to bypass a missing entitlement."
+    },
+    {
+      "id": "CP4",
+      "title": "Map GitHub and Azure DevOps findings into Defender governance",
+      "commands": "$mapping=@([ordered]@{source='GitHub';signal='code/dependency/secret';connectorOwner='security-admin';scope=$GhRepo},[ordered]@{source='Azure DevOps';signal='advanced-security';connectorOwner='security-admin';scope=$AdoProject})\n $mapping|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connector-review.json')\n",
+      "expected": "Connector ownership and selected repository/project scope are explicit; no organization connector is created.",
+      "positive": "$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)\n if($m.Count -ne 2 -or @($m|Where-Object connectorOwner -ne 'security-admin').Count){throw 'Security connector governance incomplete.'}\n",
+      "negative": "$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)\n if('*' -in $m.scope){throw 'Connector scope must not select every organization repository.'}\n",
+      "validate": "$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)\n if($m.Count -ne 2 -or @($m|Where-Object connectorOwner -ne 'security-admin').Count){throw 'Security connector governance incomplete.'}\n\n$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)\n if('*' -in $m.scope){throw 'Connector scope must not select every organization repository.'}\n",
+      "evidence": "Connector design with explicit authorization and billing boundaries.",
+      "fix": "Use separate one-time privileged bootstrap for connectors; repository ownership does not authorize organization-wide collection."
+    },
+    {
+      "id": "CP5",
+      "title": "Triage a synthetic finding with an evidence-based decision",
+      "commands": "$finding=[ordered]@{id='training-codeql-001';severity='high';reachable=$true;owner='sample-maintainer';action='fix before release';dismissed=$false;evidence='request input reaches unsafe sink in synthetic example';falsePositive=$false}\n $finding|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')\n",
+      "expected": "A reachable high finding blocks release and has a named remediation owner.",
+      "positive": "$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json\n if($f.action -ne 'fix before release' -or -not $f.reachable){throw 'Triage decision inconsistent with evidence.'}\n",
+      "negative": "$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json\n if($f.dismissed -or $f.falsePositive){throw 'Synthetic reachable finding cannot be dismissed without contrary evidence.'}\n",
+      "validate": "$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json\n if($f.action -ne 'fix before release' -or -not $f.reachable){throw 'Triage decision inconsistent with evidence.'}\n\n$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json\n if($f.dismissed -or $f.falsePositive){throw 'Synthetic reachable finding cannot be dismissed without contrary evidence.'}\n",
+      "evidence": "Finding ID, owner, reachability rationale, and remediation criteria.",
+      "fix": "Record concrete false-positive evidence before dismissal; severity changes require traceable review."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json;$f.dismissed=$true;$f|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'triage.json')\n",
+    "repair": "$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json;$f.dismissed=$false;$f|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')\n"
+  },
+  "challenge": "In a separately authorized licensed sandbox, enable the eligible security product, generate a harmless test alert, correlate it in Defender, and document connector removal and billing cleanup.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction",
+    "https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security",
+    "https://docs.github.com/en/code-security/getting-started/github-security-features"
+  ],
+  "primer": "Advanced security capabilities vary with visibility and entitlement. Defender integration does not justify organization-wide collection or subscription billing changes from a repository lab.",
+  "architecture": {
+    "title": "Security entitlement and scoped Defender integration",
+    "nodes": [
+      {
+        "id": "github",
+        "label": "GitHub security capabilities",
+        "kind": "platform",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "license",
+        "label": "Entitlement / billing owner",
+        "kind": "identity",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "defender",
+        "label": "Microsoft Defender plan state",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "connector",
+        "label": "Scoped DevOps connector proposal",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "ado",
+        "label": "Azure DevOps Advanced Security",
+        "kind": "platform",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "triage",
+        "label": "Finding owner + triage evidence",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "github",
+        "to": "license",
+        "label": "eligible feature review"
+      },
+      {
+        "from": "license",
+        "to": "defender",
+        "label": "separate paid authorization",
+        "style": "dashed"
+      },
+      {
+        "from": "github",
+        "to": "connector",
+        "label": "selected repository signals",
+        "style": "dashed"
+      },
+      {
+        "from": "ado",
+        "to": "connector",
+        "label": "selected project signals",
+        "style": "dashed"
+      },
+      {
+        "from": "connector",
+        "to": "defender",
+        "label": "separate approved connection",
+        "style": "dashed"
+      },
+      {
+        "from": "defender",
+        "to": "triage",
+        "label": "correlated findings",
+        "style": "dashed"
+      }
+    ],
+    "topology": "GitHub capability metadata and subscription Defender plan reads inform an entitlement review; they do not enable a paid product. Connector proposals select only the owned repository/project and need a security/billing owner. A synthetic finding exercises triage ownership while real Advanced Security activation and Defender correlation remain explicitly gated integrations."
+  }
+}

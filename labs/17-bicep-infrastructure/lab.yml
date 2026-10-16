@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "17",
+  "slug": "17-bicep-infrastructure",
+  "title": "Validate and deploy infrastructure with Bicep",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "billable; explicit acknowledgement",
+  "platforms": [
+    "local",
+    "azure"
+  ],
+  "objectives": [
+    "D3.5.3",
+    "D3.5.4"
+  ],
+  "scenario": "The team needs an infrastructure change that can be compiled, previewed, deployed, and independently checked in one owned resource group.",
+  "role": "Infrastructure delivery engineer",
+  "outcome": "Validate and deploy infrastructure with Bicep.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Compile the independent core infrastructure",
+      "commands": "$file=Join-Path $LabRoot 'artifacts/core.bicep';az bicep lint --file $file\n az bicep build --file $file --outfile (Join-Path $WorkRoot 'core.json')\n if($LASTEXITCODE -ne 0){throw 'Core Bicep compilation failed.'}\n",
+      "expected": "The core template compiles to exactly a storage account and an RG-contained identity.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'core.json') -Raw|ConvertFrom-Json\n if(@($t.resources).Count -ne 2){throw 'Unexpected core resource count.'}\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'core.json') -Raw|ConvertFrom-Json\n if('Microsoft.Sql/servers' -in $t.resources.type -or 'Microsoft.KeyVault/vaults' -in $t.resources.type){throw 'Core must not create database or soft-delete vault prerequisites.'}\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'core.json') -Raw|ConvertFrom-Json\n if(@($t.resources).Count -ne 2){throw 'Unexpected core resource count.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'core.json') -Raw|ConvertFrom-Json\n if('Microsoft.Sql/servers' -in $t.resources.type -or 'Microsoft.KeyVault/vaults' -in $t.resources.type){throw 'Core must not create database or soft-delete vault prerequisites.'}\n",
+      "evidence": "Compiled template SHA and resource-type allowlist.",
+      "fix": "Use core.bicep for the independent lane; main.bicep is the advanced SQL-integrated workload."
+    },
+    {
+      "id": "CP2",
+      "title": "Validate and preview the exact owned-group changes",
+      "commands": "$file=Join-Path $LabRoot 'artifacts/core.bicep'\n az deployment group validate --subscription $SubscriptionId --resource-group $ResourceGroup --template-file $file --parameters \"labRunId=$RunId\" -o json|Set-Content (Join-Path $WorkRoot 'template-validation.json')\n az deployment group what-if --subscription $SubscriptionId --resource-group $ResourceGroup --template-file $file --parameters \"labRunId=$RunId\" --result-format FullResourcePayloads -o json|Set-Content (Join-Path $WorkRoot 'what-if.json')\n",
+      "expected": "ARM validates the core inputs and what-if lists only changes scoped to the run-owned group.",
+      "positive": "$w=Get-Content (Join-Path $WorkRoot 'what-if.json') -Raw|ConvertFrom-Json\n if($w.status -ne 'Succeeded'){throw 'What-if did not succeed.'}\n",
+      "negative": "$w=Get-Content (Join-Path $WorkRoot 'what-if.json') -Raw|ConvertFrom-Json\n $prefix=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/\"\n if(@($w.changes|Where-Object { $_.resourceId -notlike \"$prefix*\" }).Count){throw 'What-if escaped owned scope.'}\n",
+      "validate": "$w=Get-Content (Join-Path $WorkRoot 'what-if.json') -Raw|ConvertFrom-Json\n if($w.status -ne 'Succeeded'){throw 'What-if did not succeed.'}\n\n$w=Get-Content (Join-Path $WorkRoot 'what-if.json') -Raw|ConvertFrom-Json\n $prefix=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/\"\n if(@($w.changes|Where-Object { $_.resourceId -notlike \"$prefix*\" }).Count){throw 'What-if escaped owned scope.'}\n",
+      "evidence": "What-if resource IDs/change types and validation outcome.",
+      "fix": "Stop on unexpected deletes, SKU changes, or scope. A successful what-if is a preview, not deployment authorization."
+    },
+    {
+      "id": "CP3",
+      "title": "Deploy the reviewed storage and identity core",
+      "commands": "$file=Join-Path $LabRoot 'artifacts/core.bicep'\n az deployment group create --subscription $SubscriptionId --resource-group $ResourceGroup --name \"core-$RunId\" --mode Incremental --template-file $file --parameters \"labRunId=$RunId\" -o json|Set-Content (Join-Path $WorkRoot 'core-deployment.json')\n if($LASTEXITCODE -ne 0){throw 'Owned core deployment failed; retain partial-state manifest.'}\n",
+      "expected": "The declared two-resource core reaches Succeeded inside the owned group.",
+      "positive": "$d=az deployment group show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"core-$RunId\" -o json|ConvertFrom-Json\n if($d.properties.provisioningState -ne 'Succeeded'){throw 'Core deployment not successful.'}\n",
+      "negative": "$d=az deployment group show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"core-$RunId\" -o json|ConvertFrom-Json\n if($d.properties.mode -ne 'Incremental'){throw 'Unexpected destructive complete-mode deployment.'}\n",
+      "validate": "$d=az deployment group show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"core-$RunId\" -o json|ConvertFrom-Json\n if($d.properties.provisioningState -ne 'Succeeded'){throw 'Core deployment not successful.'}\n\n$d=az deployment group show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"core-$RunId\" -o json|ConvertFrom-Json\n if($d.properties.mode -ne 'Incremental'){throw 'Unexpected destructive complete-mode deployment.'}\n",
+      "evidence": "Deployment ID, result, template digest, and explicit parameter/run identity.",
+      "fix": "Inspect deployment operations before retry; retain owned group so cleanup can recover partial resource creation."
+    },
+    {
+      "id": "CP4",
+      "title": "Assert the deployed security properties from service reads",
+      "commands": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json;$o=$d.properties.outputs\n az storage account show --subscription $SubscriptionId --ids $o.storageAccountId.value -o json|Set-Content (Join-Path $WorkRoot 'deployed-storage.json')\n az identity show --subscription $SubscriptionId --ids $o.identityId.value -o json|Set-Content (Join-Path $WorkRoot 'deployed-identity.json')\n",
+      "expected": "Storage enforces HTTPS/TLS, disables shared keys/public networking, and matches the declared identity output.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $s=az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value -o json|ConvertFrom-Json\n if(-not $s.enableHttpsTrafficOnly -or $s.minimumTlsVersion -ne 'TLS1_2' -or $s.tags.'az400-run' -ne $RunId){throw 'Storage hardening or ownership mismatch.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $s=az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value -o json|ConvertFrom-Json\n if($s.allowSharedKeyAccess -or $s.publicNetworkAccess -ne 'Disabled'){throw 'Storage exposed a denied access path.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $s=az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value -o json|ConvertFrom-Json\n if(-not $s.enableHttpsTrafficOnly -or $s.minimumTlsVersion -ne 'TLS1_2' -or $s.tags.'az400-run' -ne $RunId){throw 'Storage hardening or ownership mismatch.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $s=az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value -o json|ConvertFrom-Json\n if($s.allowSharedKeyAccess -or $s.publicNetworkAccess -ne 'Disabled'){throw 'Storage exposed a denied access path.'}\n",
+      "evidence": "Queried storage settings and identity principal, with IDs redacted for sharing.",
+      "fix": "Control-plane assertions need no storage data access; public-network denial is intentional."
+    },
+    {
+      "id": "CP5",
+      "title": "Check declared identity and capture post-deployment drift preview",
+      "commands": "$file=Join-Path $LabRoot 'artifacts/core.bicep'\n az deployment group what-if --subscription $SubscriptionId --resource-group $ResourceGroup --template-file $file --parameters \"labRunId=$RunId\" -o json|Set-Content (Join-Path $WorkRoot 'what-if-after.json')\n $d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n [ordered]@{deployment=$d.id;coreTemplateSha=(Get-FileHash (Join-Path $WorkRoot 'core.json')).Hash;advancedSqlLane='not executed; separate SQL/network prerequisites'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'iac-evidence.json')\n",
+      "expected": "Independent identity reads agree with outputs, and post-deployment what-if is available for drift review.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $m=az identity show --subscription $SubscriptionId --ids $d.properties.outputs.identityId.value -o json|ConvertFrom-Json\n if($m.principalId -ne $d.properties.outputs.identityPrincipalId.value -or $m.tags.'az400-run' -ne $RunId){throw 'Identity output/ownership mismatch.'}\n",
+      "negative": "$w=Get-Content (Join-Path $WorkRoot 'what-if-after.json') -Raw|ConvertFrom-Json\n if(@($w.changes|Where-Object changeType -eq 'Delete').Count){throw 'Unexpected destructive post-deployment drift.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\n $m=az identity show --subscription $SubscriptionId --ids $d.properties.outputs.identityId.value -o json|ConvertFrom-Json\n if($m.principalId -ne $d.properties.outputs.identityPrincipalId.value -or $m.tags.'az400-run' -ne $RunId){throw 'Identity output/ownership mismatch.'}\n\n$w=Get-Content (Join-Path $WorkRoot 'what-if-after.json') -Raw|ConvertFrom-Json\n if(@($w.changes|Where-Object changeType -eq 'Delete').Count){throw 'Unexpected destructive post-deployment drift.'}\n",
+      "evidence": "Before/after what-if, output assertions, and explicit advanced-lane status.",
+      "fix": "Investigate noisy provider defaults separately from real drift; never treat all Modify output as harmless."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\naz tag update --subscription $SubscriptionId --resource-id $d.properties.outputs.storageAccountId.value --operation Merge --tags az400-run=wrong-run -o none\n",
+    "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json\naz storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value --query tags -o json\n",
+    "repair": "az deployment group create --subscription $SubscriptionId --resource-group $ResourceGroup --name \"repair-$RunId\" --template-file (Join-Path $LabRoot 'artifacts/core.bicep') --parameters \"labRunId=$RunId\" -o none\n"
+  },
+  "challenge": "Execute advanced main.bicep only with separately approved Entra SQL/database users, network prerequisites, federation, pricing, and a vault soft-delete residual audit; no prerequisite means this advanced integration stays partial.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview",
+    "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-what-if",
+    "https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer"
+  ],
+  "primer": "Bicep describes desired ARM state; what-if previews changes but does not grant approval. The core deploys isolated Storage and a managed identity; advanced main.bicep has separate SQL/network prerequisites.",
+  "providers": [
+    "Microsoft.Storage",
+    "Microsoft.ManagedIdentity"
+  ],
+  "architecture": {
+    "title": "Bicep deployment through ARM into an owned group",
+    "nodes": [
+      {
+        "id": "shell",
+        "label": "PowerShell + Bicep source",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "arm",
+        "label": "Azure Resource Manager",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "group",
+        "label": "Run-owned resource group",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "storage",
+        "label": "Hardened StorageV2 account",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "identity",
+        "label": "User-assigned managed identity",
+        "kind": "identity",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "journal",
+        "label": "What-if / outputs / manifest",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "shell",
+        "to": "arm",
+        "label": "compile / what-if / deploy"
+      },
+      {
+        "from": "arm",
+        "to": "group",
+        "label": "explicit subscription + scope"
+      },
+      {
+        "from": "group",
+        "to": "storage",
+        "label": "declared storage resource"
+      },
+      {
+        "from": "group",
+        "to": "identity",
+        "label": "declared RG identity"
+      },
+      {
+        "from": "arm",
+        "to": "journal",
+        "label": "deployment outputs"
+      },
+      {
+        "from": "storage",
+        "to": "journal",
+        "label": "security property reads"
+      },
+      {
+        "from": "identity",
+        "to": "journal",
+        "label": "principal / ownership reads"
+      }
+    ],
+    "topology": "PowerShell compiles Bicep and sends validate, what-if, and explicit deployment requests to ARM at the exact owned resource-group scope. The core creates a hardened StorageV2 account and user-assigned managed identity. Independent control-plane reads compare security properties and identity outputs with the local manifest; no public storage data access or SQL dependency is needed for this core."
+  }
+}

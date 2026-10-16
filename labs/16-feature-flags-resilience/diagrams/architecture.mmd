@@ -1,0 +1,13 @@
+flowchart LR
+  api["Sample ASP.NET API"]
+  manager["FeatureManagement library"]
+  store["Azure App Configuration"]
+  rbac["Entra learner + scoped data RBAC"]
+  switch["TodoWrites feature flag"]
+  tests["Local feature / resilience tests"]
+  api -->|application feature decision| manager
+  manager -.->|optional live refresh path| store
+  rbac -->|identity-based data access| store
+  store -->|named flag state| switch
+  rbac -->|CLI enable / kill switch| switch
+  tests -->|enabled / disabled behavior| manager

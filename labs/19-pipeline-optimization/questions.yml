@@ -1,0 +1,1931 @@
+{
+  "schemaVersion": 1,
+  "labId": "19",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/policies/retention?view=azure-devops"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/migrate/from-classic-pipelines?view=azure-devops"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L19-Q001",
+      "checkpointId": "CP1",
+      "caseId": "L19-C01",
+      "task": "remedy",
+      "caseContext": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate representative triggers and preserve a bounded fallback",
+          "rationale": "One happy-path run does not establish complete equivalence. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Track duration distributions and failure trends across comparable runs",
+          "rationale": "One run cannot characterize pipeline health. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a cache keyed by relevant dependency inputs",
+          "rationale": "Repeated identical dependencies are suitable cache candidates. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "One run cannot characterize pipeline health. The selected answer is track duration distributions and failure trends across comparable runs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q002",
+      "checkpointId": "CP1",
+      "caseId": "L19-C01",
+      "task": "diagnosis",
+      "caseContext": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The dashboard lacks historical and failed-run context",
+          "rationale": "Latest success can hide sustained degradation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The pipeline repeatedly downloads reusable inputs",
+          "rationale": "The work is not unique to each source change. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The migration acceptance sample omits important execution modes",
+          "rationale": "Scheduled and release behavior can differ from manual runs. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Latest success can hide sustained degradation. The selected answer is the dashboard lacks historical and failed-run context.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q003",
+      "checkpointId": "CP1",
+      "caseId": "L19-C01",
+      "task": "verification",
+      "caseContext": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "applied",
+      "question": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Required trigger and failure scenarios pass on the YAML path",
+          "rationale": "The evidence should cover the operational contract. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A stable cohort shows the timing change and affected stage",
+          "rationale": "The evidence should identify where time increased. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Cache hits reduce restore time without changing test results",
+          "rationale": "Acceleration must preserve correctness. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence should identify where time increased. The selected answer is a stable cohort shows the timing change and affected stage.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q004",
+      "checkpointId": "CP1",
+      "caseId": "L19-C01",
+      "task": "safeguard",
+      "caseContext": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "applied",
+      "question": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Treat cache misses as supported normal execution",
+          "rationale": "A cache should not be required to produce correct output. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Freeze conflicting writes while comparing deployment paths",
+          "rationale": "Two active release systems can change the same target. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Compare equivalent branches agents and workload sizes",
+          "rationale": "Mixed populations can create false trends. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Mixed populations can create false trends. The selected answer is compare equivalent branches agents and workload sizes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q005",
+      "checkpointId": "CP1",
+      "caseId": "L19-C01",
+      "task": "tradeoff",
+      "caseContext": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Pipeline regression: Median build duration increased after a tool update, but the dashboard shows only the latest successful run. The team selects this remedy: \"Track duration distributions and failure trends across comparable runs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Detailed telemetry adds reporting overhead",
+          "rationale": "Collect signals that support operational decisions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Caching adds invalidation and storage complexity",
+          "rationale": "Incorrect keys can preserve stale dependencies. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Temporary dual maintenance increases effort",
+          "rationale": "A clear retirement milestone avoids indefinite duplication. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Collect signals that support operational decisions. The selected answer is detailed telemetry adds reporting overhead.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q006",
+      "checkpointId": "CP2",
+      "caseId": "L19-C02",
+      "task": "remedy",
+      "caseContext": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Publish the binary as a versioned pipeline artifact",
+          "rationale": "Release deliverables need explicit retained provenance. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Track duration distributions and failure trends across comparable runs",
+          "rationale": "One run cannot characterize pipeline health. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a cache keyed by relevant dependency inputs",
+          "rationale": "Repeated identical dependencies are suitable cache candidates. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Repeated identical dependencies are suitable cache candidates. The selected answer is use a cache keyed by relevant dependency inputs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q007",
+      "checkpointId": "CP2",
+      "caseId": "L19-C02",
+      "task": "diagnosis",
+      "caseContext": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Caches are optimizations rather than release records",
+          "rationale": "Their lifecycle does not guarantee artifact availability. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The dashboard lacks historical and failed-run context",
+          "rationale": "Latest success can hide sustained degradation. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The pipeline repeatedly downloads reusable inputs",
+          "rationale": "The work is not unique to each source change. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The work is not unique to each source change. The selected answer is the pipeline repeatedly downloads reusable inputs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q008",
+      "checkpointId": "CP2",
+      "caseId": "L19-C02",
+      "task": "verification",
+      "caseContext": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The approved run exposes a downloadable identified artifact",
+          "rationale": "The output should survive as a deliberate deliverable. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A stable cohort shows the timing change and affected stage",
+          "rationale": "The evidence should identify where time increased. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Cache hits reduce restore time without changing test results",
+          "rationale": "Acceleration must preserve correctness. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Acceleration must preserve correctness. The selected answer is cache hits reduce restore time without changing test results.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q009",
+      "checkpointId": "CP2",
+      "caseId": "L19-C02",
+      "task": "safeguard",
+      "caseContext": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare equivalent branches agents and workload sizes",
+          "rationale": "Mixed populations can create false trends. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Treat cache misses as supported normal execution",
+          "rationale": "A cache should not be required to produce correct output. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Keep artifact identity separate from cache keys",
+          "rationale": "A cache hit cannot establish release provenance. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A cache should not be required to produce correct output. The selected answer is treat cache misses as supported normal execution.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q010",
+      "checkpointId": "CP2",
+      "caseId": "L19-C02",
+      "task": "tradeoff",
+      "caseContext": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Slow restore: Dependency download dominates builds while the dependency lock file rarely changes. The team selects this remedy: \"Use a cache keyed by relevant dependency inputs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Caching adds invalidation and storage complexity",
+          "rationale": "Incorrect keys can preserve stale dependencies. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Artifacts consume retained storage",
+          "rationale": "Retention must match release and recovery needs. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Detailed telemetry adds reporting overhead",
+          "rationale": "Collect signals that support operational decisions. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Incorrect keys can preserve stale dependencies. The selected answer is caching adds invalidation and storage complexity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q011",
+      "checkpointId": "CP4",
+      "caseId": "L19-C03",
+      "task": "remedy",
+      "caseContext": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallelize independent tests after confirming their isolation",
+          "rationale": "Unused capacity can reduce elapsed validation time. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use a cache keyed by relevant dependency inputs",
+          "rationale": "Repeated identical dependencies are suitable cache candidates. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Publish the binary as a versioned pipeline artifact",
+          "rationale": "Release deliverables need explicit retained provenance. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Release deliverables need explicit retained provenance. The selected answer is publish the binary as a versioned pipeline artifact.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q012",
+      "checkpointId": "CP4",
+      "caseId": "L19-C03",
+      "task": "diagnosis",
+      "caseContext": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pipeline repeatedly downloads reusable inputs",
+          "rationale": "The work is not unique to each source change. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Caches are optimizations rather than release records",
+          "rationale": "Their lifecycle does not guarantee artifact availability. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The dependency graph unnecessarily serializes the work",
+          "rationale": "More agents cannot overcome artificial ordering. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Their lifecycle does not guarantee artifact availability. The selected answer is caches are optimizations rather than release records.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q013",
+      "checkpointId": "CP4",
+      "caseId": "L19-C03",
+      "task": "verification",
+      "caseContext": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The approved run exposes a downloadable identified artifact",
+          "rationale": "The output should survive as a deliberate deliverable. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Test jobs overlap and produce the same valid results",
+          "rationale": "The improvement must preserve outcome integrity. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Cache hits reduce restore time without changing test results",
+          "rationale": "Acceleration must preserve correctness. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The output should survive as a deliberate deliverable. The selected answer is the approved run exposes a downloadable identified artifact.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q014",
+      "checkpointId": "CP4",
+      "caseId": "L19-C03",
+      "task": "safeguard",
+      "caseContext": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Treat cache misses as supported normal execution",
+          "rationale": "A cache should not be required to produce correct output. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep artifact identity separate from cache keys",
+          "rationale": "A cache hit cannot establish release provenance. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Prevent tests from colliding on shared mutable fixtures",
+          "rationale": "Parallel execution can introduce nondeterministic failures. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A cache hit cannot establish release provenance. The selected answer is keep artifact identity separate from cache keys.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q015",
+      "checkpointId": "CP4",
+      "caseId": "L19-C03",
+      "task": "tradeoff",
+      "caseContext": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary.",
+      "objectiveIds": [
+        "D3.6.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Wrong cache purpose: A release uses a dependency cache as the only storage for the tested application binary. The team selects this remedy: \"Publish the binary as a versioned pipeline artifact.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Caching adds invalidation and storage complexity",
+          "rationale": "Incorrect keys can preserve stale dependencies. That addresses a different requirement: Slow restore. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Artifacts consume retained storage",
+          "rationale": "Retention must match release and recovery needs. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Higher parallelism increases peak resource demand",
+          "rationale": "Faster runs may cost more than sequential execution. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Retention must match release and recovery needs. The selected answer is artifacts consume retained storage.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q016",
+      "checkpointId": "CP3",
+      "caseId": "L19-C04",
+      "task": "remedy",
+      "caseContext": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallelize independent tests after confirming their isolation",
+          "rationale": "Unused capacity can reduce elapsed validation time. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Measure critical-path benefit before expanding concurrency",
+          "rationale": "Capacity should address the actual limiting stage. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Publish the binary as a versioned pipeline artifact",
+          "rationale": "Release deliverables need explicit retained provenance. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Unused capacity can reduce elapsed validation time. The selected answer is parallelize independent tests after confirming their isolation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q017",
+      "checkpointId": "CP3",
+      "caseId": "L19-C04",
+      "task": "diagnosis",
+      "caseContext": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "applied",
+      "question": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pipeline bottleneck is not the parallelized work",
+          "rationale": "More slots deliver little useful elapsed-time improvement. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Caches are optimizations rather than release records",
+          "rationale": "Their lifecycle does not guarantee artifact availability. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The dependency graph unnecessarily serializes the work",
+          "rationale": "More agents cannot overcome artificial ordering. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "More agents cannot overcome artificial ordering. The selected answer is the dependency graph unnecessarily serializes the work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q018",
+      "checkpointId": "CP3",
+      "caseId": "L19-C04",
+      "task": "verification",
+      "caseContext": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "applied",
+      "question": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The approved run exposes a downloadable identified artifact",
+          "rationale": "The output should survive as a deliberate deliverable. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Test jobs overlap and produce the same valid results",
+          "rationale": "The improvement must preserve outcome integrity. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A capacity change shows justified duration and cost impact",
+          "rationale": "The comparison should include both performance and spend. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The improvement must preserve outcome integrity. The selected answer is test jobs overlap and produce the same valid results.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q019",
+      "checkpointId": "CP3",
+      "caseId": "L19-C04",
+      "task": "safeguard",
+      "caseContext": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "applied",
+      "question": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use comparable workloads when evaluating optimization",
+          "rationale": "Different changes can confound the apparent improvement. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep artifact identity separate from cache keys",
+          "rationale": "A cache hit cannot establish release provenance. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Prevent tests from colliding on shared mutable fixtures",
+          "rationale": "Parallel execution can introduce nondeterministic failures. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Parallel execution can introduce nondeterministic failures. The selected answer is prevent tests from colliding on shared mutable fixtures.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q020",
+      "checkpointId": "CP3",
+      "caseId": "L19-C04",
+      "task": "tradeoff",
+      "caseContext": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Parallel bottleneck: Independent tests run in sequence even though paid parallel capacity is idle. The team selects this remedy: \"Parallelize independent tests after confirming their isolation.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Artifacts consume retained storage",
+          "rationale": "Retention must match release and recovery needs. That addresses a different requirement: Wrong cache purpose. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Higher parallelism increases peak resource demand",
+          "rationale": "Faster runs may cost more than sequential execution. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Maximum concurrency is not always optimal",
+          "rationale": "Cost-efficient throughput can require a deliberate limit. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Faster runs may cost more than sequential execution. The selected answer is higher parallelism increases peak resource demand.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q021",
+      "checkpointId": "CP3",
+      "caseId": "L19-C05",
+      "task": "remedy",
+      "caseContext": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Measure critical-path benefit before expanding concurrency",
+          "rationale": "Capacity should address the actual limiting stage. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Retain artifacts according to support and recovery requirements",
+          "rationale": "Retention must preserve required operational inputs. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Parallelize independent tests after confirming their isolation",
+          "rationale": "Unused capacity can reduce elapsed validation time. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Capacity should address the actual limiting stage. The selected answer is measure critical-path benefit before expanding concurrency.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q022",
+      "checkpointId": "CP3",
+      "caseId": "L19-C05",
+      "task": "diagnosis",
+      "caseContext": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pipeline bottleneck is not the parallelized work",
+          "rationale": "More slots deliver little useful elapsed-time improvement. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Generic age-based cleanup ignores active release obligations",
+          "rationale": "An old artifact can still be operationally necessary. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The dependency graph unnecessarily serializes the work",
+          "rationale": "More agents cannot overcome artificial ordering. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "More slots deliver little useful elapsed-time improvement. The selected answer is the pipeline bottleneck is not the parallelized work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q023",
+      "checkpointId": "CP3",
+      "caseId": "L19-C05",
+      "task": "verification",
+      "caseContext": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Supported releases retain their identified deployable artifacts",
+          "rationale": "The test should exercise an actual redeployment lookup. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Test jobs overlap and produce the same valid results",
+          "rationale": "The improvement must preserve outcome integrity. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A capacity change shows justified duration and cost impact",
+          "rationale": "The comparison should include both performance and spend. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The comparison should include both performance and spend. The selected answer is a capacity change shows justified duration and cost impact.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q024",
+      "checkpointId": "CP3",
+      "caseId": "L19-C05",
+      "task": "safeguard",
+      "caseContext": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review retention exceptions and prevent unlimited accumulation",
+          "rationale": "Indefinite preservation can create unnecessary storage and exposure. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Prevent tests from colliding on shared mutable fixtures",
+          "rationale": "Parallel execution can introduce nondeterministic failures. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use comparable workloads when evaluating optimization",
+          "rationale": "Different changes can confound the apparent improvement. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Different changes can confound the apparent improvement. The selected answer is use comparable workloads when evaluating optimization.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q025",
+      "checkpointId": "CP3",
+      "caseId": "L19-C05",
+      "task": "tradeoff",
+      "caseContext": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path.",
+      "objectiveIds": [
+        "D3.6.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Cost spike: Increasing concurrency cuts queue time slightly but doubles runner costs without improving the critical path. The team selects this remedy: \"Measure critical-path benefit before expanding concurrency.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Long recovery windows increase storage needs",
+          "rationale": "The retention policy should explain that cost. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Higher parallelism increases peak resource demand",
+          "rationale": "Faster runs may cost more than sequential execution. That addresses a different requirement: Parallel bottleneck. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Maximum concurrency is not always optimal",
+          "rationale": "Cost-efficient throughput can require a deliberate limit. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Cost-efficient throughput can require a deliberate limit. The selected answer is maximum concurrency is not always optimal.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q026",
+      "checkpointId": "CP4",
+      "caseId": "L19-C06",
+      "task": "remedy",
+      "caseContext": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release.",
+      "objectiveIds": [
+        "D3.6.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Measure critical-path benefit before expanding concurrency",
+          "rationale": "Capacity should address the actual limiting stage. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Retain artifacts according to support and recovery requirements",
+          "rationale": "Retention must preserve required operational inputs. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Inventory behavior and protected resources before validating equivalence",
+          "rationale": "Migration must preserve governance as well as task order. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Retention must preserve required operational inputs. The selected answer is retain artifacts according to support and recovery requirements.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q027",
+      "checkpointId": "CP4",
+      "caseId": "L19-C06",
+      "task": "diagnosis",
+      "caseContext": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release.",
+      "objectiveIds": [
+        "D3.6.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pipeline bottleneck is not the parallelized work",
+          "rationale": "More slots deliver little useful elapsed-time improvement. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Generic age-based cleanup ignores active release obligations",
+          "rationale": "An old artifact can still be operationally necessary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The conversion copied steps without the surrounding controls",
+          "rationale": "Pipeline semantics extend beyond visible task definitions. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "An old artifact can still be operationally necessary. The selected answer is generic age-based cleanup ignores active release obligations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q028",
+      "checkpointId": "CP4",
+      "caseId": "L19-C06",
+      "task": "verification",
+      "caseContext": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release.",
+      "objectiveIds": [
+        "D3.6.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A capacity change shows justified duration and cost impact",
+          "rationale": "The comparison should include both performance and spend. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Supported releases retain their identified deployable artifacts",
+          "rationale": "The test should exercise an actual redeployment lookup. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The YAML path enforces required approvals variables and outcomes",
+          "rationale": "Acceptance should compare important behavior end to end. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test should exercise an actual redeployment lookup. The selected answer is supported releases retain their identified deployable artifacts.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q029",
+      "checkpointId": "CP4",
+      "caseId": "L19-C06",
+      "task": "safeguard",
+      "caseContext": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release.",
+      "objectiveIds": [
+        "D3.6.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use comparable workloads when evaluating optimization",
+          "rationale": "Different changes can confound the apparent improvement. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Review retention exceptions and prevent unlimited accumulation",
+          "rationale": "Indefinite preservation can create unnecessary storage and exposure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Rehearse on a training target before retiring the old pipeline",
+          "rationale": "Parallel validation reduces migration surprises. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Indefinite preservation can create unnecessary storage and exposure. The selected answer is review retention exceptions and prevent unlimited accumulation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q030",
+      "checkpointId": "CP4",
+      "caseId": "L19-C06",
+      "task": "tradeoff",
+      "caseContext": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release.",
+      "objectiveIds": [
+        "D3.6.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Rollback artifact deleted: Automatic retention removes the binary still needed to redeploy the currently supported release. The team selects this remedy: \"Retain artifacts according to support and recovery requirements.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Long recovery windows increase storage needs",
+          "rationale": "The retention policy should explain that cost. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Equivalent YAML may require different platform constructs",
+          "rationale": "Migration is not always a mechanical export. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Maximum concurrency is not always optimal",
+          "rationale": "Cost-efficient throughput can require a deliberate limit. That addresses a different requirement: Cost spike. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The retention policy should explain that cost. The selected answer is long recovery windows increase storage needs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q031",
+      "checkpointId": "CP5",
+      "caseId": "L19-C07",
+      "task": "remedy",
+      "caseContext": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted.",
+      "objectiveIds": [
+        "D3.6.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Include initial failures retries and flake classification",
+          "rationale": "Reliability reporting should preserve failed execution evidence. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Retain artifacts according to support and recovery requirements",
+          "rationale": "Retention must preserve required operational inputs. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Inventory behavior and protected resources before validating equivalence",
+          "rationale": "Migration must preserve governance as well as task order. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Migration must preserve governance as well as task order. The selected answer is inventory behavior and protected resources before validating equivalence.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q032",
+      "checkpointId": "CP5",
+      "caseId": "L19-C07",
+      "task": "diagnosis",
+      "caseContext": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted.",
+      "objectiveIds": [
+        "D3.6.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retry success hides the original unreliable behavior",
+          "rationale": "A final green state does not erase wasted attempts. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Generic age-based cleanup ignores active release obligations",
+          "rationale": "An old artifact can still be operationally necessary. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The conversion copied steps without the surrounding controls",
+          "rationale": "Pipeline semantics extend beyond visible task definitions. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Pipeline semantics extend beyond visible task definitions. The selected answer is the conversion copied steps without the surrounding controls.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q033",
+      "checkpointId": "CP5",
+      "caseId": "L19-C07",
+      "task": "verification",
+      "caseContext": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted.",
+      "objectiveIds": [
+        "D3.6.5"
+      ],
+      "difficulty": "applied",
+      "question": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The YAML path enforces required approvals variables and outcomes",
+          "rationale": "Acceptance should compare important behavior end to end. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Reports expose retry rates and underlying failure patterns",
+          "rationale": "The signal should show the user's actual execution experience. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Supported releases retain their identified deployable artifacts",
+          "rationale": "The test should exercise an actual redeployment lookup. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Acceptance should compare important behavior end to end. The selected answer is the YAML path enforces required approvals variables and outcomes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q034",
+      "checkpointId": "CP5",
+      "caseId": "L19-C07",
+      "task": "safeguard",
+      "caseContext": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted.",
+      "objectiveIds": [
+        "D3.6.5"
+      ],
+      "difficulty": "applied",
+      "question": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rehearse on a training target before retiring the old pipeline",
+          "rationale": "Parallel validation reduces migration surprises. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Assign owners and expiry to quarantined tests",
+          "rationale": "Suppression should not become permanent unowned debt. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Review retention exceptions and prevent unlimited accumulation",
+          "rationale": "Indefinite preservation can create unnecessary storage and exposure. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Parallel validation reduces migration surprises. The selected answer is rehearse on a training target before retiring the old pipeline.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q035",
+      "checkpointId": "CP5",
+      "caseId": "L19-C07",
+      "task": "tradeoff",
+      "caseContext": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted.",
+      "objectiveIds": [
+        "D3.6.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Classic migration gap: A classic release is translated into YAML but approvals and secure variable access are omitted. The team selects this remedy: \"Inventory behavior and protected resources before validating equivalence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Equivalent YAML may require different platform constructs",
+          "rationale": "Migration is not always a mechanical export. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Transparent metrics may initially look worse",
+          "rationale": "Better visibility can reveal existing problems rather than new ones. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Long recovery windows increase storage needs",
+          "rationale": "The retention policy should explain that cost. That addresses a different requirement: Rollback artifact deleted. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Migration is not always a mechanical export. The selected answer is equivalent YAML may require different platform constructs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q036",
+      "checkpointId": "CP1",
+      "caseId": "L19-C08",
+      "task": "remedy",
+      "caseContext": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inventory behavior and protected resources before validating equivalence",
+          "rationale": "Migration must preserve governance as well as task order. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Include initial failures retries and flake classification",
+          "rationale": "Reliability reporting should preserve failed execution evidence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Publish targeted diagnostics with appropriate retention",
+          "rationale": "Evidence should match operational and audit needs. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Reliability reporting should preserve failed execution evidence. The selected answer is include initial failures retries and flake classification.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q037",
+      "checkpointId": "CP1",
+      "caseId": "L19-C08",
+      "task": "diagnosis",
+      "caseContext": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "applied",
+      "question": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retry success hides the original unreliable behavior",
+          "rationale": "A final green state does not erase wasted attempts. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Diagnostic collection is broader than its useful purpose",
+          "rationale": "More data is not automatically more actionable. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The conversion copied steps without the surrounding controls",
+          "rationale": "Pipeline semantics extend beyond visible task definitions. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A final green state does not erase wasted attempts. The selected answer is retry success hides the original unreliable behavior.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q038",
+      "checkpointId": "CP1",
+      "caseId": "L19-C08",
+      "task": "verification",
+      "caseContext": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "applied",
+      "question": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reports expose retry rates and underlying failure patterns",
+          "rationale": "The signal should show the user's actual execution experience. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Required failures remain diagnosable with lower retained volume",
+          "rationale": "Optimization must preserve meaningful support evidence. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The YAML path enforces required approvals variables and outcomes",
+          "rationale": "Acceptance should compare important behavior end to end. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The signal should show the user's actual execution experience. The selected answer is reports expose retry rates and underlying failure patterns.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q039",
+      "checkpointId": "CP1",
+      "caseId": "L19-C08",
+      "task": "safeguard",
+      "caseContext": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "applied",
+      "question": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assign owners and expiry to quarantined tests",
+          "rationale": "Suppression should not become permanent unowned debt. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Sanitize diagnostics before storage and publication",
+          "rationale": "Large logs can contain sensitive environment details. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rehearse on a training target before retiring the old pipeline",
+          "rationale": "Parallel validation reduces migration surprises. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Suppression should not become permanent unowned debt. The selected answer is assign owners and expiry to quarantined tests.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q040",
+      "checkpointId": "CP1",
+      "caseId": "L19-C08",
+      "task": "tradeoff",
+      "caseContext": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience.",
+      "objectiveIds": [
+        "D3.6.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Flaky green trend: The pipeline dashboard excludes failed attempts after a retry, making reliability look better than users experience. The team selects this remedy: \"Include initial failures retries and flake classification.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Equivalent YAML may require different platform constructs",
+          "rationale": "Migration is not always a mechanical export. That addresses a different requirement: Classic migration gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Transparent metrics may initially look worse",
+          "rationale": "Better visibility can reveal existing problems rather than new ones. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Reduced logging can limit later forensic detail",
+          "rationale": "Choose the retained signal deliberately. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Better visibility can reveal existing problems rather than new ones. The selected answer is transparent metrics may initially look worse.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L19-C09",
+      "task": "remedy",
+      "caseContext": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review.",
+      "objectiveIds": [
+        "D1.2.6",
+        "D3.6.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate representative triggers and preserve a bounded fallback",
+          "rationale": "One happy-path run does not establish complete equivalence. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Include initial failures retries and flake classification",
+          "rationale": "Reliability reporting should preserve failed execution evidence. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Publish targeted diagnostics with appropriate retention",
+          "rationale": "Evidence should match operational and audit needs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Evidence should match operational and audit needs. The selected answer is publish targeted diagnostics with appropriate retention.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L19-C09",
+      "task": "diagnosis",
+      "caseContext": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review.",
+      "objectiveIds": [
+        "D1.2.6",
+        "D3.6.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Diagnostic collection is broader than its useful purpose",
+          "rationale": "More data is not automatically more actionable. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The migration acceptance sample omits important execution modes",
+          "rationale": "Scheduled and release behavior can differ from manual runs. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Retry success hides the original unreliable behavior",
+          "rationale": "A final green state does not erase wasted attempts. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "More data is not automatically more actionable. The selected answer is diagnostic collection is broader than its useful purpose.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L19-C09",
+      "task": "verification",
+      "caseContext": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review.",
+      "objectiveIds": [
+        "D1.2.6",
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Required trigger and failure scenarios pass on the YAML path",
+          "rationale": "The evidence should cover the operational contract. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Reports expose retry rates and underlying failure patterns",
+          "rationale": "The signal should show the user's actual execution experience. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Required failures remain diagnosable with lower retained volume",
+          "rationale": "Optimization must preserve meaningful support evidence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Optimization must preserve meaningful support evidence. The selected answer is required failures remain diagnosable with lower retained volume.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L19-C09",
+      "task": "safeguard",
+      "caseContext": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review.",
+      "objectiveIds": [
+        "D1.2.6",
+        "D3.6.2"
+      ],
+      "difficulty": "applied",
+      "question": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Sanitize diagnostics before storage and publication",
+          "rationale": "Large logs can contain sensitive environment details. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Freeze conflicting writes while comparing deployment paths",
+          "rationale": "Two active release systems can change the same target. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Assign owners and expiry to quarantined tests",
+          "rationale": "Suppression should not become permanent unowned debt. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Large logs can contain sensitive environment details. The selected answer is sanitize diagnostics before storage and publication.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L19-C09",
+      "task": "tradeoff",
+      "caseContext": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review.",
+      "objectiveIds": [
+        "D1.2.6",
+        "D3.6.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Oversized diagnostics: Every successful run uploads gigabytes of verbose logs, consuming storage without aiding routine review. The team selects this remedy: \"Publish targeted diagnostics with appropriate retention.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reduced logging can limit later forensic detail",
+          "rationale": "Choose the retained signal deliberately. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Temporary dual maintenance increases effort",
+          "rationale": "A clear retirement milestone avoids indefinite duplication. That addresses a different requirement: Migration rollback. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Transparent metrics may initially look worse",
+          "rationale": "Better visibility can reveal existing problems rather than new ones. That addresses a different requirement: Flaky green trend. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Choose the retained signal deliberately. The selected answer is reduced logging can limit later forensic detail.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q046",
+      "checkpointId": "CP5",
+      "caseId": "L19-C10",
+      "task": "remedy",
+      "caseContext": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths.",
+      "objectiveIds": [
+        "D3.6.4",
+        "D3.6.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Publish targeted diagnostics with appropriate retention",
+          "rationale": "Evidence should match operational and audit needs. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Validate representative triggers and preserve a bounded fallback",
+          "rationale": "One happy-path run does not establish complete equivalence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Track duration distributions and failure trends across comparable runs",
+          "rationale": "One run cannot characterize pipeline health. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "One happy-path run does not establish complete equivalence. The selected answer is validate representative triggers and preserve a bounded fallback.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q047",
+      "checkpointId": "CP5",
+      "caseId": "L19-C10",
+      "task": "diagnosis",
+      "caseContext": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths.",
+      "objectiveIds": [
+        "D3.6.4",
+        "D3.6.5"
+      ],
+      "difficulty": "applied",
+      "question": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The dashboard lacks historical and failed-run context",
+          "rationale": "Latest success can hide sustained degradation. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Diagnostic collection is broader than its useful purpose",
+          "rationale": "More data is not automatically more actionable. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The migration acceptance sample omits important execution modes",
+          "rationale": "Scheduled and release behavior can differ from manual runs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Scheduled and release behavior can differ from manual runs. The selected answer is the migration acceptance sample omits important execution modes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q048",
+      "checkpointId": "CP5",
+      "caseId": "L19-C10",
+      "task": "verification",
+      "caseContext": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths.",
+      "objectiveIds": [
+        "D3.6.4",
+        "D3.6.5"
+      ],
+      "difficulty": "applied",
+      "question": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Required trigger and failure scenarios pass on the YAML path",
+          "rationale": "The evidence should cover the operational contract. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A stable cohort shows the timing change and affected stage",
+          "rationale": "The evidence should identify where time increased. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Required failures remain diagnosable with lower retained volume",
+          "rationale": "Optimization must preserve meaningful support evidence. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence should cover the operational contract. The selected answer is required trigger and failure scenarios pass on the YAML path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q049",
+      "checkpointId": "CP5",
+      "caseId": "L19-C10",
+      "task": "safeguard",
+      "caseContext": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths.",
+      "objectiveIds": [
+        "D3.6.4",
+        "D3.6.5"
+      ],
+      "difficulty": "applied",
+      "question": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Sanitize diagnostics before storage and publication",
+          "rationale": "Large logs can contain sensitive environment details. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Freeze conflicting writes while comparing deployment paths",
+          "rationale": "Two active release systems can change the same target. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Compare equivalent branches agents and workload sizes",
+          "rationale": "Mixed populations can create false trends. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Two active release systems can change the same target. The selected answer is freeze conflicting writes while comparing deployment paths.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L19-Q050",
+      "checkpointId": "CP5",
+      "caseId": "L19-C10",
+      "task": "tradeoff",
+      "caseContext": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths.",
+      "objectiveIds": [
+        "D3.6.4",
+        "D3.6.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Migration rollback: The team plans to delete its classic pipeline immediately after the first YAML success without comparing scheduled and release paths. The team selects this remedy: \"Validate representative triggers and preserve a bounded fallback.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reduced logging can limit later forensic detail",
+          "rationale": "Choose the retained signal deliberately. That addresses a different requirement: Oversized diagnostics. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Temporary dual maintenance increases effort",
+          "rationale": "A clear retirement milestone avoids indefinite duplication. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Detailed telemetry adds reporting overhead",
+          "rationale": "Collect signals that support operational decisions. That addresses a different requirement: Pipeline regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A clear retirement milestone avoids indefinite duplication. The selected answer is temporary dual maintenance increases effort.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

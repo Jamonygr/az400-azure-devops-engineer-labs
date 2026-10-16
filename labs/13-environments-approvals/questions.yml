@@ -1,0 +1,1872 @@
+{
+  "schemaVersion": 1,
+  "labId": "13",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops"
+    },
+    {
+      "id": "S2",
+      "url": "https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L13-Q001",
+      "checkpointId": "CP4",
+      "caseId": "L13-C01",
+      "task": "remedy",
+      "caseContext": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Configure protected environment checks outside author-controlled YAML",
+          "rationale": "The gate needs an independent administrative boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Require an eligible independent approver",
+          "rationale": "The release requires separation between requester and reviewer. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Choose the gate whose trust boundary matches the requirement",
+          "rationale": "Similar pauses can have different administrative controls. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The gate needs an independent administrative boundary. The selected answer is configure protected environment checks outside author-controlled YAML.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q002",
+      "checkpointId": "CP4",
+      "caseId": "L13-C01",
+      "task": "diagnosis",
+      "caseContext": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Execution pause and independent resource protection are different mechanisms",
+          "rationale": "The author may control one but not the other. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The author controls both deployment and its approval rule",
+          "rationale": "An editable check cannot enforce independent review. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Approval identity is not independent of the request",
+          "rationale": "A nominal approval can still be self-authorization. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "An editable check cannot enforce independent review. The selected answer is the author controls both deployment and its approval rule.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q003",
+      "checkpointId": "CP4",
+      "caseId": "L13-C01",
+      "task": "verification",
+      "caseContext": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The requester cannot approve their own protected deployment",
+          "rationale": "The negative test verifies reviewer independence. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "An author cannot edit away the required independent protection",
+          "rationale": "The test should target bypass capability rather than the UI. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Removing YAML steps does not bypass the environment approval",
+          "rationale": "The protection must survive an untrusted pipeline edit. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The protection must survive an untrusted pipeline edit. The selected answer is removing YAML steps does not bypass the environment approval.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q004",
+      "checkpointId": "CP4",
+      "caseId": "L13-C01",
+      "task": "safeguard",
+      "caseContext": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review who can modify each gate and pipeline definition",
+          "rationale": "Permission boundaries determine actual enforcement strength. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Limit environment administration to accountable owners",
+          "rationale": "Broad administration rights can still bypass intended governance. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Keep an available backup approver group",
+          "rationale": "A single absent reviewer can block necessary releases. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Broad administration rights can still bypass intended governance. The selected answer is limit environment administration to accountable owners.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q005",
+      "checkpointId": "CP4",
+      "caseId": "L13-C01",
+      "task": "tradeoff",
+      "caseContext": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. The team selects this remedy: \"Configure protected environment checks outside author-controlled YAML.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Porting gates across platforms may require redesign",
+          "rationale": "Equivalent intent does not imply identical configuration features. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "External checks need separate configuration management",
+          "rationale": "Repository review alone cannot reproduce every resource policy. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Independent approval adds coordination latency",
+          "rationale": "The assurance benefit should match deployment risk. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Repository review alone cannot reproduce every resource policy. The selected answer is external checks need separate configuration management.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q006",
+      "checkpointId": "CP1",
+      "caseId": "L13-C02",
+      "task": "remedy",
+      "caseContext": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add a protected branch-control check for the environment",
+          "rationale": "The target must verify the source provenance policy. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Configure protected environment checks outside author-controlled YAML",
+          "rationale": "The gate needs an independent administrative boundary. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Require an eligible independent approver",
+          "rationale": "The release requires separation between requester and reviewer. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The release requires separation between requester and reviewer. The selected answer is require an eligible independent approver.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q007",
+      "checkpointId": "CP1",
+      "caseId": "L13-C02",
+      "task": "diagnosis",
+      "caseContext": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The author controls both deployment and its approval rule",
+          "rationale": "An editable check cannot enforce independent review. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Approval identity is not independent of the request",
+          "rationale": "A nominal approval can still be self-authorization. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The gate checks success but not authorized source branch",
+          "rationale": "A green feature build is not an approved release source. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A nominal approval can still be self-authorization. The selected answer is approval identity is not independent of the request.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q008",
+      "checkpointId": "CP1",
+      "caseId": "L13-C02",
+      "task": "verification",
+      "caseContext": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Removing YAML steps does not bypass the environment approval",
+          "rationale": "The protection must survive an untrusted pipeline edit. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The requester cannot approve their own protected deployment",
+          "rationale": "The negative test verifies reviewer independence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A feature-branch run is rejected while main is accepted",
+          "rationale": "Both branches test the intended provenance restriction. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The negative test verifies reviewer independence. The selected answer is the requester cannot approve their own protected deployment.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q009",
+      "checkpointId": "CP1",
+      "caseId": "L13-C02",
+      "task": "safeguard",
+      "caseContext": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep an available backup approver group",
+          "rationale": "A single absent reviewer can block necessary releases. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Protect the permitted branch and its required validations",
+          "rationale": "A permitted branch can still be unsafe if unprotected. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Limit environment administration to accountable owners",
+          "rationale": "Broad administration rights can still bypass intended governance. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A single absent reviewer can block necessary releases. The selected answer is keep an available backup approver group.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q010",
+      "checkpointId": "CP1",
+      "caseId": "L13-C02",
+      "task": "tradeoff",
+      "caseContext": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. The team selects this remedy: \"Require an eligible independent approver.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Branch controls depend on accurate linked-resource provenance",
+          "rationale": "Complex multi-repository pipelines need careful policy review. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "External checks need separate configuration management",
+          "rationale": "Repository review alone cannot reproduce every resource policy. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Independent approval adds coordination latency",
+          "rationale": "The assurance benefit should match deployment risk. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The assurance benefit should match deployment risk. The selected answer is independent approval adds coordination latency.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q011",
+      "checkpointId": "CP5",
+      "caseId": "L13-C03",
+      "task": "remedy",
+      "caseContext": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Require an eligible independent approver",
+          "rationale": "The release requires separation between requester and reviewer. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Add a protected branch-control check for the environment",
+          "rationale": "The target must verify the source provenance policy. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use an exclusive lock with an intentional queue policy",
+          "rationale": "Shared mutable targets need coordinated deployment ownership. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The target must verify the source provenance policy. The selected answer is add a protected branch-control check for the environment.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q012",
+      "checkpointId": "CP5",
+      "caseId": "L13-C03",
+      "task": "diagnosis",
+      "caseContext": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Approval identity is not independent of the request",
+          "rationale": "A nominal approval can still be self-authorization. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The gate checks success but not authorized source branch",
+          "rationale": "A green feature build is not an approved release source. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Approval does not serialize concurrent execution",
+          "rationale": "Two independently authorized changes can still collide. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A green feature build is not an approved release source. The selected answer is the gate checks success but not authorized source branch.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q013",
+      "checkpointId": "CP5",
+      "caseId": "L13-C03",
+      "task": "verification",
+      "caseContext": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only one protected deployment changes the environment at a time",
+          "rationale": "The test must include competing eligible runs. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The requester cannot approve their own protected deployment",
+          "rationale": "The negative test verifies reviewer independence. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A feature-branch run is rejected while main is accepted",
+          "rationale": "Both branches test the intended provenance restriction. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Both branches test the intended provenance restriction. The selected answer is a feature-branch run is rejected while main is accepted.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q014",
+      "checkpointId": "CP5",
+      "caseId": "L13-C03",
+      "task": "safeguard",
+      "caseContext": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Choose cancellation or sequential behavior based on recovery safety",
+          "rationale": "An interrupted deployment may leave partial work. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep an available backup approver group",
+          "rationale": "A single absent reviewer can block necessary releases. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Protect the permitted branch and its required validations",
+          "rationale": "A permitted branch can still be unsafe if unprotected. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A permitted branch can still be unsafe if unprotected. The selected answer is protect the permitted branch and its required validations.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q015",
+      "checkpointId": "CP5",
+      "caseId": "L13-C03",
+      "task": "tradeoff",
+      "caseContext": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. The team selects this remedy: \"Add a protected branch-control check for the environment.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Independent approval adds coordination latency",
+          "rationale": "The assurance benefit should match deployment risk. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Branch controls depend on accurate linked-resource provenance",
+          "rationale": "Complex multi-repository pipelines need careful policy review. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Serialization increases queue time",
+          "rationale": "Consistency may be more valuable than maximum throughput. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Complex multi-repository pipelines need careful policy review. The selected answer is branch controls depend on accurate linked-resource provenance.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q016",
+      "checkpointId": "CP4",
+      "caseId": "L13-C04",
+      "task": "remedy",
+      "caseContext": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add a protected branch-control check for the environment",
+          "rationale": "The target must verify the source provenance policy. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use an exclusive lock with an intentional queue policy",
+          "rationale": "Shared mutable targets need coordinated deployment ownership. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Gate promotion on relevant runtime health evidence",
+          "rationale": "Static and predeployment tests cannot establish live service health. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Shared mutable targets need coordinated deployment ownership. The selected answer is use an exclusive lock with an intentional queue policy.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q017",
+      "checkpointId": "CP4",
+      "caseId": "L13-C04",
+      "task": "diagnosis",
+      "caseContext": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The gate checks success but not authorized source branch",
+          "rationale": "A green feature build is not an approved release source. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Approval does not serialize concurrent execution",
+          "rationale": "Two independently authorized changes can still collide. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The release gate omits the failing operational signal",
+          "rationale": "A healthy build can create an unhealthy deployment. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Two independently authorized changes can still collide. The selected answer is approval does not serialize concurrent execution.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q018",
+      "checkpointId": "CP4",
+      "caseId": "L13-C04",
+      "task": "verification",
+      "caseContext": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A failed health probe prevents traffic promotion",
+          "rationale": "The negative outcome demonstrates the quality boundary. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A feature-branch run is rejected while main is accepted",
+          "rationale": "Both branches test the intended provenance restriction. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Only one protected deployment changes the environment at a time",
+          "rationale": "The test must include competing eligible runs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The test must include competing eligible runs. The selected answer is only one protected deployment changes the environment at a time.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q019",
+      "checkpointId": "CP4",
+      "caseId": "L13-C04",
+      "task": "safeguard",
+      "caseContext": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use bounded observation periods and a defined recovery action",
+          "rationale": "An indefinite wait is not a safe release strategy. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Protect the permitted branch and its required validations",
+          "rationale": "A permitted branch can still be unsafe if unprotected. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Choose cancellation or sequential behavior based on recovery safety",
+          "rationale": "An interrupted deployment may leave partial work. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An interrupted deployment may leave partial work. The selected answer is choose cancellation or sequential behavior based on recovery safety.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q020",
+      "checkpointId": "CP4",
+      "caseId": "L13-C04",
+      "task": "tradeoff",
+      "caseContext": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. The team selects this remedy: \"Use an exclusive lock with an intentional queue policy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Branch controls depend on accurate linked-resource provenance",
+          "rationale": "Complex multi-repository pipelines need careful policy review. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Serialization increases queue time",
+          "rationale": "Consistency may be more valuable than maximum throughput. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Health gates can produce false positives",
+          "rationale": "Thresholds should reflect meaningful service behavior. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Consistency may be more valuable than maximum throughput. The selected answer is serialization increases queue time.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q021",
+      "checkpointId": "CP5",
+      "caseId": "L13-C05",
+      "task": "remedy",
+      "caseContext": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Set an explicit approval timeout and communicate the outcome",
+          "rationale": "Waiting should have a bounded operational result. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use an exclusive lock with an intentional queue policy",
+          "rationale": "Shared mutable targets need coordinated deployment ownership. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Gate promotion on relevant runtime health evidence",
+          "rationale": "Static and predeployment tests cannot establish live service health. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Static and predeployment tests cannot establish live service health. The selected answer is gate promotion on relevant runtime health evidence.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q022",
+      "checkpointId": "CP5",
+      "caseId": "L13-C05",
+      "task": "diagnosis",
+      "caseContext": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Approval does not serialize concurrent execution",
+          "rationale": "Two independently authorized changes can still collide. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The release gate omits the failing operational signal",
+          "rationale": "A healthy build can create an unhealthy deployment. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The workflow lacks a defined expired-approval path",
+          "rationale": "Silence cannot be treated as authorization. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A healthy build can create an unhealthy deployment. The selected answer is the release gate omits the failing operational signal.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q023",
+      "checkpointId": "CP5",
+      "caseId": "L13-C05",
+      "task": "verification",
+      "caseContext": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A failed health probe prevents traffic promotion",
+          "rationale": "The negative outcome demonstrates the quality boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "An unanswered request expires with a visible failed or skipped outcome",
+          "rationale": "The process should not silently deploy after timeout. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Only one protected deployment changes the environment at a time",
+          "rationale": "The test must include competing eligible runs. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The negative outcome demonstrates the quality boundary. The selected answer is a failed health probe prevents traffic promotion.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q024",
+      "checkpointId": "CP5",
+      "caseId": "L13-C05",
+      "task": "safeguard",
+      "caseContext": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Document how to retry after renewed authorization",
+          "rationale": "A later release still needs valid approval evidence. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Choose cancellation or sequential behavior based on recovery safety",
+          "rationale": "An interrupted deployment may leave partial work. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use bounded observation periods and a defined recovery action",
+          "rationale": "An indefinite wait is not a safe release strategy. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An indefinite wait is not a safe release strategy. The selected answer is use bounded observation periods and a defined recovery action.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q025",
+      "checkpointId": "CP5",
+      "caseId": "L13-C05",
+      "task": "tradeoff",
+      "caseContext": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. The team selects this remedy: \"Gate promotion on relevant runtime health evidence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Short timeouts may reject otherwise valid releases",
+          "rationale": "Choose a window compatible with reviewer availability. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Serialization increases queue time",
+          "rationale": "Consistency may be more valuable than maximum throughput. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Health gates can produce false positives",
+          "rationale": "Thresholds should reflect meaningful service behavior. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Thresholds should reflect meaningful service behavior. The selected answer is health gates can produce false positives.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q026",
+      "checkpointId": "CP1",
+      "caseId": "L13-C06",
+      "task": "remedy",
+      "caseContext": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Gate promotion on relevant runtime health evidence",
+          "rationale": "Static and predeployment tests cannot establish live service health. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Set an explicit approval timeout and communicate the outcome",
+          "rationale": "Waiting should have a bounded operational result. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a schedule or business-hours check appropriate to the platform",
+          "rationale": "Approval and allowed execution time are separate constraints. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Waiting should have a bounded operational result. The selected answer is set an explicit approval timeout and communicate the outcome.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q027",
+      "checkpointId": "CP1",
+      "caseId": "L13-C06",
+      "task": "diagnosis",
+      "caseContext": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The release gate omits the failing operational signal",
+          "rationale": "A healthy build can create an unhealthy deployment. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The workflow lacks a defined expired-approval path",
+          "rationale": "Silence cannot be treated as authorization. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "An approval alone does not enforce the calendar boundary",
+          "rationale": "An early decision can precede a safe execution period. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Silence cannot be treated as authorization. The selected answer is the workflow lacks a defined expired-approval path.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q028",
+      "checkpointId": "CP1",
+      "caseId": "L13-C06",
+      "task": "verification",
+      "caseContext": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployment waits until the permitted window",
+          "rationale": "Timing evidence must match the organization's stated rule. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A failed health probe prevents traffic promotion",
+          "rationale": "The negative outcome demonstrates the quality boundary. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "An unanswered request expires with a visible failed or skipped outcome",
+          "rationale": "The process should not silently deploy after timeout. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The process should not silently deploy after timeout. The selected answer is an unanswered request expires with a visible failed or skipped outcome.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q029",
+      "checkpointId": "CP1",
+      "caseId": "L13-C06",
+      "task": "safeguard",
+      "caseContext": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check timezone and window duration explicitly",
+          "rationale": "Incorrect timezone assumptions can cause off-hours changes. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use bounded observation periods and a defined recovery action",
+          "rationale": "An indefinite wait is not a safe release strategy. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Document how to retry after renewed authorization",
+          "rationale": "A later release still needs valid approval evidence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A later release still needs valid approval evidence. The selected answer is document how to retry after renewed authorization.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q030",
+      "checkpointId": "CP1",
+      "caseId": "L13-C06",
+      "task": "tradeoff",
+      "caseContext": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. The team selects this remedy: \"Set an explicit approval timeout and communicate the outcome.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Health gates can produce false positives",
+          "rationale": "Thresholds should reflect meaningful service behavior. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Short timeouts may reject otherwise valid releases",
+          "rationale": "Choose a window compatible with reviewer availability. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Calendar gates can delay urgent remediations",
+          "rationale": "A controlled exception process may be necessary. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Choose a window compatible with reviewer availability. The selected answer is short timeouts may reject otherwise valid releases.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q031",
+      "checkpointId": "CP1",
+      "caseId": "L13-C07",
+      "task": "remedy",
+      "caseContext": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Set an explicit approval timeout and communicate the outcome",
+          "rationale": "Waiting should have a bounded operational result. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use a schedule or business-hours check appropriate to the platform",
+          "rationale": "Approval and allowed execution time are separate constraints. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Present the immutable release identity and validation evidence",
+          "rationale": "An informed decision requires relevant trustworthy context. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Approval and allowed execution time are separate constraints. The selected answer is use a schedule or business-hours check appropriate to the platform.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q032",
+      "checkpointId": "CP1",
+      "caseId": "L13-C07",
+      "task": "diagnosis",
+      "caseContext": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Approval is being treated as a ceremonial click",
+          "rationale": "The reviewer cannot assess the actual candidate. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The workflow lacks a defined expired-approval path",
+          "rationale": "Silence cannot be treated as authorization. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "An approval alone does not enforce the calendar boundary",
+          "rationale": "An early decision can precede a safe execution period. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An early decision can precede a safe execution period. The selected answer is an approval alone does not enforce the calendar boundary.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q033",
+      "checkpointId": "CP1",
+      "caseId": "L13-C07",
+      "task": "verification",
+      "caseContext": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployment waits until the permitted window",
+          "rationale": "Timing evidence must match the organization's stated rule. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The request links to the exact artifact and its checks",
+          "rationale": "Evidence must identify the candidate being approved. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "An unanswered request expires with a visible failed or skipped outcome",
+          "rationale": "The process should not silently deploy after timeout. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Timing evidence must match the organization's stated rule. The selected answer is the deployment waits until the permitted window.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q034",
+      "checkpointId": "CP1",
+      "caseId": "L13-C07",
+      "task": "safeguard",
+      "caseContext": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check timezone and window duration explicitly",
+          "rationale": "Incorrect timezone assumptions can cause off-hours changes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Prevent substitution of the artifact after approval",
+          "rationale": "Changing the input would invalidate the review decision. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Document how to retry after renewed authorization",
+          "rationale": "A later release still needs valid approval evidence. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Incorrect timezone assumptions can cause off-hours changes. The selected answer is check timezone and window duration explicitly.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q035",
+      "checkpointId": "CP1",
+      "caseId": "L13-C07",
+      "task": "tradeoff",
+      "caseContext": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. The team selects this remedy: \"Use a schedule or business-hours check appropriate to the platform.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rich evidence takes effort to collect and maintain",
+          "rationale": "Automation can reduce reviewer burden without replacing judgment. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Short timeouts may reject otherwise valid releases",
+          "rationale": "Choose a window compatible with reviewer availability. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Calendar gates can delay urgent remediations",
+          "rationale": "A controlled exception process may be necessary. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A controlled exception process may be necessary. The selected answer is calendar gates can delay urgent remediations.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q036",
+      "checkpointId": "CP3",
+      "caseId": "L13-C08",
+      "task": "remedy",
+      "caseContext": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Restrict and audit exceptional bypass use",
+          "rationale": "Bypass is a powerful administrative exception. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use a schedule or business-hours check appropriate to the platform",
+          "rationale": "Approval and allowed execution time are separate constraints. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Present the immutable release identity and validation evidence",
+          "rationale": "An informed decision requires relevant trustworthy context. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An informed decision requires relevant trustworthy context. The selected answer is present the immutable release identity and validation evidence.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q037",
+      "checkpointId": "CP3",
+      "caseId": "L13-C08",
+      "task": "diagnosis",
+      "caseContext": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An approval alone does not enforce the calendar boundary",
+          "rationale": "An early decision can precede a safe execution period. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Approval is being treated as a ceremonial click",
+          "rationale": "The reviewer cannot assess the actual candidate. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Normal delivery is avoiding the required control",
+          "rationale": "Frequent unexplained exceptions defeat the policy. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The reviewer cannot assess the actual candidate. The selected answer is approval is being treated as a ceremonial click.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q038",
+      "checkpointId": "CP3",
+      "caseId": "L13-C08",
+      "task": "verification",
+      "caseContext": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployment waits until the permitted window",
+          "rationale": "Timing evidence must match the organization's stated rule. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The request links to the exact artifact and its checks",
+          "rationale": "Evidence must identify the candidate being approved. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Bypass events identify an owner reason and reviewed incident",
+          "rationale": "The evidence should make exceptions accountable. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Evidence must identify the candidate being approved. The selected answer is the request links to the exact artifact and its checks.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q039",
+      "checkpointId": "CP3",
+      "caseId": "L13-C08",
+      "task": "safeguard",
+      "caseContext": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check timezone and window duration explicitly",
+          "rationale": "Incorrect timezone assumptions can cause off-hours changes. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Prevent substitution of the artifact after approval",
+          "rationale": "Changing the input would invalidate the review decision. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a narrowly defined emergency access process",
+          "rationale": "Routine broad bypass should not be the release path. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Changing the input would invalidate the review decision. The selected answer is prevent substitution of the artifact after approval.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q040",
+      "checkpointId": "CP3",
+      "caseId": "L13-C08",
+      "task": "tradeoff",
+      "caseContext": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary.",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. The team selects this remedy: \"Present the immutable release identity and validation evidence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Emergency access remains a residual risk",
+          "rationale": "Audit and review reduce misuse rather than eliminate authority. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Calendar gates can delay urgent remediations",
+          "rationale": "A controlled exception process may be necessary. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rich evidence takes effort to collect and maintain",
+          "rationale": "Automation can reduce reviewer burden without replacing judgment. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Automation can reduce reviewer burden without replacing judgment. The selected answer is rich evidence takes effort to collect and maintain.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L13-C09",
+      "task": "remedy",
+      "caseContext": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Present the immutable release identity and validation evidence",
+          "rationale": "An informed decision requires relevant trustworthy context. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Restrict and audit exceptional bypass use",
+          "rationale": "Bypass is a powerful administrative exception. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Choose the gate whose trust boundary matches the requirement",
+          "rationale": "Similar pauses can have different administrative controls. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Bypass is a powerful administrative exception. The selected answer is restrict and audit exceptional bypass use.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L13-C09",
+      "task": "diagnosis",
+      "caseContext": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Approval is being treated as a ceremonial click",
+          "rationale": "The reviewer cannot assess the actual candidate. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Normal delivery is avoiding the required control",
+          "rationale": "Frequent unexplained exceptions defeat the policy. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Execution pause and independent resource protection are different mechanisms",
+          "rationale": "The author may control one but not the other. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Frequent unexplained exceptions defeat the policy. The selected answer is normal delivery is avoiding the required control.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L13-C09",
+      "task": "verification",
+      "caseContext": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Bypass events identify an owner reason and reviewed incident",
+          "rationale": "The evidence should make exceptions accountable. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "An author cannot edit away the required independent protection",
+          "rationale": "The test should target bypass capability rather than the UI. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The request links to the exact artifact and its checks",
+          "rationale": "Evidence must identify the candidate being approved. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence should make exceptions accountable. The selected answer is bypass events identify an owner reason and reviewed incident.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L13-C09",
+      "task": "safeguard",
+      "caseContext": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a narrowly defined emergency access process",
+          "rationale": "Routine broad bypass should not be the release path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Review who can modify each gate and pipeline definition",
+          "rationale": "Permission boundaries determine actual enforcement strength. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Prevent substitution of the artifact after approval",
+          "rationale": "Changing the input would invalidate the review decision. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Routine broad bypass should not be the release path. The selected answer is use a narrowly defined emergency access process.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L13-C09",
+      "task": "tradeoff",
+      "caseContext": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded.",
+      "objectiveIds": [
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. The team selects this remedy: \"Restrict and audit exceptional bypass use.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Emergency access remains a residual risk",
+          "rationale": "Audit and review reduce misuse rather than eliminate authority. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Porting gates across platforms may require redesign",
+          "rationale": "Equivalent intent does not imply identical configuration features. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rich evidence takes effort to collect and maintain",
+          "rationale": "Automation can reduce reviewer burden without replacing judgment. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Audit and review reduce misuse rather than eliminate authority. The selected answer is emergency access remains a residual risk.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q046",
+      "checkpointId": "CP2",
+      "caseId": "L13-C10",
+      "task": "remedy",
+      "caseContext": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check.",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.3.9"
+      ],
+      "difficulty": "foundational",
+      "question": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Restrict and audit exceptional bypass use",
+          "rationale": "Bypass is a powerful administrative exception. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Choose the gate whose trust boundary matches the requirement",
+          "rationale": "Similar pauses can have different administrative controls. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Configure protected environment checks outside author-controlled YAML",
+          "rationale": "The gate needs an independent administrative boundary. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Similar pauses can have different administrative controls. The selected answer is choose the gate whose trust boundary matches the requirement.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q047",
+      "checkpointId": "CP2",
+      "caseId": "L13-C10",
+      "task": "diagnosis",
+      "caseContext": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check.",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Execution pause and independent resource protection are different mechanisms",
+          "rationale": "The author may control one but not the other. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The author controls both deployment and its approval rule",
+          "rationale": "An editable check cannot enforce independent review. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Normal delivery is avoiding the required control",
+          "rationale": "Frequent unexplained exceptions defeat the policy. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The author may control one but not the other. The selected answer is execution pause and independent resource protection are different mechanisms.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q048",
+      "checkpointId": "CP2",
+      "caseId": "L13-C10",
+      "task": "verification",
+      "caseContext": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check.",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An author cannot edit away the required independent protection",
+          "rationale": "The test should target bypass capability rather than the UI. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Removing YAML steps does not bypass the environment approval",
+          "rationale": "The protection must survive an untrusted pipeline edit. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Bypass events identify an owner reason and reviewed incident",
+          "rationale": "The evidence should make exceptions accountable. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The test should target bypass capability rather than the UI. The selected answer is an author cannot edit away the required independent protection.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q049",
+      "checkpointId": "CP2",
+      "caseId": "L13-C10",
+      "task": "safeguard",
+      "caseContext": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check.",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.3.9"
+      ],
+      "difficulty": "applied",
+      "question": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a narrowly defined emergency access process",
+          "rationale": "Routine broad bypass should not be the release path. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Review who can modify each gate and pipeline definition",
+          "rationale": "Permission boundaries determine actual enforcement strength. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Limit environment administration to accountable owners",
+          "rationale": "Broad administration rights can still bypass intended governance. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Permission boundaries determine actual enforcement strength. The selected answer is review who can modify each gate and pipeline definition.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "id": "L13-Q050",
+      "checkpointId": "CP2",
+      "caseId": "L13-C10",
+      "task": "tradeoff",
+      "caseContext": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check.",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.3.9"
+      ],
+      "difficulty": "advanced",
+      "question": "Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. The team selects this remedy: \"Choose the gate whose trust boundary matches the requirement.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "External checks need separate configuration management",
+          "rationale": "Repository review alone cannot reproduce every resource policy. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Emergency access remains a residual risk",
+          "rationale": "Audit and review reduce misuse rather than eliminate authority. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Porting gates across platforms may require redesign",
+          "rationale": "Equivalent intent does not imply identical configuration features. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Equivalent intent does not imply identical configuration features. The selected answer is porting gates across platforms may require redesign.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ]
+    }
+  ]
+}

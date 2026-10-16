@@ -1,0 +1,13 @@
+flowchart LR
+  bundle["Immutable application bundle"]
+  release["Release orchestrator contract"]
+  migration["Idempotent SQL migration"]
+  database["Approved SQL database"]
+  app["Compatible application binary"]
+  readiness["Readiness / rollback evidence"]
+  bundle -->|promote exact digest| release
+  release -->|expand before deploy| migration
+  migration -.->|separately approved apply| database
+  release -.->|same reviewed binary| app
+  database -.->|compatible expanded schema| app
+  app -.->|observed health / recovery| readiness

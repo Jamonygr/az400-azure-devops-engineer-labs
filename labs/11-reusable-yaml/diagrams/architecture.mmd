@@ -1,0 +1,12 @@
+flowchart LR
+  consumer["Consumer YAML contract"]
+  template["Azure build template"]
+  build[".NET build job"]
+  github["GitHub reusable workflow"]
+  variables["Scoped variable group"]
+  dag["needs / dependsOn DAG"]
+  consumer -->|typed parameters| template
+  template -->|rendered build steps| build
+  variables -->|authorized runtime values| template
+  dag -->|job dependency order| build
+  consumer -.->|alternative call contract| github

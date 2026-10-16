@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "04",
+  "slug": "04-branching-pull-requests",
+  "title": "Protect branches and review pull requests",
+  "domain": "source",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "github"
+  ],
+  "objectives": [
+    "D2.1.1",
+    "D2.1.2",
+    "D2.1.3"
+  ],
+  "scenario": "Direct updates to main bypass review. Create a feature workflow and enforce the smallest meaningful branch protection in a disposable repository.",
+  "role": "Repository maintainer",
+  "outcome": "Protect branches and review pull requests.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Create a local trunk and short-lived feature branch",
+      "commands": "$gitRoot=Join-Path $WorkRoot 'branching';New-Item -ItemType Directory -Force $gitRoot|Out-Null\n git init --initial-branch=main $gitRoot\n git -C $gitRoot config user.name 'AZ400 Learner';git -C $gitRoot config user.email 'learner@example.invalid'\n 'release-health'|Set-Content (Join-Path $gitRoot 'README.md');git -C $gitRoot add README.md;git -C $gitRoot commit -m 'Initialize protected trunk'\n git -C $gitRoot switch -c \"feature/$RunId\"\n",
+      "expected": "An isolated Git repository has main and a named feature branch.",
+      "positive": "$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p branch --show-current) -ne \"feature/$RunId\") { throw 'Expected feature branch.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'branching'\n if (@(git -C $p status --porcelain).Count -gt 0) { throw 'Unexpected uncommitted changes.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p branch --show-current) -ne \"feature/$RunId\") { throw 'Expected feature branch.' }\n\n$p=Join-Path $WorkRoot 'branching'\n if (@(git -C $p status --porcelain).Count -gt 0) { throw 'Unexpected uncommitted changes.' }\n",
+      "evidence": "Branch names and commit graph.",
+      "fix": "Set identity only in the sandbox repository; never change global Git settings."
+    },
+    {
+      "id": "CP2",
+      "title": "Push one reviewable feature to the disposable GitHub repo",
+      "commands": "$p=Join-Path $WorkRoot 'branching'\n git -C $p remote add origin \"https://github.com/$GhRepo.git\"\n git -C $p push -u origin main\n 'GET /health/ready -> 200'|Set-Content (Join-Path $p 'health-contract.md');git -C $p add health-contract.md;git -C $p commit -m \"Add health contract for $RunId\";git -C $p push -u origin \"feature/$RunId\"\n",
+      "expected": "Only the disposable repository receives main and the feature branch.",
+      "positive": "$b=gh api \"repos/$GhRepo/branches/feature%2F$RunId\"|ConvertFrom-Json\n if ($b.name -ne \"feature/$RunId\") { throw 'Remote feature branch absent.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p remote get-url origin) -ne \"https://github.com/$GhRepo.git\") { throw 'Remote ownership mismatch.' }\n",
+      "validate": "$b=gh api \"repos/$GhRepo/branches/feature%2F$RunId\"|ConvertFrom-Json\n if ($b.name -ne \"feature/$RunId\") { throw 'Remote feature branch absent.' }\n\n$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p remote get-url origin) -ne \"https://github.com/$GhRepo.git\") { throw 'Remote ownership mismatch.' }\n",
+      "evidence": "Commit SHA and sandbox remote.",
+      "fix": "Check the derived sandbox owner/name before pushing; retry only after ownership matches."
+    },
+    {
+      "id": "CP3",
+      "title": "Open a pull request with a test plan",
+      "commands": "$url=gh pr create --repo $GhRepo --base main --head \"feature/$RunId\" --title \"[$RunId] Add health contract\" --body 'Acceptance: contract states readiness status. Test: review contract and run dotnet test. Rollback: revert merge commit.'\n $url|Set-Content (Join-Path $WorkRoot 'pull-request-url.txt')\n",
+      "expected": "The feature is represented by an open PR targeting main.",
+      "positive": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json state,baseRefName,body|ConvertFrom-Json\n if ($p.state -ne 'OPEN' -or $p.baseRefName -ne 'main' -or $p.body -notmatch 'Test:') { throw 'Review contract incomplete.' }\n",
+      "negative": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json headRefName|ConvertFrom-Json\n if ($p.headRefName -eq 'main') { throw 'PR must not review main against itself.' }\n",
+      "validate": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json state,baseRefName,body|ConvertFrom-Json\n if ($p.state -ne 'OPEN' -or $p.baseRefName -ne 'main' -or $p.body -notmatch 'Test:') { throw 'Review contract incomplete.' }\n\n$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json headRefName|ConvertFrom-Json\n if ($p.headRefName -eq 'main') { throw 'PR must not review main against itself.' }\n",
+      "evidence": "PR URL, changed-file count, and test plan.",
+      "fix": "A second authorized reviewer is needed to satisfy an approval; the author cannot approve their own PR."
+    },
+    {
+      "id": "CP4",
+      "title": "Require review and block force pushes on main",
+      "commands": "$policy=@{required_status_checks=$null;enforce_admins=$true;required_pull_request_reviews=@{required_approving_review_count=1;dismiss_stale_reviews=$true};restrictions=$null;allow_force_pushes=$false;allow_deletions=$false}\n $file=Join-Path $WorkRoot 'branch-policy.json';$policy|ConvertTo-Json -Depth 8|Set-Content $file\n gh api --method PUT \"repos/$GhRepo/branches/main/protection\" --input $file|Set-Content (Join-Path $WorkRoot 'branch-protection.json')\n",
+      "expected": "Main requires one approval and disallows force pushes and deletion.",
+      "positive": "$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.required_pull_request_reviews.required_approving_review_count -lt 1) { throw 'Approval requirement absent.' }\n",
+      "negative": "$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.allow_force_pushes.enabled -or $p.allow_deletions.enabled) { throw 'Destructive branch updates remain enabled.' }\n",
+      "validate": "$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.required_pull_request_reviews.required_approving_review_count -lt 1) { throw 'Approval requirement absent.' }\n\n$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.allow_force_pushes.enabled -or $p.allow_deletions.enabled) { throw 'Destructive branch updates remain enabled.' }\n",
+      "evidence": "Protection settings; do not attempt destructive force pushes to test denial.",
+      "fix": "Use the sandbox public repository; plan/license availability may gate equivalent controls in private repos."
+    },
+    {
+      "id": "CP5",
+      "title": "Inspect merge readiness without bypassing review",
+      "commands": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt')\n gh pr view $url --repo $GhRepo --json mergeStateStatus,reviewDecision,statusCheckRollup|Set-Content (Join-Path $WorkRoot 'merge-readiness.json')\n Get-Content (Join-Path $WorkRoot 'merge-readiness.json')\n",
+      "expected": "The pending review remains visible and no administrative bypass is used.",
+      "positive": "$p=Get-Content (Join-Path $WorkRoot 'merge-readiness.json') -Raw|ConvertFrom-Json\n if (-not $p.mergeStateStatus) { throw 'Merge readiness was not reported.' }\n",
+      "negative": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json mergedAt|ConvertFrom-Json\n if ($p.mergedAt) { throw 'This exercise should retain the unapproved PR.' }\n",
+      "validate": "$p=Get-Content (Join-Path $WorkRoot 'merge-readiness.json') -Raw|ConvertFrom-Json\n if (-not $p.mergeStateStatus) { throw 'Merge readiness was not reported.' }\n\n$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json mergedAt|ConvertFrom-Json\n if ($p.mergedAt) { throw 'This exercise should retain the unapproved PR.' }\n",
+      "evidence": "Review decision and branch protection result.",
+      "fix": "Request an authorized second reviewer rather than using --admin or lowering policy."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$p=Join-Path $WorkRoot 'branching';git -C $p config branch.main.description 'fault: long-lived unreviewed work'\n",
+    "diagnose": "$p=Join-Path $WorkRoot 'branching';git -C $p log --graph --oneline --all;git -C $p config --get branch.main.description\n",
+    "repair": "$p=Join-Path $WorkRoot 'branching';git -C $p config --unset branch.main.description\n"
+  },
+  "challenge": "Add a required CI status context after a real successful run, then show how stale approvals and failed checks affect merge readiness.",
+  "sources": [
+    "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies",
+    "https://git-scm.com/docs/git-switch"
+  ],
+  "primer": "Short-lived branches reduce integration distance. Required reviews and force-push restrictions protect shared history; the author cannot supply independent approval.",
+  "requiresPaidFeatures": true,
+  "architecture": {
+    "title": "Protected-branch pull request architecture",
+    "nodes": [
+      {
+        "id": "local",
+        "label": "Local Git working copy",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "repo",
+        "label": "GitHub sandbox repository",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "main",
+        "label": "Protected main branch",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "pr",
+        "label": "Feature pull request",
+        "kind": "platform",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "reviewer",
+        "label": "Independent reviewer",
+        "kind": "identity",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "checks",
+        "label": "CI status contexts",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "local",
+        "to": "repo",
+        "label": "push owned source"
+      },
+      {
+        "from": "repo",
+        "to": "main",
+        "label": "branch protection"
+      },
+      {
+        "from": "pr",
+        "to": "main",
+        "label": "policy-controlled merge"
+      },
+      {
+        "from": "reviewer",
+        "to": "pr",
+        "label": "required approval"
+      },
+      {
+        "from": "checks",
+        "to": "pr",
+        "label": "required status signals",
+        "style": "dashed"
+      },
+      {
+        "from": "local",
+        "to": "pr",
+        "label": "feature revision"
+      }
+    ],
+    "topology": "A local feature branch is pushed only to the run-owned GitHub repository. Main is protected against force pushes and deletion and requires independent pull-request review. CI status contexts can be added after their real workflow names exist; an author cannot supply their own independent approval or infer checks from a pushed commit."
+  }
+}

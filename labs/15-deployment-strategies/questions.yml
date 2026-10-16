@@ -1,0 +1,1931 @@
+{
+  "schemaVersion": 1,
+  "labId": "15",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L15-Q001",
+      "checkpointId": "CP1",
+      "caseId": "L15-C01",
+      "task": "remedy",
+      "caseContext": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a blue-green traffic-switch strategy",
+          "rationale": "Parallel environments separate candidate validation from live traffic. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Halt expansion and restore the cohort to the healthy baseline",
+          "rationale": "Canary health should control further exposure. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rehearse rollback with explicit health and completion criteria",
+          "rationale": "A recovery option needs demonstrated operational behavior. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Parallel environments separate candidate validation from live traffic. The selected answer is use a blue-green traffic-switch strategy.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q002",
+      "checkpointId": "CP1",
+      "caseId": "L15-C01",
+      "task": "diagnosis",
+      "caseContext": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The design maintains two release environments",
+          "rationale": "That topology enables a controlled switch between versions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The candidate fails the defined comparative health criteria",
+          "rationale": "A successful deployment task does not imply safe behavior. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Retaining old capacity is not proof of recoverability",
+          "rationale": "Dependencies and configuration may have changed. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "That topology enables a controlled switch between versions. The selected answer is the design maintains two release environments.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q003",
+      "checkpointId": "CP1",
+      "caseId": "L15-C01",
+      "task": "verification",
+      "caseContext": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Exposure stops and cohort errors return to acceptable levels",
+          "rationale": "The evidence must include user-facing service behavior. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A failed candidate is replaced by the healthy baseline within target time",
+          "rationale": "The rehearsal measures the actual recovery objective. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Traffic moves to the validated environment and the old one remains recoverable",
+          "rationale": "The test should verify routing and recovery options. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The test should verify routing and recovery options. The selected answer is traffic moves to the validated environment and the old one remains recoverable.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q004",
+      "checkpointId": "CP1",
+      "caseId": "L15-C01",
+      "task": "safeguard",
+      "caseContext": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate shared dependencies before switching traffic",
+          "rationale": "A separate application environment may still share state. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Define thresholds and observation time before rollout",
+          "rationale": "Ad hoc criteria can rationalize an unsafe expansion. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Confirm data and schema compatibility before rollback",
+          "rationale": "Older application code may not understand new state. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A separate application environment may still share state. The selected answer is validate shared dependencies before switching traffic.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q005",
+      "checkpointId": "CP1",
+      "caseId": "L15-C01",
+      "task": "tradeoff",
+      "caseContext": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. The team selects this remedy: \"Use a blue-green traffic-switch strategy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Small cohorts may produce statistically weak signals",
+          "rationale": "Observation needs enough representative traffic. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Rollback can be constrained by irreversible changes",
+          "rationale": "Some failures require forward repair instead. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Parallel environments increase resource cost",
+          "rationale": "Fast switching trades capacity for reduced cutover risk. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Fast switching trades capacity for reduced cutover risk. The selected answer is parallel environments increase resource cost.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q006",
+      "checkpointId": "CP5",
+      "caseId": "L15-C02",
+      "task": "remedy",
+      "caseContext": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use ordered deployment rings with validation between rings",
+          "rationale": "Cohorts advance through deliberate exposure stages. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use a blue-green traffic-switch strategy",
+          "rationale": "Parallel environments separate candidate validation from live traffic. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Halt expansion and restore the cohort to the healthy baseline",
+          "rationale": "Canary health should control further exposure. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Canary health should control further exposure. The selected answer is halt expansion and restore the cohort to the healthy baseline.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q007",
+      "checkpointId": "CP5",
+      "caseId": "L15-C02",
+      "task": "diagnosis",
+      "caseContext": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Different risk cohorts require controlled promotion order",
+          "rationale": "A single global release lacks the requested staging. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The design maintains two release environments",
+          "rationale": "That topology enables a controlled switch between versions. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The candidate fails the defined comparative health criteria",
+          "rationale": "A successful deployment task does not imply safe behavior. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A successful deployment task does not imply safe behavior. The selected answer is the candidate fails the defined comparative health criteria.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q008",
+      "checkpointId": "CP5",
+      "caseId": "L15-C02",
+      "task": "verification",
+      "caseContext": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Exposure stops and cohort errors return to acceptable levels",
+          "rationale": "The evidence must include user-facing service behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Each ring advances only after its acceptance evidence passes",
+          "rationale": "The progression must match the intended population sequence. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Traffic moves to the validated environment and the old one remains recoverable",
+          "rationale": "The test should verify routing and recovery options. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence must include user-facing service behavior. The selected answer is exposure stops and cohort errors return to acceptable levels.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q009",
+      "checkpointId": "CP5",
+      "caseId": "L15-C02",
+      "task": "safeguard",
+      "caseContext": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate shared dependencies before switching traffic",
+          "rationale": "A separate application environment may still share state. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Define thresholds and observation time before rollout",
+          "rationale": "Ad hoc criteria can rationalize an unsafe expansion. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Keep cohort definitions and emergency stop controls explicit",
+          "rationale": "Incorrect membership can expose unintended users. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Ad hoc criteria can rationalize an unsafe expansion. The selected answer is define thresholds and observation time before rollout.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q010",
+      "checkpointId": "CP5",
+      "caseId": "L15-C02",
+      "task": "tradeoff",
+      "caseContext": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. The team selects this remedy: \"Halt expansion and restore the cohort to the healthy baseline.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel environments increase resource cost",
+          "rationale": "Fast switching trades capacity for reduced cutover risk. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Small cohorts may produce statistically weak signals",
+          "rationale": "Observation needs enough representative traffic. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Ring management adds operational complexity",
+          "rationale": "More cohorts require more policy and observability. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Observation needs enough representative traffic. The selected answer is small cohorts may produce statistically weak signals.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q011",
+      "checkpointId": "CP5",
+      "caseId": "L15-C03",
+      "task": "remedy",
+      "caseContext": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run an A-B experiment with stable assignment and business metrics",
+          "rationale": "The goal is comparative product evidence. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Halt expansion and restore the cohort to the healthy baseline",
+          "rationale": "Canary health should control further exposure. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use ordered deployment rings with validation between rings",
+          "rationale": "Cohorts advance through deliberate exposure stages. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Cohorts advance through deliberate exposure stages. The selected answer is use ordered deployment rings with validation between rings.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q012",
+      "checkpointId": "CP5",
+      "caseId": "L15-C03",
+      "task": "diagnosis",
+      "caseContext": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Different risk cohorts require controlled promotion order",
+          "rationale": "A single global release lacks the requested staging. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "This is an experimentation question rather than only rollout safety",
+          "rationale": "Both variants need meaningful measured outcomes. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The candidate fails the defined comparative health criteria",
+          "rationale": "A successful deployment task does not imply safe behavior. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A single global release lacks the requested staging. The selected answer is different risk cohorts require controlled promotion order.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q013",
+      "checkpointId": "CP5",
+      "caseId": "L15-C03",
+      "task": "verification",
+      "caseContext": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Comparable cohorts produce the specified conversion measurements",
+          "rationale": "The result must support the experiment's business hypothesis. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Exposure stops and cohort errors return to acceptable levels",
+          "rationale": "The evidence must include user-facing service behavior. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Each ring advances only after its acceptance evidence passes",
+          "rationale": "The progression must match the intended population sequence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The progression must match the intended population sequence. The selected answer is each ring advances only after its acceptance evidence passes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q014",
+      "checkpointId": "CP5",
+      "caseId": "L15-C03",
+      "task": "safeguard",
+      "caseContext": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep cohort definitions and emergency stop controls explicit",
+          "rationale": "Incorrect membership can expose unintended users. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Avoid changing assignment mid-session or mixing incompatible data",
+          "rationale": "Unstable cohorts contaminate the comparison. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Define thresholds and observation time before rollout",
+          "rationale": "Ad hoc criteria can rationalize an unsafe expansion. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Incorrect membership can expose unintended users. The selected answer is keep cohort definitions and emergency stop controls explicit.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q015",
+      "checkpointId": "CP5",
+      "caseId": "L15-C03",
+      "task": "tradeoff",
+      "caseContext": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. The team selects this remedy: \"Use ordered deployment rings with validation between rings.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Small cohorts may produce statistically weak signals",
+          "rationale": "Observation needs enough representative traffic. That addresses a different requirement: Canary regression. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Ring management adds operational complexity",
+          "rationale": "More cohorts require more policy and observability. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Experiments need sufficient sample size and bias control",
+          "rationale": "A short noisy comparison may not justify conclusions. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "More cohorts require more policy and observability. The selected answer is ring management adds operational complexity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q016",
+      "checkpointId": "CP5",
+      "caseId": "L15-C04",
+      "task": "remedy",
+      "caseContext": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Warm and validate the staging slot before cutover",
+          "rationale": "The candidate should be ready before serving users. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use ordered deployment rings with validation between rings",
+          "rationale": "Cohorts advance through deliberate exposure stages. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Run an A-B experiment with stable assignment and business metrics",
+          "rationale": "The goal is comparative product evidence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The goal is comparative product evidence. The selected answer is run an A-B experiment with stable assignment and business metrics.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q017",
+      "checkpointId": "CP5",
+      "caseId": "L15-C04",
+      "task": "diagnosis",
+      "caseContext": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Different risk cohorts require controlled promotion order",
+          "rationale": "A single global release lacks the requested staging. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "This is an experimentation question rather than only rollout safety",
+          "rationale": "Both variants need meaningful measured outcomes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Startup readiness was not established before routing traffic",
+          "rationale": "Deployment completion and application readiness differ. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Both variants need meaningful measured outcomes. The selected answer is this is an experimentation question rather than only rollout safety.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q018",
+      "checkpointId": "CP5",
+      "caseId": "L15-C04",
+      "task": "verification",
+      "caseContext": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The candidate passes readiness checks before traffic moves",
+          "rationale": "The proof should exercise the actual startup path. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Each ring advances only after its acceptance evidence passes",
+          "rationale": "The progression must match the intended population sequence. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Comparable cohorts produce the specified conversion measurements",
+          "rationale": "The result must support the experiment's business hypothesis. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The result must support the experiment's business hypothesis. The selected answer is comparable cohorts produce the specified conversion measurements.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q019",
+      "checkpointId": "CP5",
+      "caseId": "L15-C04",
+      "task": "safeguard",
+      "caseContext": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "applied",
+      "question": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use health checks representative of critical dependencies",
+          "rationale": "A shallow ping can miss an unusable application. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep cohort definitions and emergency stop controls explicit",
+          "rationale": "Incorrect membership can expose unintended users. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid changing assignment mid-session or mixing incompatible data",
+          "rationale": "Unstable cohorts contaminate the comparison. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Unstable cohorts contaminate the comparison. The selected answer is avoid changing assignment mid-session or mixing incompatible data.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q020",
+      "checkpointId": "CP5",
+      "caseId": "L15-C04",
+      "task": "tradeoff",
+      "caseContext": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment.",
+      "objectiveIds": [
+        "D3.4.1"
+      ],
+      "difficulty": "advanced",
+      "question": "A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. The team selects this remedy: \"Run an A-B experiment with stable assignment and business metrics.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ring management adds operational complexity",
+          "rationale": "More cohorts require more policy and observability. That addresses a different requirement: Ring rollout. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Experiments need sufficient sample size and bias control",
+          "rationale": "A short noisy comparison may not justify conclusions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Warmup increases release time and resource use",
+          "rationale": "The overhead reduces user-facing startup risk. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A short noisy comparison may not justify conclusions. The selected answer is experiments need sufficient sample size and bias control.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q021",
+      "checkpointId": "CP4",
+      "caseId": "L15-C05",
+      "task": "remedy",
+      "caseContext": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run an A-B experiment with stable assignment and business metrics",
+          "rationale": "The goal is comparative product evidence. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Warm and validate the staging slot before cutover",
+          "rationale": "The candidate should be ready before serving users. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Review slot-specific settings and swap behavior",
+          "rationale": "Configuration movement must match the intended environment boundary. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The candidate should be ready before serving users. The selected answer is warm and validate the staging slot before cutover.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q022",
+      "checkpointId": "CP4",
+      "caseId": "L15-C05",
+      "task": "diagnosis",
+      "caseContext": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "This is an experimentation question rather than only rollout safety",
+          "rationale": "Both variants need meaningful measured outcomes. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Startup readiness was not established before routing traffic",
+          "rationale": "Deployment completion and application readiness differ. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Not every setting has the desired stickiness behavior",
+          "rationale": "A correct binary can run against the wrong service. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Deployment completion and application readiness differ. The selected answer is startup readiness was not established before routing traffic.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q023",
+      "checkpointId": "CP4",
+      "caseId": "L15-C05",
+      "task": "verification",
+      "caseContext": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Comparable cohorts produce the specified conversion measurements",
+          "rationale": "The result must support the experiment's business hypothesis. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The candidate passes readiness checks before traffic moves",
+          "rationale": "The proof should exercise the actual startup path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "After a rehearsal each slot retains its intended backend configuration",
+          "rationale": "The test must inspect configuration after the swap. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The proof should exercise the actual startup path. The selected answer is the candidate passes readiness checks before traffic moves.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q024",
+      "checkpointId": "CP4",
+      "caseId": "L15-C05",
+      "task": "safeguard",
+      "caseContext": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use nonproduction validation targets during the rehearsal",
+          "rationale": "Wrong-backend tests must not modify production data. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid changing assignment mid-session or mixing incompatible data",
+          "rationale": "Unstable cohorts contaminate the comparison. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use health checks representative of critical dependencies",
+          "rationale": "A shallow ping can miss an unusable application. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A shallow ping can miss an unusable application. The selected answer is use health checks representative of critical dependencies.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q025",
+      "checkpointId": "CP4",
+      "caseId": "L15-C05",
+      "task": "tradeoff",
+      "caseContext": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. The team selects this remedy: \"Warm and validate the staging slot before cutover.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Warmup increases release time and resource use",
+          "rationale": "The overhead reduces user-facing startup risk. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Slot swap is not equivalent to full environment isolation",
+          "rationale": "Shared resources and setting behavior need separate review. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Experiments need sufficient sample size and bias control",
+          "rationale": "A short noisy comparison may not justify conclusions. That addresses a different requirement: A-B experiment. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The overhead reduces user-facing startup risk. The selected answer is warmup increases release time and resource use.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q026",
+      "checkpointId": "CP3",
+      "caseId": "L15-C06",
+      "task": "remedy",
+      "caseContext": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use the documented supported-release hotfix path",
+          "rationale": "The patch should exclude unrelated unready changes. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Warm and validate the staging slot before cutover",
+          "rationale": "The candidate should be ready before serving users. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Review slot-specific settings and swap behavior",
+          "rationale": "Configuration movement must match the intended environment boundary. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Configuration movement must match the intended environment boundary. The selected answer is review slot-specific settings and swap behavior.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q027",
+      "checkpointId": "CP3",
+      "caseId": "L15-C06",
+      "task": "diagnosis",
+      "caseContext": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Startup readiness was not established before routing traffic",
+          "rationale": "Deployment completion and application readiness differ. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Not every setting has the desired stickiness behavior",
+          "rationale": "A correct binary can run against the wrong service. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The default branch does not represent the deployed baseline",
+          "rationale": "Releasing it would broaden emergency scope. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A correct binary can run against the wrong service. The selected answer is not every setting has the desired stickiness behavior.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q028",
+      "checkpointId": "CP3",
+      "caseId": "L15-C06",
+      "task": "verification",
+      "caseContext": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The candidate passes readiness checks before traffic moves",
+          "rationale": "The proof should exercise the actual startup path. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "After a rehearsal each slot retains its intended backend configuration",
+          "rationale": "The test must inspect configuration after the swap. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The patch fixes production and is reconciled into future development",
+          "rationale": "Both immediate repair and forward consistency matter. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test must inspect configuration after the swap. The selected answer is after a rehearsal each slot retains its intended backend configuration.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q029",
+      "checkpointId": "CP3",
+      "caseId": "L15-C06",
+      "task": "safeguard",
+      "caseContext": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use nonproduction validation targets during the rehearsal",
+          "rationale": "Wrong-backend tests must not modify production data. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Retain required review and targeted regression tests",
+          "rationale": "Urgency should not remove all quality evidence. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use health checks representative of critical dependencies",
+          "rationale": "A shallow ping can miss an unusable application. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Wrong-backend tests must not modify production data. The selected answer is use nonproduction validation targets during the rehearsal.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q030",
+      "checkpointId": "CP3",
+      "caseId": "L15-C06",
+      "task": "tradeoff",
+      "caseContext": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend.",
+      "objectiveIds": [
+        "D3.4.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. The team selects this remedy: \"Review slot-specific settings and swap behavior.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel hotfix branches increase reconciliation work",
+          "rationale": "The fix must not be lost in the next release. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Warmup increases release time and resource use",
+          "rationale": "The overhead reduces user-facing startup risk. That addresses a different requirement: Cold slot. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Slot swap is not equivalent to full environment isolation",
+          "rationale": "Shared resources and setting behavior need separate review. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Shared resources and setting behavior need separate review. The selected answer is slot swap is not equivalent to full environment isolation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q031",
+      "checkpointId": "CP5",
+      "caseId": "L15-C07",
+      "task": "remedy",
+      "caseContext": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today.",
+      "objectiveIds": [
+        "D3.4.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review slot-specific settings and swap behavior",
+          "rationale": "Configuration movement must match the intended environment boundary. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use the documented supported-release hotfix path",
+          "rationale": "The patch should exclude unrelated unready changes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a controlled rolling deployment with readiness checks",
+          "rationale": "Healthy capacity should remain while instances change. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The patch should exclude unrelated unready changes. The selected answer is use the documented supported-release hotfix path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q032",
+      "checkpointId": "CP5",
+      "caseId": "L15-C07",
+      "task": "diagnosis",
+      "caseContext": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today.",
+      "objectiveIds": [
+        "D3.4.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The default branch does not represent the deployed baseline",
+          "rationale": "Releasing it would broaden emergency scope. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The rollout removes all serving capacity at once",
+          "rationale": "Parallel replacement violates the availability requirement. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Not every setting has the desired stickiness behavior",
+          "rationale": "A correct binary can run against the wrong service. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Releasing it would broaden emergency scope. The selected answer is the default branch does not represent the deployed baseline.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q033",
+      "checkpointId": "CP5",
+      "caseId": "L15-C07",
+      "task": "verification",
+      "caseContext": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today.",
+      "objectiveIds": [
+        "D3.4.4"
+      ],
+      "difficulty": "applied",
+      "question": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "After a rehearsal each slot retains its intended backend configuration",
+          "rationale": "The test must inspect configuration after the swap. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The patch fixes production and is reconciled into future development",
+          "rationale": "Both immediate repair and forward consistency matter. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Some healthy instances serve traffic throughout the update",
+          "rationale": "The evidence should cover the transition interval. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Both immediate repair and forward consistency matter. The selected answer is the patch fixes production and is reconciled into future development.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q034",
+      "checkpointId": "CP5",
+      "caseId": "L15-C07",
+      "task": "safeguard",
+      "caseContext": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today.",
+      "objectiveIds": [
+        "D3.4.4"
+      ],
+      "difficulty": "applied",
+      "question": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Set capacity and failure thresholds for the actual workload",
+          "rationale": "Too aggressive a rollout can exhaust remaining capacity. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use nonproduction validation targets during the rehearsal",
+          "rationale": "Wrong-backend tests must not modify production data. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Retain required review and targeted regression tests",
+          "rationale": "Urgency should not remove all quality evidence. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Urgency should not remove all quality evidence. The selected answer is retain required review and targeted regression tests.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q035",
+      "checkpointId": "CP5",
+      "caseId": "L15-C07",
+      "task": "tradeoff",
+      "caseContext": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today.",
+      "objectiveIds": [
+        "D3.4.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. The team selects this remedy: \"Use the documented supported-release hotfix path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel hotfix branches increase reconciliation work",
+          "rationale": "The fix must not be lost in the next release. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Rolling updates temporarily run mixed application versions",
+          "rationale": "Compatibility is required during the transition. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Slot swap is not equivalent to full environment isolation",
+          "rationale": "Shared resources and setting behavior need separate review. That addresses a different requirement: Wrong configuration. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The fix must not be lost in the next release. The selected answer is parallel hotfix branches increase reconciliation work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q036",
+      "checkpointId": "CP3",
+      "caseId": "L15-C08",
+      "task": "remedy",
+      "caseContext": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Externalize or deliberately handle session state across the cutover",
+          "rationale": "Application state must survive the chosen routing change. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use the documented supported-release hotfix path",
+          "rationale": "The patch should exclude unrelated unready changes. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a controlled rolling deployment with readiness checks",
+          "rationale": "Healthy capacity should remain while instances change. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Healthy capacity should remain while instances change. The selected answer is use a controlled rolling deployment with readiness checks.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q037",
+      "checkpointId": "CP3",
+      "caseId": "L15-C08",
+      "task": "diagnosis",
+      "caseContext": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Session data is tied to the old instances",
+          "rationale": "Traffic switching does not transfer process memory. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The default branch does not represent the deployed baseline",
+          "rationale": "Releasing it would broaden emergency scope. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The rollout removes all serving capacity at once",
+          "rationale": "Parallel replacement violates the availability requirement. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Parallel replacement violates the availability requirement. The selected answer is the rollout removes all serving capacity at once.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q038",
+      "checkpointId": "CP3",
+      "caseId": "L15-C08",
+      "task": "verification",
+      "caseContext": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A representative user session remains valid through cutover",
+          "rationale": "The test must include stateful user behavior. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The patch fixes production and is reconciled into future development",
+          "rationale": "Both immediate repair and forward consistency matter. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Some healthy instances serve traffic throughout the update",
+          "rationale": "The evidence should cover the transition interval. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The evidence should cover the transition interval. The selected answer is some healthy instances serve traffic throughout the update.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q039",
+      "checkpointId": "CP3",
+      "caseId": "L15-C08",
+      "task": "safeguard",
+      "caseContext": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "applied",
+      "question": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retain required review and targeted regression tests",
+          "rationale": "Urgency should not remove all quality evidence. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Set capacity and failure thresholds for the actual workload",
+          "rationale": "Too aggressive a rollout can exhaust remaining capacity. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Assess security and expiry rules for shared session storage",
+          "rationale": "Availability should not weaken session protection. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Too aggressive a rollout can exhaust remaining capacity. The selected answer is set capacity and failure thresholds for the actual workload.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q040",
+      "checkpointId": "CP3",
+      "caseId": "L15-C08",
+      "task": "tradeoff",
+      "caseContext": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity.",
+      "objectiveIds": [
+        "D3.4.7"
+      ],
+      "difficulty": "advanced",
+      "question": "Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. The team selects this remedy: \"Use a controlled rolling deployment with readiness checks.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel hotfix branches increase reconciliation work",
+          "rationale": "The fix must not be lost in the next release. That addresses a different requirement: Emergency patch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Rolling updates temporarily run mixed application versions",
+          "rationale": "Compatibility is required during the transition. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Shared state introduces another dependency",
+          "rationale": "Its cost and reliability become part of release design. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Compatibility is required during the transition. The selected answer is rolling updates temporarily run mixed application versions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L15-C09",
+      "task": "remedy",
+      "caseContext": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Externalize or deliberately handle session state across the cutover",
+          "rationale": "Application state must survive the chosen routing change. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Rehearse rollback with explicit health and completion criteria",
+          "rationale": "A recovery option needs demonstrated operational behavior. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a controlled rolling deployment with readiness checks",
+          "rationale": "Healthy capacity should remain while instances change. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Application state must survive the chosen routing change. The selected answer is externalize or deliberately handle session state across the cutover.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L15-C09",
+      "task": "diagnosis",
+      "caseContext": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The rollout removes all serving capacity at once",
+          "rationale": "Parallel replacement violates the availability requirement. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Session data is tied to the old instances",
+          "rationale": "Traffic switching does not transfer process memory. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Retaining old capacity is not proof of recoverability",
+          "rationale": "Dependencies and configuration may have changed. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Traffic switching does not transfer process memory. The selected answer is session data is tied to the old instances.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L15-C09",
+      "task": "verification",
+      "caseContext": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Some healthy instances serve traffic throughout the update",
+          "rationale": "The evidence should cover the transition interval. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A representative user session remains valid through cutover",
+          "rationale": "The test must include stateful user behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A failed candidate is replaced by the healthy baseline within target time",
+          "rationale": "The rehearsal measures the actual recovery objective. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test must include stateful user behavior. The selected answer is a representative user session remains valid through cutover.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L15-C09",
+      "task": "safeguard",
+      "caseContext": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.3"
+      ],
+      "difficulty": "applied",
+      "question": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Confirm data and schema compatibility before rollback",
+          "rationale": "Older application code may not understand new state. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Set capacity and failure thresholds for the actual workload",
+          "rationale": "Too aggressive a rollout can exhaust remaining capacity. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Assess security and expiry rules for shared session storage",
+          "rationale": "Availability should not weaken session protection. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Availability should not weaken session protection. The selected answer is assess security and expiry rules for shared session storage.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L15-C09",
+      "task": "tradeoff",
+      "caseContext": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. The team selects this remedy: \"Externalize or deliberately handle session state across the cutover.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rolling updates temporarily run mixed application versions",
+          "rationale": "Compatibility is required during the transition. That addresses a different requirement: Rolling update failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Shared state introduces another dependency",
+          "rationale": "Its cost and reliability become part of release design. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Rollback can be constrained by irreversible changes",
+          "rationale": "Some failures require forward repair instead. That addresses a different requirement: Rollback confidence. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Its cost and reliability become part of release design. The selected answer is shared state introduces another dependency.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q046",
+      "checkpointId": "CP5",
+      "caseId": "L15-C10",
+      "task": "remedy",
+      "caseContext": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Externalize or deliberately handle session state across the cutover",
+          "rationale": "Application state must survive the chosen routing change. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Rehearse rollback with explicit health and completion criteria",
+          "rationale": "A recovery option needs demonstrated operational behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a blue-green traffic-switch strategy",
+          "rationale": "Parallel environments separate candidate validation from live traffic. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A recovery option needs demonstrated operational behavior. The selected answer is rehearse rollback with explicit health and completion criteria.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q047",
+      "checkpointId": "CP5",
+      "caseId": "L15-C10",
+      "task": "diagnosis",
+      "caseContext": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Session data is tied to the old instances",
+          "rationale": "Traffic switching does not transfer process memory. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Retaining old capacity is not proof of recoverability",
+          "rationale": "Dependencies and configuration may have changed. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The design maintains two release environments",
+          "rationale": "That topology enables a controlled switch between versions. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Dependencies and configuration may have changed. The selected answer is retaining old capacity is not proof of recoverability.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q048",
+      "checkpointId": "CP5",
+      "caseId": "L15-C10",
+      "task": "verification",
+      "caseContext": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A failed candidate is replaced by the healthy baseline within target time",
+          "rationale": "The rehearsal measures the actual recovery objective. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Traffic moves to the validated environment and the old one remains recoverable",
+          "rationale": "The test should verify routing and recovery options. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A representative user session remains valid through cutover",
+          "rationale": "The test must include stateful user behavior. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The rehearsal measures the actual recovery objective. The selected answer is a failed candidate is replaced by the healthy baseline within target time.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q049",
+      "checkpointId": "CP5",
+      "caseId": "L15-C10",
+      "task": "safeguard",
+      "caseContext": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate shared dependencies before switching traffic",
+          "rationale": "A separate application environment may still share state. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Assess security and expiry rules for shared session storage",
+          "rationale": "Availability should not weaken session protection. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Confirm data and schema compatibility before rollback",
+          "rationale": "Older application code may not understand new state. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Older application code may not understand new state. The selected answer is confirm data and schema compatibility before rollback.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L15-Q050",
+      "checkpointId": "CP5",
+      "caseId": "L15-C10",
+      "task": "tradeoff",
+      "caseContext": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release.",
+      "objectiveIds": [
+        "D3.4.1",
+        "D3.4.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. The team selects this remedy: \"Rehearse rollback with explicit health and completion criteria.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parallel environments increase resource cost",
+          "rationale": "Fast switching trades capacity for reduced cutover risk. That addresses a different requirement: Blue-green candidate. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Shared state introduces another dependency",
+          "rationale": "Its cost and reliability become part of release design. That addresses a different requirement: Session disruption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rollback can be constrained by irreversible changes",
+          "rationale": "Some failures require forward repair instead. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Some failures require forward repair instead. The selected answer is rollback can be constrained by irreversible changes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

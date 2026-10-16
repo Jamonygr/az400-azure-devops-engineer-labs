@@ -1,0 +1,36 @@
+name: Dependency and CodeQL gates
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      # TreatWarningsAsErrors turns known vulnerable restore dependencies into a failed build.
+      - run: dotnet restore samples/DevOps.slnx --locked-mode -p:NuGetAudit=true -p:NuGetAuditMode=all
+      - run: dotnet package list --project samples/DevOps.Api/DevOps.Api.csproj --vulnerable --include-transitive --format json > dependency-audit.json
+  codeql:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4
+        with:
+          languages: csharp
+          build-mode: manual
+      - run: dotnet restore samples/DevOps.slnx --locked-mode
+      - run: dotnet build samples/DevOps.slnx --configuration Release --no-restore
+      - uses: github/codeql-action/analyze@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4

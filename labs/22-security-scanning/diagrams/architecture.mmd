@@ -1,0 +1,14 @@
+flowchart LR
+  source["Sample source + package locks"]
+  advisories["NuGet vulnerability advisories"]
+  codeql["CodeQL workflow contract"]
+  container["Container image + scan contract"]
+  gate["Reviewed security release gate"]
+  license["License / secret review evidence"]
+  source -->|dependency inventory lookup| advisories
+  source -.->|C# analysis target| codeql
+  advisories -->|dated severity findings| gate
+  codeql -.->|separate scan result| gate
+  container -.->|image severity result| gate
+  source -->|licenses / synthetic leak rule| license
+  license -->|explicit approval status| gate

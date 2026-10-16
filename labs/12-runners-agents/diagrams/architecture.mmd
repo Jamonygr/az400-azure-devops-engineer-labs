@@ -1,0 +1,13 @@
+flowchart LR
+  github["GitHub Actions control plane"]
+  ado["Azure DevOps control plane"]
+  https["Outbound HTTPS boundary"]
+  hosted["Hosted ephemeral worker"]
+  private["Private-network worker design"]
+  image["Pinned tool / image baseline"]
+  github -->|job / runner API| https
+  ado -->|pool / agent API| https
+  https -->|controlled outbound access| hosted
+  https -.->|approved private job path| private
+  image -->|known toolchain| hosted
+  image -.->|maintained image contract| private

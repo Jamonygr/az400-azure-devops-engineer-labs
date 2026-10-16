@@ -1,0 +1,1926 @@
+{
+  "schemaVersion": 1,
+  "labId": "25",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L25-Q001",
+      "checkpointId": "CP5",
+      "caseId": "L25-C01",
+      "task": "remedy",
+      "caseContext": "Slow log query: A responder searches all retained request rows before applying the incident time window.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Slow log query: A responder searches all retained request rows before applying the incident time window. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Summarize counts by a five-minute time bin",
+          "rationale": "Time bins preserve the requested trend structure. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Project only the fields required for diagnosis",
+          "rationale": "Narrow output limits unnecessary data disclosure. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Filter time and relevant scope early in the KQL query",
+          "rationale": "Early selective filtering reduces unnecessary processing. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Early selective filtering reduces unnecessary processing. The selected answer is filter time and relevant scope early in the KQL query.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q002",
+      "checkpointId": "CP5",
+      "caseId": "L25-C01",
+      "task": "diagnosis",
+      "caseContext": "Slow log query: A responder searches all retained request rows before applying the incident time window.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Slow log query: A responder searches all retained request rows before applying the incident time window. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The export includes more sensitive context than the task needs",
+          "rationale": "Query access does not justify broad redistribution. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The query scans data outside the investigation window",
+          "rationale": "Broad scans increase work without adding relevant evidence. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A single aggregate collapses the incident timeline",
+          "rationale": "It cannot show when the volume changed. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Broad scans increase work without adding relevant evidence. The selected answer is the query scans data outside the investigation window.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q003",
+      "checkpointId": "CP5",
+      "caseId": "L25-C01",
+      "task": "verification",
+      "caseContext": "Slow log query: A responder searches all retained request rows before applying the incident time window.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Slow log query: A responder searches all retained request rows before applying the incident time window. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The result has ordered five-minute buckets and counts",
+          "rationale": "The evidence should match the requested temporal granularity. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The report contains relevant timing without unnecessary payload data",
+          "rationale": "The evidence should inspect the exported artifact. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The narrowed query returns the same relevant incident records",
+          "rationale": "Optimization should preserve the investigation's intended population. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Optimization should preserve the investigation's intended population. The selected answer is the narrowed query returns the same relevant incident records.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q004",
+      "checkpointId": "CP5",
+      "caseId": "L25-C01",
+      "task": "safeguard",
+      "caseContext": "Slow log query: A responder searches all retained request rows before applying the incident time window.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Slow log query: A responder searches all retained request rows before applying the incident time window. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify timezone and timestamp meaning before narrowing",
+          "rationale": "A wrong time window can hide important events. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Choose bins appropriate to the sample density",
+          "rationale": "Sparse data can make fine-grained charts misleading. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Apply appropriate access and retention to investigation results",
+          "rationale": "Derived reports can outlive the original controlled query. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A wrong time window can hide important events. The selected answer is verify timezone and timestamp meaning before narrowing.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q005",
+      "checkpointId": "CP5",
+      "caseId": "L25-C01",
+      "task": "tradeoff",
+      "caseContext": "Slow log query: A responder searches all retained request rows before applying the incident time window.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Slow log query: A responder searches all retained request rows before applying the incident time window. The team selects this remedy: \"Filter time and relevant scope early in the KQL query.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Minimal projections may require follow-up queries",
+          "rationale": "Reduced exposure can add a small diagnostic step. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Very narrow windows can miss preceding causal events",
+          "rationale": "Expand deliberately when the investigation requires context. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Coarser bins smooth short spikes",
+          "rationale": "Granularity changes the behavior visible to responders. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Expand deliberately when the investigation requires context. The selected answer is very narrow windows can miss preceding causal events.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q006",
+      "checkpointId": "CP2",
+      "caseId": "L25-C02",
+      "task": "remedy",
+      "caseContext": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Summarize counts by a five-minute time bin",
+          "rationale": "Time bins preserve the requested trend structure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Inspect latency percentiles and the slow-request cohort",
+          "rationale": "Tail behavior can be hidden by an average. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Filter time and relevant scope early in the KQL query",
+          "rationale": "Early selective filtering reduces unnecessary processing. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Time bins preserve the requested trend structure. The selected answer is summarize counts by a five-minute time bin.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q007",
+      "checkpointId": "CP2",
+      "caseId": "L25-C02",
+      "task": "diagnosis",
+      "caseContext": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Most fast requests dilute the slow minority",
+          "rationale": "A central measure does not describe every user. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The query scans data outside the investigation window",
+          "rationale": "Broad scans increase work without adding relevant evidence. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A single aggregate collapses the incident timeline",
+          "rationale": "It cannot show when the volume changed. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "It cannot show when the volume changed. The selected answer is a single aggregate collapses the incident timeline.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q008",
+      "checkpointId": "CP2",
+      "caseId": "L25-C02",
+      "task": "verification",
+      "caseContext": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The result has ordered five-minute buckets and counts",
+          "rationale": "The evidence should match the requested temporal granularity. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The latency distribution exposes the affected slow tail",
+          "rationale": "The evidence must reveal the exceptional experience. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The narrowed query returns the same relevant incident records",
+          "rationale": "Optimization should preserve the investigation's intended population. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The evidence should match the requested temporal granularity. The selected answer is the result has ordered five-minute buckets and counts.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q009",
+      "checkpointId": "CP2",
+      "caseId": "L25-C02",
+      "task": "safeguard",
+      "caseContext": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify timezone and timestamp meaning before narrowing",
+          "rationale": "A wrong time window can hide important events. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Choose bins appropriate to the sample density",
+          "rationale": "Sparse data can make fine-grained charts misleading. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Compare equivalent operations and relevant user populations",
+          "rationale": "Mixed endpoints can distort latency interpretation. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Sparse data can make fine-grained charts misleading. The selected answer is choose bins appropriate to the sample density.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q010",
+      "checkpointId": "CP2",
+      "caseId": "L25-C02",
+      "task": "tradeoff",
+      "caseContext": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. The team selects this remedy: \"Summarize counts by a five-minute time bin.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Coarser bins smooth short spikes",
+          "rationale": "Granularity changes the behavior visible to responders. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Percentiles need sufficient representative observations",
+          "rationale": "Small or sampled populations require caution. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Very narrow windows can miss preceding causal events",
+          "rationale": "Expand deliberately when the investigation requires context. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Granularity changes the behavior visible to responders. The selected answer is coarser bins smooth short spikes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q011",
+      "checkpointId": "CP2",
+      "caseId": "L25-C03",
+      "task": "remedy",
+      "caseContext": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests.",
+      "objectiveIds": [
+        "D5.2.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect latency percentiles and the slow-request cohort",
+          "rationale": "Tail behavior can be hidden by an average. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Correlate request and dependency telemetry by trace context",
+          "rationale": "Distributed tracing links records across service boundaries. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Summarize counts by a five-minute time bin",
+          "rationale": "Time bins preserve the requested trend structure. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Tail behavior can be hidden by an average. The selected answer is inspect latency percentiles and the slow-request cohort.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q012",
+      "checkpointId": "CP2",
+      "caseId": "L25-C03",
+      "task": "diagnosis",
+      "caseContext": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests.",
+      "objectiveIds": [
+        "D5.2.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A single aggregate collapses the incident timeline",
+          "rationale": "It cannot show when the volume changed. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Most fast requests dilute the slow minority",
+          "rationale": "A central measure does not describe every user. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Timestamp proximity alone does not identify one transaction",
+          "rationale": "Concurrent requests overlap in time. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A central measure does not describe every user. The selected answer is most fast requests dilute the slow minority.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q013",
+      "checkpointId": "CP2",
+      "caseId": "L25-C03",
+      "task": "verification",
+      "caseContext": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests.",
+      "objectiveIds": [
+        "D5.2.2"
+      ],
+      "difficulty": "applied",
+      "question": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The result has ordered five-minute buckets and counts",
+          "rationale": "The evidence should match the requested temporal granularity. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The latency distribution exposes the affected slow tail",
+          "rationale": "The evidence must reveal the exceptional experience. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The failing request links to its backend dependency chain",
+          "rationale": "The trace should preserve causal relationships. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence must reveal the exceptional experience. The selected answer is the latency distribution exposes the affected slow tail.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q014",
+      "checkpointId": "CP2",
+      "caseId": "L25-C03",
+      "task": "safeguard",
+      "caseContext": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests.",
+      "objectiveIds": [
+        "D5.2.2"
+      ],
+      "difficulty": "applied",
+      "question": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Propagate supported trace context across every relevant hop",
+          "rationale": "A missing boundary can fragment the transaction. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Choose bins appropriate to the sample density",
+          "rationale": "Sparse data can make fine-grained charts misleading. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Compare equivalent operations and relevant user populations",
+          "rationale": "Mixed endpoints can distort latency interpretation. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Mixed endpoints can distort latency interpretation. The selected answer is compare equivalent operations and relevant user populations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q015",
+      "checkpointId": "CP2",
+      "caseId": "L25-C03",
+      "task": "tradeoff",
+      "caseContext": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests.",
+      "objectiveIds": [
+        "D5.2.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Average hides pain: Mean latency is normal while a small set of users experience very slow requests. The team selects this remedy: \"Inspect latency percentiles and the slow-request cohort.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Incomplete instrumentation limits trace completeness",
+          "rationale": "Correlation cannot reconstruct every missing event. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Coarser bins smooth short spikes",
+          "rationale": "Granularity changes the behavior visible to responders. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Percentiles need sufficient representative observations",
+          "rationale": "Small or sampled populations require caution. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Small or sampled populations require caution. The selected answer is percentiles need sufficient representative observations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q016",
+      "checkpointId": "CP3",
+      "caseId": "L25-C04",
+      "task": "remedy",
+      "caseContext": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Correlate request and dependency telemetry by trace context",
+          "rationale": "Distributed tracing links records across service boundaries. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Restore trace-context propagation between the services",
+          "rationale": "Telemetry collection and correlation are separate requirements. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Inspect latency percentiles and the slow-request cohort",
+          "rationale": "Tail behavior can be hidden by an average. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Distributed tracing links records across service boundaries. The selected answer is correlate request and dependency telemetry by trace context.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q017",
+      "checkpointId": "CP3",
+      "caseId": "L25-C04",
+      "task": "diagnosis",
+      "caseContext": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Most fast requests dilute the slow minority",
+          "rationale": "A central measure does not describe every user. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Timestamp proximity alone does not identify one transaction",
+          "rationale": "Concurrent requests overlap in time. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The receiving service starts a disconnected trace",
+          "rationale": "It cannot associate the call with its upstream parent. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Concurrent requests overlap in time. The selected answer is timestamp proximity alone does not identify one transaction.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q018",
+      "checkpointId": "CP3",
+      "caseId": "L25-C04",
+      "task": "verification",
+      "caseContext": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The failing request links to its backend dependency chain",
+          "rationale": "The trace should preserve causal relationships. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A test request appears as one linked distributed trace",
+          "rationale": "The proof should span the repaired service boundary. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The latency distribution exposes the affected slow tail",
+          "rationale": "The evidence must reveal the exceptional experience. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The trace should preserve causal relationships. The selected answer is the failing request links to its backend dependency chain.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q019",
+      "checkpointId": "CP3",
+      "caseId": "L25-C04",
+      "task": "safeguard",
+      "caseContext": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare equivalent operations and relevant user populations",
+          "rationale": "Mixed endpoints can distort latency interpretation. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Propagate supported trace context across every relevant hop",
+          "rationale": "A missing boundary can fragment the transaction. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use supported context handling rather than ad hoc identifiers",
+          "rationale": "Custom copying can create incorrect or spoofable relationships. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A missing boundary can fragment the transaction. The selected answer is propagate supported trace context across every relevant hop.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q020",
+      "checkpointId": "CP3",
+      "caseId": "L25-C04",
+      "task": "tradeoff",
+      "caseContext": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. The team selects this remedy: \"Correlate request and dependency telemetry by trace context.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Third-party services may not preserve context",
+          "rationale": "Some trace boundaries require documented limitations. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Percentiles need sufficient representative observations",
+          "rationale": "Small or sampled populations require caution. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Incomplete instrumentation limits trace completeness",
+          "rationale": "Correlation cannot reconstruct every missing event. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Correlation cannot reconstruct every missing event. The selected answer is incomplete instrumentation limits trace completeness.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q021",
+      "checkpointId": "CP3",
+      "caseId": "L25-C05",
+      "task": "remedy",
+      "caseContext": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Correlate CPU pressure with request and process behavior",
+          "rationale": "Sustained host pressure is a plausible performance contributor. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Correlate request and dependency telemetry by trace context",
+          "rationale": "Distributed tracing links records across service boundaries. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Restore trace-context propagation between the services",
+          "rationale": "Telemetry collection and correlation are separate requirements. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Telemetry collection and correlation are separate requirements. The selected answer is restore trace-context propagation between the services.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q022",
+      "checkpointId": "CP3",
+      "caseId": "L25-C05",
+      "task": "diagnosis",
+      "caseContext": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The infrastructure signal indicates constrained compute headroom",
+          "rationale": "Correlation needs application context before concluding causation. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Timestamp proximity alone does not identify one transaction",
+          "rationale": "Concurrent requests overlap in time. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The receiving service starts a disconnected trace",
+          "rationale": "It cannot associate the call with its upstream parent. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "It cannot associate the call with its upstream parent. The selected answer is the receiving service starts a disconnected trace.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q023",
+      "checkpointId": "CP3",
+      "caseId": "L25-C05",
+      "task": "verification",
+      "caseContext": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The incident view aligns CPU pressure with affected operations",
+          "rationale": "The evidence should compare time and workload scope. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The failing request links to its backend dependency chain",
+          "rationale": "The trace should preserve causal relationships. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A test request appears as one linked distributed trace",
+          "rationale": "The proof should span the repaired service boundary. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The proof should span the repaired service boundary. The selected answer is a test request appears as one linked distributed trace.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q024",
+      "checkpointId": "CP3",
+      "caseId": "L25-C05",
+      "task": "safeguard",
+      "caseContext": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Avoid scaling before confirming the bottleneck and workload",
+          "rationale": "An expensive change can mask a different root cause. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Propagate supported trace context across every relevant hop",
+          "rationale": "A missing boundary can fragment the transaction. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use supported context handling rather than ad hoc identifiers",
+          "rationale": "Custom copying can create incorrect or spoofable relationships. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Custom copying can create incorrect or spoofable relationships. The selected answer is use supported context handling rather than ad hoc identifiers.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q025",
+      "checkpointId": "CP3",
+      "caseId": "L25-C05",
+      "task": "tradeoff",
+      "caseContext": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped.",
+      "objectiveIds": [
+        "D5.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. The team selects this remedy: \"Restore trace-context propagation between the services.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Incomplete instrumentation limits trace completeness",
+          "rationale": "Correlation cannot reconstruct every missing event. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Third-party services may not preserve context",
+          "rationale": "Some trace boundaries require documented limitations. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Correlation does not prove causation",
+          "rationale": "A controlled comparison or deeper profiling may be needed. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Some trace boundaries require documented limitations. The selected answer is third-party services may not preserve context.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q026",
+      "checkpointId": "CP5",
+      "caseId": "L25-C06",
+      "task": "remedy",
+      "caseContext": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Correlate CPU pressure with request and process behavior",
+          "rationale": "Sustained host pressure is a plausible performance contributor. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Investigate storage performance rather than assuming CPU shortage",
+          "rationale": "The strongest pressure signal is the storage layer. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Restore trace-context propagation between the services",
+          "rationale": "Telemetry collection and correlation are separate requirements. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Sustained host pressure is a plausible performance contributor. The selected answer is correlate CPU pressure with request and process behavior.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q027",
+      "checkpointId": "CP5",
+      "caseId": "L25-C06",
+      "task": "diagnosis",
+      "caseContext": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compute utilization alone does not explain the observed bottleneck",
+          "rationale": "A different resource can limit throughput. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The receiving service starts a disconnected trace",
+          "rationale": "It cannot associate the call with its upstream parent. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The infrastructure signal indicates constrained compute headroom",
+          "rationale": "Correlation needs application context before concluding causation. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Correlation needs application context before concluding causation. The selected answer is the infrastructure signal indicates constrained compute headroom.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q028",
+      "checkpointId": "CP5",
+      "caseId": "L25-C06",
+      "task": "verification",
+      "caseContext": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A test request appears as one linked distributed trace",
+          "rationale": "The proof should span the repaired service boundary. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The incident view aligns CPU pressure with affected operations",
+          "rationale": "The evidence should compare time and workload scope. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Disk pressure and affected work correlate in the incident window",
+          "rationale": "The evidence should target the constrained resource. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence should compare time and workload scope. The selected answer is the incident view aligns CPU pressure with affected operations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q029",
+      "checkpointId": "CP5",
+      "caseId": "L25-C06",
+      "task": "safeguard",
+      "caseContext": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use supported context handling rather than ad hoc identifiers",
+          "rationale": "Custom copying can create incorrect or spoofable relationships. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid scaling before confirming the bottleneck and workload",
+          "rationale": "An expensive change can mask a different root cause. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Check storage limits and application access patterns before resizing",
+          "rationale": "Provisioned capacity is only one possible cause. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "An expensive change can mask a different root cause. The selected answer is avoid scaling before confirming the bottleneck and workload.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q030",
+      "checkpointId": "CP5",
+      "caseId": "L25-C06",
+      "task": "tradeoff",
+      "caseContext": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. The team selects this remedy: \"Correlate CPU pressure with request and process behavior.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Correlation does not prove causation",
+          "rationale": "A controlled comparison or deeper profiling may be needed. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "More storage performance can increase cost",
+          "rationale": "Application optimization may be a better remedy. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Third-party services may not preserve context",
+          "rationale": "Some trace boundaries require documented limitations. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A controlled comparison or deeper profiling may be needed. The selected answer is correlation does not prove causation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q031",
+      "checkpointId": "CP5",
+      "caseId": "L25-C07",
+      "task": "remedy",
+      "caseContext": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Join on appropriate correlation keys and expected cardinality",
+          "rationale": "The relationship must match the intended data model. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Correlate CPU pressure with request and process behavior",
+          "rationale": "Sustained host pressure is a plausible performance contributor. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Investigate storage performance rather than assuming CPU shortage",
+          "rationale": "The strongest pressure signal is the storage layer. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The strongest pressure signal is the storage layer. The selected answer is investigate storage performance rather than assuming CPU shortage.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q032",
+      "checkpointId": "CP5",
+      "caseId": "L25-C07",
+      "task": "diagnosis",
+      "caseContext": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A nonunique key creates many-to-many combinations",
+          "rationale": "The result overstates the number of relevant events. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The infrastructure signal indicates constrained compute headroom",
+          "rationale": "Correlation needs application context before concluding causation. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Compute utilization alone does not explain the observed bottleneck",
+          "rationale": "A different resource can limit throughput. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A different resource can limit throughput. The selected answer is compute utilization alone does not explain the observed bottleneck.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q033",
+      "checkpointId": "CP5",
+      "caseId": "L25-C07",
+      "task": "verification",
+      "caseContext": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The incident view aligns CPU pressure with affected operations",
+          "rationale": "The evidence should compare time and workload scope. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Disk pressure and affected work correlate in the incident window",
+          "rationale": "The evidence should target the constrained resource. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Joined counts match the expected transaction relationships",
+          "rationale": "Verification should compare input and output cardinality. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence should target the constrained resource. The selected answer is disk pressure and affected work correlate in the incident window.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q034",
+      "checkpointId": "CP5",
+      "caseId": "L25-C07",
+      "task": "safeguard",
+      "caseContext": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect uniqueness and select only needed fields",
+          "rationale": "Large accidental joins waste resources and confuse diagnosis. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid scaling before confirming the bottleneck and workload",
+          "rationale": "An expensive change can mask a different root cause. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Check storage limits and application access patterns before resizing",
+          "rationale": "Provisioned capacity is only one possible cause. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Provisioned capacity is only one possible cause. The selected answer is check storage limits and application access patterns before resizing.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q035",
+      "checkpointId": "CP5",
+      "caseId": "L25-C07",
+      "task": "tradeoff",
+      "caseContext": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing.",
+      "objectiveIds": [
+        "D5.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. The team selects this remedy: \"Investigate storage performance rather than assuming CPU shortage.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Deduplication can hide legitimate repeated events",
+          "rationale": "Choose keys based on meaning rather than convenient reduction. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Correlation does not prove causation",
+          "rationale": "A controlled comparison or deeper profiling may be needed. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "More storage performance can increase cost",
+          "rationale": "Application optimization may be a better remedy. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Application optimization may be a better remedy. The selected answer is more storage performance can increase cost.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q036",
+      "checkpointId": "CP4",
+      "caseId": "L25-C08",
+      "task": "remedy",
+      "caseContext": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Join on appropriate correlation keys and expected cardinality",
+          "rationale": "The relationship must match the intended data model. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Account for the configured sampling and aggregation semantics",
+          "rationale": "Retained events may represent more requests than raw rows. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Investigate storage performance rather than assuming CPU shortage",
+          "rationale": "The strongest pressure signal is the storage layer. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The relationship must match the intended data model. The selected answer is join on appropriate correlation keys and expected cardinality.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q037",
+      "checkpointId": "CP4",
+      "caseId": "L25-C08",
+      "task": "diagnosis",
+      "caseContext": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The compared measurements have different population semantics",
+          "rationale": "Sampling changes what is physically stored. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Compute utilization alone does not explain the observed bottleneck",
+          "rationale": "A different resource can limit throughput. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A nonunique key creates many-to-many combinations",
+          "rationale": "The result overstates the number of relevant events. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The result overstates the number of relevant events. The selected answer is a nonunique key creates many-to-many combinations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q038",
+      "checkpointId": "CP4",
+      "caseId": "L25-C08",
+      "task": "verification",
+      "caseContext": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The adjusted interpretation agrees with the known collection model",
+          "rationale": "The result should explain rather than ignore sampling. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Disk pressure and affected work correlate in the incident window",
+          "rationale": "The evidence should target the constrained resource. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Joined counts match the expected transaction relationships",
+          "rationale": "Verification should compare input and output cardinality. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Verification should compare input and output cardinality. The selected answer is joined counts match the expected transaction relationships.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q039",
+      "checkpointId": "CP4",
+      "caseId": "L25-C08",
+      "task": "safeguard",
+      "caseContext": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check storage limits and application access patterns before resizing",
+          "rationale": "Provisioned capacity is only one possible cause. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Inspect uniqueness and select only needed fields",
+          "rationale": "Large accidental joins waste resources and confuse diagnosis. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Document which metrics and logs are sampled",
+          "rationale": "Consumers need to know the data's limitations. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Large accidental joins waste resources and confuse diagnosis. The selected answer is inspect uniqueness and select only needed fields.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q040",
+      "checkpointId": "CP4",
+      "caseId": "L25-C08",
+      "task": "tradeoff",
+      "caseContext": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. The team selects this remedy: \"Join on appropriate correlation keys and expected cardinality.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "More storage performance can increase cost",
+          "rationale": "Application optimization may be a better remedy. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Deduplication can hide legitimate repeated events",
+          "rationale": "Choose keys based on meaning rather than convenient reduction. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Sampling reduces volume but can omit individual traces",
+          "rationale": "Cost savings trade against event-level completeness. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Choose keys based on meaning rather than convenient reduction. The selected answer is deduplication can hide legitimate repeated events.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q041",
+      "checkpointId": "CP2",
+      "caseId": "L25-C09",
+      "task": "remedy",
+      "caseContext": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished.",
+      "objectiveIds": [
+        "D5.1.2",
+        "D5.2.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Account for the configured sampling and aggregation semantics",
+          "rationale": "Retained events may represent more requests than raw rows. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Project only the fields required for diagnosis",
+          "rationale": "Narrow output limits unnecessary data disclosure. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Join on appropriate correlation keys and expected cardinality",
+          "rationale": "The relationship must match the intended data model. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Retained events may represent more requests than raw rows. The selected answer is account for the configured sampling and aggregation semantics.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q042",
+      "checkpointId": "CP2",
+      "caseId": "L25-C09",
+      "task": "diagnosis",
+      "caseContext": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished.",
+      "objectiveIds": [
+        "D5.1.2",
+        "D5.2.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The compared measurements have different population semantics",
+          "rationale": "Sampling changes what is physically stored. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The export includes more sensitive context than the task needs",
+          "rationale": "Query access does not justify broad redistribution. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A nonunique key creates many-to-many combinations",
+          "rationale": "The result overstates the number of relevant events. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Sampling changes what is physically stored. The selected answer is the compared measurements have different population semantics.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q043",
+      "checkpointId": "CP2",
+      "caseId": "L25-C09",
+      "task": "verification",
+      "caseContext": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished.",
+      "objectiveIds": [
+        "D5.1.2",
+        "D5.2.2"
+      ],
+      "difficulty": "applied",
+      "question": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The adjusted interpretation agrees with the known collection model",
+          "rationale": "The result should explain rather than ignore sampling. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The report contains relevant timing without unnecessary payload data",
+          "rationale": "The evidence should inspect the exported artifact. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Joined counts match the expected transaction relationships",
+          "rationale": "Verification should compare input and output cardinality. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The result should explain rather than ignore sampling. The selected answer is the adjusted interpretation agrees with the known collection model.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q044",
+      "checkpointId": "CP2",
+      "caseId": "L25-C09",
+      "task": "safeguard",
+      "caseContext": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished.",
+      "objectiveIds": [
+        "D5.1.2",
+        "D5.2.2"
+      ],
+      "difficulty": "applied",
+      "question": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Apply appropriate access and retention to investigation results",
+          "rationale": "Derived reports can outlive the original controlled query. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Inspect uniqueness and select only needed fields",
+          "rationale": "Large accidental joins waste resources and confuse diagnosis. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Document which metrics and logs are sampled",
+          "rationale": "Consumers need to know the data's limitations. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Consumers need to know the data's limitations. The selected answer is document which metrics and logs are sampled.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q045",
+      "checkpointId": "CP2",
+      "caseId": "L25-C09",
+      "task": "tradeoff",
+      "caseContext": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished.",
+      "objectiveIds": [
+        "D5.1.2",
+        "D5.2.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. The team selects this remedy: \"Account for the configured sampling and aggregation semantics.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Deduplication can hide legitimate repeated events",
+          "rationale": "Choose keys based on meaning rather than convenient reduction. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Sampling reduces volume but can omit individual traces",
+          "rationale": "Cost savings trade against event-level completeness. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Minimal projections may require follow-up queries",
+          "rationale": "Reduced exposure can add a small diagnostic step. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Cost savings trade against event-level completeness. The selected answer is sampling reduces volume but can omit individual traces.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q046",
+      "checkpointId": "CP1",
+      "caseId": "L25-C10",
+      "task": "remedy",
+      "caseContext": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Project only the fields required for diagnosis",
+          "rationale": "Narrow output limits unnecessary data disclosure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Filter time and relevant scope early in the KQL query",
+          "rationale": "Early selective filtering reduces unnecessary processing. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Account for the configured sampling and aggregation semantics",
+          "rationale": "Retained events may represent more requests than raw rows. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Narrow output limits unnecessary data disclosure. The selected answer is project only the fields required for diagnosis.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q047",
+      "checkpointId": "CP1",
+      "caseId": "L25-C10",
+      "task": "diagnosis",
+      "caseContext": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The export includes more sensitive context than the task needs",
+          "rationale": "Query access does not justify broad redistribution. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The query scans data outside the investigation window",
+          "rationale": "Broad scans increase work without adding relevant evidence. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The compared measurements have different population semantics",
+          "rationale": "Sampling changes what is physically stored. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Query access does not justify broad redistribution. The selected answer is the export includes more sensitive context than the task needs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q048",
+      "checkpointId": "CP1",
+      "caseId": "L25-C10",
+      "task": "verification",
+      "caseContext": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The adjusted interpretation agrees with the known collection model",
+          "rationale": "The result should explain rather than ignore sampling. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The report contains relevant timing without unnecessary payload data",
+          "rationale": "The evidence should inspect the exported artifact. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The narrowed query returns the same relevant incident records",
+          "rationale": "Optimization should preserve the investigation's intended population. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence should inspect the exported artifact. The selected answer is the report contains relevant timing without unnecessary payload data.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q049",
+      "checkpointId": "CP1",
+      "caseId": "L25-C10",
+      "task": "safeguard",
+      "caseContext": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Document which metrics and logs are sampled",
+          "rationale": "Consumers need to know the data's limitations. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Apply appropriate access and retention to investigation results",
+          "rationale": "Derived reports can outlive the original controlled query. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Verify timezone and timestamp meaning before narrowing",
+          "rationale": "A wrong time window can hide important events. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Derived reports can outlive the original controlled query. The selected answer is apply appropriate access and retention to investigation results.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L25-Q050",
+      "checkpointId": "CP1",
+      "caseId": "L25-C10",
+      "task": "tradeoff",
+      "caseContext": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed.",
+      "objectiveIds": [
+        "D5.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. The team selects this remedy: \"Project only the fields required for diagnosis.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Very narrow windows can miss preceding causal events",
+          "rationale": "Expand deliberately when the investigation requires context. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Sampling reduces volume but can omit individual traces",
+          "rationale": "Cost savings trade against event-level completeness. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Minimal projections may require follow-up queries",
+          "rationale": "Reduced exposure can add a small diagnostic step. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Reduced exposure can add a small diagnostic step. The selected answer is minimal projections may require follow-up queries.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

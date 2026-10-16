@@ -1,0 +1,1926 @@
+{
+  "schemaVersion": 1,
+  "labId": "20",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions?view=azure-devops"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview"
+    },
+    {
+      "id": "S3",
+      "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L20-Q001",
+      "checkpointId": "CP3",
+      "caseId": "L20-C01",
+      "task": "remedy",
+      "caseContext": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a suitable managed identity with scoped resource access",
+          "rationale": "Azure can manage the workload identity lifecycle. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Evaluate a user-assigned managed identity",
+          "rationale": "Its lifecycle can be independent of a single resource. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Replace personal dependence with an appropriate service identity strategy",
+          "rationale": "Automation needs accountable nonpersonal lifecycle management. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Azure can manage the workload identity lifecycle. The selected answer is use a suitable managed identity with scoped resource access.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q002",
+      "checkpointId": "CP3",
+      "caseId": "L20-C01",
+      "task": "diagnosis",
+      "caseContext": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The job's availability is coupled to a personal credential",
+          "rationale": "Expiration and employee changes become operational dependencies. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The application currently relies on manually stored credentials",
+          "rationale": "A managed identity can remove that secret handling. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A system-assigned identity is tied to its resource lifecycle",
+          "rationale": "Deleting that resource affects its associated identity. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A managed identity can remove that secret handling. The selected answer is the application currently relies on manually stored credentials.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q003",
+      "checkpointId": "CP3",
+      "caseId": "L20-C01",
+      "task": "verification",
+      "caseContext": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workload authenticates without a stored client secret",
+          "rationale": "The test must verify the actual resource access path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Replacement resources use the intended retained identity",
+          "rationale": "The identity must survive the relevant resource recreation. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The job runs under the documented service-owned authentication path",
+          "rationale": "Identity provenance should be visible and reviewable. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The test must verify the actual resource access path. The selected answer is the workload authenticates without a stored client secret.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q004",
+      "checkpointId": "CP3",
+      "caseId": "L20-C01",
+      "task": "safeguard",
+      "caseContext": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use short-lived or federated credentials when supported",
+          "rationale": "Reducing reusable credentials lowers rotation and leakage exposure. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Assign only the target resource permissions required",
+          "rationale": "Managed identity does not imply least privilege automatically. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Limit which resources may attach the shared identity",
+          "rationale": "Attachment can grant access through the identity. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Managed identity does not imply least privilege automatically. The selected answer is assign only the target resource permissions required.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q005",
+      "checkpointId": "CP3",
+      "caseId": "L20-C01",
+      "task": "tradeoff",
+      "caseContext": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Hosted workload identity: An Azure service needs to access another Azure resource without embedding a reusable client secret. The team selects this remedy: \"Use a suitable managed identity with scoped resource access.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Shared identity reduces per-resource attribution granularity",
+          "rationale": "Isolation may favor separate identities instead. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Legacy tools may still require a PAT",
+          "rationale": "Such exceptions need scope expiry and an owner. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Managed identities still need authorization and lifecycle design",
+          "rationale": "Secret removal does not remove access governance. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Secret removal does not remove access governance. The selected answer is managed identities still need authorization and lifecycle design.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q006",
+      "checkpointId": "CP3",
+      "caseId": "L20-C02",
+      "task": "remedy",
+      "caseContext": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a suitable managed identity with scoped resource access",
+          "rationale": "Azure can manage the workload identity lifecycle. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Evaluate a user-assigned managed identity",
+          "rationale": "Its lifecycle can be independent of a single resource. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a narrowly scoped GitHub App installation",
+          "rationale": "App identity separates integration ownership from a person. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Its lifecycle can be independent of a single resource. The selected answer is evaluate a user-assigned managed identity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q007",
+      "checkpointId": "CP3",
+      "caseId": "L20-C02",
+      "task": "diagnosis",
+      "caseContext": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The integration depends on an individual's credential lifecycle",
+          "rationale": "Employee access changes can interrupt automation. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The application currently relies on manually stored credentials",
+          "rationale": "A managed identity can remove that secret handling. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A system-assigned identity is tied to its resource lifecycle",
+          "rationale": "Deleting that resource affects its associated identity. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Deleting that resource affects its associated identity. The selected answer is a system-assigned identity is tied to its resource lifecycle.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q008",
+      "checkpointId": "CP3",
+      "caseId": "L20-C02",
+      "task": "verification",
+      "caseContext": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workload authenticates without a stored client secret",
+          "rationale": "The test must verify the actual resource access path. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Replacement resources use the intended retained identity",
+          "rationale": "The identity must survive the relevant resource recreation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The installation has only the required repository permissions",
+          "rationale": "The proof should include denied unrelated access. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The identity must survive the relevant resource recreation. The selected answer is replacement resources use the intended retained identity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q009",
+      "checkpointId": "CP3",
+      "caseId": "L20-C02",
+      "task": "safeguard",
+      "caseContext": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Protect the app credentials and rotate them appropriately",
+          "rationale": "Service identity still has sensitive authentication material. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Assign only the target resource permissions required",
+          "rationale": "Managed identity does not imply least privilege automatically. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Limit which resources may attach the shared identity",
+          "rationale": "Attachment can grant access through the identity. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Attachment can grant access through the identity. The selected answer is limit which resources may attach the shared identity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q010",
+      "checkpointId": "CP3",
+      "caseId": "L20-C02",
+      "task": "tradeoff",
+      "caseContext": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource.",
+      "objectiveIds": [
+        "D4.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Identity lifecycle: Several independently recreated resources need a deliberately shared Azure identity that survives replacement of one resource. The team selects this remedy: \"Evaluate a user-assigned managed identity.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "App setup adds installation and permission administration",
+          "rationale": "The benefit is clearer service ownership and scope. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Managed identities still need authorization and lifecycle design",
+          "rationale": "Secret removal does not remove access governance. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Shared identity reduces per-resource attribution granularity",
+          "rationale": "Isolation may favor separate identities instead. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Isolation may favor separate identities instead. The selected answer is shared identity reduces per-resource attribution granularity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q011",
+      "checkpointId": "CP5",
+      "caseId": "L20-C03",
+      "task": "remedy",
+      "caseContext": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Evaluate a user-assigned managed identity",
+          "rationale": "Its lifecycle can be independent of a single resource. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use a narrowly scoped GitHub App installation",
+          "rationale": "App identity separates integration ownership from a person. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Reduce GITHUB_TOKEN permissions to the required minimum",
+          "rationale": "Workflow authority should match the task. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "App identity separates integration ownership from a person. The selected answer is use a narrowly scoped GitHub App installation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q012",
+      "checkpointId": "CP5",
+      "caseId": "L20-C03",
+      "task": "diagnosis",
+      "caseContext": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The integration depends on an individual's credential lifecycle",
+          "rationale": "Employee access changes can interrupt automation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The token's effective scope exceeds read-only build needs",
+          "rationale": "Defaults can grant unnecessary capabilities. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A system-assigned identity is tied to its resource lifecycle",
+          "rationale": "Deleting that resource affects its associated identity. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Employee access changes can interrupt automation. The selected answer is the integration depends on an individual's credential lifecycle.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q013",
+      "checkpointId": "CP5",
+      "caseId": "L20-C03",
+      "task": "verification",
+      "caseContext": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The installation has only the required repository permissions",
+          "rationale": "The proof should include denied unrelated access. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Checkout works while unrelated writes are rejected",
+          "rationale": "Both useful operation and denied excess matter. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Replacement resources use the intended retained identity",
+          "rationale": "The identity must survive the relevant resource recreation. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The proof should include denied unrelated access. The selected answer is the installation has only the required repository permissions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q014",
+      "checkpointId": "CP5",
+      "caseId": "L20-C03",
+      "task": "safeguard",
+      "caseContext": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Grant elevated rights only to trusted jobs needing them",
+          "rationale": "Permission escalation should follow a deliberate boundary. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Limit which resources may attach the shared identity",
+          "rationale": "Attachment can grant access through the identity. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Protect the app credentials and rotate them appropriately",
+          "rationale": "Service identity still has sensitive authentication material. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Service identity still has sensitive authentication material. The selected answer is protect the app credentials and rotate them appropriately.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q015",
+      "checkpointId": "CP5",
+      "caseId": "L20-C03",
+      "task": "tradeoff",
+      "caseContext": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "GitHub automation: A long-running integration should act as a service across selected repositories without depending on an employee's personal token. The team selects this remedy: \"Use a narrowly scoped GitHub App installation.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "App setup adds installation and permission administration",
+          "rationale": "The benefit is clearer service ownership and scope. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Tighter scopes can break implicit workflow assumptions",
+          "rationale": "Those dependencies should be reviewed explicitly. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Shared identity reduces per-resource attribution granularity",
+          "rationale": "Isolation may favor separate identities instead. That addresses a different requirement: Identity lifecycle. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The benefit is clearer service ownership and scope. The selected answer is app setup adds installation and permission administration.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q016",
+      "checkpointId": "CP1",
+      "caseId": "L20-C04",
+      "task": "remedy",
+      "caseContext": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a narrowly scoped GitHub App installation",
+          "rationale": "App identity separates integration ownership from a person. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Reduce GITHUB_TOKEN permissions to the required minimum",
+          "rationale": "Workflow authority should match the task. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Restrict connection scope and authorize intended pipelines explicitly",
+          "rationale": "The connection is a protected deployment capability. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Workflow authority should match the task. The selected answer is reduce GITHUB_TOKEN permissions to the required minimum.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q017",
+      "checkpointId": "CP1",
+      "caseId": "L20-C04",
+      "task": "diagnosis",
+      "caseContext": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Resource authorization and Azure role scope are overly broad",
+          "rationale": "Either can expand the attack surface. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The integration depends on an individual's credential lifecycle",
+          "rationale": "Employee access changes can interrupt automation. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The token's effective scope exceeds read-only build needs",
+          "rationale": "Defaults can grant unnecessary capabilities. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Defaults can grant unnecessary capabilities. The selected answer is the token's effective scope exceeds read-only build needs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q018",
+      "checkpointId": "CP1",
+      "caseId": "L20-C04",
+      "task": "verification",
+      "caseContext": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The installation has only the required repository permissions",
+          "rationale": "The proof should include denied unrelated access. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Checkout works while unrelated writes are rejected",
+          "rationale": "Both useful operation and denied excess matter. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The intended pipeline deploys while an unauthorized pipeline is denied",
+          "rationale": "The test should cross the actual consumer boundary. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Both useful operation and denied excess matter. The selected answer is checkout works while unrelated writes are rejected.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q019",
+      "checkpointId": "CP1",
+      "caseId": "L20-C04",
+      "task": "safeguard",
+      "caseContext": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Protect the app credentials and rotate them appropriately",
+          "rationale": "Service identity still has sensitive authentication material. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Grant elevated rights only to trusted jobs needing them",
+          "rationale": "Permission escalation should follow a deliberate boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Inspect both service-connection permissions and Azure assignments",
+          "rationale": "Two authorization layers affect effective access. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Permission escalation should follow a deliberate boundary. The selected answer is grant elevated rights only to trusted jobs needing them.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q020",
+      "checkpointId": "CP1",
+      "caseId": "L20-C04",
+      "task": "tradeoff",
+      "caseContext": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents.",
+      "objectiveIds": [
+        "D4.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Workflow token scope: A GitHub job only reads source but receives write access to issues and repository contents. The team selects this remedy: \"Reduce GITHUB_TOKEN permissions to the required minimum.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "App setup adds installation and permission administration",
+          "rationale": "The benefit is clearer service ownership and scope. That addresses a different requirement: GitHub automation. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Tighter scopes can break implicit workflow assumptions",
+          "rationale": "Those dependencies should be reviewed explicitly. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Narrow connections require more explicit onboarding",
+          "rationale": "New pipelines need deliberate permission review. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Those dependencies should be reviewed explicitly. The selected answer is tighter scopes can break implicit workflow assumptions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q021",
+      "checkpointId": "CP4",
+      "caseId": "L20-C05",
+      "task": "remedy",
+      "caseContext": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience.",
+      "objectiveIds": [
+        "D4.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use the appropriate limited repository collaboration access",
+          "rationale": "The principal needs a narrow collaboration scope. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Reduce GITHUB_TOKEN permissions to the required minimum",
+          "rationale": "Workflow authority should match the task. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Restrict connection scope and authorize intended pipelines explicitly",
+          "rationale": "The connection is a protected deployment capability. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The connection is a protected deployment capability. The selected answer is restrict connection scope and authorize intended pipelines explicitly.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q022",
+      "checkpointId": "CP4",
+      "caseId": "L20-C05",
+      "task": "diagnosis",
+      "caseContext": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience.",
+      "objectiveIds": [
+        "D4.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The invitation grants more organizational reach than needed",
+          "rationale": "Task access and organization membership are separate choices. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The token's effective scope exceeds read-only build needs",
+          "rationale": "Defaults can grant unnecessary capabilities. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Resource authorization and Azure role scope are overly broad",
+          "rationale": "Either can expand the attack surface. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Either can expand the attack surface. The selected answer is resource authorization and Azure role scope are overly broad.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q023",
+      "checkpointId": "CP4",
+      "caseId": "L20-C05",
+      "task": "verification",
+      "caseContext": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience.",
+      "objectiveIds": [
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The intended pipeline deploys while an unauthorized pipeline is denied",
+          "rationale": "The test should cross the actual consumer boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The contractor reviews the intended repository without broader access",
+          "rationale": "The check should include an unrelated private repository. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Checkout works while unrelated writes are rejected",
+          "rationale": "Both useful operation and denied excess matter. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The test should cross the actual consumer boundary. The selected answer is the intended pipeline deploys while an unauthorized pipeline is denied.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q024",
+      "checkpointId": "CP4",
+      "caseId": "L20-C05",
+      "task": "safeguard",
+      "caseContext": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience.",
+      "objectiveIds": [
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect both service-connection permissions and Azure assignments",
+          "rationale": "Two authorization layers affect effective access. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Review repository role and sensitive workflow permissions",
+          "rationale": "Read collaboration still needs an appropriate trust boundary. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Grant elevated rights only to trusted jobs needing them",
+          "rationale": "Permission escalation should follow a deliberate boundary. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Two authorization layers affect effective access. The selected answer is inspect both service-connection permissions and Azure assignments.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q025",
+      "checkpointId": "CP4",
+      "caseId": "L20-C05",
+      "task": "tradeoff",
+      "caseContext": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience.",
+      "objectiveIds": [
+        "D4.1.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Azure service connection: A deployment authorizes every pipeline in the project to a broadly privileged Azure connection for convenience. The team selects this remedy: \"Restrict connection scope and authorize intended pipelines explicitly.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Narrow connections require more explicit onboarding",
+          "rationale": "New pipelines need deliberate permission review. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Outside collaboration may limit some organization features",
+          "rationale": "Choose access based on actual work requirements. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Tighter scopes can break implicit workflow assumptions",
+          "rationale": "Those dependencies should be reviewed explicitly. That addresses a different requirement: Workflow token scope. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "New pipelines need deliberate permission review. The selected answer is narrow connections require more explicit onboarding.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q026",
+      "checkpointId": "CP1",
+      "caseId": "L20-C06",
+      "task": "remedy",
+      "caseContext": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges.",
+      "objectiveIds": [
+        "D4.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect effective group and repository permissions",
+          "rationale": "Combined permission assignments determine actual access. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Restrict connection scope and authorize intended pipelines explicitly",
+          "rationale": "The connection is a protected deployment capability. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use the appropriate limited repository collaboration access",
+          "rationale": "The principal needs a narrow collaboration scope. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The principal needs a narrow collaboration scope. The selected answer is use the appropriate limited repository collaboration access.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q027",
+      "checkpointId": "CP1",
+      "caseId": "L20-C06",
+      "task": "diagnosis",
+      "caseContext": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges.",
+      "objectiveIds": [
+        "D4.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Resource authorization and Azure role scope are overly broad",
+          "rationale": "Either can expand the attack surface. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The invitation grants more organizational reach than needed",
+          "rationale": "Task access and organization membership are separate choices. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "An overlapping explicit restriction can override the expected grant",
+          "rationale": "One allowed membership does not explain all effective rights. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Task access and organization membership are separate choices. The selected answer is the invitation grants more organizational reach than needed.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q028",
+      "checkpointId": "CP1",
+      "caseId": "L20-C06",
+      "task": "verification",
+      "caseContext": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges.",
+      "objectiveIds": [
+        "D4.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The intended pipeline deploys while an unauthorized pipeline is denied",
+          "rationale": "The test should cross the actual consumer boundary. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The contractor reviews the intended repository without broader access",
+          "rationale": "The check should include an unrelated private repository. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The intended checkout succeeds after the conflict is corrected",
+          "rationale": "The repair should avoid broad administrator promotion. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The check should include an unrelated private repository. The selected answer is the contractor reviews the intended repository without broader access.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q029",
+      "checkpointId": "CP1",
+      "caseId": "L20-C06",
+      "task": "safeguard",
+      "caseContext": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges.",
+      "objectiveIds": [
+        "D4.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review repository role and sensitive workflow permissions",
+          "rationale": "Read collaboration still needs an appropriate trust boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Confirm the denied scope protects no required separate boundary",
+          "rationale": "Removing a deny can expose unrelated resources. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Inspect both service-connection permissions and Azure assignments",
+          "rationale": "Two authorization layers affect effective access. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Read collaboration still needs an appropriate trust boundary. The selected answer is review repository role and sensitive workflow permissions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q030",
+      "checkpointId": "CP1",
+      "caseId": "L20-C06",
+      "task": "tradeoff",
+      "caseContext": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges.",
+      "objectiveIds": [
+        "D4.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "External GitHub reviewer: A contractor needs access to one repository but is invited with broad organization membership privileges. The team selects this remedy: \"Use the appropriate limited repository collaboration access.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Complex inheritance increases access troubleshooting effort",
+          "rationale": "Simpler groups make effective rights easier to review. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Narrow connections require more explicit onboarding",
+          "rationale": "New pipelines need deliberate permission review. That addresses a different requirement: Azure service connection. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Outside collaboration may limit some organization features",
+          "rationale": "Choose access based on actual work requirements. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Choose access based on actual work requirements. The selected answer is outside collaboration may limit some organization features.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q031",
+      "checkpointId": "CP4",
+      "caseId": "L20-C07",
+      "task": "remedy",
+      "caseContext": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails.",
+      "objectiveIds": [
+        "D4.1.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect effective group and repository permissions",
+          "rationale": "Combined permission assignments determine actual access. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Choose the access level and permissions needed for the actual task",
+          "rationale": "Licensing access and security permissions are different controls. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use the appropriate limited repository collaboration access",
+          "rationale": "The principal needs a narrow collaboration scope. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Combined permission assignments determine actual access. The selected answer is inspect effective group and repository permissions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q032",
+      "checkpointId": "CP4",
+      "caseId": "L20-C07",
+      "task": "diagnosis",
+      "caseContext": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails.",
+      "objectiveIds": [
+        "D4.1.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An overlapping explicit restriction can override the expected grant",
+          "rationale": "One allowed membership does not explain all effective rights. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A security grant cannot necessarily add an unavailable access-level feature",
+          "rationale": "Feature entitlement and permission checks both matter. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The invitation grants more organizational reach than needed",
+          "rationale": "Task access and organization membership are separate choices. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "One allowed membership does not explain all effective rights. The selected answer is an overlapping explicit restriction can override the expected grant.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q033",
+      "checkpointId": "CP4",
+      "caseId": "L20-C07",
+      "task": "verification",
+      "caseContext": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails.",
+      "objectiveIds": [
+        "D4.1.5"
+      ],
+      "difficulty": "applied",
+      "question": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The contractor reviews the intended repository without broader access",
+          "rationale": "The check should include an unrelated private repository. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The intended checkout succeeds after the conflict is corrected",
+          "rationale": "The repair should avoid broad administrator promotion. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The user can perform the approved task under the chosen access model",
+          "rationale": "Validate the actual private-project operation. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The repair should avoid broad administrator promotion. The selected answer is the intended checkout succeeds after the conflict is corrected.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q034",
+      "checkpointId": "CP4",
+      "caseId": "L20-C07",
+      "task": "safeguard",
+      "caseContext": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails.",
+      "objectiveIds": [
+        "D4.1.5"
+      ],
+      "difficulty": "applied",
+      "question": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Confirm the denied scope protects no required separate boundary",
+          "rationale": "Removing a deny can expose unrelated resources. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Avoid granting project administration to fix a licensing limitation",
+          "rationale": "Administrative authority is not the appropriate entitlement remedy. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Review repository role and sensitive workflow permissions",
+          "rationale": "Read collaboration still needs an appropriate trust boundary. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Removing a deny can expose unrelated resources. The selected answer is confirm the denied scope protects no required separate boundary.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q035",
+      "checkpointId": "CP4",
+      "caseId": "L20-C07",
+      "task": "tradeoff",
+      "caseContext": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails.",
+      "objectiveIds": [
+        "D4.1.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Unexpected Azure deny: A pipeline identity belongs to an allowed group and a denied group, and repository checkout fails. The team selects this remedy: \"Inspect effective group and repository permissions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Higher access levels may have licensing implications",
+          "rationale": "Provision according to required capabilities. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Outside collaboration may limit some organization features",
+          "rationale": "Choose access based on actual work requirements. That addresses a different requirement: External GitHub reviewer. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Complex inheritance increases access troubleshooting effort",
+          "rationale": "Simpler groups make effective rights easier to review. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Simpler groups make effective rights easier to review. The selected answer is complex inheritance increases access troubleshooting effort.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q036",
+      "checkpointId": "CP2",
+      "caseId": "L20-C08",
+      "task": "remedy",
+      "caseContext": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project.",
+      "objectiveIds": [
+        "D4.1.6"
+      ],
+      "difficulty": "foundational",
+      "question": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Choose the access level and permissions needed for the actual task",
+          "rationale": "Licensing access and security permissions are different controls. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Configure team settings areas and iteration paths intentionally",
+          "rationale": "Teams can have distinct planning scopes within a project. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Inspect effective group and repository permissions",
+          "rationale": "Combined permission assignments determine actual access. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Licensing access and security permissions are different controls. The selected answer is choose the access level and permissions needed for the actual task.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q037",
+      "checkpointId": "CP2",
+      "caseId": "L20-C08",
+      "task": "diagnosis",
+      "caseContext": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project.",
+      "objectiveIds": [
+        "D4.1.6"
+      ],
+      "difficulty": "applied",
+      "question": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An overlapping explicit restriction can override the expected grant",
+          "rationale": "One allowed membership does not explain all effective rights. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A security grant cannot necessarily add an unavailable access-level feature",
+          "rationale": "Feature entitlement and permission checks both matter. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Project membership does not automatically define each team's workflow",
+          "rationale": "Planning configuration has its own boundaries. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Feature entitlement and permission checks both matter. The selected answer is a security grant cannot necessarily add an unavailable access-level feature.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q038",
+      "checkpointId": "CP2",
+      "caseId": "L20-C08",
+      "task": "verification",
+      "caseContext": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project.",
+      "objectiveIds": [
+        "D4.1.6"
+      ],
+      "difficulty": "applied",
+      "question": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Each team sees the intended backlog and iteration configuration",
+          "rationale": "The test should inspect both teams' effective views. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The intended checkout succeeds after the conflict is corrected",
+          "rationale": "The repair should avoid broad administrator promotion. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The user can perform the approved task under the chosen access model",
+          "rationale": "Validate the actual private-project operation. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Validate the actual private-project operation. The selected answer is the user can perform the approved task under the chosen access model.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q039",
+      "checkpointId": "CP2",
+      "caseId": "L20-C08",
+      "task": "safeguard",
+      "caseContext": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project.",
+      "objectiveIds": [
+        "D4.1.6"
+      ],
+      "difficulty": "applied",
+      "question": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review shared project permissions separately from team planning",
+          "rationale": "A backlog filter is not a security barrier. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Confirm the denied scope protects no required separate boundary",
+          "rationale": "Removing a deny can expose unrelated resources. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid granting project administration to fix a licensing limitation",
+          "rationale": "Administrative authority is not the appropriate entitlement remedy. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Administrative authority is not the appropriate entitlement remedy. The selected answer is avoid granting project administration to fix a licensing limitation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q040",
+      "checkpointId": "CP2",
+      "caseId": "L20-C08",
+      "task": "tradeoff",
+      "caseContext": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project.",
+      "objectiveIds": [
+        "D4.1.6"
+      ],
+      "difficulty": "advanced",
+      "question": "Stakeholder assumption: A user with Azure DevOps Stakeholder access expects unrestricted repository and pipeline capabilities in a private project. The team selects this remedy: \"Choose the access level and permissions needed for the actual task.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Shared projects simplify administration but share some settings",
+          "rationale": "Team autonomy is not total project isolation. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Complex inheritance increases access troubleshooting effort",
+          "rationale": "Simpler groups make effective rights easier to review. That addresses a different requirement: Unexpected Azure deny. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Higher access levels may have licensing implications",
+          "rationale": "Provision according to required capabilities. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Provision according to required capabilities. The selected answer is higher access levels may have licensing implications.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q041",
+      "checkpointId": "CP2",
+      "caseId": "L20-C09",
+      "task": "remedy",
+      "caseContext": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules.",
+      "objectiveIds": [
+        "D4.1.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Replace personal dependence with an appropriate service identity strategy",
+          "rationale": "Automation needs accountable nonpersonal lifecycle management. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Choose the access level and permissions needed for the actual task",
+          "rationale": "Licensing access and security permissions are different controls. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Configure team settings areas and iteration paths intentionally",
+          "rationale": "Teams can have distinct planning scopes within a project. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Teams can have distinct planning scopes within a project. The selected answer is configure team settings areas and iteration paths intentionally.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q042",
+      "checkpointId": "CP2",
+      "caseId": "L20-C09",
+      "task": "diagnosis",
+      "caseContext": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules.",
+      "objectiveIds": [
+        "D4.1.7"
+      ],
+      "difficulty": "foundational",
+      "question": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The job's availability is coupled to a personal credential",
+          "rationale": "Expiration and employee changes become operational dependencies. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A security grant cannot necessarily add an unavailable access-level feature",
+          "rationale": "Feature entitlement and permission checks both matter. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Project membership does not automatically define each team's workflow",
+          "rationale": "Planning configuration has its own boundaries. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Planning configuration has its own boundaries. The selected answer is project membership does not automatically define each team's workflow.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q043",
+      "checkpointId": "CP2",
+      "caseId": "L20-C09",
+      "task": "verification",
+      "caseContext": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules.",
+      "objectiveIds": [
+        "D4.1.7"
+      ],
+      "difficulty": "applied",
+      "question": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Each team sees the intended backlog and iteration configuration",
+          "rationale": "The test should inspect both teams' effective views. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The job runs under the documented service-owned authentication path",
+          "rationale": "Identity provenance should be visible and reviewable. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The user can perform the approved task under the chosen access model",
+          "rationale": "Validate the actual private-project operation. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The test should inspect both teams' effective views. The selected answer is each team sees the intended backlog and iteration configuration.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q044",
+      "checkpointId": "CP2",
+      "caseId": "L20-C09",
+      "task": "safeguard",
+      "caseContext": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules.",
+      "objectiveIds": [
+        "D4.1.7"
+      ],
+      "difficulty": "applied",
+      "question": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use short-lived or federated credentials when supported",
+          "rationale": "Reducing reusable credentials lowers rotation and leakage exposure. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid granting project administration to fix a licensing limitation",
+          "rationale": "Administrative authority is not the appropriate entitlement remedy. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Review shared project permissions separately from team planning",
+          "rationale": "A backlog filter is not a security barrier. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A backlog filter is not a security barrier. The selected answer is review shared project permissions separately from team planning.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q045",
+      "checkpointId": "CP2",
+      "caseId": "L20-C09",
+      "task": "tradeoff",
+      "caseContext": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules.",
+      "objectiveIds": [
+        "D4.1.7"
+      ],
+      "difficulty": "advanced",
+      "question": "Team boundary: Two Azure DevOps teams share one project but require different backlogs areas and iteration schedules. The team selects this remedy: \"Configure team settings areas and iteration paths intentionally.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Shared projects simplify administration but share some settings",
+          "rationale": "Team autonomy is not total project isolation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Legacy tools may still require a PAT",
+          "rationale": "Such exceptions need scope expiry and an owner. That addresses a different requirement: Personal-token expiry. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Higher access levels may have licensing implications",
+          "rationale": "Provision according to required capabilities. That addresses a different requirement: Stakeholder assumption. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Team autonomy is not total project isolation. The selected answer is shared projects simplify administration but share some settings.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q046",
+      "checkpointId": "CP5",
+      "caseId": "L20-C10",
+      "task": "remedy",
+      "caseContext": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process.",
+      "objectiveIds": [
+        "D2.2.3",
+        "D4.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Replace personal dependence with an appropriate service identity strategy",
+          "rationale": "Automation needs accountable nonpersonal lifecycle management. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Use a suitable managed identity with scoped resource access",
+          "rationale": "Azure can manage the workload identity lifecycle. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Configure team settings areas and iteration paths intentionally",
+          "rationale": "Teams can have distinct planning scopes within a project. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Automation needs accountable nonpersonal lifecycle management. The selected answer is replace personal dependence with an appropriate service identity strategy.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q047",
+      "checkpointId": "CP5",
+      "caseId": "L20-C10",
+      "task": "diagnosis",
+      "caseContext": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process.",
+      "objectiveIds": [
+        "D2.2.3",
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The application currently relies on manually stored credentials",
+          "rationale": "A managed identity can remove that secret handling. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Project membership does not automatically define each team's workflow",
+          "rationale": "Planning configuration has its own boundaries. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The job's availability is coupled to a personal credential",
+          "rationale": "Expiration and employee changes become operational dependencies. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Expiration and employee changes become operational dependencies. The selected answer is the job's availability is coupled to a personal credential.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q048",
+      "checkpointId": "CP5",
+      "caseId": "L20-C10",
+      "task": "verification",
+      "caseContext": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process.",
+      "objectiveIds": [
+        "D2.2.3",
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workload authenticates without a stored client secret",
+          "rationale": "The test must verify the actual resource access path. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Each team sees the intended backlog and iteration configuration",
+          "rationale": "The test should inspect both teams' effective views. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The job runs under the documented service-owned authentication path",
+          "rationale": "Identity provenance should be visible and reviewable. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Identity provenance should be visible and reviewable. The selected answer is the job runs under the documented service-owned authentication path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q049",
+      "checkpointId": "CP5",
+      "caseId": "L20-C10",
+      "task": "safeguard",
+      "caseContext": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process.",
+      "objectiveIds": [
+        "D2.2.3",
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review shared project permissions separately from team planning",
+          "rationale": "A backlog filter is not a security barrier. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use short-lived or federated credentials when supported",
+          "rationale": "Reducing reusable credentials lowers rotation and leakage exposure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Assign only the target resource permissions required",
+          "rationale": "Managed identity does not imply least privilege automatically. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Reducing reusable credentials lowers rotation and leakage exposure. The selected answer is use short-lived or federated credentials when supported.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L20-Q050",
+      "checkpointId": "CP5",
+      "caseId": "L20-C10",
+      "task": "tradeoff",
+      "caseContext": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process.",
+      "objectiveIds": [
+        "D2.2.3",
+        "D4.1.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Personal-token expiry: A nightly job fails when its owner's PAT expires, and nobody else owns the credential rotation process. The team selects this remedy: \"Replace personal dependence with an appropriate service identity strategy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Legacy tools may still require a PAT",
+          "rationale": "Such exceptions need scope expiry and an owner. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Managed identities still need authorization and lifecycle design",
+          "rationale": "Secret removal does not remove access governance. That addresses a different requirement: Hosted workload identity. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Shared projects simplify administration but share some settings",
+          "rationale": "Team autonomy is not total project isolation. That addresses a different requirement: Team boundary. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Such exceptions need scope expiry and an owner. The selected answer is legacy tools may still require a PAT.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

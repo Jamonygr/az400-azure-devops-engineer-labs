@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private AZ400 ownership journal; never export as learner progress",
+  "type": "object",
+  "required": ["schemaVersion", "labId", "runId", "ownerToken", "context", "status", "objects", "checkpoints", "liveVerified"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"}, "labId": {"type": "string", "pattern": "^[0-2][0-9]$"},
+    "runId": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,23}$"},
+    "ownerToken": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "context": {"type": "object", "required": ["labId", "runId", "githubOwner", "adoOrganization", "subscriptionId", "location"]},
+    "status": {"enum": ["initialized", "provisioned", "configured", "partial", "failed", "cleanup-incomplete", "cleaned"]},
+    "objects": {"type": "array", "items": {"type": "object", "required": ["kind", "id", "name", "state"], "properties": {
+      "kind": {"enum": ["github-repository", "ado-project", "azure-resource-group"]},
+      "id": {"type": "string"}, "name": {"type": "string", "minLength": 1}, "state": {"enum": ["planned", "created", "deleted"]}
+    }}},
+    "checkpoints": {"type": "array"}, "liveVerified": {"type": "boolean"}
+  }
+}

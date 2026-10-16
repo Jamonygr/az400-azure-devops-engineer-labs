@@ -1,0 +1,13 @@
+flowchart LR
+  source["GitHub source revision"]
+  runner["Ephemeral Actions runner"]
+  sdk[".NET 10 SDK + locked restore"]
+  tests["xUnit / coverage job"]
+  artifact["Immutable build artifact"]
+  checks["Commit-bound run / checks"]
+  source -->|push / PR event| runner
+  runner -->|read-only source token| sdk
+  sdk -->|build and test| tests
+  tests -->|publish tested bytes| artifact
+  tests -->|TRX and conclusion| checks
+  source -->|headSha provenance| checks

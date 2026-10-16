@@ -1,0 +1,250 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "27",
+  "slug": "27-capstone-azure-devops",
+  "title": "Capstone: deliver securely through Azure DevOps",
+  "domain": "capstone",
+  "minutes": 180,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "azure-devops"
+  ],
+  "objectives": [
+    "D1.1.1",
+    "D1.1.2",
+    "D1.1.3",
+    "D1.1.4",
+    "D1.2.1",
+    "D1.2.2",
+    "D1.2.3",
+    "D1.2.4",
+    "D1.2.5",
+    "D1.2.6",
+    "D1.2.7",
+    "D1.3.1",
+    "D1.3.2",
+    "D1.3.3",
+    "D1.3.4",
+    "D1.3.5",
+    "D1.3.6",
+    "D2.1.1",
+    "D2.1.2",
+    "D2.1.3",
+    "D2.2.1",
+    "D2.2.2",
+    "D2.2.3",
+    "D2.2.4",
+    "D2.2.5",
+    "D2.2.6",
+    "D3.1.1",
+    "D3.1.2",
+    "D3.1.3",
+    "D3.1.4",
+    "D3.2.1",
+    "D3.2.2",
+    "D3.2.3",
+    "D3.2.4",
+    "D3.3.1",
+    "D3.3.2",
+    "D3.3.3",
+    "D3.3.4",
+    "D3.3.5",
+    "D3.3.6",
+    "D3.3.7",
+    "D3.3.8",
+    "D3.3.9",
+    "D3.4.1",
+    "D3.4.2",
+    "D3.4.3",
+    "D3.4.4",
+    "D3.4.5",
+    "D3.4.6",
+    "D3.4.7",
+    "D3.4.8",
+    "D3.5.1",
+    "D3.5.2",
+    "D3.5.3",
+    "D3.5.4",
+    "D3.5.5",
+    "D3.6.1",
+    "D3.6.2",
+    "D3.6.3",
+    "D3.6.4",
+    "D3.6.5",
+    "D4.1.1",
+    "D4.1.2",
+    "D4.1.3",
+    "D4.1.4",
+    "D4.1.5",
+    "D4.1.6",
+    "D4.1.7",
+    "D4.2.1",
+    "D4.2.2",
+    "D4.2.3",
+    "D4.2.4",
+    "D4.3.1",
+    "D4.3.2",
+    "D4.3.3",
+    "D4.3.4",
+    "D4.3.5",
+    "D4.3.6",
+    "D5.1.1",
+    "D5.1.2",
+    "D5.1.3",
+    "D5.1.4",
+    "D5.2.1",
+    "D5.2.2",
+    "D5.2.3",
+    "D5.2.4"
+  ],
+  "scenario": "Deliver the sample through a fresh Azure DevOps project with work tracking, YAML CI, exact build provenance, protected release review, and recovery evidence.",
+  "role": "Azure DevOps delivery owner",
+  "outcome": "Capstone: deliver securely through Azure DevOps.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Establish Azure DevOps source and accepted work",
+      "commands": "$r=@(az repos list --organization $AdoOrganization --project $AdoProject -o json|ConvertFrom-Json)|Select-Object -First 1\n $r|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'capstone-repo.json')\n $p=Join-Path $WorkRoot 'capstone'\nif(Test-Path (Join-Path $p '.git')){\n $origin=git -C $p remote get-url origin\n if($origin.TrimEnd('/') -cne ([string]$r.remoteUrl).TrimEnd('/')){throw 'Existing working copy points to a different Azure Repos repository; refusing to reuse it.'}\n}else{git clone $r.remoteUrl $p}\ngit -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n $source=Join-Path $RepoRoot 'samples'\n Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\\/](bin|obj)[\\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n $w=az boards work-item create --organization $AdoOrganization --project $AdoProject --type Task --title \"[$RunId] Deliver observable API\" --description 'Acceptance: locked build, passing tests/coverage, successful exact-revision pipeline, protected deployment review, rollback and cleanup evidence.' -o json|ConvertFrom-Json\n $w.id|Set-Content (Join-Path $WorkRoot 'capstone-work-item.txt')\n",
+      "expected": "Source and acceptance criteria exist only in the disposable project.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'capstone-repo.json') -Raw|ConvertFrom-Json\n if($r.project.name -ne $AdoProject){throw 'Capstone repository/project mismatch.'}\n",
+      "negative": "$id=Get-Content (Join-Path $WorkRoot 'capstone-work-item.txt');$w=az boards work-item show --organization $AdoOrganization --id $id -o json|ConvertFrom-Json\n if($w.fields.'System.TeamProject' -ne $AdoProject){throw 'Capstone work item escaped project.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'capstone-repo.json') -Raw|ConvertFrom-Json\n if($r.project.name -ne $AdoProject){throw 'Capstone repository/project mismatch.'}\n\n$id=Get-Content (Join-Path $WorkRoot 'capstone-work-item.txt');$w=az boards work-item show --organization $AdoOrganization --id $id -o json|ConvertFrom-Json\n if($w.fields.'System.TeamProject' -ne $AdoProject){throw 'Capstone work item escaped project.'}\n",
+      "evidence": "Task, repository ID, and project identity.",
+      "fix": "Complete Git authentication bootstrap without writing a PAT into a remote URL."
+    },
+    {
+      "id": "CP2",
+      "title": "Run local build, tests, and measured coverage",
+      "commands": "$p=Join-Path $WorkRoot 'capstone';dotnet restore (Join-Path $p 'samples/DevOps.slnx') --locked-mode\n dotnet test (Join-Path $p 'samples/DevOps.slnx') --configuration Release --settings (Join-Path $p 'samples/coverage.runsettings') --collect 'XPlat Code Coverage' --logger \"trx;LogFileName=capstone.trx\" --results-directory (Join-Path $WorkRoot 'quality')\n if($LASTEXITCODE -ne 0){throw 'Local capstone quality failed.'}\n $coverage=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1\n & (Join-Path $p 'samples/Test-Coverage.ps1') -CoverageFile $coverage.FullName\n",
+      "expected": "The shared sample passes a 65% minimum measured coverage gate.",
+      "positive": "$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([double]$x.coverage.'line-rate' -lt 0.65){throw 'Coverage gate failed.'}\n",
+      "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0 -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'No passing capstone test baseline.'}\n",
+      "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([double]$x.coverage.'line-rate' -lt 0.65){throw 'Coverage gate failed.'}\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0 -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'No passing capstone test baseline.'}\n",
+      "evidence": "TRX, coverage report, and dependency locks.",
+      "fix": "Repair behavior rather than suppressing tests or disabling collectors."
+    },
+    {
+      "id": "CP3",
+      "title": "Publish a CI pipeline and dormant deployment contract",
+      "commands": "$p=Join-Path $WorkRoot 'capstone'\n Copy-Item (Join-Path $LabRoot 'artifacts/capstone-ci.yml') (Join-Path $p 'azure-pipelines.yml')\n New-Item -ItemType Directory -Force (Join-Path $p 'deployment-review')|Out-Null\n Copy-Item (Join-Path $LabRoot 'artifacts/capstone-azure-pipelines.yml') (Join-Path $p 'deployment-review/capstone-azure-pipelines.yml')\n @('**/bin/','**/obj/')|Set-Content (Join-Path $p '.gitignore')\n git -C $p add .;$staged=@(git -C $p diff --cached --name-only)\nif($staged.Count -gt 0){git -C $p commit -m \"[$RunId] Capstone CI and deployment review\"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'};git -C $p branch -M main;git -C $p push -u origin main\n (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'capstone-sha.txt')\n",
+      "expected": "The reviewed revision contains CI and an unregistered cloud deployment template.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'capstone/azure-pipelines.yml') -Raw\n if($t -notmatch 'dotnet|DotNetCoreCLI'){throw 'Capstone build tasks absent.'}\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'capstone/azure-pipelines.yml') -Raw\n if($t -match 'AzureCLI@|az deployment|azureSubscription:'){throw 'CI publication must not activate cloud deployment.'}\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'capstone/azure-pipelines.yml') -Raw\n if($t -notmatch 'dotnet|DotNetCoreCLI'){throw 'Capstone build tasks absent.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'capstone/azure-pipelines.yml') -Raw\n if($t -match 'AzureCLI@|az deployment|azureSubscription:'){throw 'CI publication must not activate cloud deployment.'}\n",
+      "evidence": "Committed SHA and CI-versus-dormant template review.",
+      "fix": "Keep deployment registration separate until service connection, environment checks, SQL/network prerequisites, and costs are approved."
+    },
+    {
+      "id": "CP4",
+      "title": "Register and queue the exact project CI definition",
+      "commands": "$r=Get-Content (Join-Path $WorkRoot 'capstone-repo.json') -Raw|ConvertFrom-Json\n$pipelineName=\"capstone-$RunId\";$idPath=Join-Path $WorkRoot 'capstone-pipeline-id.txt'\nif(Test-Path $idPath){\n $savedId=(Get-Content $idPath -Raw).Trim()\n if($savedId -notmatch '^\\d+$'){throw 'Saved pipeline ID is invalid.'}\n $p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $savedId -o json|ConvertFrom-Json\n}else{\n $candidates=@(az pipelines list --organization $AdoOrganization --project $AdoProject --name $pipelineName --repository $r.id --repository-type tfsgit -o json|ConvertFrom-Json|Where-Object name -eq $pipelineName)\n $matchingPipelines=@(foreach($candidate in $candidates){\n  $definition=az pipelines show --organization $AdoOrganization --project $AdoProject --id $candidate.id -o json|ConvertFrom-Json\n  if($definition.name -eq $pipelineName -and $definition.repository.id -eq $r.id){$definition}\n })\n if($matchingPipelines.Count -gt 1){throw 'Multiple matching pipelines; resolve the ambiguous owned boundary before retrying.'}\n if($matchingPipelines.Count -eq 1){$p=$matchingPipelines[0]}else{\n  $p=az pipelines create --organization $AdoOrganization --project $AdoProject --name $pipelineName --repository $r.id --repository-type tfsgit --branch main --yml-path azure-pipelines.yml --skip-first-run true -o json|ConvertFrom-Json\n }\n}\nif($p.name -ne $pipelineName -or $p.repository.id -ne $r.id -or $p.project.name -ne $AdoProject -or $p.process.yamlFilename -ne 'azure-pipelines.yml'){throw 'Existing pipeline identity/source differs from this run; refusing to reuse it.'}\n$p.id|Set-Content $idPath\n\n$b=az pipelines run --organization $AdoOrganization --project $AdoProject --id $p.id --branch main -o json|ConvertFrom-Json\n$b.id|Set-Content (Join-Path $WorkRoot 'capstone-build-id.txt')\n",
+      "expected": "One sandbox pipeline is queued against the reviewed main revision.",
+      "positive": "$id=Get-Content (Join-Path $WorkRoot 'capstone-pipeline-id.txt');$p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if($p.process.yamlFilename -ne 'azure-pipelines.yml'){throw 'Wrong capstone YAML definition.'}\n",
+      "negative": "$id=Get-Content (Join-Path $WorkRoot 'capstone-pipeline-id.txt');$p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if($p.project.name -ne $AdoProject){throw 'Pipeline escaped project ownership.'}\n",
+      "validate": "$id=Get-Content (Join-Path $WorkRoot 'capstone-pipeline-id.txt');$p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if($p.process.yamlFilename -ne 'azure-pipelines.yml'){throw 'Wrong capstone YAML definition.'}\n\n$id=Get-Content (Join-Path $WorkRoot 'capstone-pipeline-id.txt');$p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if($p.project.name -ne $AdoProject){throw 'Pipeline escaped project ownership.'}\n",
+      "evidence": "Pipeline/build IDs and queued source branch.",
+      "fix": "Obtain hosted parallelism or approved isolated agents; waiting for capacity is an external gate."
+    },
+    {
+      "id": "CP5",
+      "title": "Verify successful delivery provenance and recovery evidence",
+      "commands": "$id=Get-Content (Join-Path $WorkRoot 'capstone-build-id.txt')\n $b=az pipelines runs show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if($b.status -ne 'completed' -or $b.result -ne 'succeeded'){throw 'Capstone build incomplete/failed; retry after examining logs.'}\n [ordered]@{workItem=(Get-Content (Join-Path $WorkRoot 'capstone-work-item.txt'));commit=$b.sourceVersion;build=$id;result=$b.result;rollback='last compatible immutable artifact';cloudDeployed=$false;cleanupRequired=$true}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
+      "expected": "Successful build evidence ties accepted work to the exact commit; cloud deployment remains a separate gate.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.result -ne 'succeeded' -or $d.commit -ne (Get-Content (Join-Path $WorkRoot 'capstone-sha.txt'))){throw 'Capstone delivery provenance mismatch.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.cloudDeployed -or -not $d.cleanupRequired){throw 'Unverified deployment claim or missing cleanup obligation.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.result -ne 'succeeded' -or $d.commit -ne (Get-Content (Join-Path $WorkRoot 'capstone-sha.txt'))){throw 'Capstone delivery provenance mismatch.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.cloudDeployed -or -not $d.cleanupRequired){throw 'Unverified deployment claim or missing cleanup obligation.'}\n",
+      "evidence": "Release dossier, successful test artifact references, recovery plan, and final cleanup audit.",
+      "fix": "Retrieve final test/artifact evidence before deleting the disposable project; do not report a queued run as delivered."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$d.result='partiallySucceeded';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'release-dossier.json');az pipelines runs show --organization $AdoOrganization --project $AdoProject --id (Get-Content (Join-Path $WorkRoot 'capstone-build-id.txt')) --query '{status:status,result:result,commit:sourceVersion}' -o json\n",
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$d.result='succeeded';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n"
+  },
+  "challenge": "Complete the protected Azure Pipelines release with WIF service connection, protected resource approvals, ordered database deployment, staged exposure, telemetry evidence, rollback, and residual audit. Preserve every unavailable external gate as partial.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals"
+  ],
+  "primer": "A release owner must preserve source-to-build traceability and distinguish successful CI from approved deployment. Service connections, environment checks, database compatibility, and agent capacity have separate owners.",
+  "architecture": {
+    "title": "Azure DevOps delivery evidence and protected resources",
+    "nodes": [
+      {
+        "id": "boards",
+        "label": "Accepted Azure Boards task",
+        "kind": "platform",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "repos",
+        "label": "Owned Azure Repos revision",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "pipeline",
+        "label": "YAML CI on approved agent",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "artifact",
+        "label": "Build SHA / tests / artifact",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "checks",
+        "label": "Protected environment + WIF",
+        "kind": "identity",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "azure",
+        "label": "Azure app / SQL / telemetry",
+        "kind": "platform",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "boards",
+        "to": "repos",
+        "label": "work-to-change traceability"
+      },
+      {
+        "from": "repos",
+        "to": "pipeline",
+        "label": "registered exact YAML source"
+      },
+      {
+        "from": "pipeline",
+        "to": "artifact",
+        "label": "successful build provenance"
+      },
+      {
+        "from": "artifact",
+        "to": "checks",
+        "label": "separate resource approval",
+        "style": "dashed"
+      },
+      {
+        "from": "checks",
+        "to": "azure",
+        "label": "optional protected live extension",
+        "style": "dashed"
+      }
+    ],
+    "topology": "The core ties the accepted Boards task to an exact Azure Repos revision and successful YAML CI on an available approved agent. Build results and artifact evidence enter the recovery dossier. A protected environment, workload-identity service connection, database/network prerequisites, and observed telemetry are separate requirements for the optional live release; CI success is not reported as a completed cloud deployment."
+  }
+}

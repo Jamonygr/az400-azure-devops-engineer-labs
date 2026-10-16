@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "11",
+  "slug": "11-reusable-yaml",
+  "title": "Reuse YAML templates and variables",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "azure-devops"
+  ],
+  "objectives": [
+    "D3.3.5",
+    "D3.3.6",
+    "D3.3.8"
+  ],
+  "scenario": "Build logic is diverging between teams. Define reusable YAML interfaces, typed inputs, variable groups, and explicit job dependencies.",
+  "role": "Pipeline framework maintainer",
+  "outcome": "Reuse YAML templates and variables.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Review the reusable GitHub workflow contract",
+      "commands": "$t=Get-Content (Join-Path $LabRoot 'artifacts/templates/reusable-dotnet.yml') -Raw\n $t|Set-Content (Join-Path $WorkRoot 'reusable-dotnet.yml')\n Select-String -InputObject $t -Pattern 'workflow_call|inputs:|permissions:|dotnet' -AllMatches\n",
+      "expected": "The reusable workflow exposes typed inputs and a limited permission contract.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -notmatch 'workflow_call' -or $t -notmatch 'inputs:') { throw 'Reusable interface missing.' }\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -match 'secrets: inherit|write-all') { throw 'Overbroad reusable-workflow access.' }\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -notmatch 'workflow_call' -or $t -notmatch 'inputs:') { throw 'Reusable interface missing.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -match 'secrets: inherit|write-all') { throw 'Overbroad reusable-workflow access.' }\n",
+      "evidence": "Input names, defaults, and permissions.",
+      "fix": "Pass only required inputs and explicitly named secrets; pin cross-repository reuse to a reviewed commit."
+    },
+    {
+      "id": "CP2",
+      "title": "Review the Azure Pipelines template interface",
+      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/templates/dotnet-build.yml') (Join-Path $WorkRoot 'dotnet-build.yml')\n Select-String -Path (Join-Path $WorkRoot 'dotnet-build.yml') -Pattern 'parameters:|type:|dotnet|steps:'\n",
+      "expected": "The build template declares parameters separately from runtime variables.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -notmatch 'parameters:' -or $t -notmatch 'steps:') { throw 'Build template contract absent.' }\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -match 'password:\\s*[^$\\s]') { throw 'Literal credential in template.' }\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -notmatch 'parameters:' -or $t -notmatch 'steps:') { throw 'Build template contract absent.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -match 'password:\\s*[^$\\s]') { throw 'Literal credential in template.' }\n",
+      "evidence": "Parameter types and compile-time/runtime expression comparison.",
+      "fix": "Use template parameters for structure; use runtime variables for execution values."
+    },
+    {
+      "id": "CP3",
+      "title": "Create an explicitly nonsecret variable group",
+      "commands": "$g=az pipelines variable-group create --organization $AdoOrganization --project $AdoProject --name \"build-$RunId\" --variables BuildConfiguration=Release TargetFramework=net10.0 --authorize false -o json|ConvertFrom-Json\n $g.id|Set-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n",
+      "expected": "A sandbox variable group exists without blanket pipeline authorization.",
+      "positive": "$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.variables.BuildConfiguration.value -ne 'Release') { throw 'Build variable mismatch.' }\n",
+      "negative": "$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.authorized) { throw 'Variable group must not be authorized for every pipeline.' }\n",
+      "validate": "$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.variables.BuildConfiguration.value -ne 'Release') { throw 'Build variable mismatch.' }\n\n$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.authorized) { throw 'Variable group must not be authorized for every pipeline.' }\n",
+      "evidence": "Variable group ID and nonsecret values.",
+      "fix": "Authorize only a designated sandbox pipeline; store secrets through protected secret facilities."
+    },
+    {
+      "id": "CP4",
+      "title": "Model build-test-package ordering as a DAG",
+      "commands": "$dag=@([ordered]@{job='build';needs=@()},[ordered]@{job='test';needs=@('build')},[ordered]@{job='package';needs=@('test')})\n $dag|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n $done=@();foreach($j in $dag){foreach($d in $j.needs){if($d -notin $done){throw \"Unresolved dependency $d\"}};$done+=$j.job}\n $done|Set-Content (Join-Path $WorkRoot 'execution-order.txt')\n",
+      "expected": "Each job depends only on completed prerequisites; package follows successful tests.",
+      "positive": "$o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))\n if (($o -join ',') -ne 'build,test,package') { throw 'Invalid topological execution order.' }\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json\n if (@($d|Where-Object { $_.job -in $_.needs }).Count) { throw 'Self-referencing job dependency.' }\n",
+      "validate": "$o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))\n if (($o -join ',') -ne 'build,test,package') { throw 'Invalid topological execution order.' }\n\n$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json\n if (@($d|Where-Object { $_.job -in $_.needs }).Count) { throw 'Self-referencing job dependency.' }\n",
+      "evidence": "DAG and successful execution order.",
+      "fix": "Fix dependsOn/needs references; do not serialize independent tests unless resource contention requires it."
+    },
+    {
+      "id": "CP5",
+      "title": "Exercise the shared template build command locally",
+      "commands": "dotnet build (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release\n if($LASTEXITCODE -ne 0){throw 'Reusable build baseline failed.'}\n Get-FileHash (Join-Path $WorkRoot 'dotnet-build.yml')|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'template-digest.json')\n",
+      "expected": "The reusable build command succeeds and the reviewed template is fingerprinted.",
+      "positive": "$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'dotnet-build.yml')).Hash -ne $h.Hash){throw 'Template drift detected.'}\n",
+      "negative": "$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if($h.Algorithm -ne 'SHA256'){throw 'Unexpected template digest algorithm.'}\n",
+      "validate": "$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'dotnet-build.yml')).Hash -ne $h.Hash){throw 'Template drift detected.'}\n\n$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if($h.Algorithm -ne 'SHA256'){throw 'Unexpected template digest algorithm.'}\n",
+      "evidence": "Build result and template SHA256.",
+      "fix": "Match local command arguments with the template, and review breaking input changes before reuse."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@('package');$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n",
+    "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d|Format-Table job,needs\n",
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@();$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n"
+  },
+  "challenge": "Call the templates from a separate disposable consumer repository using a pinned revision and demonstrate one deliberate input validation failure.",
+  "sources": [
+    "https://docs.github.com/en/actions/sharing-automations/reusing-workflows",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups"
+  ],
+  "primer": "Template parameters shape compile-time structure; variables carry runtime values. Reuse must preserve least privilege, immutable references, and a tested compatibility contract.",
+  "architecture": {
+    "title": "Reusable YAML inputs and protected variable injection",
+    "nodes": [
+      {
+        "id": "consumer",
+        "label": "Consumer YAML contract",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "template",
+        "label": "Azure build template",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "build",
+        "label": ".NET build job",
+        "kind": "platform",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "github",
+        "label": "GitHub reusable workflow",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "variables",
+        "label": "Scoped variable group",
+        "kind": "data",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "dag",
+        "label": "needs / dependsOn DAG",
+        "kind": "data",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "consumer",
+        "to": "template",
+        "label": "typed parameters"
+      },
+      {
+        "from": "template",
+        "to": "build",
+        "label": "rendered build steps"
+      },
+      {
+        "from": "variables",
+        "to": "template",
+        "label": "authorized runtime values"
+      },
+      {
+        "from": "dag",
+        "to": "build",
+        "label": "job dependency order"
+      },
+      {
+        "from": "consumer",
+        "to": "github",
+        "label": "alternative call contract",
+        "style": "dashed"
+      }
+    ],
+    "topology": "The consumer YAML supplies typed template parameters while a scoped Azure DevOps variable group supplies authorized runtime values. Explicit needs/dependsOn edges order jobs. The GitHub reusable workflow is a parallel reviewed contract; its existence does not grant inherited secrets or activate a remote workflow."
+  }
+}

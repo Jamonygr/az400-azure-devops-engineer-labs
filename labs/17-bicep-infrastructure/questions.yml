@@ -1,0 +1,1921 @@
+{
+  "schemaVersion": 1,
+  "labId": "17",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-what-if"
+    },
+    {
+      "id": "S2",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/linter"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/best-practices"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L17-Q001",
+      "checkpointId": "CP2",
+      "caseId": "L17-C01",
+      "task": "remedy",
+      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run validation and review the what-if result",
+          "rationale": "Planned changes should be visible before applying them. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Use secure parameter handling and avoid secret outputs",
+          "rationale": "Sensitive values need protection across input and output paths. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Output a nonsensitive reference rather than the secret value",
+          "rationale": "Downstream configuration should minimize secret transport. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Planned changes should be visible before applying them. The selected answer is run validation and review the what-if result.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q002",
+      "checkpointId": "CP2",
+      "caseId": "L17-C01",
+      "task": "diagnosis",
+      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Template validity does not establish an acceptable resource diff",
+          "rationale": "A valid deployment can still weaken access. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Infrastructure metadata can expose plain configuration values",
+          "rationale": "A parameter's purpose alone does not make it secure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Infrastructure output was used as an unrestricted secret channel",
+          "rationale": "Artifact publication expands the exposure boundary. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A valid deployment can still weaken access. The selected answer is template validity does not establish an acceptable resource diff.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q003",
+      "checkpointId": "CP2",
+      "caseId": "L17-C01",
+      "task": "verification",
+      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Deployment records do not reveal the sensitive value",
+          "rationale": "Verification must include logs and outputs. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The public artifact contains only the permitted reference",
+          "rationale": "The test must inspect the published content. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The reviewed plan identifies the intended access change",
+          "rationale": "The evidence should show actual target impact. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The evidence should show actual target impact. The selected answer is the reviewed plan identifies the intended access change.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q004",
+      "checkpointId": "CP2",
+      "caseId": "L17-C01",
+      "task": "safeguard",
+      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prefer references to a secret store where appropriate",
+          "rationale": "Reducing copied secret material lowers exposure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Restrict secret resolution to the task that actually needs it",
+          "rationale": "A reference should not grant broad retrieval capability. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Verify subscription resource group and parameters before deployment",
+          "rationale": "Correct code can affect an incorrect target. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Correct code can affect an incorrect target. The selected answer is verify subscription resource group and parameters before deployment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q005",
+      "checkpointId": "CP2",
+      "caseId": "L17-C01",
+      "task": "tradeoff",
+      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. The team selects this remedy: \"Run validation and review the what-if result.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "What-if is a planning aid with limitations",
+          "rationale": "It does not guarantee every runtime outcome. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Secure parameters do not make every downstream use safe",
+          "rationale": "Scripts and resource settings can still disclose values. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Reference-based designs depend on runtime identity access",
+          "rationale": "Consumers need scoped authorization to resolve protected values. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "It does not guarantee every runtime outcome. The selected answer is what-if is a planning aid with limitations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q006",
+      "checkpointId": "CP3",
+      "caseId": "L17-C02",
+      "task": "remedy",
+      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use secure parameter handling and avoid secret outputs",
+          "rationale": "Sensitive values need protection across input and output paths. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Make the required static validation enforce pipeline failure",
+          "rationale": "A quality signal needs an execution gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Run validation and review the what-if result",
+          "rationale": "Planned changes should be visible before applying them. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Sensitive values need protection across input and output paths. The selected answer is use secure parameter handling and avoid secret outputs.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q007",
+      "checkpointId": "CP3",
+      "caseId": "L17-C02",
+      "task": "diagnosis",
+      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Template validity does not establish an acceptable resource diff",
+          "rationale": "A valid deployment can still weaken access. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Infrastructure metadata can expose plain configuration values",
+          "rationale": "A parameter's purpose alone does not make it secure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The wrapper ignores validation failure status",
+          "rationale": "Visible findings do not prevent deployment by themselves. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A parameter's purpose alone does not make it secure. The selected answer is infrastructure metadata can expose plain configuration values.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q008",
+      "checkpointId": "CP3",
+      "caseId": "L17-C02",
+      "task": "verification",
+      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A known invalid fixture blocks the deployment path",
+          "rationale": "A negative probe demonstrates the gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The reviewed plan identifies the intended access change",
+          "rationale": "The evidence should show actual target impact. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Deployment records do not reveal the sensitive value",
+          "rationale": "Verification must include logs and outputs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Verification must include logs and outputs. The selected answer is deployment records do not reveal the sensitive value.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q009",
+      "checkpointId": "CP3",
+      "caseId": "L17-C02",
+      "task": "safeguard",
+      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prefer references to a secret store where appropriate",
+          "rationale": "Reducing copied secret material lowers exposure. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Keep diagnostic output while preserving nonzero status",
+          "rationale": "Failure visibility and enforcement should work together. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Verify subscription resource group and parameters before deployment",
+          "rationale": "Correct code can affect an incorrect target. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Reducing copied secret material lowers exposure. The selected answer is prefer references to a secret store where appropriate.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q010",
+      "checkpointId": "CP3",
+      "caseId": "L17-C02",
+      "task": "tradeoff",
+      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. The team selects this remedy: \"Use secure parameter handling and avoid secret outputs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "What-if is a planning aid with limitations",
+          "rationale": "It does not guarantee every runtime outcome. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Secure parameters do not make every downstream use safe",
+          "rationale": "Scripts and resource settings can still disclose values. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Static checks cannot prove service behavior",
+          "rationale": "Runtime validation still matters after a valid template. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Scripts and resource settings can still disclose values. The selected answer is secure parameters do not make every downstream use safe.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q011",
+      "checkpointId": "CP1",
+      "caseId": "L17-C03",
+      "task": "remedy",
+      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Make the required static validation enforce pipeline failure",
+          "rationale": "A quality signal needs an execution gate. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Express the resource relationship through declarative references",
+          "rationale": "The deployment engine can order explicit dependencies. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use secure parameter handling and avoid secret outputs",
+          "rationale": "Sensitive values need protection across input and output paths. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A quality signal needs an execution gate. The selected answer is make the required static validation enforce pipeline failure.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q012",
+      "checkpointId": "CP1",
+      "caseId": "L17-C03",
+      "task": "diagnosis",
+      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Infrastructure metadata can expose plain configuration values",
+          "rationale": "A parameter's purpose alone does not make it secure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The wrapper ignores validation failure status",
+          "rationale": "Visible findings do not prevent deployment by themselves. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The script hides a required provisioning relationship",
+          "rationale": "Parallel execution can access an unavailable resource. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Visible findings do not prevent deployment by themselves. The selected answer is the wrapper ignores validation failure status.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q013",
+      "checkpointId": "CP1",
+      "caseId": "L17-C03",
+      "task": "verification",
+      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The dependent resource deploys only after its prerequisite is ready",
+          "rationale": "The verification must inspect the actual resource state. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Deployment records do not reveal the sensitive value",
+          "rationale": "Verification must include logs and outputs. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A known invalid fixture blocks the deployment path",
+          "rationale": "A negative probe demonstrates the gate. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A negative probe demonstrates the gate. The selected answer is a known invalid fixture blocks the deployment path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q014",
+      "checkpointId": "CP1",
+      "caseId": "L17-C03",
+      "task": "safeguard",
+      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Prefer references to a secret store where appropriate",
+          "rationale": "Reducing copied secret material lowers exposure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep diagnostic output while preserving nonzero status",
+          "rationale": "Failure visibility and enforcement should work together. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Avoid unnecessary dependencies that serialize independent resources",
+          "rationale": "Correct ordering should not prevent safe parallelism. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Failure visibility and enforcement should work together. The selected answer is keep diagnostic output while preserving nonzero status.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q015",
+      "checkpointId": "CP1",
+      "caseId": "L17-C03",
+      "task": "tradeoff",
+      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. The team selects this remedy: \"Make the required static validation enforce pipeline failure.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Declared dependencies do not solve every readiness condition",
+          "rationale": "Some services need additional application-level checks. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Secure parameters do not make every downstream use safe",
+          "rationale": "Scripts and resource settings can still disclose values. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Static checks cannot prove service behavior",
+          "rationale": "Runtime validation still matters after a valid template. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Runtime validation still matters after a valid template. The selected answer is static checks cannot prove service behavior.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q016",
+      "checkpointId": "CP1",
+      "caseId": "L17-C04",
+      "task": "remedy",
+      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare desired configuration and reconcile through a reviewed change",
+          "rationale": "Source-controlled intent should govern intentional infrastructure updates. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Make the required static validation enforce pipeline failure",
+          "rationale": "A quality signal needs an execution gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Express the resource relationship through declarative references",
+          "rationale": "The deployment engine can order explicit dependencies. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The deployment engine can order explicit dependencies. The selected answer is express the resource relationship through declarative references.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q017",
+      "checkpointId": "CP1",
+      "caseId": "L17-C04",
+      "task": "diagnosis",
+      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The script hides a required provisioning relationship",
+          "rationale": "Parallel execution can access an unavailable resource. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Out-of-band changes bypassed the normal declaration workflow",
+          "rationale": "Repository content no longer explains the deployed state. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The wrapper ignores validation failure status",
+          "rationale": "Visible findings do not prevent deployment by themselves. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Parallel execution can access an unavailable resource. The selected answer is the script hides a required provisioning relationship.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q018",
+      "checkpointId": "CP1",
+      "caseId": "L17-C04",
+      "task": "verification",
+      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployed configuration matches the approved desired state",
+          "rationale": "The comparison should cover the changed property. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A known invalid fixture blocks the deployment path",
+          "rationale": "A negative probe demonstrates the gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The dependent resource deploys only after its prerequisite is ready",
+          "rationale": "The verification must inspect the actual resource state. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The verification must inspect the actual resource state. The selected answer is the dependent resource deploys only after its prerequisite is ready.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q019",
+      "checkpointId": "CP1",
+      "caseId": "L17-C04",
+      "task": "safeguard",
+      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep diagnostic output while preserving nonzero status",
+          "rationale": "Failure visibility and enforcement should work together. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid unnecessary dependencies that serialize independent resources",
+          "rationale": "Correct ordering should not prevent safe parallelism. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Determine whether the manual change was an emergency correction",
+          "rationale": "Blindly reverting can undo a needed operational fix. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Correct ordering should not prevent safe parallelism. The selected answer is avoid unnecessary dependencies that serialize independent resources.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q020",
+      "checkpointId": "CP1",
+      "caseId": "L17-C04",
+      "task": "tradeoff",
+      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. The team selects this remedy: \"Express the resource relationship through declarative references.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Strict reconciliation needs an exception and feedback process",
+          "rationale": "Operational discoveries should return to source control. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Static checks cannot prove service behavior",
+          "rationale": "Runtime validation still matters after a valid template. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Declared dependencies do not solve every readiness condition",
+          "rationale": "Some services need additional application-level checks. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Some services need additional application-level checks. The selected answer is declared dependencies do not solve every readiness condition.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q021",
+      "checkpointId": "CP5",
+      "caseId": "L17-C05",
+      "task": "remedy",
+      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare desired configuration and reconcile through a reviewed change",
+          "rationale": "Source-controlled intent should govern intentional infrastructure updates. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Extract a reusable versioned module with explicit parameters",
+          "rationale": "Modules centralize reviewed infrastructure behavior. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Express the resource relationship through declarative references",
+          "rationale": "The deployment engine can order explicit dependencies. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Source-controlled intent should govern intentional infrastructure updates. The selected answer is compare desired configuration and reconcile through a reviewed change.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q022",
+      "checkpointId": "CP5",
+      "caseId": "L17-C05",
+      "task": "diagnosis",
+      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Out-of-band changes bypassed the normal declaration workflow",
+          "rationale": "Repository content no longer explains the deployed state. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Copies are maintained as independent implementations",
+          "rationale": "Repeated text does not provide shared governance. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The script hides a required provisioning relationship",
+          "rationale": "Parallel execution can access an unavailable resource. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Repository content no longer explains the deployed state. The selected answer is out-of-band changes bypassed the normal declaration workflow.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q023",
+      "checkpointId": "CP5",
+      "caseId": "L17-C05",
+      "task": "verification",
+      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The dependent resource deploys only after its prerequisite is ready",
+          "rationale": "The verification must inspect the actual resource state. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The deployed configuration matches the approved desired state",
+          "rationale": "The comparison should cover the changed property. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Each environment resolves the approved module version",
+          "rationale": "The evidence should verify module adoption and parameters. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The comparison should cover the changed property. The selected answer is the deployed configuration matches the approved desired state.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q024",
+      "checkpointId": "CP5",
+      "caseId": "L17-C05",
+      "task": "safeguard",
+      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Determine whether the manual change was an emergency correction",
+          "rationale": "Blindly reverting can undo a needed operational fix. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Review module updates against representative environments",
+          "rationale": "A central change can affect many deployments. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid unnecessary dependencies that serialize independent resources",
+          "rationale": "Correct ordering should not prevent safe parallelism. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Blindly reverting can undo a needed operational fix. The selected answer is determine whether the manual change was an emergency correction.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q025",
+      "checkpointId": "CP5",
+      "caseId": "L17-C05",
+      "task": "tradeoff",
+      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. The team selects this remedy: \"Compare desired configuration and reconcile through a reviewed change.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Strict reconciliation needs an exception and feedback process",
+          "rationale": "Operational discoveries should return to source control. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Reusable modules need interface and version discipline",
+          "rationale": "Overly generic modules can become hard to maintain. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Declared dependencies do not solve every readiness condition",
+          "rationale": "Some services need additional application-level checks. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Operational discoveries should return to source control. The selected answer is strict reconciliation needs an exception and feedback process.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q026",
+      "checkpointId": "CP1",
+      "caseId": "L17-C06",
+      "task": "remedy",
+      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Match deployment scope and identity permissions to the required operation",
+          "rationale": "Resource scope determines the necessary authorization. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Compare desired configuration and reconcile through a reviewed change",
+          "rationale": "Source-controlled intent should govern intentional infrastructure updates. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Extract a reusable versioned module with explicit parameters",
+          "rationale": "Modules centralize reviewed infrastructure behavior. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Modules centralize reviewed infrastructure behavior. The selected answer is extract a reusable versioned module with explicit parameters.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q027",
+      "checkpointId": "CP1",
+      "caseId": "L17-C06",
+      "task": "diagnosis",
+      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Resource-group rights do not grant all subscription operations",
+          "rationale": "The failed action is outside the existing boundary. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Out-of-band changes bypassed the normal declaration workflow",
+          "rationale": "Repository content no longer explains the deployed state. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Copies are maintained as independent implementations",
+          "rationale": "Repeated text does not provide shared governance. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Repeated text does not provide shared governance. The selected answer is copies are maintained as independent implementations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q028",
+      "checkpointId": "CP1",
+      "caseId": "L17-C06",
+      "task": "verification",
+      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The intended scoped operation succeeds without unrelated elevation",
+          "rationale": "The repair should not require blanket subscription access. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The deployed configuration matches the approved desired state",
+          "rationale": "The comparison should cover the changed property. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Each environment resolves the approved module version",
+          "rationale": "The evidence should verify module adoption and parameters. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The evidence should verify module adoption and parameters. The selected answer is each environment resolves the approved module version.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q029",
+      "checkpointId": "CP1",
+      "caseId": "L17-C06",
+      "task": "safeguard",
+      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review module updates against representative environments",
+          "rationale": "A central change can affect many deployments. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Separate privileged foundation changes from routine application deployment",
+          "rationale": "Different risk levels need different execution identities. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Determine whether the manual change was an emergency correction",
+          "rationale": "Blindly reverting can undo a needed operational fix. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A central change can affect many deployments. The selected answer is review module updates against representative environments.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q030",
+      "checkpointId": "CP1",
+      "caseId": "L17-C06",
+      "task": "tradeoff",
+      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. The team selects this remedy: \"Extract a reusable versioned module with explicit parameters.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reusable modules need interface and version discipline",
+          "rationale": "Overly generic modules can become hard to maintain. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "More scopes and identities add orchestration work",
+          "rationale": "The separation limits routine deployment authority. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Strict reconciliation needs an exception and feedback process",
+          "rationale": "Operational discoveries should return to source control. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Overly generic modules can become hard to maintain. The selected answer is reusable modules need interface and version discipline.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q031",
+      "checkpointId": "CP3",
+      "caseId": "L17-C07",
+      "task": "remedy",
+      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Match deployment scope and identity permissions to the required operation",
+          "rationale": "Resource scope determines the necessary authorization. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Parameterize or deterministically derive collision-resistant names",
+          "rationale": "Reusable infrastructure needs environment-specific identity. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Extract a reusable versioned module with explicit parameters",
+          "rationale": "Modules centralize reviewed infrastructure behavior. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Resource scope determines the necessary authorization. The selected answer is match deployment scope and identity permissions to the required operation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q032",
+      "checkpointId": "CP3",
+      "caseId": "L17-C07",
+      "task": "diagnosis",
+      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Copies are maintained as independent implementations",
+          "rationale": "Repeated text does not provide shared governance. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Resource-group rights do not grant all subscription operations",
+          "rationale": "The failed action is outside the existing boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A global namespace cannot accept duplicated fixed names",
+          "rationale": "The template assumes a single deployment instance. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The failed action is outside the existing boundary. The selected answer is resource-group rights do not grant all subscription operations.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q033",
+      "checkpointId": "CP3",
+      "caseId": "L17-C07",
+      "task": "verification",
+      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Two isolated deployments produce distinct valid names",
+          "rationale": "The test should demonstrate reuse across environments. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Each environment resolves the approved module version",
+          "rationale": "The evidence should verify module adoption and parameters. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The intended scoped operation succeeds without unrelated elevation",
+          "rationale": "The repair should not require blanket subscription access. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The repair should not require blanket subscription access. The selected answer is the intended scoped operation succeeds without unrelated elevation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q034",
+      "checkpointId": "CP3",
+      "caseId": "L17-C07",
+      "task": "safeguard",
+      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review module updates against representative environments",
+          "rationale": "A central change can affect many deployments. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Separate privileged foundation changes from routine application deployment",
+          "rationale": "Different risk levels need different execution identities. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Keep naming deterministic enough for lifecycle management",
+          "rationale": "Uncontrolled randomness can complicate updates and cleanup. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Different risk levels need different execution identities. The selected answer is separate privileged foundation changes from routine application deployment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q035",
+      "checkpointId": "CP3",
+      "caseId": "L17-C07",
+      "task": "tradeoff",
+      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. The team selects this remedy: \"Match deployment scope and identity permissions to the required operation.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reusable modules need interface and version discipline",
+          "rationale": "Overly generic modules can become hard to maintain. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "More scopes and identities add orchestration work",
+          "rationale": "The separation limits routine deployment authority. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Name constraints differ across Azure resource types",
+          "rationale": "A universal naming expression may not fit every service. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The separation limits routine deployment authority. The selected answer is more scopes and identities add orchestration work.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q036",
+      "checkpointId": "CP1",
+      "caseId": "L17-C08",
+      "task": "remedy",
+      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parameterize or deterministically derive collision-resistant names",
+          "rationale": "Reusable infrastructure needs environment-specific identity. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Add scoped deployment and postdeployment verification",
+          "rationale": "Planning output does not exercise the full runtime path. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Match deployment scope and identity permissions to the required operation",
+          "rationale": "Resource scope determines the necessary authorization. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Reusable infrastructure needs environment-specific identity. The selected answer is parameterize or deterministically derive collision-resistant names.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q037",
+      "checkpointId": "CP1",
+      "caseId": "L17-C08",
+      "task": "diagnosis",
+      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A global namespace cannot accept duplicated fixed names",
+          "rationale": "The template assumes a single deployment instance. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A preview cannot prove every execution and service condition",
+          "rationale": "Authorization and live behavior can still differ. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Resource-group rights do not grant all subscription operations",
+          "rationale": "The failed action is outside the existing boundary. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The template assumes a single deployment instance. The selected answer is a global namespace cannot accept duplicated fixed names.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q038",
+      "checkpointId": "CP1",
+      "caseId": "L17-C08",
+      "task": "verification",
+      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The intended scoped operation succeeds without unrelated elevation",
+          "rationale": "The repair should not require blanket subscription access. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Two isolated deployments produce distinct valid names",
+          "rationale": "The test should demonstrate reuse across environments. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A safe test deployment passes required functional probes",
+          "rationale": "Actual behavior must support the planning conclusion. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test should demonstrate reuse across environments. The selected answer is two isolated deployments produce distinct valid names.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q039",
+      "checkpointId": "CP1",
+      "caseId": "L17-C08",
+      "task": "safeguard",
+      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Separate privileged foundation changes from routine application deployment",
+          "rationale": "Different risk levels need different execution identities. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep naming deterministic enough for lifecycle management",
+          "rationale": "Uncontrolled randomness can complicate updates and cleanup. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a bounded training target and cleanup procedure",
+          "rationale": "Validation should not accidentally modify unrelated resources. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Uncontrolled randomness can complicate updates and cleanup. The selected answer is keep naming deterministic enough for lifecycle management.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q040",
+      "checkpointId": "CP1",
+      "caseId": "L17-C08",
+      "task": "tradeoff",
+      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. The team selects this remedy: \"Parameterize or deterministically derive collision-resistant names.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Live verification can incur cost",
+          "rationale": "Choose the smallest representative environment. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "More scopes and identities add orchestration work",
+          "rationale": "The separation limits routine deployment authority. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Name constraints differ across Azure resource types",
+          "rationale": "A universal naming expression may not fit every service. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A universal naming expression may not fit every service. The selected answer is name constraints differ across Azure resource types.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L17-C09",
+      "task": "remedy",
+      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Output a nonsensitive reference rather than the secret value",
+          "rationale": "Downstream configuration should minimize secret transport. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Parameterize or deterministically derive collision-resistant names",
+          "rationale": "Reusable infrastructure needs environment-specific identity. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Add scoped deployment and postdeployment verification",
+          "rationale": "Planning output does not exercise the full runtime path. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Planning output does not exercise the full runtime path. The selected answer is add scoped deployment and postdeployment verification.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L17-C09",
+      "task": "diagnosis",
+      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A global namespace cannot accept duplicated fixed names",
+          "rationale": "The template assumes a single deployment instance. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A preview cannot prove every execution and service condition",
+          "rationale": "Authorization and live behavior can still differ. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Infrastructure output was used as an unrestricted secret channel",
+          "rationale": "Artifact publication expands the exposure boundary. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Authorization and live behavior can still differ. The selected answer is a preview cannot prove every execution and service condition.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L17-C09",
+      "task": "verification",
+      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Two isolated deployments produce distinct valid names",
+          "rationale": "The test should demonstrate reuse across environments. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A safe test deployment passes required functional probes",
+          "rationale": "Actual behavior must support the planning conclusion. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The public artifact contains only the permitted reference",
+          "rationale": "The test must inspect the published content. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Actual behavior must support the planning conclusion. The selected answer is a safe test deployment passes required functional probes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L17-C09",
+      "task": "safeguard",
+      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "applied",
+      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Restrict secret resolution to the task that actually needs it",
+          "rationale": "A reference should not grant broad retrieval capability. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep naming deterministic enough for lifecycle management",
+          "rationale": "Uncontrolled randomness can complicate updates and cleanup. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a bounded training target and cleanup procedure",
+          "rationale": "Validation should not accidentally modify unrelated resources. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Validation should not accidentally modify unrelated resources. The selected answer is use a bounded training target and cleanup procedure.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L17-C09",
+      "task": "tradeoff",
+      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. The team selects this remedy: \"Add scoped deployment and postdeployment verification.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Name constraints differ across Azure resource types",
+          "rationale": "A universal naming expression may not fit every service. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Live verification can incur cost",
+          "rationale": "Choose the smallest representative environment. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Reference-based designs depend on runtime identity access",
+          "rationale": "Consumers need scoped authorization to resolve protected values. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Choose the smallest representative environment. The selected answer is live verification can incur cost.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q046",
+      "checkpointId": "CP4",
+      "caseId": "L17-C10",
+      "task": "remedy",
+      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add scoped deployment and postdeployment verification",
+          "rationale": "Planning output does not exercise the full runtime path. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Output a nonsensitive reference rather than the secret value",
+          "rationale": "Downstream configuration should minimize secret transport. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Run validation and review the what-if result",
+          "rationale": "Planned changes should be visible before applying them. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Downstream configuration should minimize secret transport. The selected answer is output a nonsensitive reference rather than the secret value.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q047",
+      "checkpointId": "CP4",
+      "caseId": "L17-C10",
+      "task": "diagnosis",
+      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A preview cannot prove every execution and service condition",
+          "rationale": "Authorization and live behavior can still differ. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Infrastructure output was used as an unrestricted secret channel",
+          "rationale": "Artifact publication expands the exposure boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Template validity does not establish an acceptable resource diff",
+          "rationale": "A valid deployment can still weaken access. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Artifact publication expands the exposure boundary. The selected answer is infrastructure output was used as an unrestricted secret channel.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q048",
+      "checkpointId": "CP4",
+      "caseId": "L17-C10",
+      "task": "verification",
+      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A safe test deployment passes required functional probes",
+          "rationale": "Actual behavior must support the planning conclusion. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The public artifact contains only the permitted reference",
+          "rationale": "The test must inspect the published content. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The reviewed plan identifies the intended access change",
+          "rationale": "The evidence should show actual target impact. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The test must inspect the published content. The selected answer is the public artifact contains only the permitted reference.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q049",
+      "checkpointId": "CP4",
+      "caseId": "L17-C10",
+      "task": "safeguard",
+      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a bounded training target and cleanup procedure",
+          "rationale": "Validation should not accidentally modify unrelated resources. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Restrict secret resolution to the task that actually needs it",
+          "rationale": "A reference should not grant broad retrieval capability. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Verify subscription resource group and parameters before deployment",
+          "rationale": "Correct code can affect an incorrect target. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A reference should not grant broad retrieval capability. The selected answer is restrict secret resolution to the task that actually needs it.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L17-Q050",
+      "checkpointId": "CP4",
+      "caseId": "L17-C10",
+      "task": "tradeoff",
+      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. The team selects this remedy: \"Output a nonsensitive reference rather than the secret value.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Live verification can incur cost",
+          "rationale": "Choose the smallest representative environment. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Reference-based designs depend on runtime identity access",
+          "rationale": "Consumers need scoped authorization to resolve protected values. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "What-if is a planning aid with limitations",
+          "rationale": "It does not guarantee every runtime outcome. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Consumers need scoped authorization to resolve protected values. The selected answer is reference-based designs depend on runtime identity access.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+flowchart LR
+  library["Versioned .NET library"]
+  pack["dotnet pack"]
+  feed["Local NuGet feed"]
+  consumer["Consumer project"]
+  lock["Dependency lock file"]
+  registry["GitHub / Artifacts contract"]
+  library -->|SemVer build input| pack
+  pack -->|immutable nupkg| feed
+  feed -->|pinned package version| consumer
+  consumer -->|resolved dependency graph| lock
+  feed -.->|separate approved publish| registry

@@ -1,0 +1,13 @@
+flowchart LR
+  repos["Azure Repos main revision"]
+  definition["YAML pipeline definition"]
+  agent["Hosted / approved agent"]
+  tests[".NET build + xUnit tests"]
+  artifact["Versioned pipeline artifact"]
+  evidence["Build SHA / test results"]
+  repos -->|exact repository + YAML| definition
+  definition -->|queue with bounded capacity| agent
+  agent -->|locked restore / test| tests
+  tests -->|publish output| artifact
+  tests -->|TRX and build result| evidence
+  repos -->|sourceVersion provenance| evidence

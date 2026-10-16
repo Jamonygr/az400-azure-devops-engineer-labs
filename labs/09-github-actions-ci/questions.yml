@@ -1,0 +1,1926 @@
+{
+  "schemaVersion": 1,
+  "labId": "09",
+  "verifiedDate": "2026-10-16",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions"
+    },
+    {
+      "id": "S2",
+      "url": "https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs"
+    },
+    {
+      "id": "S3",
+      "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L09-Q001",
+      "checkpointId": "CP2",
+      "caseId": "L09-C01",
+      "task": "remedy",
+      "caseContext": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add checkout before the build steps",
+          "rationale": "The runner needs repository files before compiling source. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Pin third-party actions to reviewed full commit references",
+          "rationale": "Immutable references reduce unnoticed executable dependency changes. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Add event and path filters matching the intended CI scope",
+          "rationale": "Trigger rules should reflect the changes requiring validation. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Trigger rules should reflect the changes requiring validation. The selected answer is add event and path filters matching the intended CI scope.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q002",
+      "checkpointId": "CP2",
+      "caseId": "L09-C01",
+      "task": "diagnosis",
+      "caseContext": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workflow trigger is broader than the intended workload",
+          "rationale": "Every pull request is currently eligible for execution. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A fresh hosted runner does not contain the repository automatically",
+          "rationale": "Workflow scheduling is distinct from source retrieval. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A moving tag can resolve to different action code",
+          "rationale": "The workflow text can stay unchanged while execution changes. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Every pull request is currently eligible for execution. The selected answer is the workflow trigger is broader than the intended workload.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q003",
+      "checkpointId": "CP2",
+      "caseId": "L09-C01",
+      "task": "verification",
+      "caseContext": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The action reference resolves to the approved commit",
+          "rationale": "The dependency identity should be explicit and verifiable. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Application changes trigger CI while unrelated documentation follows its intended path",
+          "rationale": "Both positive and negative cases verify filter behavior. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The build step can read the expected project at the selected commit",
+          "rationale": "Checkout should bind execution to the triggering revision. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Both positive and negative cases verify filter behavior. The selected answer is application changes trigger CI while unrelated documentation follows its intended path.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q004",
+      "checkpointId": "CP2",
+      "caseId": "L09-C01",
+      "task": "safeguard",
+      "caseContext": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ensure required branch checks are compatible with filtering",
+          "rationale": "A skipped required workflow can leave merges waiting. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Use a trusted checkout action version and limited credentials",
+          "rationale": "Source retrieval is part of the workflow trust boundary. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a reviewed process to advance pinned action versions",
+          "rationale": "A permanent pin can retain old vulnerabilities. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A skipped required workflow can leave merges waiting. The selected answer is ensure required branch checks are compatible with filtering.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q005",
+      "checkpointId": "CP2",
+      "caseId": "L09-C01",
+      "task": "tradeoff",
+      "caseContext": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Unexpected workflow: A documentation-only pull request consumes expensive integration runners although no application or pipeline files changed. The team selects this remedy: \"Add event and path filters matching the intended CI scope.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Narrow filters can miss indirect dependencies",
+          "rationale": "Review scope when shared build inputs change. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Shallow checkout may omit history needed by later tasks",
+          "rationale": "Request additional history only when required. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Commit pinning creates update maintenance",
+          "rationale": "It improves change control rather than removing supply-chain risk. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Review scope when shared build inputs change. The selected answer is narrow filters can miss indirect dependencies.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q006",
+      "checkpointId": "CP1",
+      "caseId": "L09-C02",
+      "task": "remedy",
+      "caseContext": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add checkout before the build steps",
+          "rationale": "The runner needs repository files before compiling source. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Declare read-only permissions for the build workflow",
+          "rationale": "Compilation ordinarily does not need repository mutation rights. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Add event and path filters matching the intended CI scope",
+          "rationale": "Trigger rules should reflect the changes requiring validation. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The runner needs repository files before compiling source. The selected answer is add checkout before the build steps.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q007",
+      "checkpointId": "CP1",
+      "caseId": "L09-C02",
+      "task": "diagnosis",
+      "caseContext": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A fresh hosted runner does not contain the repository automatically",
+          "rationale": "Workflow scheduling is distinct from source retrieval. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The token inherited permissions beyond the task requirements",
+          "rationale": "Default authorization may be broader than the workflow needs. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The workflow trigger is broader than the intended workload",
+          "rationale": "Every pull request is currently eligible for execution. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Workflow scheduling is distinct from source retrieval. The selected answer is a fresh hosted runner does not contain the repository automatically.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q008",
+      "checkpointId": "CP1",
+      "caseId": "L09-C02",
+      "task": "verification",
+      "caseContext": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Application changes trigger CI while unrelated documentation follows its intended path",
+          "rationale": "Both positive and negative cases verify filter behavior. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The build step can read the expected project at the selected commit",
+          "rationale": "Checkout should bind execution to the triggering revision. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The workflow builds successfully while write operations are denied",
+          "rationale": "Least privilege requires both useful access and rejected excess. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Checkout should bind execution to the triggering revision. The selected answer is the build step can read the expected project at the selected commit.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q009",
+      "checkpointId": "CP1",
+      "caseId": "L09-C02",
+      "task": "safeguard",
+      "caseContext": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a trusted checkout action version and limited credentials",
+          "rationale": "Source retrieval is part of the workflow trust boundary. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Separate publishing permissions into a trusted publishing job",
+          "rationale": "Untrusted build paths should not inherit release credentials. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Ensure required branch checks are compatible with filtering",
+          "rationale": "A skipped required workflow can leave merges waiting. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Source retrieval is part of the workflow trust boundary. The selected answer is use a trusted checkout action version and limited credentials.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q010",
+      "checkpointId": "CP1",
+      "caseId": "L09-C02",
+      "task": "tradeoff",
+      "caseContext": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Wrong working tree: A workflow starts a build without checking out the repository, and the expected project file is missing. The team selects this remedy: \"Add checkout before the build steps.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Shallow checkout may omit history needed by later tasks",
+          "rationale": "Request additional history only when required. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Permission tightening may expose implicit workflow dependencies",
+          "rationale": "Those dependencies need explicit review rather than blanket grants. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Narrow filters can miss indirect dependencies",
+          "rationale": "Review scope when shared build inputs change. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Request additional history only when required. The selected answer is shallow checkout may omit history needed by later tasks.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q011",
+      "checkpointId": "CP2",
+      "caseId": "L09-C03",
+      "task": "remedy",
+      "caseContext": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job.",
+      "objectiveIds": [
+        "D3.3.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Add checkout before the build steps",
+          "rationale": "The runner needs repository files before compiling source. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Declare read-only permissions for the build workflow",
+          "rationale": "Compilation ordinarily does not need repository mutation rights. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Install the supported SDK explicitly in the workflow",
+          "rationale": "The runtime should be an intentional build input. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Compilation ordinarily does not need repository mutation rights. The selected answer is declare read-only permissions for the build workflow.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q012",
+      "checkpointId": "CP2",
+      "caseId": "L09-C03",
+      "task": "diagnosis",
+      "caseContext": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job.",
+      "objectiveIds": [
+        "D3.3.1"
+      ],
+      "difficulty": "foundational",
+      "question": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workflow depended on an uncontrolled image default",
+          "rationale": "Hosted environments change over time. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A fresh hosted runner does not contain the repository automatically",
+          "rationale": "Workflow scheduling is distinct from source retrieval. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The token inherited permissions beyond the task requirements",
+          "rationale": "Default authorization may be broader than the workflow needs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Default authorization may be broader than the workflow needs. The selected answer is the token inherited permissions beyond the task requirements.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q013",
+      "checkpointId": "CP2",
+      "caseId": "L09-C03",
+      "task": "verification",
+      "caseContext": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job.",
+      "objectiveIds": [
+        "D3.3.1"
+      ],
+      "difficulty": "applied",
+      "question": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workflow builds successfully while write operations are denied",
+          "rationale": "Least privilege requires both useful access and rejected excess. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A clean run reports the required SDK and builds successfully",
+          "rationale": "Version evidence demonstrates environmental reproducibility. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The build step can read the expected project at the selected commit",
+          "rationale": "Checkout should bind execution to the triggering revision. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Least privilege requires both useful access and rejected excess. The selected answer is the workflow builds successfully while write operations are denied.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q014",
+      "checkpointId": "CP2",
+      "caseId": "L09-C03",
+      "task": "safeguard",
+      "caseContext": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job.",
+      "objectiveIds": [
+        "D3.3.1"
+      ],
+      "difficulty": "applied",
+      "question": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Separate publishing permissions into a trusted publishing job",
+          "rationale": "Untrusted build paths should not inherit release credentials. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Update pinned toolchains through reviewed maintenance",
+          "rationale": "Explicit versions still need security and support updates. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a trusted checkout action version and limited credentials",
+          "rationale": "Source retrieval is part of the workflow trust boundary. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Untrusted build paths should not inherit release credentials. The selected answer is separate publishing permissions into a trusted publishing job.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q015",
+      "checkpointId": "CP2",
+      "caseId": "L09-C03",
+      "task": "tradeoff",
+      "caseContext": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job.",
+      "objectiveIds": [
+        "D3.3.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Overprivileged CI: A workflow only compiles code but its token has repository write permission across every job. The team selects this remedy: \"Declare read-only permissions for the build workflow.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Toolchain installation adds startup time",
+          "rationale": "Caching may reduce overhead but must preserve correctness. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Shallow checkout may omit history needed by later tasks",
+          "rationale": "Request additional history only when required. That addresses a different requirement: Wrong working tree. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Permission tightening may expose implicit workflow dependencies",
+          "rationale": "Those dependencies need explicit review rather than blanket grants. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Those dependencies need explicit review rather than blanket grants. The selected answer is permission tightening may expose implicit workflow dependencies.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q016",
+      "checkpointId": "CP3",
+      "caseId": "L09-C04",
+      "task": "remedy",
+      "caseContext": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Install the supported SDK explicitly in the workflow",
+          "rationale": "The runtime should be an intentional build input. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Keep untrusted pull-request execution separate from privileged deployment",
+          "rationale": "Contributor code must not run with deployment credentials. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Declare read-only permissions for the build workflow",
+          "rationale": "Compilation ordinarily does not need repository mutation rights. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The runtime should be an intentional build input. The selected answer is install the supported SDK explicitly in the workflow.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q017",
+      "checkpointId": "CP3",
+      "caseId": "L09-C04",
+      "task": "diagnosis",
+      "caseContext": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The proposed design crosses an untrusted-code boundary",
+          "rationale": "Forked code can execute arbitrary build instructions. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The token inherited permissions beyond the task requirements",
+          "rationale": "Default authorization may be broader than the workflow needs. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The workflow depended on an uncontrolled image default",
+          "rationale": "Hosted environments change over time. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Hosted environments change over time. The selected answer is the workflow depended on an uncontrolled image default.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q018",
+      "checkpointId": "CP3",
+      "caseId": "L09-C04",
+      "task": "verification",
+      "caseContext": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Forked tests run without access to deployment credentials",
+          "rationale": "The safety property must hold for malicious test code. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The workflow builds successfully while write operations are denied",
+          "rationale": "Least privilege requires both useful access and rejected excess. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A clean run reports the required SDK and builds successfully",
+          "rationale": "Version evidence demonstrates environmental reproducibility. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Version evidence demonstrates environmental reproducibility. The selected answer is a clean run reports the required SDK and builds successfully.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q019",
+      "checkpointId": "CP3",
+      "caseId": "L09-C04",
+      "task": "safeguard",
+      "caseContext": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Update pinned toolchains through reviewed maintenance",
+          "rationale": "Explicit versions still need security and support updates. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Avoid checking out untrusted code in a privileged event context",
+          "rationale": "Event selection alone does not make code trustworthy. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Separate publishing permissions into a trusted publishing job",
+          "rationale": "Untrusted build paths should not inherit release credentials. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Explicit versions still need security and support updates. The selected answer is update pinned toolchains through reviewed maintenance.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q020",
+      "checkpointId": "CP3",
+      "caseId": "L09-C04",
+      "task": "tradeoff",
+      "caseContext": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Runtime drift: A build relies on the hosted image's default SDK and breaks when the image default changes. The team selects this remedy: \"Install the supported SDK explicitly in the workflow.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Toolchain installation adds startup time",
+          "rationale": "Caching may reduce overhead but must preserve correctness. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Privileged follow-up workflows require careful provenance validation",
+          "rationale": "A successful untrusted build is not automatically trusted input. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Permission tightening may expose implicit workflow dependencies",
+          "rationale": "Those dependencies need explicit review rather than blanket grants. That addresses a different requirement: Overprivileged CI. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Caching may reduce overhead but must preserve correctness. The selected answer is toolchain installation adds startup time.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q021",
+      "checkpointId": "CP4",
+      "caseId": "L09-C05",
+      "task": "remedy",
+      "caseContext": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Upload sanitized test reports under an appropriate failure-aware condition",
+          "rationale": "Diagnostic evidence should survive failed test execution. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Install the supported SDK explicitly in the workflow",
+          "rationale": "The runtime should be an intentional build input. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Keep untrusted pull-request execution separate from privileged deployment",
+          "rationale": "Contributor code must not run with deployment credentials. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Contributor code must not run with deployment credentials. The selected answer is keep untrusted pull-request execution separate from privileged deployment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q022",
+      "checkpointId": "CP4",
+      "caseId": "L09-C05",
+      "task": "diagnosis",
+      "caseContext": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The proposed design crosses an untrusted-code boundary",
+          "rationale": "Forked code can execute arbitrary build instructions. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Success-only execution skipped the report upload",
+          "rationale": "A failed test stops normal dependent steps. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The workflow depended on an uncontrolled image default",
+          "rationale": "Hosted environments change over time. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Forked code can execute arbitrary build instructions. The selected answer is the proposed design crosses an untrusted-code boundary.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q023",
+      "checkpointId": "CP4",
+      "caseId": "L09-C05",
+      "task": "verification",
+      "caseContext": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Forked tests run without access to deployment credentials",
+          "rationale": "The safety property must hold for malicious test code. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The failed run exposes the expected test report artifact",
+          "rationale": "The report should remain tied to the failing run. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "A clean run reports the required SDK and builds successfully",
+          "rationale": "Version evidence demonstrates environmental reproducibility. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The safety property must hold for malicious test code. The selected answer is forked tests run without access to deployment credentials.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q024",
+      "checkpointId": "CP4",
+      "caseId": "L09-C05",
+      "task": "safeguard",
+      "caseContext": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Avoid checking out untrusted code in a privileged event context",
+          "rationale": "Event selection alone does not make code trustworthy. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Set retention and exclude credentials from uploaded diagnostics",
+          "rationale": "Artifacts can contain sensitive environment details. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Update pinned toolchains through reviewed maintenance",
+          "rationale": "Explicit versions still need security and support updates. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Event selection alone does not make code trustworthy. The selected answer is avoid checking out untrusted code in a privileged event context.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q025",
+      "checkpointId": "CP4",
+      "caseId": "L09-C05",
+      "task": "tradeoff",
+      "caseContext": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Unsafe event: A pull-request workflow needs to test forked code, and a proposal would expose a cloud credential to that code. The team selects this remedy: \"Keep untrusted pull-request execution separate from privileged deployment.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Toolchain installation adds startup time",
+          "rationale": "Caching may reduce overhead but must preserve correctness. That addresses a different requirement: Runtime drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Privileged follow-up workflows require careful provenance validation",
+          "rationale": "A successful untrusted build is not automatically trusted input. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Longer report retention increases storage exposure",
+          "rationale": "Retain evidence only for the required learning and support window. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A successful untrusted build is not automatically trusted input. The selected answer is privileged follow-up workflows require careful provenance validation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q026",
+      "checkpointId": "CP5",
+      "caseId": "L09-C06",
+      "task": "remedy",
+      "caseContext": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis.",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "foundational",
+      "question": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a matrix that exercises each supported runtime",
+          "rationale": "Compatibility claims require execution on the relevant variants. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Keep untrusted pull-request execution separate from privileged deployment",
+          "rationale": "Contributor code must not run with deployment credentials. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Upload sanitized test reports under an appropriate failure-aware condition",
+          "rationale": "Diagnostic evidence should survive failed test execution. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Diagnostic evidence should survive failed test execution. The selected answer is upload sanitized test reports under an appropriate failure-aware condition.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q027",
+      "checkpointId": "CP5",
+      "caseId": "L09-C06",
+      "task": "diagnosis",
+      "caseContext": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis.",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The proposed design crosses an untrusted-code boundary",
+          "rationale": "Forked code can execute arbitrary build instructions. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Success-only execution skipped the report upload",
+          "rationale": "A failed test stops normal dependent steps. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "A single successful environment cannot establish multi-runtime support",
+          "rationale": "The unsupported path remains untested. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A failed test stops normal dependent steps. The selected answer is success-only execution skipped the report upload.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q028",
+      "checkpointId": "CP5",
+      "caseId": "L09-C06",
+      "task": "verification",
+      "caseContext": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis.",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Both runtime jobs execute and report their own outcomes",
+          "rationale": "The matrix must expand into the intended combinations. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Forked tests run without access to deployment credentials",
+          "rationale": "The safety property must hold for malicious test code. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The failed run exposes the expected test report artifact",
+          "rationale": "The report should remain tied to the failing run. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The report should remain tied to the failing run. The selected answer is the failed run exposes the expected test report artifact.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q029",
+      "checkpointId": "CP5",
+      "caseId": "L09-C06",
+      "task": "safeguard",
+      "caseContext": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis.",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Avoid checking out untrusted code in a privileged event context",
+          "rationale": "Event selection alone does not make code trustworthy. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Set retention and exclude credentials from uploaded diagnostics",
+          "rationale": "Artifacts can contain sensitive environment details. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Keep experimental variants separate from required supported variants",
+          "rationale": "Optional failures should not weaken mandatory compatibility checks. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Artifacts can contain sensitive environment details. The selected answer is set retention and exclude credentials from uploaded diagnostics.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q030",
+      "checkpointId": "CP5",
+      "caseId": "L09-C06",
+      "task": "tradeoff",
+      "caseContext": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis.",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Lost test reports: GitHub CI fails during tests, and the subsequent artifact step is skipped, leaving no report for diagnosis. The team selects this remedy: \"Upload sanitized test reports under an appropriate failure-aware condition.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Matrices multiply runner time and scheduling demand",
+          "rationale": "Include meaningful combinations rather than every theoretical permutation. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Privileged follow-up workflows require careful provenance validation",
+          "rationale": "A successful untrusted build is not automatically trusted input. That addresses a different requirement: Unsafe event. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Longer report retention increases storage exposure",
+          "rationale": "Retain evidence only for the required learning and support window. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Retain evidence only for the required learning and support window. The selected answer is longer report retention increases storage exposure.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q031",
+      "checkpointId": "CP3",
+      "caseId": "L09-C07",
+      "task": "remedy",
+      "caseContext": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Promote the exact validated build artifact",
+          "rationale": "The released bytes should be the bytes that passed tests. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Upload sanitized test reports under an appropriate failure-aware condition",
+          "rationale": "Diagnostic evidence should survive failed test execution. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Use a matrix that exercises each supported runtime",
+          "rationale": "Compatibility claims require execution on the relevant variants. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Compatibility claims require execution on the relevant variants. The selected answer is use a matrix that exercises each supported runtime.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q032",
+      "checkpointId": "CP3",
+      "caseId": "L09-C07",
+      "task": "diagnosis",
+      "caseContext": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A single successful environment cannot establish multi-runtime support",
+          "rationale": "The unsupported path remains untested. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Rebuilding introduces a second potentially different output",
+          "rationale": "Dependencies and environment can change between runs. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Success-only execution skipped the report upload",
+          "rationale": "A failed test stops normal dependent steps. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The unsupported path remains untested. The selected answer is a single successful environment cannot establish multi-runtime support.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q033",
+      "checkpointId": "CP3",
+      "caseId": "L09-C07",
+      "task": "verification",
+      "caseContext": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Both runtime jobs execute and report their own outcomes",
+          "rationale": "The matrix must expand into the intended combinations. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The deployment records the tested artifact's immutable identity",
+          "rationale": "Identity links verification evidence to the actual release. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The failed run exposes the expected test report artifact",
+          "rationale": "The report should remain tied to the failing run. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The matrix must expand into the intended combinations. The selected answer is both runtime jobs execute and report their own outcomes.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q034",
+      "checkpointId": "CP3",
+      "caseId": "L09-C07",
+      "task": "safeguard",
+      "caseContext": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify artifact provenance before privileged deployment",
+          "rationale": "Untrusted workflows must not substitute arbitrary release inputs. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Set retention and exclude credentials from uploaded diagnostics",
+          "rationale": "Artifacts can contain sensitive environment details. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Keep experimental variants separate from required supported variants",
+          "rationale": "Optional failures should not weaken mandatory compatibility checks. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Optional failures should not weaken mandatory compatibility checks. The selected answer is keep experimental variants separate from required supported variants.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q035",
+      "checkpointId": "CP3",
+      "caseId": "L09-C07",
+      "task": "tradeoff",
+      "caseContext": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes.",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Matrix gap: The application must support two runtimes, but the workflow validates only one before merging changes. The team selects this remedy: \"Use a matrix that exercises each supported runtime.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Matrices multiply runner time and scheduling demand",
+          "rationale": "Include meaningful combinations rather than every theoretical permutation. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Artifact promotion requires reliable storage and retention",
+          "rationale": "A missing artifact can block rollback or later deployment. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Longer report retention increases storage exposure",
+          "rationale": "Retain evidence only for the required learning and support window. That addresses a different requirement: Lost test reports. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Include meaningful combinations rather than every theoretical permutation. The selected answer is matrices multiply runner time and scheduling demand.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q036",
+      "checkpointId": "CP5",
+      "caseId": "L09-C08",
+      "task": "remedy",
+      "caseContext": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run.",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a matrix that exercises each supported runtime",
+          "rationale": "Compatibility claims require execution on the relevant variants. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Promote the exact validated build artifact",
+          "rationale": "The released bytes should be the bytes that passed tests. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use environment-specific concurrency with an intentional cancellation policy",
+          "rationale": "Deployment order needs explicit control for shared targets. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The released bytes should be the bytes that passed tests. The selected answer is promote the exact validated build artifact.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q037",
+      "checkpointId": "CP5",
+      "caseId": "L09-C08",
+      "task": "diagnosis",
+      "caseContext": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run.",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Independent workflow runs race on one mutable environment",
+          "rationale": "Completion order can differ from commit order. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "A single successful environment cannot establish multi-runtime support",
+          "rationale": "The unsupported path remains untested. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rebuilding introduces a second potentially different output",
+          "rationale": "Dependencies and environment can change between runs. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Dependencies and environment can change between runs. The selected answer is rebuilding introduces a second potentially different output.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q038",
+      "checkpointId": "CP5",
+      "caseId": "L09-C08",
+      "task": "verification",
+      "caseContext": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run.",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployment records the tested artifact's immutable identity",
+          "rationale": "Identity links verification evidence to the actual release. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The environment ends on the intended accepted release",
+          "rationale": "The evidence must include competing runs rather than one happy path. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Both runtime jobs execute and report their own outcomes",
+          "rationale": "The matrix must expand into the intended combinations. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Identity links verification evidence to the actual release. The selected answer is the deployment records the tested artifact's immutable identity.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q039",
+      "checkpointId": "CP5",
+      "caseId": "L09-C08",
+      "task": "safeguard",
+      "caseContext": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run.",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify artifact provenance before privileged deployment",
+          "rationale": "Untrusted workflows must not substitute arbitrary release inputs. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Avoid cancelling a deployment during a nonrecoverable database operation",
+          "rationale": "Cancellation safety depends on the deployment phase. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Keep experimental variants separate from required supported variants",
+          "rationale": "Optional failures should not weaken mandatory compatibility checks. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Untrusted workflows must not substitute arbitrary release inputs. The selected answer is verify artifact provenance before privileged deployment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q040",
+      "checkpointId": "CP5",
+      "caseId": "L09-C08",
+      "task": "tradeoff",
+      "caseContext": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run.",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Rebuilt release: Deployment recompiles source after CI instead of promoting the artifact tested by the original run. The team selects this remedy: \"Promote the exact validated build artifact.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Matrices multiply runner time and scheduling demand",
+          "rationale": "Include meaningful combinations rather than every theoretical permutation. That addresses a different requirement: Matrix gap. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Artifact promotion requires reliable storage and retention",
+          "rationale": "A missing artifact can block rollback or later deployment. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Serial deployment can reduce delivery throughput",
+          "rationale": "Consistency may justify waiting for the previous run. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A missing artifact can block rollback or later deployment. The selected answer is artifact promotion requires reliable storage and retention.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q041",
+      "checkpointId": "CP4",
+      "caseId": "L09-C09",
+      "task": "remedy",
+      "caseContext": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Promote the exact validated build artifact",
+          "rationale": "The released bytes should be the bytes that passed tests. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Use environment-specific concurrency with an intentional cancellation policy",
+          "rationale": "Deployment order needs explicit control for shared targets. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Pin third-party actions to reviewed full commit references",
+          "rationale": "Immutable references reduce unnoticed executable dependency changes. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Deployment order needs explicit control for shared targets. The selected answer is use environment-specific concurrency with an intentional cancellation policy.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q042",
+      "checkpointId": "CP4",
+      "caseId": "L09-C09",
+      "task": "diagnosis",
+      "caseContext": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "foundational",
+      "question": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Independent workflow runs race on one mutable environment",
+          "rationale": "Completion order can differ from commit order. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "A moving tag can resolve to different action code",
+          "rationale": "The workflow text can stay unchanged while execution changes. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Rebuilding introduces a second potentially different output",
+          "rationale": "Dependencies and environment can change between runs. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Completion order can differ from commit order. The selected answer is independent workflow runs race on one mutable environment.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q043",
+      "checkpointId": "CP4",
+      "caseId": "L09-C09",
+      "task": "verification",
+      "caseContext": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The deployment records the tested artifact's immutable identity",
+          "rationale": "Identity links verification evidence to the actual release. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The environment ends on the intended accepted release",
+          "rationale": "The evidence must include competing runs rather than one happy path. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "The action reference resolves to the approved commit",
+          "rationale": "The dependency identity should be explicit and verifiable. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The evidence must include competing runs rather than one happy path. The selected answer is the environment ends on the intended accepted release.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q044",
+      "checkpointId": "CP4",
+      "caseId": "L09-C09",
+      "task": "safeguard",
+      "caseContext": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Verify artifact provenance before privileged deployment",
+          "rationale": "Untrusted workflows must not substitute arbitrary release inputs. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Avoid cancelling a deployment during a nonrecoverable database operation",
+          "rationale": "Cancellation safety depends on the deployment phase. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Use a reviewed process to advance pinned action versions",
+          "rationale": "A permanent pin can retain old vulnerabilities. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Cancellation safety depends on the deployment phase. The selected answer is avoid cancelling a deployment during a nonrecoverable database operation.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q045",
+      "checkpointId": "CP4",
+      "caseId": "L09-C09",
+      "task": "tradeoff",
+      "caseContext": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version.",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Release race: Two commits deploy to the same environment concurrently and the older run completes last, overwriting the newer version. The team selects this remedy: \"Use environment-specific concurrency with an intentional cancellation policy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Artifact promotion requires reliable storage and retention",
+          "rationale": "A missing artifact can block rollback or later deployment. That addresses a different requirement: Rebuilt release. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Serial deployment can reduce delivery throughput",
+          "rationale": "Consistency may justify waiting for the previous run. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Commit pinning creates update maintenance",
+          "rationale": "It improves change control rather than removing supply-chain risk. That addresses a different requirement: Action supply-chain drift. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Consistency may justify waiting for the previous run. The selected answer is serial deployment can reduce delivery throughput.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q046",
+      "checkpointId": "CP2",
+      "caseId": "L09-C10",
+      "task": "remedy",
+      "caseContext": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review.",
+      "objectiveIds": [
+        "D3.3.1",
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review. Which next change most directly satisfies the stated requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use environment-specific concurrency with an intentional cancellation policy",
+          "rationale": "Deployment order needs explicit control for shared targets. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Pin third-party actions to reviewed full commit references",
+          "rationale": "Immutable references reduce unnoticed executable dependency changes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "C",
+          "text": "Add event and path filters matching the intended CI scope",
+          "rationale": "Trigger rules should reflect the changes requiring validation. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Immutable references reduce unnoticed executable dependency changes. The selected answer is pin third-party actions to reviewed full commit references.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q047",
+      "checkpointId": "CP2",
+      "caseId": "L09-C10",
+      "task": "diagnosis",
+      "caseContext": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review.",
+      "objectiveIds": [
+        "D3.3.1",
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review. Which explanation best accounts for the behavior or constraint described?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A moving tag can resolve to different action code",
+          "rationale": "The workflow text can stay unchanged while execution changes. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "The workflow trigger is broader than the intended workload",
+          "rationale": "Every pull request is currently eligible for execution. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Independent workflow runs race on one mutable environment",
+          "rationale": "Completion order can differ from commit order. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The workflow text can stay unchanged while execution changes. The selected answer is a moving tag can resolve to different action code.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q048",
+      "checkpointId": "CP2",
+      "caseId": "L09-C10",
+      "task": "verification",
+      "caseContext": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review.",
+      "objectiveIds": [
+        "D3.3.1",
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review. Which observation provides the strongest evidence that the requested result was achieved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Application changes trigger CI while unrelated documentation follows its intended path",
+          "rationale": "Both positive and negative cases verify filter behavior. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "The environment ends on the intended accepted release",
+          "rationale": "The evidence must include competing runs rather than one happy path. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "The action reference resolves to the approved commit",
+          "rationale": "The dependency identity should be explicit and verifiable. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The dependency identity should be explicit and verifiable. The selected answer is the action reference resolves to the approved commit.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q049",
+      "checkpointId": "CP2",
+      "caseId": "L09-C10",
+      "task": "safeguard",
+      "caseContext": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review.",
+      "objectiveIds": [
+        "D3.3.1",
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review. Which execution safeguard most directly addresses the risk in this case?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use a reviewed process to advance pinned action versions",
+          "rationale": "A permanent pin can retain old vulnerabilities. This directly addresses the constraint stated in this case."
+        },
+        {
+          "key": "B",
+          "text": "Ensure required branch checks are compatible with filtering",
+          "rationale": "A skipped required workflow can leave merges waiting. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Avoid cancelling a deployment during a nonrecoverable database operation",
+          "rationale": "Cancellation safety depends on the deployment phase. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A permanent pin can retain old vulnerabilities. The selected answer is use a reviewed process to advance pinned action versions.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L09-Q050",
+      "checkpointId": "CP2",
+      "caseId": "L09-C10",
+      "task": "tradeoff",
+      "caseContext": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review.",
+      "objectiveIds": [
+        "D3.3.1",
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Action supply-chain drift: A workflow references a moving action tag, and its implementation changes without a repository review. The team selects this remedy: \"Pin third-party actions to reviewed full commit references.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Narrow filters can miss indirect dependencies",
+          "rationale": "Review scope when shared build inputs change. That addresses a different requirement: Unexpected workflow. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "B",
+          "text": "Serial deployment can reduce delivery throughput",
+          "rationale": "Consistency may justify waiting for the previous run. That addresses a different requirement: Release race. It does not directly resolve this case's stated constraint."
+        },
+        {
+          "key": "C",
+          "text": "Commit pinning creates update maintenance",
+          "rationale": "It improves change control rather than removing supply-chain risk. This directly addresses the constraint stated in this case."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "It improves change control rather than removing supply-chain risk. The selected answer is commit pinning creates update maintenance.",
+      "sourceIds": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    }
+  ]
+}

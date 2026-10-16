@@ -1,0 +1,18 @@
+parameters:
+  - name: configuration
+    type: string
+    default: Release
+    values: [Release, Debug]
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: sdk
+      useGlobalJson: true
+  - script: dotnet restore samples/DevOps.slnx --locked-mode
+    displayName: Restore
+  - script: dotnet test samples/DevOps.slnx --configuration ${{ parameters.configuration }} --no-restore
+    displayName: Test
+  - script: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration ${{ parameters.configuration }} --no-restore --output $(Build.ArtifactStagingDirectory)/api /p:UseAppHost=false
+    displayName: Publish
+  - publish: $(Build.ArtifactStagingDirectory)/api
+    artifact: todo-api

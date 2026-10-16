@@ -1,0 +1,12 @@
+flowchart LR
+  sample["Sample OpenTelemetry source"]
+  insights["Application Insights component"]
+  workspace["Owned Log Analytics workspace"]
+  metrics["Canonical metric definitions"]
+  alert["Latency metric alert rule"]
+  actions["No external action group"]
+  sample -.->|separate live export gate| insights
+  insights -->|workspace-based telemetry| workspace
+  insights -->|provider metric schema| metrics
+  metrics -->|duration threshold / window| alert
+  alert -->|silent training response| actions

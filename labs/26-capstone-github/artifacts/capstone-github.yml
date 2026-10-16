@@ -1,0 +1,77 @@
+name: GitHub capstone ordered release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: todo-production
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - run: dotnet restore samples/DevOps.slnx --locked-mode
+      - run: dotnet test samples/DevOps.slnx --configuration Release --no-restore --settings samples/coverage.runsettings --collect:"XPlat Code Coverage" --results-directory TestResults
+      - name: Coverage gate
+        shell: pwsh
+        run: ./samples/Test-Coverage.ps1 -CoverageFile (Get-ChildItem TestResults -Filter coverage.cobertura.xml -Recurse | Select-Object -First 1 -ExpandProperty FullName)
+      - run: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration Release --no-restore --output publish /p:UseAppHost=false
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: todo-api
+          path: publish/
+  migrate:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: production-database
+    runs-on: [self-hosted, linux, az400-private]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ vars.AZURE_MIGRATION_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Expand database schema before application deployment
+        shell: pwsh
+        env:
+          ConnectionStrings__Todos: ${{ secrets.SQL_MIGRATION_CONNECTION }}
+        run: ./labs/14-ordered-releases-databases/artifacts/migrate.ps1 -Apply
+  deploy:
+    needs: migrate
+    environment: production
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: todo-api
+          path: publish/
+      - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383 # v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          package: publish/
+      - name: Post-deployment readiness gate
+        shell: pwsh
+        env:
+          APP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
+        run: |
+          $response = Invoke-WebRequest "https://$env:APP_NAME.azurewebsites.net/health/ready" -TimeoutSec 30
+          if ($response.StatusCode -ne 200) { throw 'Deployment readiness failed. Follow the rollback runbook.' }

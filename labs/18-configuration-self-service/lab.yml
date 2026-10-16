@@ -1,0 +1,171 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "18",
+  "slug": "18-configuration-self-service",
+  "title": "Configure machines and on-demand environments",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local"
+  ],
+  "objectives": [
+    "D3.5.1",
+    "D3.5.2",
+    "D3.5.4",
+    "D3.5.5"
+  ],
+  "scenario": "A service setting drifts after manual edits and teams request environments through tickets. Build an auditable reconciliation and a versioned self-service contract.",
+  "role": "Configuration platform engineer",
+  "outcome": "Configure machines and on-demand environments.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Author a desired-state document for local configuration",
+      "commands": "$desired=[ordered]@{schemaVersion='1.0';files=@(@{path='service.conf';content='mode=training'});compliance='audit-and-reconcile';owner=$RunId}\n $desired|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'desired-state.json')\n Copy-Item (Join-Path $LabRoot 'artifacts/configuration.catalog.yaml') (Join-Path $WorkRoot 'configuration.catalog.yaml')\n",
+      "expected": "Desired state describes content and ownership independently of an imperative deployment script.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.owner -ne $RunId -or $d.files[0].content -ne 'mode=training'){throw 'Desired state contract invalid.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.files[0].path -match '\\.\\.|^[A-Za-z]:|^/'){throw 'Desired file escaped the local sandbox.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.owner -ne $RunId -or $d.files[0].content -ne 'mode=training'){throw 'Desired state contract invalid.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.files[0].path -match '\\.\\.|^[A-Za-z]:|^/'){throw 'Desired file escaped the local sandbox.'}\n",
+      "evidence": "Desired-state document and resource ownership.",
+      "fix": "Choose Machine Configuration for Azure policy-backed auditing; use Bicep/ARM for resource state rather than conflating the layers."
+    },
+    {
+      "id": "CP2",
+      "title": "Audit configuration drift before repair",
+      "commands": "$target=Join-Path $WorkRoot 'service.conf';'mode=incorrect'|Set-Content $target\n $d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n [ordered]@{resource='service.conf';expected=$d.files[0].content;actual=(Get-Content $target);compliant=((Get-Content $target) -eq $d.files[0].content)}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'drift-before.json')\n",
+      "expected": "Audit identifies the deterministic wrong value without repairing it.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.compliant -or $r.actual -ne 'mode=incorrect'){throw 'Drift fixture not detected.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.actual -eq $r.expected){throw 'Noncompliance record lacks an actual difference.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.compliant -or $r.actual -ne 'mode=incorrect'){throw 'Drift fixture not detected.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.actual -eq $r.expected){throw 'Noncompliance record lacks an actual difference.'}\n",
+      "evidence": "Expected, actual, and compliance values.",
+      "fix": "Keep audit and modify responsibilities separate; do not repair before retaining evidence."
+    },
+    {
+      "id": "CP3",
+      "title": "Reconcile only the declared local resource",
+      "commands": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n $target=Join-Path $WorkRoot $d.files[0].path\n $d.files[0].content|Set-Content $target\n [ordered]@{resource='service.conf';compliant=((Get-Content $target) -eq $d.files[0].content)}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'drift-after.json')\n",
+      "expected": "Reconciliation restores the declared content and proves compliance.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\n if(-not $r.compliant){throw 'Configuration remains drifted.'}\n",
+      "negative": "if((Get-Content (Join-Path $WorkRoot 'service.conf')) -ne 'mode=training'){throw 'Unexpected reconciled setting.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\n if(-not $r.compliant){throw 'Configuration remains drifted.'}\n\nif((Get-Content (Join-Path $WorkRoot 'service.conf')) -ne 'mode=training'){throw 'Unexpected reconciled setting.'}\n",
+      "evidence": "Before/after reports and exact managed file.",
+      "fix": "Use the desired-state value and owned path; never recursively repair unrelated directories."
+    },
+    {
+      "id": "CP4",
+      "title": "Validate a self-service environment catalog contract",
+      "commands": "$t=Get-Content (Join-Path $WorkRoot 'configuration.catalog.yaml') -Raw\n [ordered]@{catalogDigest=(Get-FileHash (Join-Path $WorkRoot 'configuration.catalog.yaml')).Hash;environment='disposable';subscription=$SubscriptionId;resourceGroup=$ResourceGroup;approvalRequired=$true;provisioned=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'self-service-contract.json')\n",
+      "expected": "The catalog is versioned and constrained to an approved target boundary.",
+      "positive": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.resourceGroup -ne $ResourceGroup -or -not $c.approvalRequired){throw 'Self-service boundary/approval absent.'}\n",
+      "negative": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.provisioned){throw 'Catalog validation cannot claim an environment deployment.'}\n",
+      "validate": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.resourceGroup -ne $ResourceGroup -or -not $c.approvalRequired){throw 'Self-service boundary/approval absent.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.provisioned){throw 'Catalog validation cannot claim an environment deployment.'}\n",
+      "evidence": "Catalog digest, target scope, and separate platform prerequisites.",
+      "fix": "A real Deployment Environments exercise requires approved dev center/project, catalog synchronization, environment type, and deployment identity."
+    },
+    {
+      "id": "CP5",
+      "title": "Compare legacy and supported configuration paths",
+      "commands": "$decision=[ordered]@{legacy='Azure Automation State Configuration';legacyStatus='Retirement announced; verify current lifecycle before use';modern='Azure Machine Configuration';resourcePlane='Bicep/ARM';selfService='Azure Deployment Environments';verified='2026-10-16';legacyDeploymentAllowed=$false}\n $decision|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'configuration-decision.json')\n",
+      "expected": "The syllabus topic is preserved as dated context with a supported modernization route.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.legacyDeploymentAllowed){throw 'Legacy context must not silently enable retired infrastructure.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.legacyDeploymentAllowed){throw 'Legacy context must not silently enable retired infrastructure.'}\n",
+      "evidence": "Dated source comparison and migration responsibilities.",
+      "fix": "Verify current lifecycle guidance before planning production configuration changes."
+    }
+  ],
+  "breakFix": {
+    "trigger": "Set-Content (Join-Path $WorkRoot 'service.conf') 'mode=drifted'\n",
+    "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json;[pscustomobject]@{expected=$d.files[0].content;actual=(Get-Content (Join-Path $WorkRoot 'service.conf'))}\n",
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json;$d.files[0].content|Set-Content (Join-Path $WorkRoot 'service.conf')\n"
+  },
+  "challenge": "Publish a versioned catalog into a separately approved disposable Deployment Environments project and prove resource ownership, deletion, and policy compliance.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview",
+    "https://learn.microsoft.com/en-us/azure/deployment-environments/overview-what-is-azure-deployment-environments",
+    "https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview"
+  ],
+  "primer": "Resource provisioning, guest configuration, and self-service orchestration are different control planes. Legacy Automation State Configuration remains dated syllabus context; use current Machine Configuration guidance.",
+  "architecture": {
+    "title": "Desired-state reconciliation and self-service catalog",
+    "nodes": [
+      {
+        "id": "desired",
+        "label": "Desired-state JSON",
+        "kind": "data",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "reconciler",
+        "label": "PowerShell reconciler",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "file",
+        "label": "Owned local service.conf",
+        "kind": "data",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "report",
+        "label": "Before / after compliance JSON",
+        "kind": "evidence",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "catalog",
+        "label": "Versioned environment catalog",
+        "kind": "code",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "ade",
+        "label": "Azure Deployment Environments",
+        "kind": "platform",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "desired",
+        "to": "reconciler",
+        "label": "declared content / owner"
+      },
+      {
+        "from": "reconciler",
+        "to": "file",
+        "label": "bounded repair"
+      },
+      {
+        "from": "file",
+        "to": "report",
+        "label": "independent audit"
+      },
+      {
+        "from": "desired",
+        "to": "report",
+        "label": "expected value"
+      },
+      {
+        "from": "catalog",
+        "to": "ade",
+        "label": "separate approved sync",
+        "style": "dashed"
+      },
+      {
+        "from": "catalog",
+        "to": "desired",
+        "label": "versioned configuration intent"
+      }
+    ],
+    "topology": "The desired-state document gives a local reconciler an exact owned path and target value. Audit reports preserve both drift and repaired compliance. A separate versioned catalog describes the self-service environment contract; synchronizing it with Azure Deployment Environments requires the approved dev-center/project bootstrap and is not claimed by the local reconciliation exercise."
+  }
+}

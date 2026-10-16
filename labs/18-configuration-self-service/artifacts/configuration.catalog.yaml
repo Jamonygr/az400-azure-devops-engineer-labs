@@ -1,0 +1,29 @@
+schemaVersion: 1
+catalog:
+  - name: todo-api-small
+    description: Approved disposable training workload
+    template: labs/17-bicep-infrastructure/artifacts/main.bicep
+    owner: platform-training
+    allowedSkus: [B1, S1]
+    defaultSku: B1
+    requires:
+      - explicit-subscription-and-resource-group
+      - ownership-manifest
+      - existing-entra-sql-and-network-route
+      - cost-acknowledgement-for-S1
+    configuration:
+      featureFlag: TodoWrites
+      source: Azure-App-Configuration
+      credential: Managed-Identity
+      telemetry: Azure-Monitor-OpenTelemetry
+    lifecycle:
+      previewRequired: true
+      deleteOnlyManifestOwnedIds: true
+      auditResiduals: true
+retirements:
+  - service: Azure Deployment Environments
+    guidance: Verify the current Microsoft retirement notice; use a reviewed GitHub/Azure Pipelines workflow calling this Bicep template for new exercises.
+    source: https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide
+  - service: Azure Automation State Configuration
+    guidance: Use Azure Machine Configuration for audit/assignment-based guest configuration; review capabilities and limits before migrating DSC workloads.
+    source: https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview

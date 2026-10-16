@@ -1,0 +1,13 @@
+flowchart LR
+  local["Local Git working copy"]
+  repo["GitHub sandbox repository"]
+  main["Protected main branch"]
+  pr["Feature pull request"]
+  reviewer["Independent reviewer"]
+  checks["CI status contexts"]
+  local -->|push owned source| repo
+  repo -->|branch protection| main
+  pr -->|policy-controlled merge| main
+  reviewer -->|required approval| pr
+  checks -.->|required status signals| pr
+  local -->|feature revision| pr

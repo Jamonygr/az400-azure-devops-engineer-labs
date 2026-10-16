@@ -1,0 +1,12 @@
+flowchart LR
+  boards["Accepted Azure Boards task"]
+  repos["Owned Azure Repos revision"]
+  pipeline["YAML CI on approved agent"]
+  artifact["Build SHA / tests / artifact"]
+  checks["Protected environment + WIF"]
+  azure["Azure app / SQL / telemetry"]
+  boards -->|work-to-change traceability| repos
+  repos -->|registered exact YAML source| pipeline
+  pipeline -->|successful build provenance| artifact
+  artifact -.->|separate resource approval| checks
+  checks -.->|optional protected live extension| azure

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "24",
+  "slug": "24-monitoring-alerts",
+  "title": "Collect telemetry and configure actionable alerts",
+  "domain": "instrumentation",
+  "minutes": 120,
+  "cost": "billable; explicit acknowledgement",
+  "platforms": [
+    "local",
+    "azure"
+  ],
+  "objectives": [
+    "D1.2.7",
+    "D5.1.1",
+    "D5.1.2",
+    "D5.1.3",
+    "D5.1.4"
+  ],
+  "scenario": "The team can deploy an app but has no owned telemetry store or actionable latency rule. Connect workspace-based telemetry and create a silent training alert.",
+  "role": "Observability engineer",
+  "outcome": "Collect telemetry and configure actionable alerts.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Create the owned Log Analytics workspace",
+      "commands": "$name=\"logs-$RunId\"\n $w=az monitor log-analytics workspace create --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name $name --location $Location --retention-time 30 --sku PerGB2018 -o json|ConvertFrom-Json\n $w|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'workspace.json')\n",
+      "expected": "A30-day workspace exists in the owned group; ingestion pricing still applies.",
+      "positive": "$w=az monitor log-analytics workspace show --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"logs-$RunId\" -o json|ConvertFrom-Json\n if($w.retentionInDays -ne 30){throw 'Workspace retention mismatch.'}\n",
+      "negative": "$w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Workspace escaped owned group.'}\n",
+      "validate": "$w=az monitor log-analytics workspace show --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"logs-$RunId\" -o json|ConvertFrom-Json\n if($w.retentionInDays -ne 30){throw 'Workspace retention mismatch.'}\n\n$w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Workspace escaped owned group.'}\n",
+      "evidence": "Workspace ID locally, retention, pricing tier, and ingestion budget.",
+      "fix": "Review current workspace billing and approved region; avoid ingesting production/private payloads."
+    },
+    {
+      "id": "CP2",
+      "title": "Connect a workspace-based Application Insights component",
+      "commands": "$w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json\n az monitor app-insights component create --subscription $SubscriptionId --resource-group $ResourceGroup --app \"insights-$RunId\" --location $Location --workspace $w.id --kind web --application-type web -o json|Set-Content (Join-Path $WorkRoot 'insights.json')\n",
+      "expected": "Application Insights is explicitly connected to the owned workspace.",
+      "positive": "$i=az monitor app-insights component show --subscription $SubscriptionId --resource-group $ResourceGroup --app \"insights-$RunId\" -o json|ConvertFrom-Json\n $w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json\n if($i.workspaceResourceId -ne $w.id){throw 'Insights workspace linkage mismatch.'}\n",
+      "negative": "$i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json\n if($i.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Insights escaped owned group.'}\n",
+      "validate": "$i=az monitor app-insights component show --subscription $SubscriptionId --resource-group $ResourceGroup --app \"insights-$RunId\" -o json|ConvertFrom-Json\n $w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json\n if($i.workspaceResourceId -ne $w.id){throw 'Insights workspace linkage mismatch.'}\n\n$i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json\n if($i.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Insights escaped owned group.'}\n",
+      "evidence": "Component/workspace linkage; redact instrumentation/connection values.",
+      "fix": "Install the pinned application-insights extension during bootstrap; do not auto-install inside read-only preflight."
+    },
+    {
+      "id": "CP3",
+      "title": "Inspect supported metric names before selecting alerts",
+      "commands": "$i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json\n az monitor metrics list-definitions --subscription $SubscriptionId --resource $i.id --query '[].{name:name.value,unit:unit,aggregation:primaryAggregationType}' -o json|Set-Content (Join-Path $WorkRoot 'metric-definitions.json')\n",
+      "expected": "The resource provider defines actual available metric names and units.",
+      "positive": "$m=@(Get-Content (Join-Path $WorkRoot 'metric-definitions.json') -Raw|ConvertFrom-Json)\n if('requests/duration' -notin $m.name){throw 'Expected request-duration metric unavailable; stop before creating alert.'}\n",
+      "negative": "$m=@(Get-Content (Join-Path $WorkRoot 'metric-definitions.json') -Raw|ConvertFrom-Json)\n if(@($m|Where-Object { -not $_.name }).Count){throw 'Metric definition missing canonical name.'}\n",
+      "validate": "$m=@(Get-Content (Join-Path $WorkRoot 'metric-definitions.json') -Raw|ConvertFrom-Json)\n if('requests/duration' -notin $m.name){throw 'Expected request-duration metric unavailable; stop before creating alert.'}\n\n$m=@(Get-Content (Join-Path $WorkRoot 'metric-definitions.json') -Raw|ConvertFrom-Json)\n if(@($m|Where-Object { -not $_.name }).Count){throw 'Metric definition missing canonical name.'}\n",
+      "evidence": "Metric name/unit/aggregation; no inference of live application traffic.",
+      "fix": "Use the metric definition unit; avoid applying a millisecond threshold to a count or percent."
+    },
+    {
+      "id": "CP4",
+      "title": "Create a silent sandbox response-time alert",
+      "commands": "$i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json\n az monitor metrics alert create --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" --scopes $i.id --condition 'avg requests/duration > 1000' --window-size 5m --evaluation-frequency 1m --severity 3 --description \"Run $RunId training alert; no external notification action\" -o json|Set-Content (Join-Path $WorkRoot 'alert.json')\n",
+      "expected": "A5-minute latency rule exists without action groups or messages to external recipients.",
+      "positive": "$a=az monitor metrics alert show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" -o json|ConvertFrom-Json\n if(-not $a.enabled -or $a.windowSize -ne 'PT5M'){throw 'Latency alert disabled or wrong window.'}\n",
+      "negative": "$a=Get-Content (Join-Path $WorkRoot 'alert.json') -Raw|ConvertFrom-Json\n if(@($a.actions).Count -gt 0){throw 'This training alert must not notify external recipients.'}\n",
+      "validate": "$a=az monitor metrics alert show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" -o json|ConvertFrom-Json\n if(-not $a.enabled -or $a.windowSize -ne 'PT5M'){throw 'Latency alert disabled or wrong window.'}\n\n$a=Get-Content (Join-Path $WorkRoot 'alert.json') -Raw|ConvertFrom-Json\n if(@($a.actions).Count -gt 0){throw 'This training alert must not notify external recipients.'}\n",
+      "evidence": "Alert condition/window/severity and empty action list.",
+      "fix": "No telemetry means no proof of firing behavior; use an approved synthetic workload for the optional integration test."
+    },
+    {
+      "id": "CP5",
+      "title": "Map pipeline and platform telemetry to owned response actions",
+      "commands": "$map=[ordered]@{application='request duration/error rate';infrastructure=@('CPU','memory','disk','network');github='workflow_run completion and repository insights';azurePipelines='build/release result';notificationMode='reviewed owner only';externalMessagesSent=0;liveTrafficVerified=$false}\n $map|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'telemetry-response-map.json')\n",
+      "expected": "Application, infrastructure, and delivery signals have distinct response paths.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n",
+      "evidence": "Signal-to-owner/action matrix and unverified integration gates.",
+      "fix": "Configure VM/Container/Storage/Network Insights only for approved owned resources; avoid collecting credentials or personal request bodies."
+    }
+  ],
+  "breakFix": {
+    "trigger": "az monitor metrics alert update --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" --enabled false -o none\n",
+    "diagnose": "az monitor metrics alert show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" --query '{enabled:enabled,window:windowSize}' -o json\n",
+    "repair": "az monitor metrics alert update --subscription $SubscriptionId --resource-group $ResourceGroup --name \"slow-requests-$RunId\" --enabled true -o none\n"
+  },
+  "challenge": "Emit an approved synthetic trace/request through the sample and demonstrate the alert changing state without sending unsolicited Teams/email notifications.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview",
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-metric-overview",
+    "https://learn.microsoft.com/en-us/cli/azure/monitor/metrics/alert"
+  ],
+  "primer": "A workspace, instrumentation, ingestion, query, and alert action are separate links. A configured rule without telemetry proves configuration only; no external notifications are sent here.",
+  "extensions": [
+    "application-insights"
+  ],
+  "architecture": {
+    "title": "Workspace-based telemetry and a silent metric alert",
+    "nodes": [
+      {
+        "id": "sample",
+        "label": "Sample OpenTelemetry source",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "insights",
+        "label": "Application Insights component",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "workspace",
+        "label": "Owned Log Analytics workspace",
+        "kind": "data",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "metrics",
+        "label": "Canonical metric definitions",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "alert",
+        "label": "Latency metric alert rule",
+        "kind": "platform",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "actions",
+        "label": "No external action group",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "sample",
+        "to": "insights",
+        "label": "separate live export gate",
+        "style": "dashed"
+      },
+      {
+        "from": "insights",
+        "to": "workspace",
+        "label": "workspace-based telemetry"
+      },
+      {
+        "from": "insights",
+        "to": "metrics",
+        "label": "provider metric schema"
+      },
+      {
+        "from": "metrics",
+        "to": "alert",
+        "label": "duration threshold / window"
+      },
+      {
+        "from": "alert",
+        "to": "actions",
+        "label": "silent training response"
+      }
+    ],
+    "topology": "The Application Insights component is actually linked to the owned Log Analytics workspace. Provider metric definitions supply the latency name/unit before the alert rule is created. The rule has no external action group and sends no messages. Emitting sample telemetry and proving a firing transition are separate integration gates; configured resources alone do not establish live ingestion."
+  },
+  "providers": [
+    "Microsoft.OperationalInsights",
+    "Microsoft.Insights"
+  ]
+}

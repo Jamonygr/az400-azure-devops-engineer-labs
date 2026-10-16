@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="650" viewBox="0 0 760 650" role="img" aria-labelledby="title desc"><title id="title">Lab 14: Ordered schema and application release boundaries</title><desc id="desc">The release contract promotes one immutable application bundle and orders idempotent schema expansion before application deployment. The SQL script is generated locally; applying it requires a separately approved database identity and network path. Old and new binaries must tolerate the expanded schema so recovery can route to compatible code without destructive data rollback. Relationships: Immutable application bundle to Release orchestrator contract: promote exact digest; Release orchestrator contract to Idempotent SQL migration: expand before deploy; Idempotent SQL migration to Approved SQL database: separately approved apply; Release orchestrator contract to Compatible application binary: same reviewed binary; Approved SQL database to Compatible application binary: compatible expanded schema; Compatible application binary to Readiness / rollback evidence: observed health / recovery</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto-start-reverse"><path d="M0,0 L0,8 L8,4 z" fill="#0369a1"/></marker></defs>
+<rect width="760" height="650" rx="16" fill="#f0f9ff"/>
+<text x="22" y="30" fill="#0c4a6e" font-size="19" font-weight="bold" font-family="sans-serif">Lab 14: Ordered schema and application release boundaries</text>
+<path d="M210,160.0 H285" fill="none" stroke="#0369a1" stroke-width="2" marker-end="url(#arrow)" data-from="bundle" data-to="release"><title>promote exact digest</title></path>
+<circle cx="247.5" cy="160.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="247.5" y="164.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">1</text>
+<path d="M475,160.0 H550" fill="none" stroke="#0369a1" stroke-width="2" marker-end="url(#arrow)" data-from="release" data-to="migration"><title>expand before deploy</title></path>
+<circle cx="512.5" cy="160.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="512.5" y="164.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">2</text>
+<path d="M645.0,220 V330" fill="none" stroke="#0369a1" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)" data-from="migration" data-to="database"><title>separately approved apply</title></path>
+<circle cx="645.0" cy="275.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="645.0" y="279.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">3</text>
+<path d="M380.0,220 V330" fill="none" stroke="#0369a1" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)" data-from="release" data-to="app"><title>same reviewed binary</title></path>
+<circle cx="380.0" cy="275.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="380.0" y="279.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">4</text>
+<path d="M550,390.0 H475" fill="none" stroke="#0369a1" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)" data-from="database" data-to="app"><title>compatible expanded schema</title></path>
+<circle cx="512.5" cy="390.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="512.5" y="394.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">5</text>
+<path d="M285,390.0 H210" fill="none" stroke="#0369a1" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)" data-from="app" data-to="readiness"><title>observed health / recovery</title></path>
+<circle cx="247.5" cy="390.0" r="11" fill="#ffffff" stroke="#0369a1" stroke-width="1.5"/><text x="247.5" y="394.5" text-anchor="middle" fill="#075985" font-size="13" font-weight="bold" font-family="sans-serif">6</text>
+<g data-node="bundle"><rect x="20" y="100" width="190" height="120" rx="11" fill="#ecfdf5" stroke="#059669" stroke-width="2"/><text x="33" y="123" fill="#059669" font-family="sans-serif" font-size="12" font-weight="bold">DATA</text>
+<text x="33" y="148" fill="#0f172a" font-family="sans-serif" font-size="18">Immutable</text>
+<text x="33" y="170" fill="#0f172a" font-family="sans-serif" font-size="18">application bundle</text>
+</g>
+<g data-node="release"><rect x="285" y="100" width="190" height="120" rx="11" fill="#ffffff" stroke="#0284c7" stroke-width="2"/><text x="298" y="123" fill="#0284c7" font-family="sans-serif" font-size="12" font-weight="bold">CODE</text>
+<text x="298" y="148" fill="#0f172a" font-family="sans-serif" font-size="18">Release</text>
+<text x="298" y="170" fill="#0f172a" font-family="sans-serif" font-size="18">orchestrator</text>
+<text x="298" y="192" fill="#0f172a" font-family="sans-serif" font-size="18">contract</text>
+</g>
+<g data-node="migration"><rect x="550" y="100" width="190" height="120" rx="11" fill="#ffffff" stroke="#0284c7" stroke-width="2"/><text x="563" y="123" fill="#0284c7" font-family="sans-serif" font-size="12" font-weight="bold">CODE</text>
+<text x="563" y="148" fill="#0f172a" font-family="sans-serif" font-size="18">Idempotent SQL</text>
+<text x="563" y="170" fill="#0f172a" font-family="sans-serif" font-size="18">migration</text>
+</g>
+<g data-node="database"><rect x="550" y="330" width="190" height="120" rx="11" fill="#ecfdf5" stroke="#059669" stroke-width="2"/><text x="563" y="353" fill="#059669" font-family="sans-serif" font-size="12" font-weight="bold">DATA</text>
+<text x="563" y="378" fill="#0f172a" font-family="sans-serif" font-size="18">Approved SQL</text>
+<text x="563" y="400" fill="#0f172a" font-family="sans-serif" font-size="18">database</text>
+</g>
+<g data-node="app"><rect x="285" y="330" width="190" height="120" rx="11" fill="#ffffff" stroke="#0284c7" stroke-width="2"/><text x="298" y="353" fill="#0284c7" font-family="sans-serif" font-size="12" font-weight="bold">CODE</text>
+<text x="298" y="378" fill="#0f172a" font-family="sans-serif" font-size="18">Compatible</text>
+<text x="298" y="400" fill="#0f172a" font-family="sans-serif" font-size="18">application binary</text>
+</g>
+<g data-node="readiness"><rect x="20" y="330" width="190" height="120" rx="11" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/><text x="33" y="353" fill="#ea580c" font-family="sans-serif" font-size="12" font-weight="bold">EVIDENCE</text>
+<text x="33" y="378" fill="#0f172a" font-family="sans-serif" font-size="18">Readiness /</text>
+<text x="33" y="400" fill="#0f172a" font-family="sans-serif" font-size="18">rollback evidence</text>
+</g>
+<text x="22" y="480" fill="#0c4a6e" font-family="sans-serif" font-weight="bold" font-size="16">Relationships</text>
+<text x="22" y="507" fill="#0f172a" font-family="sans-serif" font-size="14.5">1. promote exact digest</text>
+<text x="392" y="507" fill="#0f172a" font-family="sans-serif" font-size="14.5">2. expand before deploy</text>
+<text x="22" y="545" fill="#0f172a" font-family="sans-serif" font-size="14.5">3. separately approved apply</text>
+<text x="392" y="545" fill="#0f172a" font-family="sans-serif" font-size="14.5">4. same reviewed binary</text>
+<text x="22" y="583" fill="#0f172a" font-family="sans-serif" font-size="14.5">5. compatible expanded schema</text>
+<text x="392" y="583" fill="#0f172a" font-family="sans-serif" font-size="14.5">6. observed health / recovery</text>
+<text x="22" y="636" fill="#334155" font-family="sans-serif" font-size="12">Solid: core relationship · Dashed: separately gated integration · See walkthrough for verification limits.</text>
+</svg>

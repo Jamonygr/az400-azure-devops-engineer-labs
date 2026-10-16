@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "02",
+  "slug": "02-devops-metrics",
+  "title": "Measure flow, quality, security, and delivery",
+  "domain": "process",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local",
+    "github"
+  ],
+  "objectives": [
+    "D1.2.1",
+    "D1.2.2",
+    "D1.2.3",
+    "D1.2.4",
+    "D1.2.5",
+    "D1.2.6",
+    "D1.2.7"
+  ],
+  "scenario": "The team reports activity counts but cannot explain slow delivery or unstable releases. Derive flow and quality measures from a small transparent dataset.",
+  "role": "Engineering lead",
+  "outcome": "Measure flow, quality, security, and delivery.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Normalize delivery observations",
+      "commands": "$events=@(\n [pscustomobject]@{change='a';leadMinutes=120;cycleMinutes=70;recoveryMinutes=0;failed=$false;tests=50;failedTests=0;criticalFindings=0},\n [pscustomobject]@{change='b';leadMinutes=240;cycleMinutes=100;recoveryMinutes=30;failed=$true;tests=60;failedTests=1;criticalFindings=2},\n [pscustomobject]@{change='c';leadMinutes=90;cycleMinutes=40;recoveryMinutes=0;failed=$false;tests=55;failedTests=0;criticalFindings=0})\n $events|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n",
+      "expected": "Three explicitly fictional observations separate flow, tests, and findings.",
+      "positive": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if ($e.Count -ne 3 -or ($e|Measure-Object leadMinutes -Minimum).Minimum -lt 0) { throw 'Invalid observation data.' }\n",
+      "negative": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if (@($e|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }).Count) { throw 'Cycle time exceeds lead time.' }\n",
+      "validate": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if ($e.Count -ne 3 -or ($e|Measure-Object leadMinutes -Minimum).Minimum -lt 0) { throw 'Invalid observation data.' }\n\n$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if (@($e|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }).Count) { throw 'Cycle time exceeds lead time.' }\n",
+      "evidence": "observations.json marked synthetic.",
+      "fix": "Use one time unit and keep observation windows consistent."
+    },
+    {
+      "id": "CP2",
+      "title": "Calculate flow and recovery measures",
+      "commands": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n $m=[ordered]@{meanLeadMinutes=($e|Measure-Object leadMinutes -Average).Average;meanCycleMinutes=($e|Measure-Object cycleMinutes -Average).Average;changeFailureRate=@($e|Where-Object failed).Count/$e.Count;meanRecoveryMinutes=($e|Where-Object failed|Measure-Object recoveryMinutes -Average).Average}\n $m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'flow.json')\n",
+      "expected": "Mean lead time150min, cycle70min, failure rate1/3, recovery30min.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.meanLeadMinutes -ne 150 -or $m.meanRecoveryMinutes -ne 30) { throw 'Flow aggregation incorrect.' }\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.changeFailureRate -lt 0 -or $m.changeFailureRate -gt 1) { throw 'Failure rate outside fraction range.' }\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.meanLeadMinutes -ne 150 -or $m.meanRecoveryMinutes -ne 30) { throw 'Flow aggregation incorrect.' }\n\n$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.changeFailureRate -lt 0 -or $m.changeFailureRate -gt 1) { throw 'Failure rate outside fraction range.' }\n",
+      "evidence": "flow.json with the denominator and observation window.",
+      "fix": "Count failed deployments, not failed unit tests, in the change-failure numerator."
+    },
+    {
+      "id": "CP3",
+      "title": "Report testing and security independently",
+      "commands": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n $q=[ordered]@{tests=($e|Measure-Object tests -Sum).Sum;failedTests=($e|Measure-Object failedTests -Sum).Sum;criticalFindings=($e|Measure-Object criticalFindings -Sum).Sum}\n $q|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'quality.json')\n",
+      "expected": "The quality report records165tests,1failed test,2critical findings.",
+      "positive": "$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.tests -ne 165 -or $q.failedTests -ne 1 -or $q.criticalFindings -ne 2) { throw 'Quality aggregation mismatch.' }\n",
+      "negative": "$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.failedTests -gt $q.tests) { throw 'Test failure count exceeds executed tests.' }\n",
+      "validate": "$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.tests -ne 165 -or $q.failedTests -ne 1 -or $q.criticalFindings -ne 2) { throw 'Quality aggregation mismatch.' }\n\n$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.failedTests -gt $q.tests) { throw 'Test failure count exceeds executed tests.' }\n",
+      "evidence": "Separate test and security counters, without person rankings.",
+      "fix": "Avoid interpreting scan count as vulnerability count; deduplicate by stable alert identity."
+    },
+    {
+      "id": "CP4",
+      "title": "Inspect workflow durations from the sandbox",
+      "commands": "$runs=gh run list --repo $GhRepo --limit 20 --json databaseId,status,conclusion,createdAt,updatedAt,workflowName\n $runs|Set-Content (Join-Path $WorkRoot 'workflow-runs.json')\n $r=@($runs|ConvertFrom-Json);[pscustomobject]@{observedRuns=$r.Count;completed=@($r|Where-Object status -eq 'completed').Count}\n",
+      "expected": "A real run inventory is collected; a new sandbox may correctly contain zero runs.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json -NoEnumerate\n if ($null -eq $r) { throw 'Workflow API did not return a JSON collection.' }\n",
+      "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json)\n if (@($r|Where-Object { $_.status -eq 'completed' -and -not $_.conclusion }).Count) { throw 'Completed runs require conclusions.' }\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json -NoEnumerate\n if ($null -eq $r) { throw 'Workflow API did not return a JSON collection.' }\n\n$r=@(Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json)\n if (@($r|Where-Object { $_.status -eq 'completed' -and -not $_.conclusion }).Count) { throw 'Completed runs require conclusions.' }\n",
+      "evidence": "Observed inventory and explicit zero-data status.",
+      "fix": "A zero-run sandbox is missing telemetry, not a successful pipeline."
+    },
+    {
+      "id": "CP5",
+      "title": "Publish a decision-oriented metric review",
+      "commands": "$flow=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n $review=@(\"# Synthetic delivery review\",\"Mean lead time: $($flow.meanLeadMinutes) minutes\",\"Observed change failure rate: $($flow.changeFailureRate)\",\"Action: investigate change b; improve failing test and critical findings before increasing release frequency.\",\"Limit: three synthetic changes; no production SLO claim.\")\n $review|Set-Content (Join-Path $WorkRoot 'review.md')\n",
+      "expected": "A review ties a metric to one concrete improvement and its sample-size limit.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -notmatch 'Action:' -or $r -notmatch 'Limit:') { throw 'Review lacks action or uncertainty.' }\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -match '100% production reliability') { throw 'Unsupported reliability claim.' }\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -notmatch 'Action:' -or $r -notmatch 'Limit:') { throw 'Review lacks action or uncertainty.' }\n\n$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -match '100% production reliability') { throw 'Unsupported reliability claim.' }\n",
+      "evidence": "review.md and the raw synthetic observation set.",
+      "fix": "Report the sample size and distinguish delivery metrics from service SLO measurements."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=999;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }\n",
+    "repair": "$e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=70;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n"
+  },
+  "challenge": "Replace synthetic changes with a redacted dataset and preserve denominators, time zones, null values, and statistical limitations.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/devops/report/dashboards/overview",
+    "https://cli.github.com/manual/gh_run_list"
+  ],
+  "primer": "Lead time includes waiting; cycle time covers active work. Recovery time, change-failure rate, test failures, and security findings have different denominators.",
+  "architecture": {
+    "title": "Delivery observations and the metric review",
+    "nodes": [
+      {
+        "id": "api",
+        "label": "GitHub Actions API",
+        "kind": "platform",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "collector",
+        "label": "PowerShell collector",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "observations",
+        "label": "Synthetic observations",
+        "kind": "data",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "aggregate",
+        "label": "Flow / quality metrics",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "review",
+        "label": "Markdown metric review",
+        "kind": "evidence",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "owner",
+        "label": "Engineering decision",
+        "kind": "identity",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "api",
+        "to": "collector",
+        "label": "run inventory"
+      },
+      {
+        "from": "collector",
+        "to": "observations",
+        "label": "explicit data source"
+      },
+      {
+        "from": "observations",
+        "to": "aggregate",
+        "label": "time-window aggregates"
+      },
+      {
+        "from": "aggregate",
+        "to": "review",
+        "label": "values and limits"
+      },
+      {
+        "from": "review",
+        "to": "owner",
+        "label": "one improvement action"
+      }
+    ],
+    "topology": "The collector reads the sandbox Actions run inventory while the exercise computes flow and quality measures from an explicitly synthetic JSON dataset. PowerShell produces a Markdown review with denominators and sample-size limits. The engineering decision follows the measurements; no synthetic value is presented as production telemetry."
+  }
+}

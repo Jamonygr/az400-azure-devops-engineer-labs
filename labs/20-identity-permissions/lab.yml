@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "20",
+  "slug": "20-identity-permissions",
+  "title": "Scope identities, teams, and permissions",
+  "domain": "security",
+  "minutes": 120,
+  "cost": "none or approved hosted-run allowance",
+  "platforms": [
+    "local",
+    "github",
+    "azure-devops",
+    "azure"
+  ],
+  "objectives": [
+    "D2.2.3",
+    "D4.1.1",
+    "D4.1.2",
+    "D4.1.3",
+    "D4.1.4",
+    "D4.1.5",
+    "D4.1.6",
+    "D4.1.7"
+  ],
+  "scenario": "Build jobs and humans share broad permissions. Inventory access, create an RG-contained identity, and demonstrate a narrowly scoped read role.",
+  "role": "Identity engineer",
+  "outcome": "Scope identities, teams, and permissions.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inspect GitHub effective access without expanding it",
+      "commands": "gh repo view $GhRepo --json nameWithOwner,viewerPermission,visibility|Set-Content (Join-Path $WorkRoot 'github-access.json')\n gh api \"repos/$GhRepo/collaborators\" --jq '[.[]|{login:.login,role:.role_name}]'|Set-Content (Join-Path $WorkRoot 'collaborators.json')\n",
+      "expected": "Effective repository permission and collaborator roles are reviewable.",
+      "positive": "$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.nameWithOwner -ne $GhRepo){throw 'Access review targeted wrong repository.'}\n",
+      "negative": "$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.viewerPermission -eq 'NONE'){throw 'No repository access.'}\n",
+      "validate": "$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.nameWithOwner -ne $GhRepo){throw 'Access review targeted wrong repository.'}\n\n$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.viewerPermission -eq 'NONE'){throw 'No repository access.'}\n",
+      "evidence": "Role names with personal identities redacted.",
+      "fix": "Separate organization owners, repository maintainers, contributors, and outside collaborators; choose the smallest role."
+    },
+    {
+      "id": "CP2",
+      "title": "Read Azure DevOps project teams",
+      "commands": "az devops team list --organization $AdoOrganization --project $AdoProject --query 'value[].{id:id,name:name}' -o json|Set-Content (Join-Path $WorkRoot 'teams.json')\n az devops project show --organization $AdoOrganization --project $AdoProject --query '{id:id,name:name,visibility:visibility}' -o json|Set-Content (Join-Path $WorkRoot 'project-access.json')\n",
+      "expected": "Project identity/visibility and teams are scoped to the disposable project.",
+      "positive": "$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.name -ne $AdoProject){throw 'Project access review mismatch.'}\n",
+      "negative": "$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.visibility -notin @('private','public')){throw 'Unknown project visibility.'}\n",
+      "validate": "$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.name -ne $AdoProject){throw 'Project access review mismatch.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.visibility -notin @('private','public')){throw 'Unknown project visibility.'}\n",
+      "evidence": "Team names/count and project visibility; access levels remain distinct from security group permissions.",
+      "fix": "Stakeholder/Basic licensing does not replace explicit project/repository permissions."
+    },
+    {
+      "id": "CP3",
+      "title": "Create an Azure managed identity inside the owned group",
+      "commands": "$name=\"identity-$RunId\"\n $m=az identity create --subscription $SubscriptionId --resource-group $ResourceGroup --name $name --location $Location -o json|ConvertFrom-Json\n $m|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'managed-identity.json')\n",
+      "expected": "A user-assigned identity exists entirely inside the disposable resource group.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n $live=az identity show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"identity-$RunId\" -o json|ConvertFrom-Json\n if($live.principalId -ne $m.principalId){throw 'Managed identity principal mismatch.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Identity escaped resource-group boundary.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n $live=az identity show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"identity-$RunId\" -o json|ConvertFrom-Json\n if($live.principalId -ne $m.principalId){throw 'Managed identity principal mismatch.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Identity escaped resource-group boundary.'}\n",
+      "evidence": "Identity resource ID/client ID/principal ID locally; redact before export.",
+      "fix": "Managed identities avoid an application secret; do not create an untracked Entra application as a substitute."
+    },
+    {
+      "id": "CP4",
+      "title": "Assign a read-only role only at the disposable group",
+      "commands": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n $scope=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup\"\n az role assignment create --subscription $SubscriptionId --assignee-object-id $m.principalId --assignee-principal-type ServicePrincipal --role Reader --scope $scope -o json|Set-Content (Join-Path $WorkRoot 'role-assignment.json')\n",
+      "expected": "The identity receives Reader on the exact lab group, not subscription-wide contributor access.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json;$scope=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup\"\n $a=@(az role assignment list --subscription $SubscriptionId --assignee $m.principalId --scope $scope -o json|ConvertFrom-Json)\n if(@($a|Where-Object scope -eq $scope).Count -lt 1){throw 'Scoped role assignment absent.'}\n",
+      "negative": "$a=Get-Content (Join-Path $WorkRoot 'role-assignment.json') -Raw|ConvertFrom-Json\n if($a.scope -eq \"/subscriptions/$SubscriptionId\"){throw 'Subscription-wide assignment is outside this exercise.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json;$scope=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup\"\n $a=@(az role assignment list --subscription $SubscriptionId --assignee $m.principalId --scope $scope -o json|ConvertFrom-Json)\n if(@($a|Where-Object scope -eq $scope).Count -lt 1){throw 'Scoped role assignment absent.'}\n\n$a=Get-Content (Join-Path $WorkRoot 'role-assignment.json') -Raw|ConvertFrom-Json\n if($a.scope -eq \"/subscriptions/$SubscriptionId\"){throw 'Subscription-wide assignment is outside this exercise.'}\n",
+      "evidence": "Role definition and exact scope.",
+      "fix": "Role Assignment Contributor/User Access Administrator/Owner may be required for this scoped change; missing permission is a gate."
+    },
+    {
+      "id": "CP5",
+      "title": "Compare token/service-connection access choices",
+      "commands": "$matrix=[ordered]@{githubBuild='GITHUB_TOKEN contents:read';githubCrossRepo='GitHub App installation token';azureDeployment='federated managed identity';adoDeployment='workload identity service connection';pat='bootstrap-only narrowly scoped fallback';stakeholder='work tracking, subject to product restrictions'}\n $matrix|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
+      "expected": "Each trust boundary has a specific identity/access choice.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\n",
+      "evidence": "Identity/role matrix without tokens or application secrets.",
+      "fix": "Do not equate a service connection with blanket authorization to every pipeline."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN write-all';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
+    "repair": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN contents:read';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n"
+  },
+  "challenge": "Prove a read-only federated identity can inspect the owned group and cannot create a resource; keep the attempted write harmless and explicitly bounded.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview",
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview",
+    "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
+    "https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions"
+  ],
+  "primer": "Authentication identifies a caller; authorization applies at a resource scope. Managed identities remove client-secret maintenance while project access levels remain distinct from security permissions.",
+  "architecture": {
+    "title": "Three separately scoped authorization planes",
+    "nodes": [
+      {
+        "id": "ghactor",
+        "label": "GitHub principal / app token",
+        "kind": "identity",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "ghrepo",
+        "label": "GitHub repository roles",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "adoteam",
+        "label": "Azure DevOps security team",
+        "kind": "identity",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "project",
+        "label": "DevOps project + repository",
+        "kind": "platform",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "uami",
+        "label": "Entra managed identity",
+        "kind": "identity",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "group",
+        "label": "Owned Azure group: Reader",
+        "kind": "platform",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "ghactor",
+        "to": "ghrepo",
+        "label": "repository permission"
+      },
+      {
+        "from": "adoteam",
+        "to": "project",
+        "label": "project / repository roles"
+      },
+      {
+        "from": "uami",
+        "to": "group",
+        "label": "exact-scope Azure RBAC"
+      }
+    ],
+    "topology": "GitHub permissions apply to a repository principal/token, Azure DevOps groups apply to project and repository resources, and Azure RBAC applies independently to the managed identity at the owned resource-group scope. Licensing/access levels do not replace these security permissions. The lab creates only the RG-contained identity and its read-only role assignment."
+  },
+  "providers": [
+    "Microsoft.ManagedIdentity",
+    "Microsoft.Authorization"
+  ]
+}

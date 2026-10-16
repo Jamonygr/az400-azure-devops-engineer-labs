@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "00",
+  "slug": "00-safe-bootstrap",
+  "title": "Safe DevOps sandbox bootstrap",
+  "domain": "foundation",
+  "minutes": 60,
+  "cost": "none or approved hosted-run allowance",
+  "platforms": [
+    "local",
+    "github",
+    "azure-devops",
+    "azure"
+  ],
+  "objectives": [],
+  "scenario": "You have a new training subscription and two code-hosting accounts. Establish the exact disposable boundary before any delivery automation can change resources.",
+  "role": "Platform learner",
+  "outcome": "Safe DevOps sandbox bootstrap.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inspect the local toolchain",
+      "commands": "$toolReport = [ordered]@{ powershell=$PSVersionTable.PSVersion.ToString(); git=(git --version); github=(gh --version | Select-Object -First 1); dotnet=(dotnet --version); azure=(az version --query '\"azure-cli\"' -o tsv) }\n $toolReport | ConvertTo-Json | Set-Content (Join-Path $WorkRoot 'tools.json')\n $toolReport\n",
+      "expected": "PowerShell 7.4+, Git, GitHub CLI, Azure CLI, and .NET 10 are available.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if ([version]$t.powershell -lt [version]'7.4' -or $t.dotnet -notmatch '^10\\.') { throw 'Required PowerShell/.NET major versions missing.' }\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if (@($t.git,$t.github,$t.azure) -contains '') { throw 'A required CLI reported no version.' }\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if ([version]$t.powershell -lt [version]'7.4' -or $t.dotnet -notmatch '^10\\.') { throw 'Required PowerShell/.NET major versions missing.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if (@($t.git,$t.github,$t.azure) -contains '') { throw 'A required CLI reported no version.' }\n",
+      "evidence": "tools.json without authentication tokens.",
+      "fix": "Install the missing tool outside the lab, reopen PowerShell, and repeat version checks."
+    },
+    {
+      "id": "CP2",
+      "title": "Prove authenticated account context",
+      "commands": "gh api user --jq '{login:.login,id:.id}' | Set-Content (Join-Path $WorkRoot 'github-context.json')\n az account show --subscription $SubscriptionId --query '{subscription:id,tenant:tenantId,cloud:environmentName}' -o json | Set-Content (Join-Path $WorkRoot 'azure-context.json')\n az devops project list --organization $AdoOrganization --query 'value[].{name:name,id:id}' -o json | Set-Content (Join-Path $WorkRoot 'ado-context.json')\n",
+      "expected": "Read-only identity queries succeed without changing active Azure or DevOps defaults.",
+      "positive": "$a=Get-Content (Join-Path $WorkRoot 'azure-context.json') -Raw|ConvertFrom-Json\n if ($a.subscription -ne $SubscriptionId) { throw 'Azure context mismatch.' }\n",
+      "negative": "$g=Get-Content (Join-Path $WorkRoot 'github-context.json') -Raw|ConvertFrom-Json\n if (-not $g.login -or $AdoOrganization -notmatch '^https://dev.azure.com/[^/]+/?$') { throw 'Missing GitHub identity or explicit organization.' }\n",
+      "validate": "$a=Get-Content (Join-Path $WorkRoot 'azure-context.json') -Raw|ConvertFrom-Json\n if ($a.subscription -ne $SubscriptionId) { throw 'Azure context mismatch.' }\n\n$g=Get-Content (Join-Path $WorkRoot 'github-context.json') -Raw|ConvertFrom-Json\n if (-not $g.login -or $AdoOrganization -notmatch '^https://dev.azure.com/[^/]+/?$') { throw 'Missing GitHub identity or explicit organization.' }\n",
+      "evidence": "Redact user, tenant, and subscription identifiers before sharing context files.",
+      "fix": "Authenticate deliberately outside preflight and supply the approved disposable subscription."
+    },
+    {
+      "id": "CP3",
+      "title": "Create deterministic local ownership evidence",
+      "commands": "$boundary=[ordered]@{ runId=$RunId; localRoot=$WorkRoot; purpose='az400-learning'; cloudExecutionApproved=$false }\n $boundary|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n Get-Content (Join-Path $WorkRoot 'boundary.json')\n",
+      "expected": "A run-specific local boundary is recorded; it grants no cloud approval.",
+      "positive": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.runId -ne $RunId -or $b.purpose -ne 'az400-learning') { throw 'Ownership record mismatch.' }\n",
+      "negative": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.cloudExecutionApproved -ne $false) { throw 'Local readiness must not grant deployment approval.' }\n",
+      "validate": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.runId -ne $RunId -or $b.purpose -ne 'az400-learning') { throw 'Ownership record mismatch.' }\n\n$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.cloudExecutionApproved -ne $false) { throw 'Local readiness must not grant deployment approval.' }\n",
+      "evidence": "boundary.json and the selected run ID.",
+      "fix": "Choose a fresh lowercase run ID; do not reuse another learner boundary."
+    },
+    {
+      "id": "CP4",
+      "title": "Build and test the shared sample",
+      "commands": "dotnet restore (Join-Path $RepoRoot 'samples/DevOps.slnx')\n dotnet build (Join-Path $RepoRoot 'samples/DevOps.slnx') --no-restore --configuration Release\n dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --no-build --configuration Release --logger \"trx;LogFileName=bootstrap.trx\" --results-directory (Join-Path $WorkRoot 'test-results')\n if ($LASTEXITCODE -ne 0) { throw 'Sample verification failed.' }\n",
+      "expected": "The .NET 10 sample builds and its tests pass locally.",
+      "positive": "$trx=Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse\n if ($trx.Count -lt 1) { throw 'No test result was produced.' }\n",
+      "negative": "$xml=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$xml.TestRun.ResultSummary.Counters.failed -ne 0) { throw 'A sample test failed.' }\n",
+      "validate": "$trx=Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse\n if ($trx.Count -lt 1) { throw 'No test result was produced.' }\n\n$xml=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$xml.TestRun.ResultSummary.Counters.failed -ne 0) { throw 'A sample test failed.' }\n",
+      "evidence": "TRX test summary and build exit code.",
+      "fix": "Use the repository SDK version and restore packages before repeating the build."
+    },
+    {
+      "id": "CP5",
+      "title": "Establish redacted evidence and cleanup rules",
+      "commands": "$policy=[ordered]@{ retain=@('checkpoint results','test counts','cleanup status'); exclude=@('tokens','connection strings','private keys'); cleanupOrder=@('workloads','connections','top-level sandbox') }\n $policy|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'evidence-policy.json')\n Get-Content (Join-Path $WorkRoot 'evidence-policy.json')\n",
+      "expected": "Evidence excludes credentials and declares dependency-aware cleanup.",
+      "positive": "$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('tokens' -notin $p.exclude -or $p.cleanupOrder[-1] -ne 'top-level sandbox') { throw 'Evidence policy incomplete.' }\n",
+      "negative": "$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('private keys' -in $p.retain) { throw 'Credential retention is forbidden.' }\n",
+      "validate": "$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('tokens' -notin $p.exclude -or $p.cleanupOrder[-1] -ne 'top-level sandbox') { throw 'Evidence policy incomplete.' }\n\n$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('private keys' -in $p.retain) { throw 'Credential retention is forbidden.' }\n",
+      "evidence": "evidence-policy.json; never include CLI token stores.",
+      "fix": "Remove confidential fields from exports, retain local manifests for cleanup, and rerun validation."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n $b.runId='wrong-run';$b|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'boundary.json')\n 'Compare runId with the explicitly selected $RunId.'\n",
+    "repair": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n $b.runId=$RunId;$b|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n"
+  },
+  "challenge": "Run readiness from a second terminal and demonstrate that no authentication context or cloud resource changes.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli",
+    "https://cli.github.com/manual/gh_auth_status",
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test"
+  ],
+  "primer": "Tool readiness, authentication, authorization, and permission to mutate are separate gates. A local success cannot authorize cloud execution.",
+  "architecture": {
+    "title": "Tools, identities, and the disposable run boundary",
+    "nodes": [
+      {
+        "id": "shell",
+        "label": "PowerShell 7 host",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "tools",
+        "label": "Git, gh, az, .NET 10",
+        "kind": "code",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "accounts",
+        "label": "GitHub / DevOps / Entra",
+        "kind": "identity",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "scope",
+        "label": "Disposable run scopes",
+        "kind": "platform",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "journal",
+        "label": "Local ownership journal",
+        "kind": "evidence",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "tests",
+        "label": "Local API test host",
+        "kind": "code",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "shell",
+        "to": "tools",
+        "label": "CLI commands"
+      },
+      {
+        "from": "tools",
+        "to": "accounts",
+        "label": "identity reads"
+      },
+      {
+        "from": "accounts",
+        "to": "scope",
+        "label": "explicit account scope"
+      },
+      {
+        "from": "scope",
+        "to": "journal",
+        "label": "exact owned IDs"
+      },
+      {
+        "from": "shell",
+        "to": "tests",
+        "label": "build and test"
+      },
+      {
+        "from": "tests",
+        "to": "journal",
+        "label": "redacted evidence"
+      }
+    ],
+    "topology": "PowerShell hosts the command-line tools. Read-only account queries identify GitHub, Azure DevOps, and Entra contexts; provisioning is a separate explicit step that records disposable scope IDs in the local ownership journal. The .NET test host runs locally and contributes test evidence, without granting cloud execution approval."
+  }
+}

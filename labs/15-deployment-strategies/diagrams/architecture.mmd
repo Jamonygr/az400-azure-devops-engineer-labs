@@ -1,0 +1,15 @@
+flowchart LR
+  artifact["Reviewed release ZIP"]
+  production["Production app + SQLite"]
+  plan["Linux App Service S1 plan"]
+  staging["Staging slot + SQLite"]
+  router["App Service traffic router"]
+  probe["HTTPS readiness probes"]
+  artifact -->|same deployment bytes| production
+  artifact -->|same deployment bytes| staging
+  plan -->|slot-capable compute| production
+  plan -->|shared plan boundary| staging
+  router -->|90% production traffic| production
+  router -->|10% canary traffic| staging
+  probe -->|readiness result| production
+  probe -->|readiness result| staging

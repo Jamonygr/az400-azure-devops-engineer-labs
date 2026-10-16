@@ -1,0 +1,12 @@
+flowchart LR
+  job["GitHub environment job"]
+  issuer["GitHub OIDC issuer"]
+  entra["Entra federation validation"]
+  uami["RG-owned managed identity"]
+  target["Scoped Azure target role"]
+  secrets["Key Vault / secure-file contract"]
+  job -.->|short-lived workload assertion| issuer
+  issuer -->|issuer / audience / subject| entra
+  entra -->|federated credential binding| uami
+  uami -.->|least-privilege access| target
+  target -.->|runtime retrieval contract| secrets

@@ -1,0 +1,61 @@
+parameters:
+  - name: serviceConnection
+    type: string
+    default: az400-wif
+  - name: appName
+    type: string
+    default: replace-with-managed-webapp-name
+stages:
+  - stage: Build
+    jobs:
+      - job: Package
+        pool:
+          vmImage: ubuntu-24.04
+        steps:
+          - template: ../../11-reusable-yaml/artifacts/templates/dotnet-build.yml
+  - stage: Migrate
+    dependsOn: Build
+    jobs:
+      - deployment: ExpandSchema
+        environment: production-database
+        pool:
+          name: az400-private
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  persistCredentials: false
+                - task: UseDotNet@2
+                  inputs:
+                    packageType: sdk
+                    useGlobalJson: true
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: ${{ parameters.serviceConnection }}
+                    scriptType: pscore
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      & ./labs/14-ordered-releases-databases/artifacts/migrate.ps1 -Apply
+                  env:
+                    ConnectionStrings__Todos: $(SqlConnectionString)
+  - stage: Deploy
+    dependsOn: Migrate
+    condition: succeeded()
+    jobs:
+      - deployment: DeployTestedPackage
+        environment: production
+        pool:
+          vmImage: ubuntu-24.04
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: todo-api
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: ${{ parameters.serviceConnection }}
+                    appType: webAppLinux
+                    appName: ${{ parameters.appName }}
+                    package: $(Pipeline.Workspace)/todo-api

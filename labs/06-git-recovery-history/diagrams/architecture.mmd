@@ -1,0 +1,13 @@
+flowchart LR
+  working["Isolated working tree"]
+  objects["Commit / tree objects"]
+  reflog["Local reference log"]
+  recovered["Recovered branch ref"]
+  inverse["Restore / revert commit"]
+  export["Allowlisted clean export"]
+  working -->|commit snapshots| objects
+  objects -->|reference movements| reflog
+  reflog -->|recover known object ID| recovered
+  objects -->|new corrective commit| inverse
+  inverse -->|healthy file state| working
+  working -->|reviewed content only| export

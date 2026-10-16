@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "22",
+  "slug": "22-security-scanning",
+  "title": "Scan dependencies, code, containers, and licenses",
+  "domain": "security",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local"
+  ],
+  "objectives": [
+    "D1.2.5",
+    "D4.2.4",
+    "D4.3.1",
+    "D4.3.5",
+    "D4.3.6"
+  ],
+  "scenario": "The team scans only direct packages and treats any green scan as compliance. Separate dependency, code, secret, container, and licensing evidence.",
+  "role": "Product security engineer",
+  "outcome": "Scan dependencies, code, containers, and licenses.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Inventory direct and transitive dependencies",
+      "commands": "dotnet list (Join-Path $RepoRoot 'samples/DevOps.slnx') package --include-transitive --format json|Set-Content (Join-Path $WorkRoot 'dependencies.json')\n if($LASTEXITCODE -ne 0){throw 'Dependency inventory failed.'}\n",
+      "expected": "Machine-readable dependency provenance includes transitive packages.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json\n if(@($d.projects).Count -lt 2){throw 'Dependency inventory omitted a project.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw\n if($d -match 'password=|client_secret='){throw 'Sensitive restore configuration leaked.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json\n if(@($d.projects).Count -lt 2){throw 'Dependency inventory omitted a project.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw\n if($d -match 'password=|client_secret='){throw 'Sensitive restore configuration leaked.'}\n",
+      "evidence": "Package IDs/versions and lock-file fingerprints.",
+      "fix": "Restore approved sources first and review transitive exposure, not just direct references."
+    },
+    {
+      "id": "CP2",
+      "title": "Run the vulnerability advisory check",
+      "commands": "dotnet list (Join-Path $RepoRoot 'samples/DevOps.slnx') package --vulnerable --include-transitive --format json|Set-Content (Join-Path $WorkRoot 'vulnerabilities.json')\n if($LASTEXITCODE -ne 0){throw 'Vulnerability advisory query failed.'}\n",
+      "expected": "The advisory result records known package findings at query time.",
+      "positive": "$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw|ConvertFrom-Json\n if(@($v.projects).Count -lt 1){throw 'Vulnerability report lacks project scope.'}\n",
+      "negative": "$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw\n if($v -match '\"severity\"\\s*:\\s*\"(High|Critical)\"'){throw 'High/critical dependency advisory requires remediation.'}\n",
+      "validate": "$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw|ConvertFrom-Json\n if(@($v.projects).Count -lt 1){throw 'Vulnerability report lacks project scope.'}\n\n$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw\n if($v -match '\"severity\"\\s*:\\s*\"(High|Critical)\"'){throw 'High/critical dependency advisory requires remediation.'}\n",
+      "evidence": "Advisory IDs/severity and UTC scan date; do not claim future vulnerability absence.",
+      "fix": "Update the smallest compatible dependency set, regenerate locks, rerun tests, and document accepted residual risk."
+    },
+    {
+      "id": "CP3",
+      "title": "Scan a synthetic source fixture for leakage",
+      "commands": "$fixture=Join-Path $WorkRoot 'scan-fixture.txt';'public-setting=training'|Set-Content $fixture\n $findings=@(Select-String -Path $fixture -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY')\n [ordered]@{tool='local demonstration rule';findings=$findings.Count;productionScannerRequired='gitleaks/secret-scanning'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'secret-scan.json')\n",
+      "expected": "A deterministic demonstration rule finds no synthetic credential pattern.",
+      "positive": "$s=Get-Content (Join-Path $WorkRoot 'secret-scan.json') -Raw|ConvertFrom-Json\n if($s.findings -ne 0){throw 'Synthetic source scan found a leak.'}\n",
+      "negative": "if(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'Leakage boundary violated.'}\n",
+      "validate": "$s=Get-Content (Join-Path $WorkRoot 'secret-scan.json') -Raw|ConvertFrom-Json\n if($s.findings -ne 0){throw 'Synthetic source scan found a leak.'}\n\nif(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'Leakage boundary violated.'}\n",
+      "evidence": "Counts and rule names only; production secret scanning remains a distinct control.",
+      "fix": "Revoke real exposed credentials before history cleanup; a regex demonstration cannot replace a mature scanner."
+    },
+    {
+      "id": "CP4",
+      "title": "Review container and CodeQL scan execution boundaries",
+      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/security.yml') (Join-Path $WorkRoot 'security.yml')\n $policy=[ordered]@{containerFile='samples/Dockerfile';codeqlLanguage='csharp';severityGate=@('HIGH','CRITICAL');privilegedContainer=$false;scannerDatabaseMustBeCurrent=$true}\n $policy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'container-scan-policy.json')\n",
+      "expected": "Code and container scanning have explicit language, target, severity, and isolation.",
+      "positive": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.codeqlLanguage -ne 'csharp' -or 'CRITICAL' -notin $p.severityGate){throw 'Scan target/gate missing.'}\n",
+      "negative": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.privilegedContainer){throw 'Scanner must not require privileged Docker access.'}\n",
+      "validate": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.codeqlLanguage -ne 'csharp' -or 'CRITICAL' -notin $p.severityGate){throw 'Scan target/gate missing.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.privilegedContainer){throw 'Scanner must not require privileged Docker access.'}\n",
+      "evidence": "Workflow digest and explicit scanner prerequisites.",
+      "fix": "For a live local challenge install approved Docker/Trivy tools; run docker build and trivy image on the disposable sample image."
+    },
+    {
+      "id": "CP5",
+      "title": "Create a dependency license review queue",
+      "commands": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json\n $queue=@();foreach($project in $d.projects){foreach($framework in $project.frameworks){foreach($pkg in $framework.topLevelPackages){$queue+=[ordered]@{package=$pkg.id;version=$pkg.resolvedVersion;licenseReview='pending primary package metadata';approved=$false}}}}\n $queue|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'license-review.json')\n",
+      "expected": "Direct dependencies enter an explicit review queue; unknown license status is not approval.",
+      "positive": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if($q.Count -lt 1){throw 'License review queue empty.'}\n",
+      "negative": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if(@($q|Where-Object approved -eq $true).Count){throw 'Unreviewed package license cannot be automatically approved.'}\n",
+      "validate": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if($q.Count -lt 1){throw 'License review queue empty.'}\n\n$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if(@($q|Where-Object approved -eq $true).Count){throw 'Unreviewed package license cannot be automatically approved.'}\n",
+      "evidence": "Package/version, SPDX/expression lookup task, and review status.",
+      "fix": "Resolve license expressions and notices from package/project primary metadata under your organization policy."
+    }
+  ],
+  "breakFix": {
+    "trigger": "Add-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
+    "diagnose": "Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
+    "repair": "Set-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'public-setting=training'\n"
+  },
+  "challenge": "Run approved local secret, CodeQL, container, and license scanners; deliberately introduce a nonsecret fixture that fails one gate and retain remediation evidence.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-list",
+    "https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql",
+    "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts"
+  ],
+  "primer": "Scanners observe different surfaces and databases change over time. Findings need severity, reachability, ownership, and remediation; unknown license status cannot become automatic approval.",
+  "architecture": {
+    "title": "Separate assurance surfaces feeding a release decision",
+    "nodes": [
+      {
+        "id": "source",
+        "label": "Sample source + package locks",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "advisories",
+        "label": "NuGet vulnerability advisories",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "codeql",
+        "label": "CodeQL workflow contract",
+        "kind": "code",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "container",
+        "label": "Container image + scan contract",
+        "kind": "data",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "gate",
+        "label": "Reviewed security release gate",
+        "kind": "platform",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "license",
+        "label": "License / secret review evidence",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "source",
+        "to": "advisories",
+        "label": "dependency inventory lookup"
+      },
+      {
+        "from": "source",
+        "to": "codeql",
+        "label": "C# analysis target",
+        "style": "dashed"
+      },
+      {
+        "from": "advisories",
+        "to": "gate",
+        "label": "dated severity findings"
+      },
+      {
+        "from": "codeql",
+        "to": "gate",
+        "label": "separate scan result",
+        "style": "dashed"
+      },
+      {
+        "from": "container",
+        "to": "gate",
+        "label": "image severity result",
+        "style": "dashed"
+      },
+      {
+        "from": "source",
+        "to": "license",
+        "label": "licenses / synthetic leak rule"
+      },
+      {
+        "from": "license",
+        "to": "gate",
+        "label": "explicit approval status"
+      }
+    ],
+    "topology": "Direct/transitive package locks are checked against current vulnerability advisories, while source, container, secret, and licensing surfaces require distinct evidence. The core performs dependency queries, a synthetic leakage rule, and a license review queue; the CodeQL/container contracts remain separate live scanner integrations. Unknown licensing or an unexecuted scanner cannot become a green release decision."
+  }
+}

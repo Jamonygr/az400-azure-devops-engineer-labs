@@ -1,0 +1,14 @@
+flowchart LR
+  shell["PowerShell + Bicep source"]
+  arm["Azure Resource Manager"]
+  group["Run-owned resource group"]
+  storage["Hardened StorageV2 account"]
+  identity["User-assigned managed identity"]
+  journal["What-if / outputs / manifest"]
+  shell -->|compile / what-if / deploy| arm
+  arm -->|explicit subscription + scope| group
+  group -->|declared storage resource| storage
+  group -->|declared RG identity| identity
+  arm -->|deployment outputs| journal
+  storage -->|security property reads| journal
+  identity -->|principal / ownership reads| journal

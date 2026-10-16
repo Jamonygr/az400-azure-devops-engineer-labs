@@ -1,0 +1,12 @@
+flowchart LR
+  issue["Accepted GitHub issue"]
+  repo["Owned GitHub source revision"]
+  ci["Actions CI + quality gates"]
+  artifact["Commit-bound tests / artifact"]
+  environment["Protected environment + WIF"]
+  azure["Azure app / SQL / telemetry"]
+  issue -->|acceptance traceability| repo
+  repo -->|reviewed CI-only workflow| ci
+  ci -->|exact source provenance| artifact
+  artifact -.->|separate release approval| environment
+  environment -.->|optional protected live extension| azure

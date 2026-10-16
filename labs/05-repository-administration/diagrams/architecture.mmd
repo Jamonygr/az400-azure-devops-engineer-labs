@@ -1,0 +1,13 @@
+flowchart LR
+  hosts["GitHub / Azure Repos"]
+  git["Local Git object store"]
+  lfs["LFS content service"]
+  tags["Annotated version tag"]
+  policy["Access / sharing record"]
+  consumer["Versioned package consumer"]
+  hosts -->|clone and access metadata| git
+  git -.->|pointer / object split| lfs
+  git -->|exact commit identity| tags
+  hosts -->|effective role inventory| policy
+  tags -->|release identity| policy
+  policy -.->|approved sharing contract| consumer

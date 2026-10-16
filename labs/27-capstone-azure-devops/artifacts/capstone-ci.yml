@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include: [main]
+pr:
+  branches:
+    include: [main]
+pool:
+  vmImage: ubuntu-24.04
+steps:
+  - checkout: self
+    persistCredentials: false
+  - task: UseDotNet@2
+    displayName: Install SDK pinned in global.json
+    inputs:
+      packageType: sdk
+      useGlobalJson: true
+  - script: dotnet restore samples/DevOps.slnx --locked-mode
+    displayName: Restore locked dependencies
+  - script: dotnet test samples/DevOps.slnx --configuration Release --no-restore --settings samples/coverage.runsettings --collect:"XPlat Code Coverage" --logger trx --results-directory $(Agent.TempDirectory)/TestResults
+    displayName: Build and test
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: $(Agent.TempDirectory)/TestResults/*.trx
+      failTaskOnFailedTests: true
+  - task: PublishCodeCoverageResults@2
+    inputs:
+      summaryFileLocation: $(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml
+      failIfCoverageEmpty: true
+  - pwsh: ./samples/Test-Coverage.ps1 -CoverageFile (Get-ChildItem '$(Agent.TempDirectory)/TestResults' -Filter coverage.cobertura.xml -Recurse | Select-Object -First 1 -ExpandProperty FullName)
+    displayName: Enforce line coverage gate
+  - script: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/api /p:UseAppHost=false
+    displayName: Package tested revision
+  - publish: $(Build.ArtifactStagingDirectory)/api
+    artifact: todo-api

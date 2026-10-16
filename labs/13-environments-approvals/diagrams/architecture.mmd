@@ -1,0 +1,12 @@
+flowchart LR
+  workflow["Dormant GitHub deploy YAML"]
+  environment["Protected GitHub environment"]
+  reviewer["Independent approval owner"]
+  federation["Exact OIDC environment subject"]
+  target["Azure target (separate gate)"]
+  ado["Azure environment-check contract"]
+  workflow -.->|explicit dispatch binding| environment
+  reviewer -->|approval / branch checks| environment
+  environment -.->|subject boundary| federation
+  federation -.->|authorized workload token| target
+  ado -->|separate resource-owner checks| reviewer

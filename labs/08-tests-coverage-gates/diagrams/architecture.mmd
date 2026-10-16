@@ -1,0 +1,12 @@
+flowchart LR
+  api["ASP.NET Core sample API"]
+  factory["WebApplicationFactory"]
+  sqlite["Isolated SQLite database"]
+  tests["xUnit API tests"]
+  coverage["Coverlet + TRX reports"]
+  gate["65% sample coverage gate"]
+  factory -->|in-process host| api
+  api -->|isolated test data| sqlite
+  tests -->|HTTP behavior probes| factory
+  tests -->|test + coverage output| coverage
+  coverage -->|measured release decision| gate

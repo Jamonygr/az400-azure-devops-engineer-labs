@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "06",
+  "slug": "06-git-recovery-history",
+  "title": "Recover commits and remove unwanted history",
+  "domain": "source",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local"
+  ],
+  "objectives": [
+    "D2.2.5",
+    "D2.2.6"
+  ],
+  "scenario": "A regression reached shared history and a local branch was accidentally deleted. Practise reversible recovery before touching any real project.",
+  "role": "Incident responder",
+  "outcome": "Recover commits and remove unwanted history.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Create recoverable committed history",
+      "commands": "$p=Join-Path $WorkRoot 'recovery';git init --initial-branch=main $p;git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n 'healthy'|Set-Content (Join-Path $p 'service.txt');git -C $p add .;git -C $p commit -m 'Known good service'\n (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'good-commit.txt')\n 'broken'|Set-Content (Join-Path $p 'service.txt');git -C $p commit -am 'Introduce deterministic regression'\n",
+      "expected": "A disposable repository contains known-good and broken commits.",
+      "positive": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '2') { throw 'Expected two-commit recovery fixture.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse HEAD) -eq (Get-Content (Join-Path $WorkRoot 'good-commit.txt'))) { throw 'Regression fixture missing.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '2') { throw 'Expected two-commit recovery fixture.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse HEAD) -eq (Get-Content (Join-Path $WorkRoot 'good-commit.txt'))) { throw 'Regression fixture missing.' }\n",
+      "evidence": "Commit graph and good commit SHA.",
+      "fix": "Run destructive history exercises only in this isolated local repository."
+    },
+    {
+      "id": "CP2",
+      "title": "Recover a file without rewriting history",
+      "commands": "$p=Join-Path $WorkRoot 'recovery';$good=Get-Content (Join-Path $WorkRoot 'good-commit.txt')\n git -C $p restore --source $good -- service.txt\n git -C $p add service.txt;git -C $p commit -m 'Restore known-good service content'\n",
+      "expected": "A new commit restores the good file while retaining the regression history.",
+      "positive": "if ((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy') { throw 'File recovery failed.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '3') { throw 'Recovery unexpectedly rewrote history.' }\n",
+      "validate": "if ((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy') { throw 'File recovery failed.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '3') { throw 'Recovery unexpectedly rewrote history.' }\n",
+      "evidence": "Recovered file digest and new commit SHA.",
+      "fix": "Use restore with a known source; avoid reset --hard for shared history."
+    },
+    {
+      "id": "CP3",
+      "title": "Revert a published-style change safely",
+      "commands": "$p=Join-Path $WorkRoot 'recovery'\n 'temporary-option'|Set-Content (Join-Path $p 'option.txt');git -C $p add option.txt;git -C $p commit -m 'Enable temporary option'\n $target=git -C $p rev-parse HEAD;git -C $p revert --no-edit $target\n $target|Set-Content (Join-Path $WorkRoot 'reverted-commit.txt')\n",
+      "expected": "Revert records an inverse commit and removes the temporary option.",
+      "positive": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p log -1 --format=%s) -notmatch '^Revert') { throw 'Expected explicit revert commit.' }\n",
+      "negative": "if (Test-Path (Join-Path $WorkRoot 'recovery/option.txt')) { throw 'Reverted file still present.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p log -1 --format=%s) -notmatch '^Revert') { throw 'Expected explicit revert commit.' }\n\nif (Test-Path (Join-Path $WorkRoot 'recovery/option.txt')) { throw 'Reverted file still present.' }\n",
+      "evidence": "Original SHA, inverse SHA, and final tree.",
+      "fix": "Resolve any conflict explicitly; do not force-push a rewritten shared branch."
+    },
+    {
+      "id": "CP4",
+      "title": "Recover an accidentally deleted branch through reflog",
+      "commands": "$p=Join-Path $WorkRoot 'recovery';git -C $p branch recover-me\n $lost=git -C $p rev-parse recover-me;git -C $p branch -D recover-me\n git -C $p reflog --format='%h %gs'|Set-Content (Join-Path $WorkRoot 'reflog.txt')\n git -C $p branch recovered $lost\n",
+      "expected": "The branch is recovered from its retained commit identity.",
+      "positive": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse recovered) -ne (git -C $p rev-parse HEAD)) { throw 'Recovered branch points at wrong commit.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ('recover-me' -in @((git -C $p branch --format='%(refname:short)'))) { throw 'Deletion fixture did not occur.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse recovered) -ne (git -C $p rev-parse HEAD)) { throw 'Recovered branch points at wrong commit.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ('recover-me' -in @((git -C $p branch --format='%(refname:short)'))) { throw 'Deletion fixture did not occur.' }\n",
+      "evidence": "Reflog entry and recovered branch SHA.",
+      "fix": "Reflog is local and expires; preserve a backup before garbage collection."
+    },
+    {
+      "id": "CP5",
+      "title": "Remove an unwanted file from a disposable exported history",
+      "commands": "$p=Join-Path $WorkRoot 'recovery';$clean=Join-Path $WorkRoot 'sanitized'\n git init --initial-branch=main $clean;git -C $clean config user.name 'AZ400 Learner';git -C $clean config user.email 'learner@example.invalid'\n Copy-Item (Join-Path $p 'service.txt') (Join-Path $clean 'service.txt')\n git -C $clean add .;git -C $clean commit -m 'Create reviewed clean export'\n git -C $clean ls-tree -r --name-only HEAD|Set-Content (Join-Path $WorkRoot 'sanitized-files.txt')\n",
+      "expected": "A clean export demonstrates allowlisted history replacement without touching the source repo.",
+      "positive": "$p=Join-Path $WorkRoot 'sanitized'\n if ((git -C $p rev-list --count HEAD) -ne '1') { throw 'Clean export unexpectedly retained prior history.' }\n",
+      "negative": "$files=@(Get-Content (Join-Path $WorkRoot 'sanitized-files.txt'))\n if ($files.Count -ne 1 -or $files[0] -ne 'service.txt') { throw 'Unexpected file in sanitized export.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'sanitized'\n if ((git -C $p rev-list --count HEAD) -ne '1') { throw 'Clean export unexpectedly retained prior history.' }\n\n$files=@(Get-Content (Join-Path $WorkRoot 'sanitized-files.txt'))\n if ($files.Count -ne 1 -or $files[0] -ne 'service.txt') { throw 'Unexpected file in sanitized export.' }\n",
+      "evidence": "Allowlist and before/after commit counts.",
+      "fix": "Real secret exposure requires immediate credential revocation first, then coordinated git-filter-repo cleanup of refs, forks, caches, and clones."
+    }
+  ],
+  "breakFix": {
+    "trigger": "Set-Content (Join-Path $WorkRoot 'recovery/service.txt') 'broken-again'\n",
+    "diagnose": "$p=Join-Path $WorkRoot 'recovery';git -C $p diff -- service.txt\n",
+    "repair": "$p=Join-Path $WorkRoot 'recovery';git -C $p restore --source HEAD -- service.txt\n"
+  },
+  "challenge": "On a separate throwaway clone, use git-filter-repo to remove a synthetic nonsecret file across all refs; document revocation and coordination needed for real incidents.",
+  "sources": [
+    "https://git-scm.com/docs/git-restore",
+    "https://git-scm.com/docs/git-revert",
+    "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository"
+  ],
+  "primer": "Restore repairs file content, revert adds an inverse commit, and reflog can recover local references. Rewriting shared history requires coordination; exposed credentials need revocation first.",
+  "architecture": {
+    "title": "Git object recovery without shared-history destruction",
+    "nodes": [
+      {
+        "id": "working",
+        "label": "Isolated working tree",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "objects",
+        "label": "Commit / tree objects",
+        "kind": "data",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "reflog",
+        "label": "Local reference log",
+        "kind": "data",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "recovered",
+        "label": "Recovered branch ref",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "inverse",
+        "label": "Restore / revert commit",
+        "kind": "code",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "export",
+        "label": "Allowlisted clean export",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "working",
+        "to": "objects",
+        "label": "commit snapshots"
+      },
+      {
+        "from": "objects",
+        "to": "reflog",
+        "label": "reference movements"
+      },
+      {
+        "from": "reflog",
+        "to": "recovered",
+        "label": "recover known object ID"
+      },
+      {
+        "from": "objects",
+        "to": "inverse",
+        "label": "new corrective commit"
+      },
+      {
+        "from": "inverse",
+        "to": "working",
+        "label": "healthy file state"
+      },
+      {
+        "from": "working",
+        "to": "export",
+        "label": "reviewed content only"
+      }
+    ],
+    "topology": "All history exercises stay in an isolated local repository. Commit objects retain snapshots, reflog entries identify moved or deleted references, and restore/revert create reviewed recovery state. A separate clean export demonstrates allowlisting without rewriting any shared remote; genuine secret exposure still requires revocation and coordinated history cleanup."
+  }
+}

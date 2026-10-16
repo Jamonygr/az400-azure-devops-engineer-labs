@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "19",
+  "slug": "19-pipeline-optimization",
+  "title": "Improve pipeline performance and retention",
+  "domain": "pipelines",
+  "minutes": 120,
+  "cost": "none",
+  "platforms": [
+    "local"
+  ],
+  "objectives": [
+    "D1.2.6",
+    "D3.6.1",
+    "D3.6.2",
+    "D3.6.3",
+    "D3.6.4",
+    "D3.6.5"
+  ],
+  "scenario": "Build duration and retained artifacts are increasing without a measured explanation. Establish comparable observations and a bounded optimization/retention decision.",
+  "role": "Pipeline operations engineer",
+  "outcome": "Improve pipeline performance and retention.",
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Measure a real build baseline",
+      "commands": "$sw=[Diagnostics.Stopwatch]::StartNew();dotnet build (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release;$sw.Stop()\n if($LASTEXITCODE -ne 0){throw 'Baseline build failed.'}\n [ordered]@{elapsedMilliseconds=$sw.ElapsedMilliseconds;configuration='Release';success=$true}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'baseline.json')\n",
+      "expected": "A measured successful build establishes one local baseline.",
+      "positive": "$b=Get-Content (Join-Path $WorkRoot 'baseline.json') -Raw|ConvertFrom-Json\n if(-not $b.success -or $b.elapsedMilliseconds -le 0){throw 'Invalid baseline measurement.'}\n",
+      "negative": "$b=Get-Content (Join-Path $WorkRoot 'baseline.json') -Raw|ConvertFrom-Json\n if($b.configuration -ne 'Release'){throw 'Benchmark configuration mismatch.'}\n",
+      "validate": "$b=Get-Content (Join-Path $WorkRoot 'baseline.json') -Raw|ConvertFrom-Json\n if(-not $b.success -or $b.elapsedMilliseconds -le 0){throw 'Invalid baseline measurement.'}\n\n$b=Get-Content (Join-Path $WorkRoot 'baseline.json') -Raw|ConvertFrom-Json\n if($b.configuration -ne 'Release'){throw 'Benchmark configuration mismatch.'}\n",
+      "evidence": "Elapsed time and machine/tool context; one run is not a performance guarantee.",
+      "fix": "Fix failures before benchmarking and compare the same configuration and warm/cold conditions."
+    },
+    {
+      "id": "CP2",
+      "title": "Measure an incremental build without restoring again",
+      "commands": "$sw=[Diagnostics.Stopwatch]::StartNew();dotnet build (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --no-restore;$sw.Stop()\n if($LASTEXITCODE -ne 0){throw 'Incremental build failed.'}\n [ordered]@{elapsedMilliseconds=$sw.ElapsedMilliseconds;restoreSkipped=$true;claim='single local observation'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'incremental.json')\n",
+      "expected": "A second measurement isolates avoided restore work without promising a speedup.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'incremental.json') -Raw|ConvertFrom-Json\n if(-not $m.restoreSkipped -or $m.elapsedMilliseconds -le 0){throw 'Incremental measurement missing.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'incremental.json') -Raw|ConvertFrom-Json\n if($m.claim -match 'guaranteed faster'){throw 'Unsupported optimization claim.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'incremental.json') -Raw|ConvertFrom-Json\n if(-not $m.restoreSkipped -or $m.elapsedMilliseconds -le 0){throw 'Incremental measurement missing.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'incremental.json') -Raw|ConvertFrom-Json\n if($m.claim -match 'guaranteed faster'){throw 'Unsupported optimization claim.'}\n",
+      "evidence": "Both observations and controlled differences.",
+      "fix": "Retain locked restore in a prior job and key caches by lock files, SDK, OS, and architecture."
+    },
+    {
+      "id": "CP3",
+      "title": "Compare serial and bounded parallel execution budgets",
+      "commands": "$jobs=@(40,30,20);$budget=[ordered]@{serialSeconds=($jobs|Measure-Object -Sum).Sum;parallelSeconds=40;maxParallel=3;agentMinutesSerial=1.5;agentMinutesParallel=1.5}\n $budget|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'concurrency-budget.json')\n Copy-Item (Join-Path $LabRoot 'artifacts/optimized-ci.yml') (Join-Path $WorkRoot 'optimized-ci.yml')\n",
+      "expected": "Parallelism shortens the synthetic critical path while preserving total compute time.",
+      "positive": "$b=Get-Content (Join-Path $WorkRoot 'concurrency-budget.json') -Raw|ConvertFrom-Json\n if($b.serialSeconds -ne 90 -or $b.parallelSeconds -ne 40){throw 'Critical-path calculation incorrect.'}\n",
+      "negative": "$b=Get-Content (Join-Path $WorkRoot 'concurrency-budget.json') -Raw|ConvertFrom-Json\n if($b.maxParallel -gt 3 -or $b.agentMinutesParallel -lt 1.5){throw 'Concurrency budget hides compute cost.'}\n",
+      "validate": "$b=Get-Content (Join-Path $WorkRoot 'concurrency-budget.json') -Raw|ConvertFrom-Json\n if($b.serialSeconds -ne 90 -or $b.parallelSeconds -ne 40){throw 'Critical-path calculation incorrect.'}\n\n$b=Get-Content (Join-Path $WorkRoot 'concurrency-budget.json') -Raw|ConvertFrom-Json\n if($b.maxParallel -gt 3 -or $b.agentMinutesParallel -lt 1.5){throw 'Concurrency budget hides compute cost.'}\n",
+      "evidence": "Critical path, maximum parallel jobs, and compute-minute model.",
+      "fix": "Account for hosted parallel-job grants and stateful test contention before increasing concurrency."
+    },
+    {
+      "id": "CP4",
+      "title": "Define retention by artifact class and release relevance",
+      "commands": "$retention=[ordered]@{prLogsDays=7;releaseArtifactsDays=30;securityEvidenceDays=90;keepLastGoodRelease=$true;deletePublishedPackagesAutomatically=$false}\n $retention|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'retention.json')\n",
+      "expected": "Release recovery and security evidence receive distinct retention policies.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json\n if(-not $r.keepLastGoodRelease -or $r.securityEvidenceDays -lt $r.prLogsDays){throw 'Retention risks recovery/evidence.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json\n if($r.deletePublishedPackagesAutomatically){throw 'Package consumers may still depend on published versions.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json\n if(-not $r.keepLastGoodRelease -or $r.securityEvidenceDays -lt $r.prLogsDays){throw 'Retention risks recovery/evidence.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json\n if($r.deletePublishedPackagesAutomatically){throw 'Package consumers may still depend on published versions.'}\n",
+      "evidence": "Retention decision and legal/team approval assumptions.",
+      "fix": "Implement policy in the sandbox only after inspecting dependencies; retention is not permission to delete consumer artifacts."
+    },
+    {
+      "id": "CP5",
+      "title": "Plan a classic-to-YAML migration with comparable gates",
+      "commands": "$migration=[ordered]@{classicTasks=@('restore','build','test','publish');yamlTasks=@('restore','build','test','publish');preserve=@('approvals','service connections','retention','variables');cutover='parallel comparison then disable classic trigger';liveCutover=$false}\n $migration|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'migration.json')\n",
+      "expected": "Migration retains security and operational behavior instead of copying task names alone.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'migration.json') -Raw|ConvertFrom-Json\n if(($m.classicTasks -join ',') -ne ($m.yamlTasks -join ',')){throw 'Pipeline migration task parity failed.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'migration.json') -Raw|ConvertFrom-Json\n if($m.liveCutover -or 'approvals' -notin $m.preserve){throw 'Unapproved or incomplete cutover.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'migration.json') -Raw|ConvertFrom-Json\n if(($m.classicTasks -join ',') -ne ($m.yamlTasks -join ',')){throw 'Pipeline migration task parity failed.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'migration.json') -Raw|ConvertFrom-Json\n if($m.liveCutover -or 'approvals' -notin $m.preserve){throw 'Unapproved or incomplete cutover.'}\n",
+      "evidence": "Task/gate parity matrix and rollback trigger plan.",
+      "fix": "Use dual nondeploying validation runs first; do not leave two production deployment triggers enabled."
+    }
+  ],
+  "breakFix": {
+    "trigger": "$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json;$r.keepLastGoodRelease=$false;$r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'retention.json')\n",
+    "diagnose": "Get-Content (Join-Path $WorkRoot 'retention.json')\n",
+    "repair": "$r=Get-Content (Join-Path $WorkRoot 'retention.json') -Raw|ConvertFrom-Json;$r.keepLastGoodRelease=$true;$r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'retention.json')\n"
+  },
+  "challenge": "Collect ten comparable runs, investigate flaky tests separately from infrastructure errors, and justify one cache or concurrency change with measured results.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/release/retention",
+    "https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/migrate/from-classic-pipelines"
+  ],
+  "primer": "Critical-path time and total compute minutes differ. Cache keys must protect correctness; retention must preserve rollback artifacts and evidence, and YAML migration must retain external gates.",
+  "architecture": {
+    "title": "Measured CI execution, cache, and retention controls",
+    "nodes": [
+      {
+        "id": "yaml",
+        "label": "Versioned pipeline YAML",
+        "kind": "code",
+        "column": 0,
+        "row": 0
+      },
+      {
+        "id": "worker",
+        "label": "Bounded CI worker jobs",
+        "kind": "platform",
+        "column": 1,
+        "row": 0
+      },
+      {
+        "id": "cache",
+        "label": "SDK + lock-keyed NuGet cache",
+        "kind": "data",
+        "column": 2,
+        "row": 0
+      },
+      {
+        "id": "tests",
+        "label": "Build / test execution",
+        "kind": "code",
+        "column": 2,
+        "row": 1
+      },
+      {
+        "id": "artifacts",
+        "label": "Release artifacts + logs",
+        "kind": "data",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "id": "policy",
+        "label": "Metrics / retention policy",
+        "kind": "evidence",
+        "column": 0,
+        "row": 1
+      }
+    ],
+    "edges": [
+      {
+        "from": "yaml",
+        "to": "worker",
+        "label": "execution DAG"
+      },
+      {
+        "from": "worker",
+        "to": "cache",
+        "label": "scoped cache lookup"
+      },
+      {
+        "from": "cache",
+        "to": "tests",
+        "label": "restored dependencies"
+      },
+      {
+        "from": "worker",
+        "to": "tests",
+        "label": "controlled concurrency"
+      },
+      {
+        "from": "tests",
+        "to": "artifacts",
+        "label": "versioned output"
+      },
+      {
+        "from": "artifacts",
+        "to": "policy",
+        "label": "recovery / evidence lifetime"
+      },
+      {
+        "from": "tests",
+        "to": "policy",
+        "label": "duration and failure data"
+      }
+    ],
+    "topology": "Pipeline YAML defines bounded job concurrency, while SDK/lock/OS-aware cache keys constrain dependency reuse. Real local build measurements feed the performance review, and artifacts/logs receive distinct retention decisions. The last compatible release and security evidence remain recoverable; the diagram represents the intended CI design rather than an unmeasured speedup guarantee."
+  }
+}
