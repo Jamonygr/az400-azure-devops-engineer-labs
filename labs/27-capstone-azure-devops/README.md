@@ -15,8 +15,8 @@ Learner role: **Azure DevOps delivery owner**. Outcome: Capstone: deliver secure
 | Platforms | local, azure-devops, azure |
 | Cost | approved hosted CI allowance plus explicitly acknowledged B1 App Service and telemetry; external SQL prerequisite billed separately — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | The complete five-checkpoint sequence, final-state validation, fault/repair and protected-release evidence checks passed with fail-closed provider doubles. Git, packaging and .NET operations are real. Live cloud deployment, approvals, SQL authentication and telemetry remain unverified. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable

@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The dossier cannot convert a Boolean into integration proof. Read hosted run conclusions and exact artifact revisions, retain deployment and rollback evidence, then use the ownership journal for cleanup.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state validation, fault/repair and protected-release evidence checks passed with fail-closed provider doubles. Git, packaging and .NET operations are real. Live cloud deployment, approvals, SQL authentication and telemetry remain unverified.
 
 ## CP1 — Establish GitHub source and accepted work traceability
 

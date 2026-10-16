@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Inspect the registered release definition's repository/YAML identity and both deploy/rollback build results. Final evidence must show actual revision, health and telemetry for each selected artifact, not just a successful CI run.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state validation, fault/repair and protected-release evidence checks passed with fail-closed provider doubles. Git, packaging and .NET operations are real. Live cloud deployment, approvals, SQL authentication and telemetry remain unverified.
 
 ## CP1 — Establish Azure DevOps source and accepted work
 
