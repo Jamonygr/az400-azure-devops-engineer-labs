@@ -15,8 +15,8 @@ Learner role: **Infrastructure delivery engineer**. Outcome: Validate and deploy
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair passed in CourseReleaseSequences.Tests.ps1. Local .NET publishing/tests, EF SQL generation and Bicep compilation are real; GitHub, Azure and readiness HTTP responses are explicit fail-closed doubles. Live release, SQL authentication and traffic routing have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable

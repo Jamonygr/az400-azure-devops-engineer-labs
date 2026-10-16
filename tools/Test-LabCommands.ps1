@@ -21,7 +21,7 @@ foreach ($lab in $source.labs) {
         $checked++
     }
     if ($lab.PSObject.Properties.Name -contains 'integration') {
-        foreach ($field in @('commands','validate')) {
+        foreach ($field in @('preparationCommands','commands','validate')) {
             $tokens = $null; $parseErrors = $null
             [void][Management.Automation.Language.Parser]::ParseInput($lab.integration.$field, [ref]$tokens, [ref]$parseErrors)
             foreach ($problem in $parseErrors) { $failures += "$($lab.id)/integration/${field}: $($problem.Message)" }

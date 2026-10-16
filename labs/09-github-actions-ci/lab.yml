@@ -24,7 +24,7 @@
     {
       "id": "CP1",
       "title": "Prepare the isolated GitHub CI working copy",
-      "commands": "$p=Join-Path $WorkRoot 'github-ci'\nif(Test-Path (Join-Path $p '.git')){\n $origin=git -C $p remote get-url origin\n $expected='^(https://github\\.com/|git@github\\.com:)'+[regex]::Escape($GhRepo)+'(?:\\.git)?$'\n if($origin -notmatch $expected){throw 'Existing working copy points to a different GitHub repository; refusing to reuse it.'}\n}else{gh repo clone $GhRepo $p}\n\n git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n $source=Join-Path $RepoRoot 'samples'\n Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\\/](bin|obj)[\\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n @('**/bin/','**/obj/','.state/')|Set-Content (Join-Path $p '.gitignore')\n",
+      "commands": "$p=Join-Path $WorkRoot 'github-ci'\nif(Test-Path (Join-Path $p '.git')){\n $origin=git -C $p remote get-url origin\n $expected='^(https://github\\.com/|git@github\\.com:)'+[regex]::Escape($GhRepo)+'(?:\\.git)?$'\n if($origin -notmatch $expected){throw 'Existing working copy points to a different GitHub repository; refusing to reuse it.'}\n}else{gh repo clone $GhRepo $p}\n\n git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n # Copy tracked source only; ignored runtime evidence and build output stay private.\n git -C $RepoRoot ls-files -- samples|ForEach-Object { $rel=$_;$sourceFile=Join-Path $RepoRoot $rel;$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item -LiteralPath $sourceFile -Destination $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n @('**/bin/','**/obj/','.state/')|Set-Content (Join-Path $p '.gitignore')\n",
       "expected": "Only the sample and build configuration enter a fresh sandbox working copy.",
       "positive": "$p=Join-Path $WorkRoot 'github-ci'\n if (-not (Test-Path (Join-Path $p 'samples/DevOps.slnx'))) { throw 'Sample was not copied.' }\n",
       "negative": "$p=Join-Path $WorkRoot 'github-ci'\n if ((git -C $p remote get-url origin) -notmatch [regex]::Escape($GhRepo)) { throw 'Wrong GitHub sandbox remote.' }\n",
@@ -204,8 +204,8 @@
     "topology": "A sandbox source revision triggers an ephemeral GitHub Actions runner with read-only repository permission. The pinned .NET SDK restores locked dependencies, builds, tests, and produces coverage/artifact evidence. The final run/check result is tied to headSha. This active CI workflow has no Azure login or deployment action."
   },
   "verification": {
-    "status": "not-run",
-    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+    "status": "offline-tested",
+    "scope": "The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live."
   },
   "solutionNotes": "The compiler fault must break the actual build. After repair, correlate the hosted run with capstone/source SHA rather than the newest run in an unrelated branch."
 }

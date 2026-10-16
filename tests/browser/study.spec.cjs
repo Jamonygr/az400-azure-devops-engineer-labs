@@ -83,8 +83,11 @@ test('invalid import leaves progress untouched and export is available',async({p
   await page.goto('./docs/learner-progress/');
   const record=emptyRecord();record.labs['LAB-01'].assessmentScore=75;
   await page.evaluate(([k,v])=>localStorage.setItem(k,JSON.stringify(v)),[key,record]);await page.reload();
+  await page.getByLabel('Import AZ-400 progress JSON').setInputFiles({name:'valid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(record))});
+  await expect(page.getByRole('button',{name:'Apply import',exact:true})).toBeVisible();
   await page.getByLabel('Import AZ-400 progress JSON').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{"tenantId":"should-not-import"}')});
   await expect(page.getByRole('status')).toContainText('Import rejected');
+  await expect(page.getByRole('button',{name:'Apply import',exact:true})).toHaveCount(0);
   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)).labs['LAB-01'].assessmentScore,key)).toBe(75);
   const download=page.waitForEvent('download');await page.getByRole('button',{name:'Export JSON',exact:true}).click();
   expect((await download).suggestedFilename()).toBe('az400-progress.json');

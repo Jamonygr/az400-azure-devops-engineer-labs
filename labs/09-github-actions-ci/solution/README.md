@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The compiler fault must break the actual build. After repair, correlate the hosted run with capstone/source SHA rather than the newest run in an unrelated branch.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Prepare the isolated GitHub CI working copy
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "16",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -9,1917 +9,1950 @@
     },
     {
       "id": "S2",
-      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+      "url": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac"
     },
     {
       "id": "S3",
       "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/retry"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
     }
   ],
   "questions": [
     {
       "id": "L16-Q001",
       "checkpointId": "CP1",
-      "caseId": "L16-C01",
-      "task": "remedy",
-      "caseContext": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch.",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "foundational",
-      "question": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which next change most directly satisfies the stated requirement?",
+      "question": "The sample contains TodoWrites flag configuration but no deployment occurs when its value changes. What concept does this illustrate?",
       "options": [
         {
           "key": "A",
-          "text": "Use the existing feature flag as a kill switch",
-          "rationale": "Runtime configuration can change exposure quickly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "A flag grants Azure subscription permissions",
+          "rationale": "Application behavior configuration does not authorize identity access to Azure resources."
         },
         {
           "key": "B",
-          "text": "Remove obsolete flags and simplify the associated code paths",
-          "rationale": "Flags need a complete retirement lifecycle. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Deployment and feature exposure are separate controls",
+          "rationale": "Existing executable code can change allowed behavior without requiring a new binary deployment."
         },
         {
           "key": "C",
-          "text": "Guard exposure with a disabled release feature flag",
-          "rationale": "Deployment and user exposure can be controlled separately. This directly addresses the constraint stated in this case."
+          "text": "A feature flag is a database backup",
+          "rationale": "Exposure control does not store or restore durable database data."
+        },
+        {
+          "key": "D",
+          "text": "Every flag update recompiles the application automatically",
+          "rationale": "Configuration changes do not inherently invoke the source compiler or build pipeline."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Deployment and user exposure can be controlled separately. The selected answer is guard exposure with a disabled release feature flag.",
+      "explanation": "Existing executable code can change allowed behavior without requiring a new binary deployment. Configuration changes do not inherently invoke the source compiler or build pipeline. Exposure control does not store or restore durable database data. Application behavior configuration does not authorize identity access to Azure resources.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q002",
-      "checkpointId": "CP1",
-      "caseId": "L16-C01",
-      "task": "diagnosis",
-      "caseContext": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "foundational",
-      "question": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The disabled-flag test rejects writes while reads stay healthy. Which required behavior does that observation establish?",
       "options": [
         {
           "key": "A",
-          "text": "Temporary rollout controls accumulated without cleanup",
-          "rationale": "The configuration state space has become unnecessary complexity. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "The write capability can be stopped without disabling reads",
+          "rationale": "The test demonstrates the stated separation between risky mutations and retained read functionality."
         },
         {
           "key": "B",
-          "text": "Code presence does not require immediate feature availability",
-          "rationale": "The application can evaluate a release-time switch. This directly addresses the constraint stated in this case."
+          "text": "The cloud App Configuration store was contacted successfully",
+          "rationale": "A local application test does not prove remote configuration retrieval or authorization."
         },
         {
           "key": "C",
-          "text": "The failure is isolated to a flag-controlled capability",
-          "rationale": "A full binary rollback may be unnecessary. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "The entire application is unavailable whenever the flag is disabled",
+          "rationale": "Successful reads contradict that claim of complete application unavailability."
+        },
+        {
+          "key": "D",
+          "text": "Every database schema was rolled back",
+          "rationale": "Feature exposure changes do not execute schema recovery or destructive migration reversal."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The application can evaluate a release-time switch. The selected answer is code presence does not require immediate feature availability.",
+      "explanation": "The test demonstrates the stated separation between risky mutations and retained read functionality. Successful reads contradict that claim of complete application unavailability. A local application test does not prove remote configuration retrieval or authorization. Feature exposure changes do not execute schema recovery or destructive migration reversal.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "TodoWrites=false\nPOST /todos: rejected\nGET /todos: healthy"
+      }
     },
     {
       "id": "L16-Q003",
-      "checkpointId": "CP1",
-      "caseId": "L16-C01",
-      "task": "verification",
-      "caseContext": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.4.6"
       ],
-      "difficulty": "applied",
-      "question": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The lab creates an Entra-only configuration store and needs to modify feature data through CLI. Which permission boundary matters?",
       "options": [
         {
           "key": "A",
-          "text": "The supported behavior remains after obsolete branches are removed",
-          "rationale": "Cleanup needs behavioral regression evidence. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "The intended identity needs the scoped data-plane role",
+          "rationale": "Management resource existence does not automatically authorize reading or changing feature key-values."
         },
         {
           "key": "B",
-          "text": "The deployed feature stays hidden until the flag is enabled",
-          "rationale": "The test distinguishes deployment from exposure. This directly addresses the constraint stated in this case."
+          "text": "Only the number of local unit tests",
+          "rationale": "Test counts cannot grant a principal remote store data-plane permissions."
         },
         {
           "key": "C",
-          "text": "Disabling the flag restores the defined healthy path",
-          "rationale": "The proof must observe user-facing behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Only the app store friendly display name",
+          "rationale": "Naming does not grant the selected identity permission over configuration data."
+        },
+        {
+          "key": "D",
+          "text": "Only the repository contents permission",
+          "rationale": "GitHub source authority does not directly authorize Azure configuration data operations."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The test distinguishes deployment from exposure. The selected answer is the deployed feature stays hidden until the flag is enabled.",
+      "explanation": "Management resource existence does not automatically authorize reading or changing feature key-values. Naming does not grant the selected identity permission over configuration data. GitHub source authority does not directly authorize Azure configuration data operations. Test counts cannot grant a principal remote store data-plane permissions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L16-Q004",
-      "checkpointId": "CP1",
-      "caseId": "L16-C01",
-      "task": "safeguard",
-      "caseContext": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch.",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.4.6"
       ],
-      "difficulty": "applied",
-      "question": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "The learner enables TodoWrites in the owned store. Which independent read verifies that data-plane feature update outcome?",
       "options": [
         {
           "key": "A",
-          "text": "Check consumers and configuration references before deleting flags",
-          "rationale": "A shared flag may still control another application. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Read only the configured identity data-plane role assignment",
+          "rationale": "Authorization enables a request but does not establish the actual stored feature value after mutation."
         },
         {
           "key": "B",
-          "text": "Validate both flag states before launch",
-          "rationale": "Disabled paths can still contain defects. This directly addresses the constraint stated in this case."
+          "text": "Read only a previously exported feature JSON file",
+          "rationale": "A stale local snapshot does not establish that the remote provider accepted and retained the intended update."
         },
         {
           "key": "C",
-          "text": "Restrict flag changes and retain an audit trail",
-          "rationale": "Exposure controls can affect production behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Disabled paths can still contain defects. The selected answer is validate both flag states before launch.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q005",
-      "checkpointId": "CP1",
-      "caseId": "L16-C01",
-      "task": "tradeoff",
-      "caseContext": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "advanced",
-      "question": "Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. The team selects this remedy: \"Guard exposure with a disabled release feature flag.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Flag propagation and refresh behavior affect response time",
-          "rationale": "A switch is not necessarily observed instantly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Query that exact feature and inspect its actual enabled state",
+          "rationale": "A fresh service read establishes stored feature state rather than only the submitted request."
         },
         {
-          "key": "B",
-          "text": "Flag removal is a code and configuration change",
-          "rationale": "It deserves the normal review and release process. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Feature flags need owners and removal dates",
-          "rationale": "Temporary flags create lasting branching complexity. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Read only the original feature creation response",
+          "rationale": "An earlier creation observation does not show the state after the newly requested enable operation."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Temporary flags create lasting branching complexity. The selected answer is feature flags need owners and removal dates.",
+      "explanation": "A fresh service read establishes stored feature state rather than only the submitted request. A stale local snapshot does not establish that the remote provider accepted and retained the intended update. Authorization enables a request but does not establish the actual stored feature value after mutation. An earlier creation observation does not show the state after the newly requested enable operation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q005",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "foundational",
+      "question": "The exercise ends by disabling TodoWrites as a kill switch. What state should the fault assertion expect?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The database was automatically dropped",
+          "rationale": "A feature state update does not perform destructive database resource cleanup."
+        },
+        {
+          "key": "B",
+          "text": "The application binary was removed from every slot",
+          "rationale": "Disabling behavior does not require deleting deployed executable application content."
+        },
+        {
+          "key": "C",
+          "text": "Any feature anywhere is enabled",
+          "rationale": "An unrelated feature state cannot establish the expected scoped kill-switch setting."
+        },
+        {
+          "key": "D",
+          "text": "The exact owned feature is off",
+          "rationale": "The asserted state must match the intended final exposure boundary after the exercise."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The asserted state must match the intended final exposure boundary after the exercise. An unrelated feature state cannot establish the expected scoped kill-switch setting. Disabling behavior does not require deleting deployed executable application content. A feature state update does not perform destructive database resource cleanup.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L16-Q006",
       "checkpointId": "CP5",
-      "caseId": "L16-C02",
-      "task": "remedy",
-      "caseContext": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application.",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
       "difficulty": "foundational",
-      "question": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which next change most directly satisfies the stated requirement?",
+      "question": "A dependency has a brief transient interruption. Which resilience technique can repeat a safe operation with bounded delay?",
       "options": [
         {
           "key": "A",
-          "text": "Guard exposure with a disabled release feature flag",
-          "rationale": "Deployment and user exposure can be controlled separately. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
+          "text": "A permanent database schema deletion",
+          "rationale": "Destructive schema change does not address a transient dependency service interruption."
         },
         {
           "key": "B",
-          "text": "Use the existing feature flag as a kill switch",
-          "rationale": "Runtime configuration can change exposure quickly. This directly addresses the constraint stated in this case."
+          "text": "A bounded retry policy",
+          "rationale": "Retries can address temporary failures when repetition is safe and time is limited."
         },
         {
           "key": "C",
-          "text": "Use stable targeting appropriate to the user journey",
-          "rationale": "Consistent assignment supports coherent multi-request behavior. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "A different artifact display label",
+          "rationale": "Naming does not alter dependency request handling or bounded retry behavior."
+        },
+        {
+          "key": "D",
+          "text": "An unlimited tight loop without delay",
+          "rationale": "Unbounded repetition can amplify load and exceed the caller acceptable latency budget."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Runtime configuration can change exposure quickly. The selected answer is use the existing feature flag as a kill switch.",
+      "explanation": "Retries can address temporary failures when repetition is safe and time is limited. Unbounded repetition can amplify load and exceed the caller acceptable latency budget. Destructive schema change does not address a transient dependency service interruption. Naming does not alter dependency request handling or bounded retry behavior.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q007",
       "checkpointId": "CP5",
-      "caseId": "L16-C02",
-      "task": "diagnosis",
-      "caseContext": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application.",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "applied",
-      "question": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "foundational",
+      "question": "A dependency fails persistently and repeated calls worsen its overload. What pattern can temporarily stop sending requests?",
       "options": [
         {
           "key": "A",
-          "text": "Random per-request assignment changes experience mid-workflow",
-          "rationale": "A percentage alone does not establish stable cohorts. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "Infinite retries from every caller",
+          "rationale": "Unbounded repeated traffic can amplify the underlying overload rather than relieve it."
         },
         {
           "key": "B",
-          "text": "Code presence does not require immediate feature availability",
-          "rationale": "The application can evaluate a release-time switch. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
+          "text": "A circuit breaker with defined recovery probes",
+          "rationale": "The breaker limits repeated calls while the dependency remains in an unhealthy state."
         },
         {
           "key": "C",
-          "text": "The failure is isolated to a flag-controlled capability",
-          "rationale": "A full binary rollback may be unnecessary. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A full binary rollback may be unnecessary. The selected answer is the failure is isolated to a flag-controlled capability.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q008",
-      "checkpointId": "CP5",
-      "caseId": "L16-C02",
-      "task": "verification",
-      "caseContext": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "applied",
-      "question": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A selected user keeps the intended variant across the journey",
-          "rationale": "The verification must span several related requests. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "A feature name containing reliable",
+          "rationale": "A label does not implement request suppression or recovery state transitions."
         },
         {
-          "key": "B",
-          "text": "The deployed feature stays hidden until the flag is enabled",
-          "rationale": "The test distinguishes deployment from exposure. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Disabling the flag restores the defined healthy path",
-          "rationale": "The proof must observe user-facing behavior. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The proof must observe user-facing behavior. The selected answer is disabling the flag restores the defined healthy path.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q009",
-      "checkpointId": "CP5",
-      "caseId": "L16-C02",
-      "task": "safeguard",
-      "caseContext": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "applied",
-      "question": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Avoid exposing sensitive identity attributes in flag telemetry",
-          "rationale": "Targeting data can reveal user information. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Validate both flag states before launch",
-          "rationale": "Disabled paths can still contain defects. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Restrict flag changes and retain an audit trail",
-          "rationale": "Exposure controls can affect production behavior. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Exposure controls can affect production behavior. The selected answer is restrict flag changes and retain an audit trail.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q010",
-      "checkpointId": "CP5",
-      "caseId": "L16-C02",
-      "task": "tradeoff",
-      "caseContext": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "advanced",
-      "question": "Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. The team selects this remedy: \"Use the existing feature flag as a kill switch.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Feature flags need owners and removal dates",
-          "rationale": "Temporary flags create lasting branching complexity. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Flag propagation and refresh behavior affect response time",
-          "rationale": "A switch is not necessarily observed instantly. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Stable targeting requires identity and assignment design",
-          "rationale": "Anonymous or changing identities complicate consistency. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "A larger log retention duration",
+          "rationale": "Keeping evidence longer does not reduce live calls to the failing dependency."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A switch is not necessarily observed instantly. The selected answer is flag propagation and refresh behavior affect response time.",
+      "explanation": "The breaker limits repeated calls while the dependency remains in an unhealthy state. Unbounded repeated traffic can amplify the underlying overload rather than relieve it. A label does not implement request suppression or recovery state transitions. Keeping evidence longer does not reduce live calls to the failing dependency.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
-      "id": "L16-Q011",
-      "checkpointId": "CP5",
-      "caseId": "L16-C03",
-      "task": "remedy",
-      "caseContext": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow.",
+      "id": "L16-Q008",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "foundational",
-      "question": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which next change most directly satisfies the stated requirement?",
+      "question": "A temporary release flag has no owner or removal date. Which lifecycle control is missing?",
       "options": [
         {
           "key": "A",
-          "text": "Implement and verify the intended configuration refresh path",
-          "rationale": "The client must observe updates after startup. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Only a longer display description",
+          "rationale": "More prose does not establish responsible ownership or an actual removal plan."
         },
         {
           "key": "B",
-          "text": "Use the existing feature flag as a kill switch",
-          "rationale": "Runtime configuration can change exposure quickly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Only a different application archive name",
+          "rationale": "Artifact labels do not manage the lifetime of application exposure conditions."
         },
         {
           "key": "C",
-          "text": "Use stable targeting appropriate to the user journey",
-          "rationale": "Consistent assignment supports coherent multi-request behavior. This directly addresses the constraint stated in this case."
+          "text": "Only a new source branch for each user",
+          "rationale": "Branch proliferation does not govern runtime flag ownership or expiry."
+        },
+        {
+          "key": "D",
+          "text": "Ownership and expiry or cleanup planning",
+          "rationale": "Exposure switches need accountable maintenance rather than accumulating permanent obsolete branching behavior."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Exposure switches need accountable maintenance rather than accumulating permanent obsolete branching behavior. More prose does not establish responsible ownership or an actual removal plan. Branch proliferation does not govern runtime flag ownership or expiry. Artifact labels do not manage the lifetime of application exposure conditions.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q009",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "foundational",
+      "question": "A learner runs dotnet test with a filter matching no tests, then claims the kill-switch behavior passed. What must validation check?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only that the command returned zero",
+          "rationale": "Process success without discovered assertions does not prove application behavior was exercised."
+        },
+        {
+          "key": "B",
+          "text": "Only that the filter contains the word Feature",
+          "rationale": "A descriptive filter can still match no actual test cases."
+        },
+        {
+          "key": "C",
+          "text": "At least one intended assertion executed and passed",
+          "rationale": "A zero-test successful process cannot establish the actual required feature behavior."
+        },
+        {
+          "key": "D",
+          "text": "Only the current store enabled state",
+          "rationale": "Provider flag state does not demonstrate a local application behavioral test ran."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Consistent assignment supports coherent multi-request behavior. The selected answer is use stable targeting appropriate to the user journey.",
+      "explanation": "A zero-test successful process cannot establish the actual required feature behavior. Process success without discovered assertions does not prove application behavior was exercised. A descriptive filter can still match no actual test cases. Provider flag state does not demonstrate a local application behavioral test ran.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q010",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "foundational",
+      "question": "The identity can create a configuration store but cannot read its feature values. What distinction explains this result?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A successful local test always grants remote read access",
+          "rationale": "Test execution does not assign roles to the identity making a provider request."
+        },
+        {
+          "key": "B",
+          "text": "Management-plane and data-plane permissions are separate",
+          "rationale": "Resource provisioning authority does not automatically grant permission to consume configuration data."
+        },
+        {
+          "key": "C",
+          "text": "Feature reads require repository administrator membership",
+          "rationale": "Source-control roles do not directly confer Azure configuration data access."
+        },
+        {
+          "key": "D",
+          "text": "Every created store must contain corrupt feature data",
+          "rationale": "An authorization denial does not establish that the stored values are invalid."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Resource provisioning authority does not automatically grant permission to consume configuration data. An authorization denial does not establish that the stored values are invalid. Source-control roles do not directly confer Azure configuration data access. Test execution does not assign roles to the identity making a provider request.",
+      "sourceIds": [
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Store creation: succeeded\nFeature read with selected identity: authorization denied"
+      }
+    },
+    {
+      "id": "L16-Q011",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "foundational",
+      "question": "The CLI reports TodoWrites enabled in the store, but the sample has not been configured to consume that store. What remains unproven?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The provider returned an enabled feature",
+          "rationale": "That observed state can be valid even while application integration remains absent."
+        },
+        {
+          "key": "B",
+          "text": "The feature name can be queried explicitly",
+          "rationale": "The query itself demonstrates inspectable provider feature data for that scoped name."
+        },
+        {
+          "key": "C",
+          "text": "The running sample behavior follows the remote flag",
+          "rationale": "Changing provider state does not establish that the application reads that configuration source."
+        },
+        {
+          "key": "D",
+          "text": "Local and cloud observations need separate reporting",
+          "rationale": "Distinct exercised boundaries should remain explicit instead of being conflated."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Changing provider state does not establish that the application reads that configuration source. That observed state can be valid even while application integration remains absent. The query itself demonstrates inspectable provider feature data for that scoped name. Distinct exercised boundaries should remain explicit instead of being conflated.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L16-Q012",
       "checkpointId": "CP5",
-      "caseId": "L16-C03",
-      "task": "diagnosis",
-      "caseContext": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow.",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
       "difficulty": "foundational",
-      "question": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A retry policy repeats a failed payment request without an idempotency contract. What risk should review highlight?",
       "options": [
         {
           "key": "A",
-          "text": "Configuration was loaded once without effective refresh",
-          "rationale": "A remote change does not automatically update application memory. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "A feature label prevents duplicate transactions",
+          "rationale": "Configuration naming does not implement a server-side idempotency boundary."
         },
         {
           "key": "B",
-          "text": "The failure is isolated to a flag-controlled capability",
-          "rationale": "A full binary rollback may be unnecessary. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Every retry automatically rolls back the first operation",
+          "rationale": "Request repetition does not inherently undo a previously committed side effect."
         },
         {
           "key": "C",
-          "text": "Random per-request assignment changes experience mid-workflow",
-          "rationale": "A percentage alone does not establish stable cohorts. This directly addresses the constraint stated in this case."
+          "text": "More retries always reduce total dependency load",
+          "rationale": "Repeated operations increase attempts and can amplify load during a failure."
+        },
+        {
+          "key": "D",
+          "text": "Repeated attempts can duplicate the side effect",
+          "rationale": "An uncertain first result does not establish that repeating a mutation is safe."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A percentage alone does not establish stable cohorts. The selected answer is random per-request assignment changes experience mid-workflow.",
+      "explanation": "An uncertain first result does not establish that repeating a mutation is safe. Request repetition does not inherently undo a previously committed side effect. Repeated operations increase attempts and can amplify load during a failure. Configuration naming does not implement a server-side idempotency boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q013",
-      "checkpointId": "CP5",
-      "caseId": "L16-C03",
-      "task": "verification",
-      "caseContext": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.4.6"
       ],
-      "difficulty": "applied",
-      "question": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "A release flag allows enabling a new capability gradually for selected users. What targeting requirement supports a stable experience?",
       "options": [
         {
           "key": "A",
-          "text": "The application observes the new value within the documented interval",
-          "rationale": "The test should measure actual propagation. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Consistent cohort assignment for the intended users",
+          "rationale": "Gradual exposure should identify who receives the capability rather than change randomly per request."
         },
         {
           "key": "B",
-          "text": "Disabling the flag restores the defined healthy path",
-          "rationale": "The proof must observe user-facing behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Only the number of generated configuration files",
+          "rationale": "File count cannot establish the actual runtime targeting decision logic."
         },
         {
           "key": "C",
-          "text": "A selected user keeps the intended variant across the journey",
-          "rationale": "The verification must span several related requests. This directly addresses the constraint stated in this case."
+          "text": "Only a source branch named canary",
+          "rationale": "Branch labels do not implement runtime user targeting or stable cohort assignment."
+        },
+        {
+          "key": "D",
+          "text": "Only the application package creation date",
+          "rationale": "Artifact age does not determine which users receive feature behavior."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The verification must span several related requests. The selected answer is a selected user keeps the intended variant across the journey.",
+      "explanation": "Gradual exposure should identify who receives the capability rather than change randomly per request. Branch labels do not implement runtime user targeting or stable cohort assignment. Artifact age does not determine which users receive feature behavior. File count cannot establish the actual runtime targeting decision logic.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q014",
       "checkpointId": "CP5",
-      "caseId": "L16-C03",
-      "task": "safeguard",
-      "caseContext": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow.",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "applied",
-      "question": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "The caller has a short response budget, but retry delays can exceed it. Which bound should the policy respect?",
       "options": [
         {
           "key": "A",
-          "text": "Choose safe behavior when refresh temporarily fails",
-          "rationale": "Configuration connectivity should not create uncontrolled exposure. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "The overall operation latency and cancellation budget",
+          "rationale": "Retries must fit the caller actual acceptable execution window rather than grow indefinitely."
         },
         {
           "key": "B",
-          "text": "Restrict flag changes and retain an audit trail",
-          "rationale": "Exposure controls can affect production behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Only the maximum number of simultaneous requests",
+          "rationale": "Concurrency limits do not by themselves bound the total duration of one retrying logical operation."
         },
         {
           "key": "C",
-          "text": "Avoid exposing sensitive identity attributes in flag telemetry",
-          "rationale": "Targeting data can reveal user information. This directly addresses the constraint stated in this case."
+          "text": "Only a maximum retry count without considering delays",
+          "rationale": "Even a finite attempt count can exceed the caller deadline when delays and individual timeouts accumulate."
+        },
+        {
+          "key": "D",
+          "text": "Only a separate timeout for each individual attempt",
+          "rationale": "Per-attempt limits do not necessarily bound cumulative delays and execution within the caller overall deadline."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Targeting data can reveal user information. The selected answer is avoid exposing sensitive identity attributes in flag telemetry.",
+      "explanation": "Per-attempt limits do not necessarily bound cumulative delays and execution within the caller overall deadline. Concurrency limits do not by themselves bound the total duration of one retrying logical operation. Even a finite attempt count can exceed the caller deadline when delays and individual timeouts accumulate. Retries must fit the caller actual acceptable execution window rather than grow indefinitely.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q015",
-      "checkpointId": "CP5",
-      "caseId": "L16-C03",
-      "task": "tradeoff",
-      "caseContext": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.4.6"
       ],
-      "difficulty": "advanced",
-      "question": "Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. The team selects this remedy: \"Use stable targeting appropriate to the user journey.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "Writes are rejected with TodoWrites disabled, but the test never checks reads. What required behavior is still missing evidence?",
       "options": [
         {
           "key": "A",
-          "text": "Faster refresh can increase configuration traffic",
-          "rationale": "Responsiveness and service usage need balance. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "The Azure subscription has no residual resources",
+          "rationale": "An application assertion does not establish remote cleanup or inventory absence."
         },
         {
           "key": "B",
-          "text": "Flag propagation and refresh behavior affect response time",
-          "rationale": "A switch is not necessarily observed instantly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint."
+          "text": "Reads remain healthy while writes are disabled",
+          "rationale": "The exercise requires both denied mutations and preserved read behavior under the flag."
         },
         {
           "key": "C",
-          "text": "Stable targeting requires identity and assignment design",
-          "rationale": "Anonymous or changing identities complicate consistency. This directly addresses the constraint stated in this case."
+          "text": "The store has an independent reviewer configured",
+          "rationale": "Local feature behavior does not prove any provider resource approval policy."
+        },
+        {
+          "key": "D",
+          "text": "The application must have been recompiled",
+          "rationale": "Changing exposure does not require a rebuild unless the implementation explicitly does so."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Anonymous or changing identities complicate consistency. The selected answer is stable targeting requires identity and assignment design.",
+      "explanation": "The exercise requires both denied mutations and preserved read behavior under the flag. Changing exposure does not require a rebuild unless the implementation explicitly does so. An application assertion does not establish remote cleanup or inventory absence. Local feature behavior does not prove any provider resource approval policy.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q016",
-      "checkpointId": "CP4",
-      "caseId": "L16-C04",
-      "task": "remedy",
-      "caseContext": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "foundational",
-      "question": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "Every client retries immediately after a shared outage and the dependency receives a synchronized burst. What delay technique can reduce that synchronization?",
       "options": [
         {
           "key": "A",
-          "text": "Use stable targeting appropriate to the user journey",
-          "rationale": "Consistent assignment supports coherent multi-request behavior. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "The same fixed zero delay for every client",
+          "rationale": "Immediate synchronized repetition can amplify the dependency load after the outage."
         },
         {
           "key": "B",
-          "text": "Implement and verify the intended configuration refresh path",
-          "rationale": "The client must observe updates after startup. This directly addresses the constraint stated in this case."
+          "text": "Renaming the dependency connection string",
+          "rationale": "A friendly configuration label does not change request timing or retry synchronization."
         },
         {
           "key": "C",
-          "text": "Use bounded retries with suitable delay for transient errors",
-          "rationale": "A short transient fault may succeed later. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Infinite retry count with no deadline",
+          "rationale": "Removing bounds extends load and can exceed acceptable user latency indefinitely."
+        },
+        {
+          "key": "D",
+          "text": "Backoff with jitter and bounded attempts",
+          "rationale": "Varying delayed retries can reduce synchronized pressure while keeping recovery attempts limited."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The client must observe updates after startup. The selected answer is implement and verify the intended configuration refresh path.",
+      "explanation": "Varying delayed retries can reduce synchronized pressure while keeping recovery attempts limited. Immediate synchronized repetition can amplify the dependency load after the outage. Removing bounds extends load and can exceed acceptable user latency indefinitely. A friendly configuration label does not change request timing or retry synchronization.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "1000 clients\nFailure at same instant\nRetry delay: zero for every attempt"
+      }
     },
     {
       "id": "L16-Q017",
       "checkpointId": "CP4",
-      "caseId": "L16-C04",
-      "task": "diagnosis",
-      "caseContext": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value.",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The feature name is correct but the command targets another configuration store. What must the validation compare?",
       "options": [
         {
           "key": "A",
-          "text": "The failure is temporary rather than a permanent invalid request",
-          "rationale": "Retry policy must classify the error correctly. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "The exact run-owned store and feature identity",
+          "rationale": "Matching a key name alone cannot establish that the authorized scoped resource was changed."
         },
         {
           "key": "B",
-          "text": "Random per-request assignment changes experience mid-workflow",
-          "rationale": "A percentage alone does not establish stable cohorts. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "Only the application local directory name",
+          "rationale": "Filesystem naming does not establish the provider store boundary used by the request."
         },
         {
           "key": "C",
-          "text": "Configuration was loaded once without effective refresh",
-          "rationale": "A remote change does not automatically update application memory. This directly addresses the constraint stated in this case."
+          "text": "Only the learner login display name",
+          "rationale": "Available identity does not identify which resource the operation actually targeted."
+        },
+        {
+          "key": "D",
+          "text": "Only whether any TodoWrites key exists",
+          "rationale": "The same key can legitimately exist in multiple unrelated stores."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A remote change does not automatically update application memory. The selected answer is configuration was loaded once without effective refresh.",
+      "explanation": "Matching a key name alone cannot establish that the authorized scoped resource was changed. The same key can legitimately exist in multiple unrelated stores. Available identity does not identify which resource the operation actually targeted. Filesystem naming does not establish the provider store boundary used by the request.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q018",
-      "checkpointId": "CP4",
-      "caseId": "L16-C04",
-      "task": "verification",
-      "caseContext": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A newly granted narrow data role is not yet effective. What retry approach preserves least privilege?",
       "options": [
         {
           "key": "A",
-          "text": "A selected user keeps the intended variant across the journey",
-          "rationale": "The verification must span several related requests. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "Treat the failed read as successful because assignment was requested",
+          "rationale": "Submitted intent does not establish effective provider data access."
         },
         {
           "key": "B",
-          "text": "The application observes the new value within the documented interval",
-          "rationale": "The test should measure actual propagation. This directly addresses the constraint stated in this case."
+          "text": "Copy a personal administrator access key into source",
+          "rationale": "Stored broad credentials introduce unnecessary exposure and abandon the intended identity design."
         },
         {
           "key": "C",
-          "text": "Transient faults recover within the permitted request budget",
-          "rationale": "The test should include an eventual successful response. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Immediately assign subscription Owner to every identity",
+          "rationale": "Broadening permissions exceeds the data operation and can hide the actual prerequisite issue."
+        },
+        {
+          "key": "D",
+          "text": "Bounded read retries with the exact identity and scope verified",
+          "rationale": "Propagation delay should be diagnosed without reflexively broadening the intended authorization boundary."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The test should measure actual propagation. The selected answer is the application observes the new value within the documented interval.",
+      "explanation": "Propagation delay should be diagnosed without reflexively broadening the intended authorization boundary. Broadening permissions exceeds the data operation and can hide the actual prerequisite issue. Stored broad credentials introduce unnecessary exposure and abandon the intended identity design. Submitted intent does not establish effective provider data access.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L16-Q019",
-      "checkpointId": "CP4",
-      "caseId": "L16-C04",
-      "task": "safeguard",
-      "caseContext": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
       "difficulty": "applied",
-      "question": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The breaker is open after persistent failures. What should normal calls do until its recovery policy allows a probe?",
       "options": [
         {
           "key": "A",
-          "text": "Retry only operations safe to repeat",
-          "rationale": "Repeated nonidempotent actions can duplicate side effects. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Send all normal requests concurrently to test recovery",
+          "rationale": "That bypasses the intended suppression and can recreate dependency overload immediately."
         },
         {
           "key": "B",
-          "text": "Avoid exposing sensitive identity attributes in flag telemetry",
-          "rationale": "Targeting data can reveal user information. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "Fail fast or use a deliberately defined fallback",
+          "rationale": "An open breaker limits repeated dependency pressure rather than continuing every normal request."
         },
         {
           "key": "C",
-          "text": "Choose safe behavior when refresh temporarily fails",
-          "rationale": "Configuration connectivity should not create uncontrolled exposure. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Configuration connectivity should not create uncontrolled exposure. The selected answer is choose safe behavior when refresh temporarily fails.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q020",
-      "checkpointId": "CP4",
-      "caseId": "L16-C04",
-      "task": "tradeoff",
-      "caseContext": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "advanced",
-      "question": "Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. The team selects this remedy: \"Implement and verify the intended configuration refresh path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Stable targeting requires identity and assignment design",
-          "rationale": "Anonymous or changing identities complicate consistency. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint."
+          "text": "Delete the application artifact before each request",
+          "rationale": "Package deletion is unrelated to controlled dependency request suppression."
         },
         {
-          "key": "B",
-          "text": "Faster refresh can increase configuration traffic",
-          "rationale": "Responsiveness and service usage need balance. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Retries increase latency and downstream load",
-          "rationale": "Unbounded repetition can worsen an outage. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Declare every skipped dependency call successful without a contract",
+          "rationale": "Suppressing requests does not establish successful completion of required business behavior."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Responsiveness and service usage need balance. The selected answer is faster refresh can increase configuration traffic.",
+      "explanation": "An open breaker limits repeated dependency pressure rather than continuing every normal request. That bypasses the intended suppression and can recreate dependency overload immediately. Suppressing requests does not establish successful completion of required business behavior. Package deletion is unrelated to controlled dependency request suppression.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
+      ]
+    },
+    {
+      "id": "L16-Q020",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "applied",
+      "question": "A flag defaults to enabled if configuration cannot load, but the capability performs risky writes. What design review is required?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use the flag display name as authorization",
+          "rationale": "Friendly naming does not establish permission to expose a risky capability."
+        },
+        {
+          "key": "B",
+          "text": "Assume every flag must always default enabled",
+          "rationale": "Default choice depends on capability risk and required service continuity behavior."
+        },
+        {
+          "key": "C",
+          "text": "Assume every missing value means deployment succeeded",
+          "rationale": "Configuration absence is not evidence of successful source-to-runtime promotion."
+        },
+        {
+          "key": "D",
+          "text": "Choose an explicit risk-appropriate fallback behavior",
+          "rationale": "An unavailable configuration source needs deliberate behavior rather than an accidental exposure default."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "An unavailable configuration source needs deliberate behavior rather than an accidental exposure default. Default choice depends on capability risk and required service continuity behavior. Configuration absence is not evidence of successful source-to-runtime promotion. Friendly naming does not establish permission to expose a risky capability.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L16-Q021",
-      "checkpointId": "CP5",
-      "caseId": "L16-C05",
-      "task": "remedy",
-      "caseContext": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
-      "difficulty": "foundational",
-      "question": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "The local test changes one flag value but the application's test configuration overrides it elsewhere. What should diagnosis inspect?",
       "options": [
         {
           "key": "A",
-          "text": "Use a circuit breaker with a recovery probe",
-          "rationale": "Persistent failures require limiting repeated dependency calls. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "The effective configuration precedence used by the application",
+          "rationale": "A declared file value may not be the actual value consumed at runtime."
         },
         {
           "key": "B",
-          "text": "Implement and verify the intended configuration refresh path",
-          "rationale": "The client must observe updates after startup. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Only the JSON file modification timestamp",
+          "rationale": "Recency does not establish precedence across environment and other configuration providers."
         },
         {
           "key": "C",
-          "text": "Use bounded retries with suitable delay for transient errors",
-          "rationale": "A short transient fault may succeed later. This directly addresses the constraint stated in this case."
+          "text": "Only the number of retained build artifacts",
+          "rationale": "Output inventory does not explain how the application resolves its configuration sources."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the file configuration value is syntactically valid",
+          "rationale": "Valid JSON can be overridden by a higher-priority environment or configuration provider value."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A short transient fault may succeed later. The selected answer is use bounded retries with suitable delay for transient errors.",
+      "explanation": "A declared file value may not be the actual value consumed at runtime. Recency does not establish precedence across environment and other configuration providers. Valid JSON can be overridden by a higher-priority environment or configuration provider value. Output inventory does not explain how the application resolves its configuration sources.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q022",
       "checkpointId": "CP5",
-      "caseId": "L16-C05",
-      "task": "diagnosis",
-      "caseContext": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request.",
       "objectiveIds": [
         "D3.4.5"
       ],
-      "difficulty": "foundational",
-      "question": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "applied",
+      "question": "A dependency returns a permanent validation error for malformed input. Which retry classification is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "The failure is temporary rather than a permanent invalid request",
-          "rationale": "Retry policy must classify the error correctly. This directly addresses the constraint stated in this case."
+          "text": "Delete the test report to avoid classifying the error",
+          "rationale": "Removing evidence does not change the actual dependency response semantics."
         },
         {
           "key": "B",
-          "text": "Retries alone amplify sustained unavailability",
-          "rationale": "The application continues spending resources on known failures. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Retry forever because every non-success must be transient",
+          "rationale": "That can amplify load without changing the invalid request or its cause."
         },
         {
           "key": "C",
-          "text": "Configuration was loaded once without effective refresh",
-          "rationale": "A remote change does not automatically update application memory. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Do not blindly retry the unchanged invalid request",
+          "rationale": "Permanent input failure is not a transient condition repetition can normally repair."
+        },
+        {
+          "key": "D",
+          "text": "Use progressively broader database privileges per retry",
+          "rationale": "Authorization expansion cannot repair malformed business input and adds unnecessary risk."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Retry policy must classify the error correctly. The selected answer is the failure is temporary rather than a permanent invalid request.",
+      "explanation": "Permanent input failure is not a transient condition repetition can normally repair. That can amplify load without changing the invalid request or its cause. Authorization expansion cannot repair malformed business input and adds unnecessary risk. Removing evidence does not change the actual dependency response semantics.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q023",
-      "checkpointId": "CP5",
-      "caseId": "L16-C05",
-      "task": "verification",
-      "caseContext": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A flag update succeeds but the application caches configuration for several minutes. What should kill-switch expectations include?",
       "options": [
         {
           "key": "A",
-          "text": "The application observes the new value within the documented interval",
-          "rationale": "The test should measure actual propagation. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Only the current enabled state shown in the store",
+          "rationale": "Stored state does not show when running consumers refresh or stop using cached configuration."
         },
         {
           "key": "B",
-          "text": "Transient faults recover within the permitted request budget",
-          "rationale": "The test should include an eventual successful response. This directly addresses the constraint stated in this case."
+          "text": "The actual refresh and propagation latency",
+          "rationale": "Stored configuration state can differ temporarily from the value used by running instances."
         },
         {
           "key": "C",
-          "text": "Calls are curtailed while the breaker is open",
-          "rationale": "The evidence should show reduced failing dependency traffic. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "An assumption that every instance changes instantaneously",
+          "rationale": "A provider write does not guarantee immediate refresh of all application caches."
+        },
+        {
+          "key": "D",
+          "text": "Only the last source commit timestamp",
+          "rationale": "Source timing does not establish runtime configuration refresh behavior."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The test should include an eventual successful response. The selected answer is transient faults recover within the permitted request budget.",
+      "explanation": "Stored state does not show when running consumers refresh or stop using cached configuration. Stored configuration state can differ temporarily from the value used by running instances. A provider write does not guarantee immediate refresh of all application caches. Source timing does not establish runtime configuration refresh behavior.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q024",
       "checkpointId": "CP5",
-      "caseId": "L16-C05",
-      "task": "safeguard",
-      "caseContext": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request.",
       "objectiveIds": [
         "D3.4.5"
       ],
       "difficulty": "applied",
-      "question": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The breaker permits a limited request after an open period to check recovery. Which state behavior does this describe?",
       "options": [
         {
           "key": "A",
-          "text": "Choose safe behavior when refresh temporarily fails",
-          "rationale": "Configuration connectivity should not create uncontrolled exposure. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "A half-open recovery probe",
+          "rationale": "Limited trial traffic tests dependency recovery before normal call volume resumes."
         },
         {
           "key": "B",
-          "text": "Retry only operations safe to repeat",
-          "rationale": "Repeated nonidempotent actions can duplicate side effects. This directly addresses the constraint stated in this case."
+          "text": "Unlimited closed-state traffic with no limits",
+          "rationale": "A bounded probe is different from restoring unrestricted ordinary calls immediately."
         },
         {
           "key": "C",
-          "text": "Define a safe failure or fallback experience",
-          "rationale": "Stopping calls still leaves user requests to handle. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "A feature deletion operation in the store",
+          "rationale": "Dependency call state transitions do not require deleting application feature definitions."
+        },
+        {
+          "key": "D",
+          "text": "An automatic database migration rollback",
+          "rationale": "Breaker recovery does not perform schema reversal or data restoration."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Repeated nonidempotent actions can duplicate side effects. The selected answer is retry only operations safe to repeat.",
+      "explanation": "Limited trial traffic tests dependency recovery before normal call volume resumes. A bounded probe is different from restoring unrestricted ordinary calls immediately. Breaker recovery does not perform schema reversal or data restoration. Dependency call state transitions do not require deleting application feature definitions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L16-Q025",
-      "checkpointId": "CP5",
-      "caseId": "L16-C05",
-      "task": "tradeoff",
-      "caseContext": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
-      "difficulty": "advanced",
-      "question": "Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. The team selects this remedy: \"Use bounded retries with suitable delay for transient errors.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "The capability is fully adopted but the old release flag still branches production code. What maintenance action should the owner consider?",
       "options": [
         {
           "key": "A",
-          "text": "Circuit breakers add states and recovery tuning",
-          "rationale": "Incorrect thresholds can reject healthy calls unnecessarily. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Delete all current configuration without checking consumers",
+          "rationale": "Broad removal can break unrelated active features and violates a scoped cleanup approach."
         },
         {
           "key": "B",
-          "text": "Faster refresh can increase configuration traffic",
-          "rationale": "Responsiveness and service usage need balance. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint."
+          "text": "Remove obsolete flag paths through a reviewed cleanup change",
+          "rationale": "Permanent stale switches increase complexity after their exposure-control purpose has ended."
         },
         {
           "key": "C",
-          "text": "Retries increase latency and downstream load",
-          "rationale": "Unbounded repetition can worsen an outage. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Unbounded repetition can worsen an outage. The selected answer is retries increase latency and downstream load.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q026",
-      "checkpointId": "CP5",
-      "caseId": "L16-C06",
-      "task": "remedy",
-      "caseContext": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources.",
-      "objectiveIds": [
-        "D3.4.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Use bounded retries with suitable delay for transient errors",
-          "rationale": "A short transient fault may succeed later. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Replace the flag with an unrestricted administrator token",
+          "rationale": "Runtime exposure control is unrelated to granting broad resource mutation authority."
         },
         {
-          "key": "B",
-          "text": "Use a circuit breaker with a recovery probe",
-          "rationale": "Persistent failures require limiting repeated dependency calls. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Add jitter to bounded backoff",
-          "rationale": "Spread retries to avoid synchronized load spikes. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Keep every temporary flag forever without review",
+          "rationale": "Unbounded accumulation leaves obsolete behavior branches and unclear ownership in production code."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Persistent failures require limiting repeated dependency calls. The selected answer is use a circuit breaker with a recovery probe.",
+      "explanation": "Permanent stale switches increase complexity after their exposure-control purpose has ended. Unbounded accumulation leaves obsolete behavior branches and unclear ownership in production code. Broad removal can break unrelated active features and violates a scoped cleanup approach. Runtime exposure control is unrelated to granting broad resource mutation authority.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q026",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "applied",
+      "question": "The lab uses Entra authentication instead of store access keys. What operational benefit does this support while still needing role review?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Automatically granting write authority to every tenant user",
+          "rationale": "Entra identity does not imply unrestricted configuration store access for all users."
+        },
+        {
+          "key": "B",
+          "text": "Eliminating every need for access control",
+          "rationale": "Authentication method does not establish that all callers should receive data mutation rights."
+        },
+        {
+          "key": "C",
+          "text": "Guaranteeing application reads the store without configuration",
+          "rationale": "Authentication capability does not wire the application to a remote provider automatically."
+        },
+        {
+          "key": "D",
+          "text": "Avoiding a stored shared secret for the intended data operation",
+          "rationale": "Identity-based access reduces shared key handling without eliminating resource authorization requirements."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Identity-based access reduces shared key handling without eliminating resource authorization requirements. Authentication method does not establish that all callers should receive data mutation rights. Entra identity does not imply unrestricted configuration store access for all users. Authentication capability does not wire the application to a remote provider automatically.",
+      "sourceIds": [
+        "S2"
       ]
     },
     {
       "id": "L16-Q027",
       "checkpointId": "CP5",
-      "caseId": "L16-C06",
-      "task": "diagnosis",
-      "caseContext": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources.",
       "objectiveIds": [
         "D3.4.5"
       ],
       "difficulty": "applied",
-      "question": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which explanation best accounts for the behavior or constraint described?",
+      "question": "An operation retries five times in each of three nested layers. What should resilience review examine?",
       "options": [
         {
           "key": "A",
-          "text": "The failure is temporary rather than a permanent invalid request",
-          "rationale": "Retry policy must classify the error correctly. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Assume nested retries always cancel each other out",
+          "rationale": "Independent retry policies can compound rather than eliminate repeated downstream operations."
         },
         {
           "key": "B",
-          "text": "Retries alone amplify sustained unavailability",
-          "rationale": "The application continues spending resources on known failures. This directly addresses the constraint stated in this case."
+          "text": "Only whether the outer retry uses exponential backoff",
+          "rationale": "The inner layers can still multiply downstream calls independently of the outer delay strategy."
         },
         {
           "key": "C",
-          "text": "Identical retry timing coordinates the entire client population",
-          "rationale": "Recovery receives a concentrated surge. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Multiplicative attempts and the combined downstream load",
+          "rationale": "Nested policies can multiply calls far beyond the apparent retry count at one layer."
+        },
+        {
+          "key": "D",
+          "text": "Only the outer layer configured retry count",
+          "rationale": "Nested downstream policies can multiply attempts beyond the limit visible in one caller layer."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "The application continues spending resources on known failures. The selected answer is retries alone amplify sustained unavailability.",
+      "explanation": "Nested policies can multiply calls far beyond the apparent retry count at one layer. Nested downstream policies can multiply attempts beyond the limit visible in one caller layer. The inner layers can still multiply downstream calls independently of the outer delay strategy. Independent retry policies can compound rather than eliminate repeated downstream operations.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Outer layer: up to 5 attempts\nMiddle layer: up to 5 attempts\nInner dependency: up to 5 attempts"
+      }
     },
     {
       "id": "L16-Q028",
-      "checkpointId": "CP5",
-      "caseId": "L16-C06",
-      "task": "verification",
-      "caseContext": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The feature-disabled test proves rejected writes, but no enabled test exists. What additional behavioral case improves the contract?",
       "options": [
         {
           "key": "A",
-          "text": "Transient faults recover within the permitted request budget",
-          "rationale": "The test should include an eventual successful response. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Verify intended writes succeed when the feature is enabled",
+          "rationale": "Both accepted and denied exposure states need observable behavior rather than one negative path alone."
         },
         {
           "key": "B",
-          "text": "Calls are curtailed while the breaker is open",
-          "rationale": "The evidence should show reduced failing dependency traffic. This directly addresses the constraint stated in this case."
+          "text": "Verify only that the provider reports the flag enabled",
+          "rationale": "Stored configuration does not execute the application enabled write path or prove the test consumes it."
         },
         {
           "key": "C",
-          "text": "Retry traffic is distributed rather than spiking in lockstep",
-          "rationale": "The measurement must observe aggregate timing. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Verify only the local workspace has been deleted",
+          "rationale": "Cleanup evidence does not establish the allowed application operation succeeds."
+        },
+        {
+          "key": "D",
+          "text": "Verify only that the JSON contains the feature name",
+          "rationale": "A declaration cannot establish actual enabled application behavior during execution."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The evidence should show reduced failing dependency traffic. The selected answer is calls are curtailed while the breaker is open.",
+      "explanation": "Both accepted and denied exposure states need observable behavior rather than one negative path alone. A declaration cannot establish actual enabled application behavior during execution. Stored configuration does not execute the application enabled write path or prove the test consumes it. Cleanup evidence does not establish the allowed application operation succeeds.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q029",
-      "checkpointId": "CP5",
-      "caseId": "L16-C06",
-      "task": "safeguard",
-      "caseContext": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "An operator enables TodoWrites in a development label while production consumes another label. What must the acceptance check establish?",
       "options": [
         {
           "key": "A",
-          "text": "Retry only operations safe to repeat",
-          "rationale": "Repeated nonidempotent actions can duplicate side effects. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the source branch is called production",
+          "rationale": "A branch label does not establish the store variant actually read by the app."
         },
         {
           "key": "B",
-          "text": "Define a safe failure or fallback experience",
-          "rationale": "Stopping calls still leaves user requests to handle. This directly addresses the constraint stated in this case."
+          "text": "Only whether the CLI process produced JSON",
+          "rationale": "Output existence does not identify the effective environment configuration variant."
         },
         {
           "key": "C",
-          "text": "Keep an overall retry and timeout budget",
-          "rationale": "Random delay should not create unbounded waiting. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Only whether any feature with the name is on",
+          "rationale": "Unrelated variants can differ without affecting the intended consumer configuration."
+        },
+        {
+          "key": "D",
+          "text": "The exact feature variant consumed by the intended environment",
+          "rationale": "A matching key in another configuration variant does not control the target runtime behavior."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Stopping calls still leaves user requests to handle. The selected answer is define a safe failure or fallback experience.",
+      "explanation": "A matching key in another configuration variant does not control the target runtime behavior. Unrelated variants can differ without affecting the intended consumer configuration. A branch label does not establish the store variant actually read by the app. Output existence does not identify the effective environment configuration variant.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q030",
       "checkpointId": "CP5",
-      "caseId": "L16-C06",
-      "task": "tradeoff",
-      "caseContext": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources.",
       "objectiveIds": [
         "D3.4.5"
       ],
-      "difficulty": "advanced",
-      "question": "Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. The team selects this remedy: \"Use a circuit breaker with a recovery probe.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A breaker opens on any error including caller validation failures. What unintended behavior can result?",
       "options": [
         {
           "key": "A",
-          "text": "Retries increase latency and downstream load",
-          "rationale": "Unbounded repetition can worsen an outage. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint."
+          "text": "The artifact digest loses cryptographic integrity",
+          "rationale": "Runtime error classification does not mutate a previously recorded package checksum."
         },
         {
           "key": "B",
-          "text": "Circuit breakers add states and recovery tuning",
-          "rationale": "Incorrect thresholds can reject healthy calls unnecessarily. This directly addresses the constraint stated in this case."
+          "text": "The feature store must revoke all identities",
+          "rationale": "A breaker decision does not itself change cloud identity assignments or grants."
         },
         {
           "key": "C",
-          "text": "Jitter improves distribution rather than fixing capacity",
-          "rationale": "The backend still needs sufficient healthy throughput. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Valid traffic can be blocked because failures were misclassified",
+          "rationale": "The breaker should reflect dependency health rather than unrelated bad client input."
+        },
+        {
+          "key": "D",
+          "text": "The database schema automatically becomes compatible",
+          "rationale": "Failure classification does not repair application database model compatibility."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Incorrect thresholds can reject healthy calls unnecessarily. The selected answer is circuit breakers add states and recovery tuning.",
+      "explanation": "The breaker should reflect dependency health rather than unrelated bad client input. Failure classification does not repair application database model compatibility. A breaker decision does not itself change cloud identity assignments or grants. Runtime error classification does not mutate a previously recorded package checksum.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L16-Q031",
-      "checkpointId": "CP5",
-      "caseId": "L16-C07",
-      "task": "remedy",
-      "caseContext": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
-      "difficulty": "foundational",
-      "question": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "The flag controls writes but a privileged background worker bypasses its check. What exposure contract should review address?",
       "options": [
         {
           "key": "A",
-          "text": "Add jitter to bounded backoff",
-          "rationale": "Spread retries to avoid synchronized load spikes. This directly addresses the constraint stated in this case."
+          "text": "All intended risky write paths honor the selected control",
+          "rationale": "A kill switch is incomplete when another required mutation path ignores it."
         },
         {
           "key": "B",
-          "text": "Use an idempotency mechanism for the payment operation",
-          "rationale": "Ambiguous outcomes require safe repeat semantics. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the background worker has a narrower deployment role",
+          "rationale": "Deployment authority does not establish that runtime business mutation checks actually consult the feature decision."
         },
         {
           "key": "C",
-          "text": "Use a circuit breaker with a recovery probe",
-          "rationale": "Persistent failures require limiting repeated dependency calls. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the public API unit test rejects writes",
+          "rationale": "A passing API test leaves the separate background mutation path unexercised under the kill switch."
+        },
+        {
+          "key": "D",
+          "text": "Only the public API response formatting",
+          "rationale": "Presentation of one endpoint does not control background execution mutations."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Spread retries to avoid synchronized load spikes. The selected answer is add jitter to bounded backoff.",
+      "explanation": "A passing API test leaves the separate background mutation path unexercised under the kill switch. Deployment authority does not establish that runtime business mutation checks actually consult the feature decision. A kill switch is incomplete when another required mutation path ignores it. Presentation of one endpoint does not control background execution mutations.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q032",
       "checkpointId": "CP5",
-      "caseId": "L16-C07",
-      "task": "diagnosis",
-      "caseContext": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage.",
       "objectiveIds": [
         "D3.4.5"
       ],
-      "difficulty": "foundational",
-      "question": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "applied",
+      "question": "A retry policy fits each individual timeout but total attempts exceed the caller deadline. What bound is missing?",
       "options": [
         {
           "key": "A",
-          "text": "Retries alone amplify sustained unavailability",
-          "rationale": "The application continues spending resources on known failures. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Only a unique name for each retry attempt",
+          "rationale": "Naming does not enforce cumulative execution time or cancellation of later attempts."
         },
         {
           "key": "B",
-          "text": "Identical retry timing coordinates the entire client population",
-          "rationale": "Recovery receives a concentrated surge. This directly addresses the constraint stated in this case."
+          "text": "Only a source branch protection rule",
+          "rationale": "Code review policy does not itself bound runtime dependency request latency."
         },
         {
           "key": "C",
-          "text": "Timeout does not prove the first operation failed",
-          "rationale": "The server may have committed before the response was lost. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "Only a maximum application artifact size",
+          "rationale": "Output storage size does not constrain live request retry duration."
+        },
+        {
+          "key": "D",
+          "text": "A combined retry and timeout budget for the whole operation",
+          "rationale": "Per-attempt limits do not automatically satisfy the end-to-end acceptable response deadline."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Recovery receives a concentrated surge. The selected answer is identical retry timing coordinates the entire client population.",
+      "explanation": "Per-attempt limits do not automatically satisfy the end-to-end acceptable response deadline. Output storage size does not constrain live request retry duration. Naming does not enforce cumulative execution time or cancellation of later attempts. Code review policy does not itself bound runtime dependency request latency.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q033",
-      "checkpointId": "CP5",
-      "caseId": "L16-C07",
-      "task": "verification",
-      "caseContext": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A learner can read flags but needs to change only the owned training store. Which permission request is most appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Repeating one payment identity creates one charge",
-          "rationale": "The evidence must include the ambiguous retry path. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "A shared production access key committed into YAML",
+          "rationale": "Persisting broad secret material in source abandons the intended scoped identity-based access."
         },
         {
           "key": "B",
-          "text": "Calls are curtailed while the breaker is open",
-          "rationale": "The evidence should show reduced failing dependency traffic. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Collection administrator in Azure DevOps",
+          "rationale": "A DevOps collection role does not directly authorize Azure configuration data writes."
         },
         {
           "key": "C",
-          "text": "Retry traffic is distributed rather than spiking in lockstep",
-          "rationale": "The measurement must observe aggregate timing. This directly addresses the constraint stated in this case."
+          "text": "The necessary data role scoped to that exact store",
+          "rationale": "The authority should match the required feature mutation and authorized disposable boundary."
+        },
+        {
+          "key": "D",
+          "text": "Subscription-wide Owner for every participant",
+          "rationale": "That grants unrelated administrative operations beyond the limited configuration exercise requirement."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The measurement must observe aggregate timing. The selected answer is retry traffic is distributed rather than spiking in lockstep.",
+      "explanation": "The authority should match the required feature mutation and authorized disposable boundary. That grants unrelated administrative operations beyond the limited configuration exercise requirement. A DevOps collection role does not directly authorize Azure configuration data writes. Persisting broad secret material in source abandons the intended scoped identity-based access.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L16-Q034",
-      "checkpointId": "CP5",
-      "caseId": "L16-C07",
-      "task": "safeguard",
-      "caseContext": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
       "difficulty": "applied",
-      "question": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The command updates the provider flag, while local test configuration stays unchanged. What should the result report distinguish?",
       "options": [
         {
           "key": "A",
-          "text": "Keep an overall retry and timeout budget",
-          "rationale": "Random delay should not create unbounded waiting. This directly addresses the constraint stated in this case."
+          "text": "A database migration completed implicitly",
+          "rationale": "Feature operations do not apply database schema programs or recovery procedures."
         },
         {
           "key": "B",
-          "text": "Persist and validate the idempotency key with operation state",
-          "rationale": "A transient client-only key cannot prevent duplicate server effects. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "A failed source build necessarily",
+          "rationale": "Different configuration sources do not establish that application compilation failed."
         },
         {
           "key": "C",
-          "text": "Define a safe failure or fallback experience",
-          "rationale": "Stopping calls still leaves user requests to handle. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
+          "text": "Actual provider control from separately tested local application behavior",
+          "rationale": "Both observations can be valid without establishing that the runtime consumes the remote value."
+        },
+        {
+          "key": "D",
+          "text": "A complete live feature integration automatically",
+          "rationale": "A provider value change cannot prove unconfigured application ingestion and refresh behavior."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Random delay should not create unbounded waiting. The selected answer is keep an overall retry and timeout budget.",
+      "explanation": "Both observations can be valid without establishing that the runtime consumes the remote value. A provider value change cannot prove unconfigured application ingestion and refresh behavior. Feature operations do not apply database schema programs or recovery procedures. Different configuration sources do not establish that application compilation failed.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q035",
       "checkpointId": "CP5",
-      "caseId": "L16-C07",
-      "task": "tradeoff",
-      "caseContext": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage.",
-      "objectiveIds": [
-        "D3.4.5"
-      ],
-      "difficulty": "advanced",
-      "question": "Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. The team selects this remedy: \"Add jitter to bounded backoff.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Jitter improves distribution rather than fixing capacity",
-          "rationale": "The backend still needs sufficient healthy throughput. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Idempotency records need lifecycle and conflict handling",
-          "rationale": "The same key cannot silently identify different operations. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Circuit breakers add states and recovery tuning",
-          "rationale": "Incorrect thresholds can reject healthy calls unnecessarily. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The backend still needs sufficient healthy throughput. The selected answer is jitter improves distribution rather than fixing capacity.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q036",
-      "checkpointId": "CP5",
-      "caseId": "L16-C08",
-      "task": "remedy",
-      "caseContext": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice.",
-      "objectiveIds": [
-        "D3.4.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Use an idempotency mechanism for the payment operation",
-          "rationale": "Ambiguous outcomes require safe repeat semantics. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Define a safe default and last-known-good policy",
-          "rationale": "Configuration failure should have deliberate exposure behavior. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Add jitter to bounded backoff",
-          "rationale": "Spread retries to avoid synchronized load spikes. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Ambiguous outcomes require safe repeat semantics. The selected answer is use an idempotency mechanism for the payment operation.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q037",
-      "checkpointId": "CP5",
-      "caseId": "L16-C08",
-      "task": "diagnosis",
-      "caseContext": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice.",
       "objectiveIds": [
         "D3.4.5"
       ],
       "difficulty": "applied",
-      "question": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A request times out after the server may have committed its mutation. What must safe retry design consider?",
       "options": [
         {
           "key": "A",
-          "text": "Identical retry timing coordinates the entire client population",
-          "rationale": "Recovery receives a concentrated surge. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "The second request is automatically a database rollback",
+          "rationale": "Repeating an operation does not inherently reverse the first committed mutation."
         },
         {
           "key": "B",
-          "text": "Timeout does not prove the first operation failed",
-          "rationale": "The server may have committed before the response was lost. This directly addresses the constraint stated in this case."
+          "text": "A timeout guarantees nothing was applied remotely",
+          "rationale": "The server can commit before the response is lost or delayed."
         },
         {
           "key": "C",
-          "text": "An unavailable configuration source creates an ambiguous decision",
-          "rationale": "The application needs a documented fallback. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The server may have committed before the response was lost. The selected answer is timeout does not prove the first operation failed.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q038",
-      "checkpointId": "CP5",
-      "caseId": "L16-C08",
-      "task": "verification",
-      "caseContext": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice.",
-      "objectiveIds": [
-        "D3.4.5"
-      ],
-      "difficulty": "applied",
-      "question": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The unvalidated feature remains within its safe exposure policy",
-          "rationale": "Test the outage rather than only healthy flag reads. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "The unknown outcome and an idempotency mechanism",
+          "rationale": "A missing response does not prove the first operation had no lasting side effect."
         },
         {
-          "key": "B",
-          "text": "Retry traffic is distributed rather than spiking in lockstep",
-          "rationale": "The measurement must observe aggregate timing. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Repeating one payment identity creates one charge",
-          "rationale": "The evidence must include the ambiguous retry path. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "The caller should remove all request identifiers",
+          "rationale": "Stable correlation or idempotency keys can help distinguish repeated attempts safely."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The evidence must include the ambiguous retry path. The selected answer is repeating one payment identity creates one charge.",
+      "explanation": "A missing response does not prove the first operation had no lasting side effect. The server can commit before the response is lost or delayed. Repeating an operation does not inherently reverse the first committed mutation. Stable correlation or idempotency keys can help distinguish repeated attempts safely.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Client: timeout\nServer: mutation may have committed\nRetry: same operation"
+      }
+    },
+    {
+      "id": "L16-Q036",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.4.5"
+      ],
+      "difficulty": "applied",
+      "question": "The dependency recovers, but the breaker never allows any probe after opening. What availability defect remains?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The policy cannot observe recovery and resume legitimate traffic",
+          "rationale": "A breaker needs a reviewed recovery mechanism rather than permanent suppression without reassessment."
+        },
+        {
+          "key": "B",
+          "text": "Force the breaker closed immediately after any timeout",
+          "rationale": "An unconditional reset can resume full pressure without establishing that the failing dependency recovered."
+        },
+        {
+          "key": "C",
+          "text": "Every request should be counted as successful while blocked",
+          "rationale": "Suppressing dependency execution does not prove business operations actually completed."
+        },
+        {
+          "key": "D",
+          "text": "The artifact version must be decremented automatically",
+          "rationale": "Runtime recovery policy does not require changing application package identity."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A breaker needs a reviewed recovery mechanism rather than permanent suppression without reassessment. Runtime recovery policy does not require changing application package identity. Suppressing dependency execution does not prove business operations actually completed. An unconditional reset can resume full pressure without establishing that the failing dependency recovered.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L16-Q037",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "applied",
+      "question": "A flag decision uses raw user email in retained telemetry to identify cohorts. What design improvement preserves useful exposure evidence?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Log every authentication token beside the email",
+          "rationale": "Sensitive credentials are unnecessary for recording a feature exposure decision."
+        },
+        {
+          "key": "B",
+          "text": "Use artifact size as the user identity",
+          "rationale": "Package metadata does not provide a meaningful stable feature targeting identity."
+        },
+        {
+          "key": "C",
+          "text": "Delete all decision outcomes and retain only the email",
+          "rationale": "That removes useful behavior evidence while preserving unnecessary identifying material."
+        },
+        {
+          "key": "D",
+          "text": "Use appropriate minimized identifiers under the evidence policy",
+          "rationale": "Targeting analysis should not unnecessarily retain personal values beyond the operational need."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Targeting analysis should not unnecessarily retain personal values beyond the operational need. Sensitive credentials are unnecessary for recording a feature exposure decision. That removes useful behavior evidence while preserving unnecessary identifying material. Package metadata does not provide a meaningful stable feature targeting identity.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q038",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "applied",
+      "question": "The test named DisabledFlagRejectsWritesWhileReadsRemainHealthy passes. Which claim should remain outside that observation unless separately tested?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The remote configuration store exported live values to the deployed app",
+          "rationale": "An in-process behavioral test does not establish remote ingestion or hosted configuration integration."
+        },
+        {
+          "key": "B",
+          "text": "The tested read path stayed healthy",
+          "rationale": "That is another asserted property of the named local execution case."
+        },
+        {
+          "key": "C",
+          "text": "The selected local configuration produced a passing result",
+          "rationale": "The actual test report can support its observed local outcome."
+        },
+        {
+          "key": "D",
+          "text": "The disabled test case rejected the write path",
+          "rationale": "That is part of the explicitly exercised behavioral case and assertions."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "An in-process behavioral test does not establish remote ingestion or hosted configuration integration. That is part of the explicitly exercised behavioral case and assertions. That is another asserted property of the named local execution case. The actual test report can support its observed local outcome.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L16-Q039",
       "checkpointId": "CP5",
-      "caseId": "L16-C08",
-      "task": "safeguard",
-      "caseContext": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice.",
       "objectiveIds": [
         "D3.4.5"
       ],
       "difficulty": "applied",
-      "question": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The application service uses both dependency retries and a circuit breaker during outages. What relationship should their composition preserve?",
       "options": [
         {
           "key": "A",
-          "text": "Persist and validate the idempotency key with operation state",
-          "rationale": "A transient client-only key cannot prevent duplicate server effects. This directly addresses the constraint stated in this case."
+          "text": "Retries should ignore every open breaker state",
+          "rationale": "Bypassing suppression can recreate the dependency overload the breaker was designed to reduce."
         },
         {
           "key": "B",
-          "text": "Avoid treating all fallback data as permanently fresh",
-          "rationale": "Stale configuration can retain outdated exposure decisions. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "The breaker should grant broader resource permissions on failure",
+          "rationale": "Dependency resilience does not authorize privilege escalation as an error response."
         },
         {
           "key": "C",
-          "text": "Keep an overall retry and timeout budget",
-          "rationale": "Random delay should not create unbounded waiting. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Bounded safe retries without defeating dependency failure suppression",
+          "rationale": "Combined policies should avoid uncontrolled calls when the breaker intends to limit pressure."
+        },
+        {
+          "key": "D",
+          "text": "Every retry must rebuild the application package",
+          "rationale": "Runtime request handling does not require generating new deployment binaries for each attempt."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A transient client-only key cannot prevent duplicate server effects. The selected answer is persist and validate the idempotency key with operation state.",
+      "explanation": "Combined policies should avoid uncontrolled calls when the breaker intends to limit pressure. Bypassing suppression can recreate the dependency overload the breaker was designed to reduce. Dependency resilience does not authorize privilege escalation as an error response. Runtime request handling does not require generating new deployment binaries for each attempt.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S3",
+        "S4"
       ]
     },
     {
       "id": "L16-Q040",
-      "checkpointId": "CP5",
-      "caseId": "L16-C08",
-      "task": "tradeoff",
-      "caseContext": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.4.5"
+        "D3.4.6"
       ],
-      "difficulty": "advanced",
-      "question": "Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. The team selects this remedy: \"Use an idempotency mechanism for the payment operation.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "The feature is disabled after a failed release, but instances continue accepting writes because refresh is stale. What acceptance evidence matters?",
       "options": [
         {
           "key": "A",
-          "text": "Safe defaults may reduce feature availability",
-          "rationale": "The tradeoff should match the feature's risk. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "Only the successful provider disable request",
+          "rationale": "A control operation can succeed while running consumers still use cached configuration."
         },
         {
           "key": "B",
-          "text": "Jitter improves distribution rather than fixing capacity",
-          "rationale": "The backend still needs sufficient healthy throughput. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint."
+          "text": "Only the JSON file creation date",
+          "rationale": "Local source metadata does not show current deployed request acceptance behavior."
         },
         {
           "key": "C",
-          "text": "Idempotency records need lifecycle and conflict handling",
-          "rationale": "The same key cannot silently identify different operations. This directly addresses the constraint stated in this case."
+          "text": "Only an earlier healthy read response",
+          "rationale": "A read probe cannot establish that the write capability is now disabled."
+        },
+        {
+          "key": "D",
+          "text": "Observed denied writes after the actual runtime refresh boundary",
+          "rationale": "Stored flag state alone does not establish the behavior currently serving requests."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The same key cannot silently identify different operations. The selected answer is idempotency records need lifecycle and conflict handling.",
+      "explanation": "Stored flag state alone does not establish the behavior currently serving requests. A control operation can succeed while running consumers still use cached configuration. Local source metadata does not show current deployed request acceptance behavior. A read probe cannot establish that the write capability is now disabled.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q041",
-      "checkpointId": "CP2",
-      "caseId": "L16-C09",
-      "task": "remedy",
-      "caseContext": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.4.5",
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "foundational",
-      "question": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "Three layers each make up to three total attempts for one logical write. What risk must the combined policy bound?",
       "options": [
         {
           "key": "A",
-          "text": "Use an idempotency mechanism for the payment operation",
-          "rationale": "Ambiguous outcomes require safe repeat semantics. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "A guaranteed reduction to zero calls on every failure",
+          "rationale": "Retry composition does not automatically supply a circuit breaker or universal suppression."
         },
         {
           "key": "B",
-          "text": "Define a safe default and last-known-good policy",
-          "rationale": "Configuration failure should have deliberate exposure behavior. This directly addresses the constraint stated in this case."
+          "text": "Only three total attempts regardless of layer composition",
+          "rationale": "That ignores multiplication when each layer independently repeats its downstream operation."
         },
         {
           "key": "C",
-          "text": "Remove obsolete flags and simplify the associated code paths",
-          "rationale": "Flags need a complete retirement lifecycle. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Configuration failure should have deliberate exposure behavior. The selected answer is define a safe default and last-known-good policy.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q042",
-      "checkpointId": "CP2",
-      "caseId": "L16-C09",
-      "task": "diagnosis",
-      "caseContext": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature.",
-      "objectiveIds": [
-        "D3.4.5",
-        "D3.4.6"
-      ],
-      "difficulty": "foundational",
-      "question": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Temporary rollout controls accumulated without cleanup",
-          "rationale": "The configuration state space has become unnecessary complexity. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Up to twenty-seven downstream attempts and repeated side effects",
+          "rationale": "Independent nested attempts can multiply rather than remain limited to one layer count."
         },
         {
-          "key": "B",
-          "text": "Timeout does not prove the first operation failed",
-          "rationale": "The server may have committed before the response was lost. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "An unavailable configuration source creates an ambiguous decision",
-          "rationale": "The application needs a documented fallback. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Automatic schema rollback after the ninth attempt",
+          "rationale": "Repeated calls do not imply a safe database reversal mechanism."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The application needs a documented fallback. The selected answer is an unavailable configuration source creates an ambiguous decision.",
+      "explanation": "Independent nested attempts can multiply rather than remain limited to one layer count. That ignores multiplication when each layer independently repeats its downstream operation. Retry composition does not automatically supply a circuit breaker or universal suppression. Repeated calls do not imply a safe database reversal mechanism.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Layer A: max 3 total attempts\nLayer B: max 3 total attempts per A\nLayer C: max 3 total attempts per B"
+      }
     },
     {
-      "id": "L16-Q043",
-      "checkpointId": "CP2",
-      "caseId": "L16-C09",
-      "task": "verification",
-      "caseContext": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature.",
+      "id": "L16-Q042",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.4.5",
         "D3.4.6"
       ],
-      "difficulty": "applied",
-      "question": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "advanced",
+      "question": "A risky write flag defaults off, but a missing value is interpreted as enabled by one client library. What must the rollout contract verify?",
       "options": [
         {
           "key": "A",
-          "text": "Repeating one payment identity creates one charge",
-          "rationale": "The evidence must include the ambiguous retry path. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "Only a successful provider list operation",
+          "rationale": "Inventory does not execute each application's fallback path when configuration is unavailable."
         },
         {
           "key": "B",
-          "text": "The unvalidated feature remains within its safe exposure policy",
-          "rationale": "Test the outage rather than only healthy flag reads. This directly addresses the constraint stated in this case."
+          "text": "Consistent explicit fallback semantics across actual consumers",
+          "rationale": "A configuration declaration is insufficient when different clients interpret missing values differently."
         },
         {
           "key": "C",
-          "text": "The supported behavior remains after obsolete branches are removed",
-          "rationale": "Cleanup needs behavioral regression evidence. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Only identical friendly flag names in documentation",
+          "rationale": "Shared spelling does not guarantee equivalent missing-value behavior in executable consumers."
+        },
+        {
+          "key": "D",
+          "text": "Only the maximum number of active source branches",
+          "rationale": "Branch count does not determine runtime feature decision semantics."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Test the outage rather than only healthy flag reads. The selected answer is the unvalidated feature remains within its safe exposure policy.",
+      "explanation": "A configuration declaration is insufficient when different clients interpret missing values differently. Shared spelling does not guarantee equivalent missing-value behavior in executable consumers. Inventory does not execute each application's fallback path when configuration is unavailable. Branch count does not determine runtime feature decision semantics.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q043",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.4.5"
+      ],
+      "difficulty": "advanced",
+      "question": "A payment request times out after commit and a retry uses a new idempotency key. What safety property has been lost?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The timeout proves the first attempt never committed",
+          "rationale": "A missing response cannot establish that remote side effects did not occur."
+        },
+        {
+          "key": "B",
+          "text": "The server cannot recognize the attempts as one logical operation",
+          "rationale": "Changing the deduplication identity can allow the repeated request to create another side effect."
+        },
+        {
+          "key": "C",
+          "text": "The retry becomes read-only because it has a key",
+          "rationale": "A request identifier does not alter the business mutation semantics."
+        },
+        {
+          "key": "D",
+          "text": "Every new key automatically reverses the previous committed payment",
+          "rationale": "Idempotency identity does not perform compensating financial operations or database reversal."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Changing the deduplication identity can allow the repeated request to create another side effect. Idempotency identity does not perform compensating financial operations or database reversal. A request identifier does not alter the business mutation semantics. A missing response cannot establish that remote side effects did not occur.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L16-Q044",
-      "checkpointId": "CP2",
-      "caseId": "L16-C09",
-      "task": "safeguard",
-      "caseContext": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.4.5",
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "applied",
-      "question": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "advanced",
+      "question": "A breaker probes recovery with a full production burst immediately after the open period. What should its recovery policy constrain?",
       "options": [
         {
           "key": "A",
-          "text": "Persist and validate the idempotency key with operation state",
-          "rationale": "A transient client-only key cannot prevent duplicate server effects. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "Only whether a single successful probe response can be logged",
+          "rationale": "A logged response without defined concurrency and transition rules does not bound the recovery traffic burst."
         },
         {
           "key": "B",
-          "text": "Avoid treating all fallback data as permanently fresh",
-          "rationale": "Stale configuration can retain outdated exposure decisions. This directly addresses the constraint stated in this case."
+          "text": "Limited half-open trial traffic and clear success/failure transitions",
+          "rationale": "Recovery needs controlled observation rather than immediately recreating the original overload pressure."
         },
         {
           "key": "C",
-          "text": "Check consumers and configuration references before deleting flags",
-          "rationale": "A shared flag may still control another application. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the open-state timer has expired",
+          "rationale": "Time passage permits a controlled probe but does not establish that full production traffic is safe."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the breaker has a nonzero wait duration",
+          "rationale": "Waiting alone does not constrain how much trial traffic is sent when the recovery period begins."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Stale configuration can retain outdated exposure decisions. The selected answer is avoid treating all fallback data as permanently fresh.",
+      "explanation": "Time passage permits a controlled probe but does not establish that full production traffic is safe. Recovery needs controlled observation rather than immediately recreating the original overload pressure. Waiting alone does not constrain how much trial traffic is sent when the recovery period begins. A logged response without defined concurrency and transition rules does not bound the recovery traffic burst.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L16-Q045",
-      "checkpointId": "CP2",
-      "caseId": "L16-C09",
-      "task": "tradeoff",
-      "caseContext": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.4.5",
         "D3.4.6"
       ],
       "difficulty": "advanced",
-      "question": "Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. The team selects this remedy: \"Define a safe default and last-known-good policy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Production instances refresh flags at different times, and a kill switch must stop writes within a defined window. Which acceptance plan fits?",
       "options": [
         {
           "key": "A",
-          "text": "Flag removal is a code and configuration change",
-          "rationale": "It deserves the normal review and release process. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint."
+          "text": "Declare immediate global success from one stored disabled value",
+          "rationale": "One service value does not establish every actual consumer stopped risky behavior."
         },
         {
           "key": "B",
-          "text": "Idempotency records need lifecycle and conflict handling",
-          "rationale": "The same key cannot silently identify different operations. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint."
+          "text": "Remove instance identity from all evidence and infer consistency",
+          "rationale": "Losing correlation prevents checking the required per-instance propagation boundary."
         },
         {
           "key": "C",
-          "text": "Safe defaults may reduce feature availability",
-          "rationale": "The tradeoff should match the feature's risk. This directly addresses the constraint stated in this case."
+          "text": "Increase the allowed window silently whenever an instance is stale",
+          "rationale": "Changing the objective to fit failure abandons the reviewed operational requirement."
+        },
+        {
+          "key": "D",
+          "text": "Measure per-instance effective behavior within the bounded propagation objective",
+          "rationale": "A provider update is only one part of the complete runtime exposure transition."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A provider update is only one part of the complete runtime exposure transition. One service value does not establish every actual consumer stopped risky behavior. Losing correlation prevents checking the required per-instance propagation boundary. Changing the objective to fit failure abandons the reviewed operational requirement.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Kill-switch objective: all instances stop writes within window\nInstance A: refreshed\nInstance B: stale enabled cache"
+      }
+    },
+    {
+      "id": "L16-Q046",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.4.6"
+      ],
+      "difficulty": "advanced",
+      "question": "A temporary role assignment is requested at store scope, but the resulting grant is subscription-wide. What should validation do despite successful feature writes?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retain the grant indefinitely to avoid propagation delays",
+          "rationale": "Convenience does not justify broader persistent authority than the approved exercise requires."
+        },
+        {
+          "key": "B",
+          "text": "Change the ownership journal to claim the whole subscription",
+          "rationale": "Editing ownership evidence cannot authorize adopting unrelated existing resource boundaries."
+        },
+        {
+          "key": "C",
+          "text": "Reject the overbroad scope and reconcile the intended assignment",
+          "rationale": "Operational success does not satisfy the separate least-privilege authorization boundary."
+        },
+        {
+          "key": "D",
+          "text": "Pass because the feature write worked",
+          "rationale": "Successful execution does not establish that its effective permissions are appropriately limited."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The tradeoff should match the feature's risk. The selected answer is safe defaults may reduce feature availability.",
+      "explanation": "Operational success does not satisfy the separate least-privilege authorization boundary. Successful execution does not establish that its effective permissions are appropriately limited. Editing ownership evidence cannot authorize adopting unrelated existing resource boundaries. Convenience does not justify broader persistent authority than the approved exercise requires.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Requested scope: exact App Configuration store\nActual role assignment scope: subscription"
+      }
     },
     {
-      "id": "L16-Q046",
-      "checkpointId": "CP1",
-      "caseId": "L16-C10",
-      "task": "remedy",
-      "caseContext": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns.",
+      "id": "L16-Q047",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.4.6"
+        "D3.4.5"
       ],
-      "difficulty": "foundational",
-      "question": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "A transient dependency outage triggers retries while requests continue arriving faster than recovery capacity. Which combined concern needs review?",
       "options": [
         {
           "key": "A",
-          "text": "Remove obsolete flags and simplify the associated code paths",
-          "rationale": "Flags need a complete retirement lifecycle. This directly addresses the constraint stated in this case."
+          "text": "Retry amplification, backoff, load limits and the end-to-end deadline",
+          "rationale": "Resilience must control added pressure rather than merely increase per-request attempt counts."
         },
         {
           "key": "B",
-          "text": "Guard exposure with a disabled release feature flag",
-          "rationale": "Deployment and user exposure can be controlled separately. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
+          "text": "Only the last successful package version",
+          "rationale": "Artifact history does not quantify current retry pressure and dependency recovery capacity."
         },
         {
           "key": "C",
-          "text": "Define a safe default and last-known-good policy",
-          "rationale": "Configuration failure should have deliberate exposure behavior. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "Only whether a local policy file says reliable:true",
+          "rationale": "A declaration does not implement measured safe behavior under accumulating live load."
+        },
+        {
+          "key": "D",
+          "text": "Only the maximum attempts configured in one selected retry layer",
+          "rationale": "One layer count does not establish aggregate retry pressure or the total caller deadline across the system."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Flags need a complete retirement lifecycle. The selected answer is remove obsolete flags and simplify the associated code paths.",
+      "explanation": "Resilience must control added pressure rather than merely increase per-request attempt counts. One layer count does not establish aggregate retry pressure or the total caller deadline across the system. Artifact history does not quantify current retry pressure and dependency recovery capacity. A declaration does not implement measured safe behavior under accumulating live load.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q047",
-      "checkpointId": "CP1",
-      "caseId": "L16-C10",
-      "task": "diagnosis",
-      "caseContext": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "applied",
-      "question": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "An unavailable configuration source creates an ambiguous decision",
-          "rationale": "The application needs a documented fallback. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Temporary rollout controls accumulated without cleanup",
-          "rationale": "The configuration state space has become unnecessary complexity. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Code presence does not require immediate feature availability",
-          "rationale": "The application can evaluate a release-time switch. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The configuration state space has become unnecessary complexity. The selected answer is temporary rollout controls accumulated without cleanup.",
-      "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L16-Q048",
-      "checkpointId": "CP1",
-      "caseId": "L16-C10",
-      "task": "verification",
-      "caseContext": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.4.6"
       ],
-      "difficulty": "applied",
-      "question": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "advanced",
+      "question": "The disabled-feature test mocks the entire request handler to always reject writes. What evidence would better establish the actual capability boundary?",
       "options": [
         {
           "key": "A",
-          "text": "The deployed feature stays hidden until the flag is enabled",
-          "rationale": "The test distinguishes deployment from exposure. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
+          "text": "Exercise the real handler under enabled and disabled configurations",
+          "rationale": "A predetermined substitute response cannot prove the actual application feature logic controls behavior."
         },
         {
           "key": "B",
-          "text": "The unvalidated feature remains within its safe exposure policy",
-          "rationale": "Test the outage rather than only healthy flag reads. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "Rename the mock to production-handler",
+          "rationale": "A friendly label cannot make a test double establish real application behavior."
         },
         {
           "key": "C",
-          "text": "The supported behavior remains after obsolete branches are removed",
-          "rationale": "Cleanup needs behavioral regression evidence. This directly addresses the constraint stated in this case."
+          "text": "Infer success from remote store role assignments",
+          "rationale": "Data authorization does not execute or verify the local handler feature decision."
+        },
+        {
+          "key": "D",
+          "text": "Add more identical mocked rejected responses",
+          "rationale": "Repeating a fixed substitute does not exercise the actual intended implementation path."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Cleanup needs behavioral regression evidence. The selected answer is the supported behavior remains after obsolete branches are removed.",
+      "explanation": "A predetermined substitute response cannot prove the actual application feature logic controls behavior. Repeating a fixed substitute does not exercise the actual intended implementation path. A friendly label cannot make a test double establish real application behavior. Data authorization does not execute or verify the local handler feature decision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L16-Q049",
       "checkpointId": "CP1",
-      "caseId": "L16-C10",
-      "task": "safeguard",
-      "caseContext": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns.",
-      "objectiveIds": [
-        "D3.4.6"
-      ],
-      "difficulty": "applied",
-      "question": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Avoid treating all fallback data as permanently fresh",
-          "rationale": "Stale configuration can retain outdated exposure decisions. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Check consumers and configuration references before deleting flags",
-          "rationale": "A shared flag may still control another application. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Validate both flag states before launch",
-          "rationale": "Disabled paths can still contain defects. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "A shared flag may still control another application. The selected answer is check consumers and configuration references before deleting flags.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L16-Q050",
-      "checkpointId": "CP1",
-      "caseId": "L16-C10",
-      "task": "tradeoff",
-      "caseContext": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns.",
       "objectiveIds": [
         "D3.4.6"
       ],
       "difficulty": "advanced",
-      "question": "Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. The team selects this remedy: \"Remove obsolete flags and simplify the associated code paths.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A long-lived flag interacts with a second flag to create four behavior combinations, but only one is tested. What maintenance risk should review address?",
       "options": [
         {
           "key": "A",
-          "text": "Safe defaults may reduce feature availability",
-          "rationale": "The tradeoff should match the feature's risk. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint."
+          "text": "Only the fact that each switch passed its standalone unit test",
+          "rationale": "Individually healthy flags do not establish behavior when their conditional execution paths interact."
         },
         {
           "key": "B",
-          "text": "Flag removal is a code and configuration change",
-          "rationale": "It deserves the normal review and release process. This directly addresses the constraint stated in this case."
+          "text": "Untested interaction states and accumulated conditional complexity",
+          "rationale": "Independent switches can combine into behavior paths beyond a single healthy test case."
         },
         {
           "key": "C",
-          "text": "Feature flags need owners and removal dates",
-          "rationale": "Temporary flags create lasting branching complexity. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint."
+          "text": "Flags automatically remove all possible regression paths",
+          "rationale": "Runtime configuration can introduce additional combinations rather than eliminate testing obligations."
+        },
+        {
+          "key": "D",
+          "text": "Only the count of YAML comment lines",
+          "rationale": "Documentation size does not establish executable interaction coverage across configuration combinations."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "It deserves the normal review and release process. The selected answer is flag removal is a code and configuration change.",
+      "explanation": "Individually healthy flags do not establish behavior when their conditional execution paths interact. Independent switches can combine into behavior paths beyond a single healthy test case. Runtime configuration can introduce additional combinations rather than eliminate testing obligations. Documentation size does not establish executable interaction coverage across configuration combinations.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L16-Q050",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.4.5"
+      ],
+      "difficulty": "advanced",
+      "question": "A release disables risky writes while dependency retries continue in background tasks, and telemetry still shows mutations. What must incident recovery verify?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only that a breaker configuration file exists",
+          "rationale": "A declaration does not prove the running tasks actually suppress unsafe operations."
+        },
+        {
+          "key": "B",
+          "text": "Every relevant mutation path and effective runtime policy stopped the risk",
+          "rationale": "One flag value cannot prove all background work and retry behavior honor the containment boundary."
+        },
+        {
+          "key": "C",
+          "text": "Only the latest successful source build",
+          "rationale": "Compilation evidence does not establish current runtime containment of ongoing side effects."
+        },
+        {
+          "key": "D",
+          "text": "Only the stored disabled value because background behavior is unrelated",
+          "rationale": "Background mutation can continue the very impact the operational kill switch should contain."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "One flag value cannot prove all background work and retry behavior honor the containment boundary. Background mutation can continue the very impact the operational kill switch should contain. Compilation evidence does not establish current runtime containment of ongoing side effects. A declaration does not prove the running tasks actually suppress unsafe operations.",
+      "sourceIds": [
+        "S3",
+        "S4"
       ]
     }
   ]

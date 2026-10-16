@@ -8,698 +8,798 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which next change most directly satisfies the stated requirement?
+A repository repeatedly commits large binary artwork. Ordinary clones download large historical blobs. Which mechanism is designed to separate those assets from normal Git objects?
 
-- **A. Use Git LFS for supported large binary assets** **Correct.** LFS separates large content from ordinary Git objects. This directly addresses the constraint stated in this case.
-- **B. Install and configure the LFS client then fetch content** Pointers need LFS tooling to resolve actual objects. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **C. Grant the pipeline identity scoped access to the shared repository** Cross-repository consumption requires explicit authorization. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
+- **A. Git Large File Storage with the relevant tracking patterns** **Correct.** LFS keeps pointer metadata in Git while storing large file content separately.
+- **B. Git tags applied to each binary revision** Tags identify revisions but do not change how binary blobs are stored.
+- **C. A CODEOWNERS rule for the artwork directory** Ownership routes review but does not move binary content out of Git objects.
+- **D. A longer release-artifact retention period** Pipeline retention does not change the source repository's historical object storage.
 
-**Explanation:** LFS separates large content from ordinary Git objects. The selected answer is use Git LFS for supported large binary assets.
+**Explanation:** LFS keeps pointer metadata in Git while storing large file content separately. Tags identify revisions but do not change how binary blobs are stored. Ownership routes review but does not move binary content out of Git objects. Pipeline retention does not change the source repository's historical object storage.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q002
 
 Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which explanation best accounts for the behavior or constraint described?
+A new clone contains a small text pointer where a usable image is expected. The machine has no LFS client. What is the targeted repair?
 
-- **A. Source access does not imply access to another repository** Private resource boundaries are evaluated independently. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **B. Binary revisions inflate repository object history** **Correct.** Normal Git stores versions that clones must retrieve. This directly addresses the constraint stated in this case.
-- **C. The checkout retrieved pointer metadata without LFS objects** The repository reference is not the binary payload. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
+- **A. Remove the pointer's object ID so the editor treats it as an image** Deleting metadata destroys the retrieval reference rather than fetching content.
+- **B. Create a lightweight tag for the pointer commit** A tag does not retrieve the LFS object into the working tree.
+- **C. Install the supported LFS client and retrieve the asset objects** **Correct.** The checkout needs the tooling that resolves pointers into actual content.
+- **D. Rename the pointer file to a different image extension** Changing its name cannot turn metadata into the missing binary bytes.
 
-**Explanation:** Normal Git stores versions that clones must retrieve. The selected answer is binary revisions inflate repository object history.
+**Explanation:** Deleting metadata destroys the retrieval reference rather than fetching content. A tag does not retrieve the LFS object into the working tree. The checkout needs the tooling that resolves pointers into actual content. Changing its name cannot turn metadata into the missing binary bytes.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q003
 
-Applied · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which observation provides the strongest evidence that the requested result was achieved?
+Developers use one service in a very large monorepo. What problem can sparse checkout directly reduce?
 
-- **A. The expected binary content is present after LFS retrieval** Usable content verifies the complete asset checkout. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **B. The pipeline fetches the shared revision without a broad token** The result should prove both access and limited scope. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **C. A new asset commit stores an LFS pointer** **Correct.** The pointer demonstrates the configured content handling. This directly addresses the constraint stated in this case.
+- **A. The amount of repository content populated in the working tree** **Correct.** A narrower checkout can omit unrelated paths from local working files.
+- **B. The need to review changes before merging** Checkout scope does not replace review governance.
+- **C. Every remote object's historical storage automatically** Working-tree sparsity alone does not rewrite the remote history.
+- **D. The requirement for access to private source** Narrow content selection does not bypass repository authorization.
 
-**Explanation:** The pointer demonstrates the configured content handling. The selected answer is a new asset commit stores an LFS pointer.
+**Explanation:** A narrower checkout can omit unrelated paths from local working files. Checkout scope does not replace review governance. Working-tree sparsity alone does not rewrite the remote history. Narrow content selection does not bypass repository authorization.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar)
 
 ## L05-Q004
 
-Applied · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which execution safeguard most directly addresses the risk in this case?
+What is normally stored in Git for an asset correctly tracked by Git LFS?
 
-- **A. Verify LFS access separately from repository access** Object storage permissions can differ from Git permissions. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **B. Authorize the exact repository and review referenced content** Shared code becomes part of the execution trust chain. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **C. Confirm the remote supports LFS and account for quotas** **Correct.** Tracking patterns alone do not provide hosted storage. This directly addresses the constraint stated in this case.
+- **A. Only the asset's filename with no content identity** A proper pointer includes object identity and size metadata.
+- **B. A generated executable that downloads arbitrary code during checkout** The pointer is metadata rather than an executable application bootstrap.
+- **C. A pointer describing the associated LFS object** **Correct.** The actual large file content is retrieved through the LFS storage mechanism.
+- **D. Every previous binary version concatenated into the current file** LFS does not use the working-tree pointer as an archive of all versions.
 
-**Explanation:** Tracking patterns alone do not provide hosted storage. The selected answer is confirm the remote supports LFS and account for quotas.
+**Explanation:** A proper pointer includes object identity and size metadata. The pointer is metadata rather than an executable application bootstrap. The actual large file content is retrieved through the LFS storage mechanism. LFS does not use the working-tree pointer as an archive of all versions.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q005
 
-Advanced · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. The team selects this remedy: "Use Git LFS for supported large binary assets." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Which clue distinguishes an LFS pointer from the actual image content expected by an editor?
 
-- **A. Shared repository availability can affect multiple consumers** Version pins reduce drift but do not remove dependency risk. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **B. Existing history needs separate migration** **Correct.** Adding tracking does not remove previously committed blobs. This directly addresses the constraint stated in this case.
-- **C. Offline work depends on locally available LFS objects** A pointer alone cannot reconstruct missing binary data. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
+```text
+version https://git-lfs.github.com/spec/v1
+oid sha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+size 5278123
+```
 
-**Explanation:** Adding tracking does not remove previously committed blobs. The selected answer is existing history needs separate migration.
+- **A. The file contains LFS version object-identity and size fields** **Correct.** These metadata lines describe another stored object rather than the image bytes.
+- **B. The image has a filename ending in png** An extension alone does not establish what bytes the file contains.
+- **C. The commit has an associated pull request** Review association does not identify whether a file is a pointer.
+- **D. The repository has an origin remote configured** Remote existence does not prove that LFS content was retrieved.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** These metadata lines describe another stored object rather than the image bytes. An extension alone does not establish what bytes the file contains. Review association does not identify whether a file is a pointer. Remote existence does not prove that LFS content was retrieved.
+
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q006
 
-Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which next change most directly satisfies the stated requirement?
+A developer wants a sparse working tree and reduced initial blob transfer where the server supports partial clone. Which combination addresses both concerns?
 
-- **A. Evaluate sparse checkout and Scalar-supported repository maintenance** Large-repository tooling reduces unnecessary local work. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **B. Use Git LFS for supported large binary assets** LFS separates large content from ordinary Git objects. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. Install and configure the LFS client then fetch content** **Correct.** Pointers need LFS tooling to resolve actual objects. This directly addresses the constraint stated in this case.
+```bash
+git clone --filter=blob:none --sparse https://example.invalid/team/monorepo.git
+git sparse-checkout set services/api shared/contracts
+```
 
-**Explanation:** Pointers need LFS tooling to resolve actual objects. The selected answer is install and configure the LFS client then fetch content.
+- **A. Use supported partial-clone filtering together with sparse checkout** **Correct.** The mechanisms address object transfer and populated working paths separately.
+- **B. Use sparse checkout alone and assume no unselected blobs can ever exist locally** Working-tree sparsity and object availability are different concepts.
+- **C. Delete unrelated files after a full clone and assume transfer was avoided** Postclone deletion cannot undo bytes already downloaded.
+- **D. Apply a release tag before cloning and assume it removes all historical objects** A tag identifies a revision rather than defining a universal transfer filter.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** The mechanisms address object transfer and populated working paths separately. Working-tree sparsity and object availability are different concepts. Postclone deletion cannot undo bytes already downloaded. A tag identifies a revision rather than defining a universal transfer filter.
+
+**Sources:** [S4](https://git-scm.com/docs/git-clone)
 
 ## L05-Q007
 
-Applied · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which explanation best accounts for the behavior or constraint described?
+A team adds an LFS tracking rule today. Why does the repository remain large from older committed binaries?
 
-- **A. The working tree includes more content than the task needs** Checkout scope can dominate local resource consumption. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **B. Binary revisions inflate repository object history** Normal Git stores versions that clones must retrieve. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. The checkout retrieved pointer metadata without LFS objects** **Correct.** The repository reference is not the binary payload. This directly addresses the constraint stated in this case.
+- **A. The rule applies only when the repository has no tags** Release tags do not universally prevent future LFS tracking.
+- **B. Every LFS pointer stores another complete copy of the old binary** The pointer itself is small metadata, not the full large asset.
+- **C. Existing historical blobs are not automatically rewritten by adding a rule** **Correct.** Future tracking and historical migration are separate changes.
+- **D. LFS requires deleting all branches before any file can be tracked** Branch deletion is not a normal prerequisite for adding tracking rules.
 
-**Explanation:** The repository reference is not the binary payload. The selected answer is the checkout retrieved pointer metadata without LFS objects.
+**Explanation:** Release tags do not universally prevent future LFS tracking. The pointer itself is small metadata, not the full large asset. Future tracking and historical migration are separate changes. Branch deletion is not a normal prerequisite for adding tracking rules.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q008
 
-Applied · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which observation provides the strongest evidence that the requested result was achieved?
+After repairing LFS setup, what should a functional checkout check verify?
 
-- **A. The required service is available with a smaller working tree** The measurement must include usability and local overhead. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **B. A new asset commit stores an LFS pointer** The pointer demonstrates the configured content handling. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. The expected binary content is present after LFS retrieval** **Correct.** Usable content verifies the complete asset checkout. This directly addresses the constraint stated in this case.
+- **A. Only that the current branch name matches the asset folder** Branch naming does not verify retrieved binary bytes.
+- **B. Only that the repository log lists the asset commit** History presence does not establish local LFS object availability.
+- **C. The expected asset content is usable and corresponds to the intended object** **Correct.** A successful Git clone message alone does not establish the binary content arrived.
+- **D. Only that the pointer's text is under one kilobyte** A small pointer is expected before hydration and does not prove usable content.
 
-**Explanation:** Usable content verifies the complete asset checkout. The selected answer is the expected binary content is present after LFS retrieval.
+**Explanation:** Branch naming does not verify retrieved binary bytes. History presence does not establish local LFS object availability. A successful Git clone message alone does not establish the binary content arrived. A small pointer is expected before hydration and does not prove usable content.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q009
 
-Applied · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which execution safeguard most directly addresses the risk in this case?
+A sparse checkout builds incorrectly because a shared project was omitted. What should the team adjust?
 
-- **A. Confirm the remote supports LFS and account for quotas** Tracking patterns alone do not provide hosted storage. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **B. Verify LFS access separately from repository access** **Correct.** Object storage permissions can differ from Git permissions. This directly addresses the constraint stated in this case.
-- **C. Test cross-service build dependencies before narrowing checkout** Sparse content can omit inputs required by tooling. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
+- **A. Remove the missing project reference without checking its functionality** Changing the application contract is not a safe checkout optimization.
+- **B. Include the paths required by the service's actual build dependency graph** **Correct.** A smaller working tree must still contain required inputs.
+- **C. Disable the compiler's missing-project errors** Ignoring a missing dependency does not produce a correct build.
+- **D. Commit copied binaries from a developer's old output folder** That substitutes uncontrolled build products for declared source dependencies.
 
-**Explanation:** Object storage permissions can differ from Git permissions. The selected answer is verify LFS access separately from repository access.
+**Explanation:** Changing the application contract is not a safe checkout optimization. A smaller working tree must still contain required inputs. Ignoring a missing dependency does not produce a correct build. That substitutes uncontrolled build products for declared source dependencies.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar)
 
 ## L05-Q010
 
-Advanced · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. The team selects this remedy: "Install and configure the LFS client then fetch content." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Which repository file should be committed so collaborators use the agreed LFS tracking patterns for matching paths?
 
-- **A. Existing history needs separate migration** Adding tracking does not remove previously committed blobs. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **B. Offline work depends on locally available LFS objects** **Correct.** A pointer alone cannot reconstruct missing binary data. This directly addresses the constraint stated in this case.
-- **C. Optimization cannot remove genuine cross-repository dependencies** Some tasks still need broader source availability. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
+- **A. .gitattributes with the intended LFS filters** **Correct.** Tracking attributes need to travel with the repository's source configuration.
+- **B. Only the developer's private shell history** Private history does not configure other clones.
+- **C. Only a local editor workspace preference** An editor preference is not the shared Git attribute contract.
+- **D. Only an entry in .gitignore for the already tracked asset** Ignoring a path does not establish its LFS content filters.
 
-**Explanation:** A pointer alone cannot reconstruct missing binary data. The selected answer is offline work depends on locally available LFS objects.
+**Explanation:** Tracking attributes need to travel with the repository's source configuration. Private history does not configure other clones. An editor preference is not the shared Git attribute contract. Ignoring a path does not establish its LFS content filters.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q011
 
-Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which next change most directly satisfies the stated requirement?
+A custom LFS endpoint returns 403 while ordinary Git fetch succeeds. What should be inspected before replacing the credential with an administrator token?
 
-- **A. Install and configure the LFS client then fetch content** Pointers need LFS tooling to resolve actual objects. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **B. Evaluate sparse checkout and Scalar-supported repository maintenance** **Correct.** Large-repository tooling reduces unnecessary local work. This directly addresses the constraint stated in this case.
-- **C. Reference a governed shared component at a deliberate version** A maintained shared source reduces unmanaged copy divergence. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
+- **A. Only the ordinary Git remote credential that already fetched successfully** The LFS endpoint can use a separate content authorization path from ordinary Git transfer.
+- **B. Only the LFS object ID and local file extension** Content identity and naming do not diagnose why the endpoint denied the authorized operation.
+- **C. Only whether the branch has a successful build** Build status does not establish the content endpoint permissions needed for LFS retrieval.
+- **D. The configured LFS endpoint and its required scoped authorization** **Correct.** Git object retrieval and the configured content endpoint can fail at different access boundaries.
 
-**Explanation:** Large-repository tooling reduces unnecessary local work. The selected answer is evaluate sparse checkout and Scalar-supported repository maintenance.
+**Explanation:** The LFS endpoint can use a separate content authorization path from ordinary Git transfer. Content identity and naming do not diagnose why the endpoint denied the authorized operation. Build status does not establish the content endpoint permissions needed for LFS retrieval. Git object retrieval and the configured content endpoint can fail at different access boundaries.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q012
 
 Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which explanation best accounts for the behavior or constraint described?
+Why should large-repository maintenance be evaluated separately from LFS tracking?
 
-- **A. The working tree includes more content than the task needs** **Correct.** Checkout scope can dominate local resource consumption. This directly addresses the constraint stated in this case.
-- **B. Independent copies no longer share an update mechanism** Copying creates separate maintenance lifecycles. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **C. The checkout retrieved pointer metadata without LFS objects** The repository reference is not the binary payload. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
+- **A. The two techniques require contradictory repository permission models** Their purposes differ without requiring an inherent authorization conflict.
+- **B. Repository maintenance and large-content storage address different sources of overhead** **Correct.** One improves repository operations while the other changes handling of selected large files.
+- **C. Scalar automatically converts every binary to an LFS pointer** Repository management does not imply that content migration.
+- **D. LFS makes every Git history operation constant time** Large-file separation does not eliminate all repository-scale costs.
 
-**Explanation:** Checkout scope can dominate local resource consumption. The selected answer is the working tree includes more content than the task needs.
+**Explanation:** Their purposes differ without requiring an inherent authorization conflict. One improves repository operations while the other changes handling of selected large files. Repository management does not imply that content migration. Large-file separation does not eliminate all repository-scale costs.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar)
 
 ## L05-Q013
 
-Applied · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which observation provides the strongest evidence that the requested result was achieved?
+The team must reduce old binary history, retain current assets, and avoid collaborators reintroducing the old graph. Which migration plan is appropriate?
 
-- **A. The required service is available with a smaller working tree** **Correct.** The measurement must include usability and local overhead. This directly addresses the constraint stated in this case.
-- **B. Consumers report the intended shared component revision** Version evidence makes cross-repository adoption traceable. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **C. The expected binary content is present after LFS retrieval** Usable content verifies the complete asset checkout. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
+- **A. Rewrite the server branch silently while collaborators continue pushing old references** Uncoordinated old histories can restore the content graph the migration intended to replace.
+- **B. Back up and test the history conversion, coordinate affected references and clones, then verify LFS objects and fresh checkout behavior** **Correct.** History rewriting and remote object availability both need a controlled transition.
+- **C. Add a future LFS pattern and declare all old history already migrated** A new attribute rule does not rewrite previously stored blobs.
+- **D. Delete every local artwork file and ask Git to infer the missing contents later** Removing working files does not provide safe historical conversion or object recovery.
 
-**Explanation:** The measurement must include usability and local overhead. The selected answer is the required service is available with a smaller working tree.
+**Explanation:** Uncoordinated old histories can restore the content graph the migration intended to replace. History rewriting and remote object availability both need a controlled transition. A new attribute rule does not rewrite previously stored blobs. Removing working files does not provide safe historical conversion or object recovery.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q014
 
-Applied · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which execution safeguard most directly addresses the risk in this case?
+Learners need an offline demonstration using selected LFS assets, but storage and bandwidth are limited. Which preparation meets both constraints?
 
-- **A. Review shared changes before advancing consumer references** One central mistake can affect many dependent repositories. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **B. Verify LFS access separately from repository access** Object storage permissions can differ from Git permissions. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **C. Test cross-service build dependencies before narrowing checkout** **Correct.** Sparse content can omit inputs required by tooling. This directly addresses the constraint stated in this case.
+- **A. Remove all tracking rules before going offline** Changing attributes does not download unavailable asset content.
+- **B. Retrieve the required versions while online, verify their local availability, and document which assets are intentionally excluded** **Correct.** Pointers alone cannot supply missing offline bytes, while selecting required content controls resource use.
+- **C. Clone only the pointer metadata and assume the offline client can reconstruct the image** A content hash is not a reversible encoding of the missing binary.
+- **D. Fetch every historical asset version regardless of the exercise scope** That ignores the explicit storage and transfer budget.
 
-**Explanation:** Sparse content can omit inputs required by tooling. The selected answer is test cross-service build dependencies before narrowing checkout.
+**Explanation:** Changing attributes does not download unavailable asset content. Pointers alone cannot supply missing offline bytes, while selecting required content controls resource use. A content hash is not a reversible encoding of the missing binary. That ignores the explicit storage and transfer budget.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q015
 
-Advanced · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. The team selects this remedy: "Evaluate sparse checkout and Scalar-supported repository maintenance." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A GitHub support analyst must label, assign, and manage issues without pushing code. Which standard organization-repository role is designed for this responsibility?
 
-- **A. Offline work depends on locally available LFS objects** A pointer alone cannot reconstruct missing binary data. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint.
-- **B. Optimization cannot remove genuine cross-repository dependencies** **Correct.** Some tasks still need broader source availability. This directly addresses the constraint stated in this case.
-- **C. Central sharing creates a dependency and coordination point** Consumers need versioning and compatibility policies. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
+- **A. Triage** **Correct.** The Triage role supports issue and pull request management without granting code-write authority.
+- **B. Read** Read permits inspection but does not supply the requested issue-management capabilities.
+- **C. Write** Write adds code-push authority beyond the stated support responsibility.
+- **D. Maintain** Maintain adds repository management authority beyond the narrower issue-triage task.
 
-**Explanation:** Some tasks still need broader source availability. The selected answer is optimization cannot remove genuine cross-repository dependencies.
+**Explanation:** The Triage role supports issue and pull request management without granting code-write authority. Read permits inspection but does not supply the requested issue-management capabilities. Write adds code-push authority beyond the stated support responsibility. Maintain adds repository management authority beyond the narrower issue-triage task.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q016
 
-Foundational · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
 
-Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which next change most directly satisfies the stated requirement?
+Twenty repositories copy one security-sensitive build script and now apply different fixes. Which change reduces unmanaged copy drift?
 
-- **A. Reference a governed shared component at a deliberate version** **Correct.** A maintained shared source reduces unmanaged copy divergence. This directly addresses the constraint stated in this case.
-- **B. Assign the narrow repository role needed for documentation review** Deletion rights exceed the required collaboration task. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **C. Evaluate sparse checkout and Scalar-supported repository maintenance** Large-repository tooling reduces unnecessary local work. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
+- **A. Consume a governed shared component at an intentional version** **Correct.** The shared implementation provides a controlled update path for consumers.
+- **B. Copy the newest file manually into a few selected repositories** The remaining independent copies still have separate maintenance lifecycles.
+- **C. Rename every copied script to the same filename** Equal names do not establish equal content or a common update mechanism.
+- **D. Delete the script's version information so consumers appear uniform** Removing identity makes drift harder to detect rather than fixing it.
 
-**Explanation:** A maintained shared source reduces unmanaged copy divergence. The selected answer is reference a governed shared component at a deliberate version.
+**Explanation:** The shared implementation provides a controlled update path for consumers. The remaining independent copies still have separate maintenance lifecycles. Equal names do not establish equal content or a common update mechanism. Removing identity makes drift harder to detect rather than fixing it.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar)
 
 ## L05-Q017
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which explanation best accounts for the behavior or constraint described?
+A contractor needs to review one private repository but currently has permission to delete it. What is the appropriate access correction?
 
-- **A. Independent copies no longer share an update mechanism** **Correct.** Copying creates separate maintenance lifecycles. This directly addresses the constraint stated in this case.
-- **B. The principal inherited an overly broad role** Task intent does not automatically constrain permission grants. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **C. The working tree includes more content than the task needs** Checkout scope can dominate local resource consumption. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
+- **A. Keep the broad role and rely only on a request not to delete** A written request does not constrain effective capability.
+- **B. Assign the narrow repository role required by the review task** **Correct.** Deletion is beyond the stated collaboration responsibility.
+- **C. Remove branch protections while retaining the broad role** That weakens a different boundary and does not remove deletion authority.
+- **D. Grant organization ownership so access problems stop occurring** That increases unnecessary privilege rather than reducing it.
 
-**Explanation:** Copying creates separate maintenance lifecycles. The selected answer is independent copies no longer share an update mechanism.
+**Explanation:** A written request does not constrain effective capability. Deletion is beyond the stated collaboration responsibility. That weakens a different boundary and does not remove deletion authority. That increases unnecessary privilege rather than reducing it.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q018
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which observation provides the strongest evidence that the requested result was achieved?
+An Azure Repos contributor belongs to an Allow group and an explicit Deny group at the relevant permission scope. Why can the push fail?
 
-- **A. The required service is available with a smaller working tree** The measurement must include usability and local overhead. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **B. Consumers report the intended shared component revision** **Correct.** Version evidence makes cross-repository adoption traceable. This directly addresses the constraint stated in this case.
-- **C. The contractor can review but cannot delete the repository** Positive and negative tests demonstrate the access boundary. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
+```text
+Ordinary contributor at repository scope:
+Group A Contribute: Allow
+Group B Contribute: Deny
+Observed push: permission denied
+```
 
-**Explanation:** Version evidence makes cross-repository adoption traceable. The selected answer is consumers report the intended shared component revision.
+- **A. The Git author email must match the group name** Commit metadata is separate from the server's permission decision.
+- **B. A successful clone guarantees permission to push** Read access and source modification are distinct capabilities.
+- **C. The effective permission includes the conflicting restriction rather than only the expected grant** **Correct.** Overlapping assignments must be evaluated at the actual applicable scope.
+- **D. Membership in any Allow group always overrides every Deny** That ignores how effective restrictions can constrain an ordinary contributor.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** Commit metadata is separate from the server's permission decision. Read access and source modification are distinct capabilities. Overlapping assignments must be evaluated at the actual applicable scope. That ignores how effective restrictions can constrain an ordinary contributor.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
 
 ## L05-Q019
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which execution safeguard most directly addresses the risk in this case?
+A published release tag v1.0 is moved to a different commit. What traceability risk does this create?
 
-- **A. Inspect inherited and explicit permissions before changing roles** Effective access can come through several group memberships. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **B. Test cross-service build dependencies before narrowing checkout** Sparse content can omit inputs required by tooling. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **C. Review shared changes before advancing consumer references** **Correct.** One central mistake can affect many dependent repositories. This directly addresses the constraint stated in this case.
+- **A. The original commit is necessarily deleted immediately** Moving a tag changes a reference rather than guaranteeing object deletion.
+- **B. Every collaborator's local tag is automatically rewritten at once** Remote reference changes do not guarantee synchronized local references.
+- **C. The new target automatically passes the original release tests** Validation evidence does not transfer merely because a tag name is reused.
+- **D. The same release label now identifies different source content** **Correct.** Consumers and audits may resolve the name to a revision different from the original release.
 
-**Explanation:** One central mistake can affect many dependent repositories. The selected answer is review shared changes before advancing consumer references.
+**Explanation:** Moving a tag changes a reference rather than guaranteeing object deletion. Remote reference changes do not guarantee synchronized local references. Validation evidence does not transfer merely because a tag name is reused. Consumers and audits may resolve the name to a revision different from the original release.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S6](https://git-scm.com/docs/git-tag)
 
 ## L05-Q020
 
-Advanced · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. The team selects this remedy: "Reference a governed shared component at a deliberate version." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An annotated tag has an author and message but no signature. What claim is not justified by annotation alone?
 
-- **A. Optimization cannot remove genuine cross-repository dependencies** Some tasks still need broader source availability. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint.
-- **B. Central sharing creates a dependency and coordination point** **Correct.** Consumers need versioning and compatibility policies. This directly addresses the constraint stated in this case.
-- **C. Narrow roles can require explicit onboarding updates** New duties should trigger a deliberate permission review. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
+- **A. That the tag's publisher identity has been cryptographically verified** **Correct.** Annotation metadata and a verified cryptographic signature provide different evidence.
+- **B. That the tag can refer to a commit** Annotated tags can identify the intended source object.
+- **C. That the tag can retain a descriptive message** That is a normal purpose of annotated tag metadata.
+- **D. That the tag can appear in repository history inspection** Annotation does not prevent ordinary inspection of the reference.
 
-**Explanation:** Consumers need versioning and compatibility policies. The selected answer is central sharing creates a dependency and coordination point.
+**Explanation:** Annotation metadata and a verified cryptographic signature provide different evidence. Annotated tags can identify the intended source object. That is a normal purpose of annotated tag metadata. Annotation does not prevent ordinary inspection of the reference.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S6](https://git-scm.com/docs/git-tag); [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q021
 
-Foundational · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
 
-Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which next change most directly satisfies the stated requirement?
+A pipeline can read its own private repository but cannot read the private shared-template repository. What is the likely access requirement?
 
-- **A. Assign the narrow repository role needed for documentation review** **Correct.** Deletion rights exceed the required collaboration task. This directly addresses the constraint stated in this case.
-- **B. Inspect effective permissions and remove the unintended denial** Effective access includes overlapping grants and restrictions. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **C. Reference a governed shared component at a deliberate version** A maintained shared source reduces unmanaged copy divergence. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
+```text
+Self repository checkout: success
+Shared template repository: 403 Forbidden
+Execution identity: project build service
+Requested operation: read approved template revision
+```
 
-**Explanation:** Deletion rights exceed the required collaboration task. The selected answer is assign the narrow repository role needed for documentation review.
+- **A. Make the shared repository public immediately** Public exposure is unnecessary for supported private cross-repository access.
+- **B. Disable source protection on the consuming repository** Its merge policy does not grant access to another private source.
+- **C. Authorize the pipeline identity for the specific additional repository** **Correct.** Source access does not automatically extend to every private dependency.
+- **D. Grant every contributor project-administrator access** That broadens unrelated authority instead of authorizing the actual consumer.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** Public exposure is unnecessary for supported private cross-repository access. Its merge policy does not grant access to another private source. Source access does not automatically extend to every private dependency. That broadens unrelated authority instead of authorizing the actual consumer.
+
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q022
 
-Foundational · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which explanation best accounts for the behavior or constraint described?
+A role change appears ineffective because the user also belongs to another privileged group. What must be inspected?
 
-- **A. Independent copies no longer share an update mechanism** Copying creates separate maintenance lifecycles. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **B. The principal inherited an overly broad role** **Correct.** Task intent does not automatically constrain permission grants. This directly addresses the constraint stated in this case.
-- **C. An explicit deny can override the expected allow** Group membership must be evaluated as a whole. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
+- **A. Only whether a pull request was previously approved** Past review activity does not establish current access grants.
+- **B. Effective access including inherited and explicit assignments** **Correct.** One visible role does not necessarily explain every source of authority.
+- **C. Only the most recently edited role label** Earlier memberships can continue to grant permissions.
+- **D. Only the user's Git author name** Commit attribution does not define repository authorization.
 
-**Explanation:** Task intent does not automatically constrain permission grants. The selected answer is the principal inherited an overly broad role.
+**Explanation:** Past review activity does not establish current access grants. One visible role does not necessarily explain every source of authority. Earlier memberships can continue to grant permissions. Commit attribution does not define repository authorization.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops); [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q023
 
 Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which observation provides the strongest evidence that the requested result was achieved?
+What should a permission investigation retrieve before changing a failing Azure Repos contributor's role?
 
-- **A. The permitted push succeeds without broad administrative elevation** The repair should address the actual permission conflict. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **B. Consumers report the intended shared component revision** Version evidence makes cross-repository adoption traceable. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **C. The contractor can review but cannot delete the repository** **Correct.** Positive and negative tests demonstrate the access boundary. This directly addresses the constraint stated in this case.
+- **A. The identity's effective permissions and relevant group and branch scopes** **Correct.** The denied operation must be traced to its actual assignments.
+- **B. Only the repository's default branch name** The name alone does not explain the permission sources.
+- **C. Only the number of commits created by that user** Activity history does not define current authorization.
+- **D. Only whether the user can open a dashboard** Dashboard viewing is not proof of repository write permission.
 
-**Explanation:** Positive and negative tests demonstrate the access boundary. The selected answer is the contractor can review but cannot delete the repository.
+**Explanation:** The denied operation must be traced to its actual assignments. The name alone does not explain the permission sources. Activity history does not define current authorization. Dashboard viewing is not proof of repository write permission.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
 
 ## L05-Q024
 
-Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which execution safeguard most directly addresses the risk in this case?
+What additional information does an annotated Git tag provide compared with a lightweight tag?
 
-- **A. Inspect inherited and explicit permissions before changing roles** **Correct.** Effective access can come through several group memberships. This directly addresses the constraint stated in this case.
-- **B. Check the scope of each deny before removing it** A restriction may intentionally protect another resource. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **C. Review shared changes before advancing consumer references** One central mistake can affect many dependent repositories. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
+- **A. A complete copy of every release binary** A source tag is not automatically an artifact archive.
+- **B. A tag object with tagging metadata and message** **Correct.** A lightweight tag is a direct reference without the same annotated tag object.
+- **C. A guarantee that the tagged code contains no defects** Tag metadata does not establish application correctness.
+- **D. A universal restriction preventing any maintainer from moving it** Reference protection is a separate repository governance concern.
 
-**Explanation:** Effective access can come through several group memberships. The selected answer is inspect inherited and explicit permissions before changing roles.
+**Explanation:** A source tag is not automatically an artifact archive. A lightweight tag is a direct reference without the same annotated tag object. Tag metadata does not establish application correctness. Reference protection is a separate repository governance concern.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S6](https://git-scm.com/docs/git-tag)
 
 ## L05-Q025
 
-Advanced · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. The team selects this remedy: "Assign the narrow repository role needed for documentation review." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release process requires cryptographic publisher verification. Which tag form is relevant to that requirement?
 
-- **A. Central sharing creates a dependency and coordination point** Consumers need versioning and compatibility policies. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint.
-- **B. Narrow roles can require explicit onboarding updates** **Correct.** New duties should trigger a deliberate permission review. This directly addresses the constraint stated in this case.
-- **C. Complex group inheritance makes access harder to reason about** Simpler role boundaries reduce surprising combinations. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
+- **A. A lightweight tag named signed-release** The name does not add a signature to the reference.
+- **B. A branch name containing the release owner's email** A name is not a verified cryptographic attestation.
+- **C. A signed tag verified under the intended trust policy** **Correct.** The signature must be checked against the authorized signer expectations.
+- **D. An unsigned annotated tag with a long message** Human-readable metadata is not cryptographic proof of the signer.
 
-**Explanation:** New duties should trigger a deliberate permission review. The selected answer is narrow roles can require explicit onboarding updates.
+**Explanation:** The name does not add a signature to the reference. A name is not a verified cryptographic attestation. The signature must be checked against the authorized signer expectations. Human-readable metadata is not cryptographic proof of the signer.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q026
 
-Foundational · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
 
-Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which next change most directly satisfies the stated requirement?
+A shared component uses a moving branch and breaks unchanged consumers. What reference policy improves repeatability?
 
-- **A. Inspect effective permissions and remove the unintended denial** **Correct.** Effective access includes overlapping grants and restrictions. This directly addresses the constraint stated in this case.
-- **B. Use distinct release tags and protect established release references** A release identifier should resolve consistently over time. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **C. Assign the narrow repository role needed for documentation review** Deletion rights exceed the required collaboration task. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
+- **A. Always consume the newest branch head and suppress failure notifications** That preserves uncontrolled change while hiding its consequences.
+- **B. Use the same filename in every repository without tracking the source revision** A name cannot identify which shared implementation executed.
+- **C. Cache the first fetched copy forever without an upgrade owner** That can retain defects and security problems indefinitely.
+- **D. Pin consumption to a reviewed immutable revision and update it deliberately** **Correct.** The executable dependency should not change independently without an intentional consumer update.
 
-**Explanation:** Effective access includes overlapping grants and restrictions. The selected answer is inspect effective permissions and remove the unintended denial.
+**Explanation:** That preserves uncontrolled change while hiding its consequences. A name cannot identify which shared implementation executed. That can retain defects and security problems indefinitely. The executable dependency should not change independently without an intentional consumer update.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar); [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q027
 
 Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which explanation best accounts for the behavior or constraint described?
+Which validation best demonstrates suitable contractor access within a disposable training scope?
 
-- **A. The principal inherited an overly broad role** Task intent does not automatically constrain permission grants. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **B. An explicit deny can override the expected allow** **Correct.** Group membership must be evaluated as a whole. This directly addresses the constraint stated in this case.
-- **C. A mutable tag was being treated as immutable provenance** The same label now identifies different source states. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
+- **A. The contractor's role description contains the word limited** Labels do not establish the effective permissions actually granted.
+- **B. The contractor can perform the intended review and lacks the unneeded destructive capability** **Correct.** Least privilege requires useful access as well as a meaningful denied boundary.
+- **C. The contractor cannot access anything including the assigned review** That fails the legitimate collaboration requirement.
+- **D. The contractor can change organization-wide policies** That demonstrates broader authority than this task needs.
 
-**Explanation:** Group membership must be evaluated as a whole. The selected answer is an explicit deny can override the expected allow.
+**Explanation:** Labels do not establish the effective permissions actually granted. Least privilege requires useful access as well as a meaningful denied boundary. That fails the legitimate collaboration requirement. That demonstrates broader authority than this task needs.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q028
 
 Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which observation provides the strongest evidence that the requested result was achieved?
+Which repair demonstrates that a conflicting permission was fixed without unnecessary elevation?
 
-- **A. The contractor can review but cannot delete the repository** Positive and negative tests demonstrate the access boundary. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **B. The permitted push succeeds without broad administrative elevation** **Correct.** The repair should address the actual permission conflict. This directly addresses the constraint stated in this case.
-- **C. The release tag resolves to the documented commit** Provenance depends on stable reference resolution. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
+- **A. The user can now delete every project in the organization** That is excessive access rather than a targeted repository repair.
+- **B. The user switches to an administrator's credential for every operation** That bypasses rather than resolves the ordinary identity's permission issue.
+- **C. All explicit restrictions are removed from every repository** That broadens scope far beyond the identified conflict.
+- **D. The intended push succeeds under the ordinary identity while unrelated protected actions remain denied** **Correct.** The corrected boundary should permit required work and retain restrictions beyond it.
 
-**Explanation:** The repair should address the actual permission conflict. The selected answer is the permitted push succeeds without broad administrative elevation.
+**Explanation:** That is excessive access rather than a targeted repository repair. That bypasses rather than resolves the ordinary identity's permission issue. That broadens scope far beyond the identified conflict. The corrected boundary should permit required work and retain restrictions beyond it.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
 
 ## L05-Q029
 
-Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which execution safeguard most directly addresses the risk in this case?
+Which verification binds a release tag to the source revision recorded by a build?
 
-- **A. Check the scope of each deny before removing it** **Correct.** A restriction may intentionally protect another resource. This directly addresses the constraint stated in this case.
-- **B. Restrict deletion and movement of release tags where supported** Accidental rewrites can invalidate published release evidence. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **C. Inspect inherited and explicit permissions before changing roles** Effective access can come through several group memberships. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
+```text
+Expected build source: 2f63a9b
+Resolved tag v1.0 commit: 80a12de
+Release labels are human-readable; commits differ
+```
 
-**Explanation:** A restriction may intentionally protect another resource. The selected answer is check the scope of each deny before removing it.
+- **A. Compare only the human-readable tag and build version labels** Matching labels can still point to different underlying source commits.
+- **B. Compare only the commit author and build requester** The same person can produce several different commits, so identity fields do not prove source equality.
+- **C. Compare only the annotated tag message with the release notes** Related descriptions do not establish the exact commit consumed by the build.
+- **D. Resolve the tag to its commit and compare the expected immutable commit identity** **Correct.** Matching names alone are weaker than matching the actual source revision.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** Matching labels can still point to different underlying source commits. The same person can produce several different commits, so identity fields do not prove source equality. Related descriptions do not establish the exact commit consumed by the build. Matching names alone are weaker than matching the actual source revision.
+
+**Sources:** [S6](https://git-scm.com/docs/git-tag)
 
 ## L05-Q030
 
-Advanced · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. The team selects this remedy: "Inspect effective permissions and remove the unintended denial." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A signature is mathematically valid but belongs to a key outside the organization's approved release-signing policy. What remains unproven?
 
-- **A. Tag protection adds controlled maintenance steps** Correcting a mistaken release reference requires deliberate handling. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **B. Narrow roles can require explicit onboarding updates** New duties should trigger a deliberate permission review. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint.
-- **C. Complex group inheritance makes access harder to reason about** **Correct.** Simpler role boundaries reduce surprising combinations. This directly addresses the constraint stated in this case.
+```text
+Signature verification: cryptographically valid
+Signer fingerprint: KEY-EXTERNAL
+Authorized release signers: KEY-RELEASE-A, KEY-RELEASE-B
+```
 
-**Explanation:** Simpler role boundaries reduce surprising combinations. The selected answer is complex group inheritance makes access harder to reason about.
+- **A. That any bytes were signed at all** A valid signature already provides evidence of the signed data relationship.
+- **B. That the tag has a human-readable name** The signature's trust issue is independent of its reference name.
+- **C. That Git can store the tagged commit** The repository object relationship is not the unresolved trust condition.
+- **D. That the release was attested by an authorized trusted signer** **Correct.** Signature validity and the decision to trust that signer are separate checks.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** A valid signature already provides evidence of the signed data relationship. The signature's trust issue is independent of its reference name. The repository object relationship is not the unresolved trust condition. Signature validity and the decision to trust that signer are separate checks.
+
+**Sources:** [S6](https://git-scm.com/docs/git-tag); [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q031
 
-Foundational · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
 
-Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which next change most directly satisfies the stated requirement?
+Which evidence proves that a consumer actually adopted a required shared-script fix?
 
-- **A. Use distinct release tags and protect established release references** **Correct.** A release identifier should resolve consistently over time. This directly addresses the constraint stated in this case.
-- **B. Use signed tags when cryptographic identity verification is required** Annotation and signature serve different provenance purposes. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **C. Inspect effective permissions and remove the unintended denial** Effective access includes overlapping grants and restrictions. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
+- **A. The shared repository's default branch contains the fix** The consumer may still reference a different revision.
+- **B. The author sent an update message to the team** Communication alone does not establish the executable dependency used.
+- **C. The run records the approved shared revision and executes the relevant corrected behavior** **Correct.** A version assertion and behavioral check connect the consumer to the intended fix.
+- **D. The consumer repository includes a comment saying latest template** A comment can be stale and does not prove runtime resolution.
 
-**Explanation:** A release identifier should resolve consistently over time. The selected answer is use distinct release tags and protect established release references.
+**Explanation:** The consumer may still reference a different revision. Communication alone does not establish the executable dependency used. A version assertion and behavioral check connect the consumer to the intended fix. A comment can be stale and does not prove runtime resolution.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q032
 
-Foundational · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which explanation best accounts for the behavior or constraint described?
+Why is granting project administration a poor default fix for a denied documentation review operation?
 
-- **A. Tag metadata is not automatically a verified signature** A message and author field are not cryptographic proof. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **B. An explicit deny can override the expected allow** Group membership must be evaluated as a whole. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **C. A mutable tag was being treated as immutable provenance** **Correct.** The same label now identifies different source states. This directly addresses the constraint stated in this case.
+- **A. Role elevation automatically removes all inherited restrictions safely** Effective permission behavior still requires deliberate inspection.
+- **B. It can grant broad unrelated capabilities instead of correcting the exact missing access** **Correct.** The permission should match the task and effective cause of denial.
+- **C. Administrative roles always lack repository read access** The problem is unnecessary breadth rather than a universal absence of reading.
+- **D. Review tasks require the ability to delete every project** Destructive project control is not inherent to documentation review.
 
-**Explanation:** The same label now identifies different source states. The selected answer is a mutable tag was being treated as immutable provenance.
+**Explanation:** Effective permission behavior still requires deliberate inspection. The permission should match the task and effective cause of denial. The problem is unnecessary breadth rather than a universal absence of reading. Destructive project control is not inherent to documentation review.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops); [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q033
 
-Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which observation provides the strongest evidence that the requested result was achieved?
+A deny assignment may intentionally protect another repository. What should precede removing it?
 
-- **A. Signature verification succeeds with the expected trusted key** The verifier must validate both signature and trust. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **B. The permitted push succeeds without broad administrative elevation** The repair should address the actual permission conflict. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **C. The release tag resolves to the documented commit** **Correct.** Provenance depends on stable reference resolution. This directly addresses the constraint stated in this case.
+- **A. Delete the group from the organization before examining membership** That risks unrelated access changes without understanding the boundary.
+- **B. Assume the oldest assignment is always obsolete** Age alone does not determine whether a control remains necessary.
+- **C. Copy the user into every allowed group and stop investigating** More grants do not establish the actual effective restriction or its intent.
+- **D. Identify its exact scope purpose and affected consumers** **Correct.** A restriction can be legitimate elsewhere even when it conflicts with this task.
 
-**Explanation:** Provenance depends on stable reference resolution. The selected answer is the release tag resolves to the documented commit.
+**Explanation:** That risks unrelated access changes without understanding the boundary. Age alone does not determine whether a control remains necessary. More grants do not establish the actual effective restriction or its intent. A restriction can be legitimate elsewhere even when it conflicts with this task.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
 
 ## L05-Q034
 
 Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which execution safeguard most directly addresses the risk in this case?
+Which policy can help preserve established GitHub release-tag references against unauthorized movement or deletion?
 
-- **A. Check the scope of each deny before removing it** A restriction may intentionally protect another resource. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **B. Restrict deletion and movement of release tags where supported** **Correct.** Accidental rewrites can invalidate published release evidence. This directly addresses the constraint stated in this case.
-- **C. Protect signing material and document key ownership** A compromised key can attest malicious release references. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
+- **A. A branch-only rule that never targets tags** Protecting another reference class does not establish the tag policy.
+- **B. A longer annotated tag message** Metadata detail does not restrict who can change the reference.
+- **C. Applicable tag rules with narrowly controlled bypass authority** **Correct.** The enforcement boundary should cover both the reference and exceptions.
+- **D. A README instruction saying do not move tags** Documentation states intent but does not enforce the reference restriction.
 
-**Explanation:** Accidental rewrites can invalidate published release evidence. The selected answer is restrict deletion and movement of release tags where supported.
+**Explanation:** Protecting another reference class does not establish the tag policy. Metadata detail does not restrict who can change the reference. The enforcement boundary should cover both the reference and exceptions. Documentation states intent but does not enforce the reference restriction.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S7](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
 
 ## L05-Q035
 
-Advanced · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. The team selects this remedy: "Use distinct release tags and protect established release references." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Why should release-signing keys have controlled access and a defined lifecycle?
 
-- **A. Signing adds key lifecycle and trust management** Consumers still need a policy for trusted signers. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **B. Complex group inheritance makes access harder to reason about** Simpler role boundaries reduce surprising combinations. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint.
-- **C. Tag protection adds controlled maintenance steps** **Correct.** Correcting a mistaken release reference requires deliberate handling. This directly addresses the constraint stated in this case.
+- **A. A key automatically prevents every malicious source change** Signing does not independently review the safety of the signed contents.
+- **B. Signed tags never require any key rotation or revocation process** Credential lifecycle and compromise handling remain relevant to trust.
+- **C. Giving every build contributor the release key improves signer separation** Broad key distribution weakens rather than separates the attestation authority.
+- **D. A compromised signing key can attest content under the expected identity** **Correct.** The value of attestation depends on protecting and managing signer authority.
 
-**Explanation:** Correcting a mistaken release reference requires deliberate handling. The selected answer is tag protection adds controlled maintenance steps.
+**Explanation:** Signing does not independently review the safety of the signed contents. Credential lifecycle and compromise handling remain relevant to trust. Broad key distribution weakens rather than separates the attestation authority. The value of attestation depends on protecting and managing signer authority.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q036
 
-Foundational · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md)
 
-Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which next change most directly satisfies the stated requirement?
+A shared security fix must reach many repositories, but one application is incompatible with its new interface. Which update process balances propagation and safety?
 
-- **A. Use signed tags when cryptographic identity verification is required** **Correct.** Annotation and signature serve different provenance purposes. This directly addresses the constraint stated in this case.
-- **B. Compare tool support and select a maintained compatible solution** Exam coverage does not mandate using every named technology. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
-- **C. Use distinct release tags and protect established release references** A release identifier should resolve consistently over time. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
+- **A. Maintain an untracked special copy for the incompatible application** An undocumented fork recreates unmanaged drift and hides its remediation obligation.
+- **B. Version the change, test representative consumers, stage adoption, and track remaining exceptions with owners** **Correct.** A central fix still needs compatibility evidence and accountable rollout across its consumers.
+- **C. Force every consumer to a moving main reference before running tests** That can distribute an incompatible interface to all builds simultaneously.
+- **D. Leave every consumer permanently pinned to its old revision** That avoids interface work by retaining the security defect.
 
-**Explanation:** Annotation and signature serve different provenance purposes. The selected answer is use signed tags when cryptographic identity verification is required.
+**Explanation:** An undocumented fork recreates unmanaged drift and hides its remediation obligation. A central fix still needs compatibility evidence and accountable rollout across its consumers. That can distribute an incompatible interface to all builds simultaneously. That avoids interface work by retaining the security defect.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S2](https://git-scm.com/docs/scalar); [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q037
 
-Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which explanation best accounts for the behavior or constraint described?
+A temporary collaborator needs one repository for two weeks, must not delete it, and should lose access afterward. Which onboarding plan is appropriate?
 
-- **A. A named technique was mistaken for a required implementation** Product compatibility and support remain design constraints. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
-- **B. A mutable tag was being treated as immutable provenance** The same label now identifies different source states. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **C. Tag metadata is not automatically a verified signature** **Correct.** A message and author field are not cryptographic proof. This directly addresses the constraint stated in this case.
+- **A. Grant the necessary scoped role, verify allowed and denied capabilities, and assign an access-removal owner and date** **Correct.** The plan covers usable least privilege and the temporary relationship's lifecycle.
+- **B. Grant a permanent organization-owner role and record the intended two-week use in a comment** The capability and duration exceed the requirement despite the note.
+- **C. Share an existing maintainer's credentials and ask the contractor not to use destructive commands** Shared broad credentials undermine both attribution and effective restriction.
+- **D. Rely on removing the collaborator from one group without checking other memberships** Other assignments can preserve unintended access after the nominal expiry.
 
-**Explanation:** A message and author field are not cryptographic proof. The selected answer is tag metadata is not automatically a verified signature.
+**Explanation:** The plan covers usable least privilege and the temporary relationship's lifecycle. The capability and duration exceed the requirement despite the note. Shared broad credentials undermine both attribution and effective restriction. Other assignments can preserve unintended access after the nominal expiry.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops); [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q038
 
-Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which observation provides the strongest evidence that the requested result was achieved?
+A contributor must write one training repository but remain restricted from shared production repositories through an existing group. Which access design is strongest?
 
-- **A. The release tag resolves to the documented commit** Provenance depends on stable reference resolution. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **B. Signature verification succeeds with the expected trusted key** **Correct.** The verifier must validate both signature and trust. This directly addresses the constraint stated in this case.
-- **C. The selected workflow works with the actual host and clients** Compatibility must be demonstrated in the target environment. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. Remove the shared restrictive group globally to make the training push work** That can remove the explicit production limitation.
+- **B. Grant organization administration and assume the user will stay in the training repository** Broad authority contradicts the required production restriction.
+- **C. Move the production repositories into the contributor's training project** That changes resource boundaries instead of applying scoped authorization.
+- **D. Resolve the conflicting assignment at the narrow appropriate scope while preserving the production restriction and testing effective access** **Correct.** The repair must satisfy one task without undoing a separate legitimate boundary.
 
-**Explanation:** The verifier must validate both signature and trust. The selected answer is signature verification succeeds with the expected trusted key.
+**Explanation:** That can remove the explicit production limitation. Broad authority contradicts the required production restriction. That changes resource boundaries instead of applying scoped authorization. The repair must satisfy one task without undoing a separate legitimate boundary.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
 
 ## L05-Q039
 
 Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which execution safeguard most directly addresses the risk in this case?
+A release tag accidentally identifies the wrong commit and has already been consumed downstream. Audit policy requires stable published references. Which response is strongest?
 
-- **A. Restrict deletion and movement of release tags where supported** Accidental rewrites can invalidate published release evidence. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **B. Protect signing material and document key ownership** **Correct.** A compromised key can attest malicious release references. This directly addresses the constraint stated in this case.
-- **C. Keep a rollback and backup plan for history migration** Large-file conversion can rewrite shared commit history. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. Delete the original release records before publishing the replacement** That removes evidence needed to understand the correction.
+- **B. Reuse the same name for a third commit if the first correction fails** Repeated reassignment compounds rather than resolves ambiguous provenance.
+- **C. Preserve evidence, publish a clearly identified corrective release or approved correction process, and notify affected consumers** **Correct.** The recovery must handle both the mistaken content and the stability expectations of existing users.
+- **D. Silently move the tag and assume downstream caches will update consistently** Consumers can retain different content under one name and lose a clear audit trail.
 
-**Explanation:** A compromised key can attest malicious release references. The selected answer is protect signing material and document key ownership.
+**Explanation:** That removes evidence needed to understand the correction. Repeated reassignment compounds rather than resolves ambiguous provenance. The recovery must handle both the mistaken content and the stability expectations of existing users. Consumers can retain different content under one name and lose a clear audit trail.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S6](https://git-scm.com/docs/git-tag); [S7](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
 
 ## L05-Q040
 
-Advanced · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. The team selects this remedy: "Use signed tags when cryptographic identity verification is required." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A signed release tag verifies successfully, but the published binary came from another commit. Which conclusion and repair are appropriate?
 
-- **A. Tag protection adds controlled maintenance steps** Correcting a mistaken release reference requires deliberate handling. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint.
-- **B. Signing adds key lifecycle and trust management** **Correct.** Consumers still need a policy for trusted signers. This directly addresses the constraint stated in this case.
-- **C. Migration affects collaborators and existing clones** They may need coordinated cleanup or fresh checkouts. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. The mismatch is harmless if both commits were authored by one person** Author identity does not establish that the artifact matches the reviewed release revision.
+- **B. The signature authenticates the tag, so the binary still needs independent provenance tying it to that tagged source** **Correct.** A verified reference does not prove that a separately uploaded artifact was built from it.
+- **C. The signature automatically authenticates every file attached to the release page** An attachment is not necessarily part of the signed tag data.
+- **D. The binary is trustworthy whenever its filename matches the tag** Names can match while the source and bytes differ.
 
-**Explanation:** Consumers still need a policy for trusted signers. The selected answer is signing adds key lifecycle and trust management.
+**Explanation:** Author identity does not establish that the artifact matches the reviewed release revision. A verified reference does not prove that a separately uploaded artifact was built from it. An attachment is not necessarily part of the signed tag data. Names can match while the source and bytes differ.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S6](https://git-scm.com/docs/git-tag); [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q041
 
-Foundational · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which next change most directly satisfies the stated requirement?
+A monorepo has large binary history, slow Git maintenance, and a service requiring shared source outside its own folder. Which pilot can separate the bottlenecks without breaking builds?
 
-- **A. Use signed tags when cryptographic identity verification is required** Annotation and signature serve different provenance purposes. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **B. Compare tool support and select a maintained compatible solution** **Correct.** Exam coverage does not mandate using every named technology. This directly addresses the constraint stated in this case.
-- **C. Grant the pipeline identity scoped access to the shared repository** Cross-repository consumption requires explicit authorization. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
+- **A. Convert binaries to LFS and assume repository maintenance and source dependency problems disappear** LFS targets large content storage rather than every repository performance or checkout-completeness issue.
+- **B. Enable repository maintenance and retain all binary history in ordinary Git** Maintenance can improve local operations but does not itself migrate large content into LFS.
+- **C. Measure blob transfer, local maintenance, and dependency paths separately; test supported LFS and sparse/partial-clone techniques with complete builds** **Correct.** The problems require different controls, and a smaller working tree must still include the service dependency closure.
+- **D. Enable sparse checkout for only the service directory and treat any faster clone as complete success** This can omit required shared code and does not establish that historical blob or maintenance cost was addressed.
 
-**Explanation:** Exam coverage does not mandate using every named technology. The selected answer is compare tool support and select a maintained compatible solution.
+**Explanation:** LFS targets large content storage rather than every repository performance or checkout-completeness issue. Maintenance can improve local operations but does not itself migrate large content into LFS. The problems require different controls, and a smaller working tree must still include the service dependency closure. This can omit required shared code and does not establish that historical blob or maintenance cost was addressed.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar)
 
 ## L05-Q042
 
-Foundational · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which explanation best accounts for the behavior or constraint described?
+A pipeline can read its own repository but not the private shared-template repository. It has project-scoped job authorization and explicit repository protection. Which repair is most targeted?
 
-- **A. Source access does not imply access to another repository** Private resource boundaries are evaluated independently. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **B. Tag metadata is not automatically a verified signature** A message and author field are not cryptographic proof. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **C. A named technique was mistaken for a required implementation** **Correct.** Product compatibility and support remain design constraints. This directly addresses the constraint stated in this case.
+- **A. Make the shared repository public solely to remove the permission error** Visibility change is a separate information-exposure decision rather than a scoped access repair.
+- **B. Authorize the pipeline identity and specific shared repository through the supported cross-repository access path** **Correct.** The identity and repository boundary should be corrected without replacing the job's source access with broad personal credentials.
+- **C. Grant subscription Owner to the pipeline identity** Azure resource ownership does not establish the required source repository permissions.
+- **D. Use a collection-wide personal token in every consumer** That adds broad personal lifecycle and privilege dependencies beyond the named repository requirement.
 
-**Explanation:** Product compatibility and support remain design constraints. The selected answer is a named technique was mistaken for a required implementation.
+**Explanation:** Visibility change is a separate information-exposure decision rather than a scoped access repair. The identity and repository boundary should be corrected without replacing the job's source access with broad personal credentials. Azure resource ownership does not establish the required source repository permissions. That adds broad personal lifecycle and privilege dependencies beyond the named repository requirement.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q043
 
-Applied · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which observation provides the strongest evidence that the requested result was achieved?
+A historical LFS migration works in the author's existing clone. Fresh clones hydrate current images, but an older supported tag contains missing LFS objects. What should gate rollout?
 
-- **A. Signature verification succeeds with the expected trusted key** The verifier must validate both signature and trust. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **B. The selected workflow works with the actual host and clients** **Correct.** Compatibility must be demonstrated in the target environment. This directly addresses the constraint stated in this case.
-- **C. The pipeline fetches the shared revision without a broad token** The result should prove both access and limited scope. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
+- **A. Publish the author's local object cache as an undocumented prerequisite** An untracked personal cache does not establish reproducible collaborator access to the intended remote assets.
+- **B. Verify required assets at each supported revision and reconcile affected references and remote object availability** **Correct.** Current checkout success does not establish that all supported release revisions remain usable after conversion.
+- **C. Accept the migration because the default branch builds** The promised supported tag still lacks required content.
+- **D. Delete the older release tag because LFS only supports the latest tree** LFS can store historical asset versions; missing objects are not a reason to silently abandon the support contract.
 
-**Explanation:** Compatibility must be demonstrated in the target environment. The selected answer is the selected workflow works with the actual host and clients.
+**Explanation:** An untracked personal cache does not establish reproducible collaborator access to the intended remote assets. Current checkout success does not establish that all supported release revisions remain usable after conversion. The promised supported tag still lacks required content. LFS can store historical asset versions; missing objects are not a reason to silently abandon the support contract.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
 
 ## L05-Q044
 
-Applied · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which execution safeguard most directly addresses the risk in this case?
+A shared template is pinned and readable, but its new version requests a production credential and executes an unreviewed downloaded script. Consumers need the bug fix in that version. What should adoption require?
 
-- **A. Authorize the exact repository and review referenced content** Shared code becomes part of the execution trust chain. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **B. Protect signing material and document key ownership** A compromised key can attest malicious release references. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
-- **C. Keep a rollback and backup plan for history migration** **Correct.** Large-file conversion can rewrite shared commit history. This directly addresses the constraint stated in this case.
+- **A. Remove the pin so consumers receive any later corrective change automatically** A moving reference adds uncontrolled change without resolving the current executable-content concern.
+- **B. Grant the requested credential but test only template parsing** Syntax success does not evaluate the new script or production authority it receives.
+- **C. Review the permission and executable-content delta, validate a safe version, and stage explicit consumer updates** **Correct.** Version pinning provides identity stability but does not establish that the pinned content's privileges or execution are acceptable.
+- **D. Adopt immediately because an immutable revision is inherently safe** Immutability says which content runs, not whether its behavior or privileges are appropriate.
 
-**Explanation:** Large-file conversion can rewrite shared commit history. The selected answer is keep a rollback and backup plan for history migration.
+**Explanation:** A moving reference adds uncontrolled change without resolving the current executable-content concern. Syntax success does not evaluate the new script or production authority it receives. Version pinning provides identity stability but does not establish that the pinned content's privileges or execution are acceptable. Immutability says which content runs, not whether its behavior or privileges are appropriate.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q045
 
-Advanced · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.1](../../docs/objective-map.md)
 
-Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. The team selects this remedy: "Compare tool support and select a maintained compatible solution." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A team needs reduced initial source transfer and an offline presentation containing only approved design assets. The server supports partial clone. Which preparation meets both needs?
 
-- **A. Migration affects collaborators and existing clones** **Correct.** They may need coordinated cleanup or fresh checkouts. This directly addresses the constraint stated in this case.
-- **B. Shared repository availability can affect multiple consumers** Version pins reduce drift but do not remove dependency risk. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint.
-- **C. Signing adds key lifecycle and trust management** Consumers still need a policy for trusted signers. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint.
+- **A. Use supported filtering and sparse paths, hydrate the required LFS versions while online, then validate the offline presentation** **Correct.** Source filtering and LFS hydration are distinct mechanisms, and offline use needs verified local content.
+- **B. Use a blob-filtered clone and assume every LFS asset is already cached** Partial clone filtering does not establish that the separate LFS content has been downloaded.
+- **C. Use sparse checkout only and assume it removes historical download costs** Sparse checkout reduces working-tree population but does not alone promise reduced historical object transfer.
+- **D. Download only the latest image without recording its version** That may omit a required historical presentation asset and loses the intended content identity.
 
-**Explanation:** They may need coordinated cleanup or fresh checkouts. The selected answer is migration affects collaborators and existing clones.
+**Explanation:** Source filtering and LFS hydration are distinct mechanisms, and offline use needs verified local content. Partial clone filtering does not establish that the separate LFS content has been downloaded. Sparse checkout reduces working-tree population but does not alone promise reduced historical object transfer. That may omit a required historical presentation asset and loses the intended content identity.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S4](https://git-scm.com/docs/git-clone)
 
 ## L05-Q046
 
-Foundational · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md), [D2.2.3](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D2.2.3](../../docs/objective-map.md)
 
-Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which next change most directly satisfies the stated requirement?
+One hundred consumers pin a shared deployment template. A security correction changes an input contract, and ten consumers are incompatible. Which rollout balances urgent remediation and controlled change?
 
-- **A. Grant the pipeline identity scoped access to the shared repository** **Correct.** Cross-repository consumption requires explicit authorization. This directly addresses the constraint stated in this case.
-- **B. Use Git LFS for supported large binary assets** LFS separates large content from ordinary Git objects. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. Compare tool support and select a maintained compatible solution** Exam coverage does not mandate using every named technology. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. Fork a unique undocumented template for each incompatible consumer** Untracked forks increase drift and obscure whether the security fix reaches each deployment path.
+- **B. Publish an identified corrected version, validate representative consumers, track adoption, and govern time-bounded incompatible exceptions** **Correct.** The plan makes the fix and remaining risk visible while testing the changed contract before broad use.
+- **C. Move the old tag to the new code so all pins update without review** Moving an established reference defeats the controlled-version promise and can break incompatible consumers.
+- **D. Leave every consumer unchanged until all one hundred upgrade simultaneously** This needlessly delays compatible consumers and retains avoidable exposure everywhere.
 
-**Explanation:** Cross-repository consumption requires explicit authorization. The selected answer is grant the pipeline identity scoped access to the shared repository.
+**Explanation:** Untracked forks increase drift and obscure whether the security fix reaches each deployment path. The plan makes the fix and remaining risk visible while testing the changed contract before broad use. Moving an established reference defeats the controlled-version promise and can break incompatible consumers. This needlessly delays compatible consumers and retains avoidable exposure everywhere.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)
 
 ## L05-Q047
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md), [D2.2.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D2.2.2](../../docs/objective-map.md)
 
-Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which explanation best accounts for the behavior or constraint described?
+A contractor's direct role is reduced to read, but deletion still succeeds in the disposable repository. The contractor belongs to an inherited administrator group. What repair and test are strongest?
 
-- **A. Source access does not imply access to another repository** **Correct.** Private resource boundaries are evaluated independently. This directly addresses the constraint stated in this case.
-- **B. Binary revisions inflate repository object history** Normal Git stores versions that clones must retrieve. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. A named technique was mistaken for a required implementation** Product compatibility and support remain design constraints. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+```text
+Contractor direct role: Read
+Inherited team: Repository administrators
+Probe as contractor: review=allowed; delete sandbox repository=allowed
+```
 
-**Explanation:** Private resource boundaries are evaluated independently. The selected answer is source access does not imply access to another repository.
+- **A. Test deletion only with a different read-only account** Another account does not prove the contractor's effective privileges were corrected.
+- **B. Remove the unnecessary effective grant at its appropriate scope and retest allowed review plus denied deletion using that identity** **Correct.** Effective access includes inherited permissions, and both the intended and forbidden behaviors need verification.
+- **C. Repeat the direct read assignment until the interface shows read** A narrower direct assignment does not necessarily remove the independent inherited grant.
+- **D. Delete the administrator group globally without checking other members** That may disrupt unrelated access and exceeds the contractor-specific correction without scope review.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** Another account does not prove the contractor's effective privileges were corrected. Effective access includes inherited permissions, and both the intended and forbidden behaviors need verification. A narrower direct assignment does not necessarily remove the independent inherited grant. That may disrupt unrelated access and exceeds the contractor-specific correction without scope review.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops); [S5](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization)
 
 ## L05-Q048
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md), [D2.2.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D2.2.4](../../docs/objective-map.md)
 
-Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which observation provides the strongest evidence that the requested result was achieved?
+A signed release tag verifies under an approved key, but the build record names a different source commit and the binary checksum is unexpected. What decision is justified?
 
-- **A. A new asset commit stores an LFS pointer** The pointer demonstrates the configured content handling. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **B. The selected workflow works with the actual host and clients** Compatibility must be demonstrated in the target environment. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
-- **C. The pipeline fetches the shared revision without a broad token** **Correct.** The result should prove both access and limited scope. This directly addresses the constraint stated in this case.
+```text
+signed tag v3.0.0 -> abc123 (trusted signer)
+build source       -> def456
+approved SHA256    -> 111...
+attached binary    -> 999...
+```
 
-**Explanation:** The result should prove both access and limited scope. The selected answer is the pipeline fetches the shared revision without a broad token.
+- **A. Stop release and reconcile the tag, build source, and approved artifact identity** **Correct.** A trusted tag signature does not establish that a different binary was built from the tagged source.
+- **B. Accept the binary because a valid tag authenticates every attachment on the release page** The signature attests the tag object, not arbitrary independently uploaded binaries.
+- **C. Move the signed tag to the build commit without retaining correction evidence** That changes a published reference and does not by itself explain the unexpected content identity.
+- **D. Ignore the build source if the version label on the binary matches** A textual version label is weaker than the source and content provenance evidence.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Explanation:** A trusted tag signature does not establish that a different binary was built from the tagged source. The signature attests the tag object, not arbitrary independently uploaded binaries. That changes a published reference and does not by itself explain the unexpected content identity. A textual version label is weaker than the source and content provenance evidence.
+
+**Sources:** [S6](https://git-scm.com/docs/git-tag); [S8](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification)
 
 ## L05-Q049
 
-Applied · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md), [D2.2.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.1](../../docs/objective-map.md), [D2.2.2](../../docs/objective-map.md)
 
-Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which execution safeguard most directly addresses the risk in this case?
+An LFS history conversion will change commit identities used by release tags, downstream clones, and build provenance. Releases must remain auditable. Which migration contract is best?
 
-- **A. Authorize the exact repository and review referenced content** **Correct.** Shared code becomes part of the execution trust chain. This directly addresses the constraint stated in this case.
-- **B. Confirm the remote supports LFS and account for quotas** Tracking patterns alone do not provide hosted storage. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. Keep a rollback and backup plan for history migration** Large-file conversion can rewrite shared commit history. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. Inventory consumers, rehearse conversion, retain a protected old-to-new identity record, and coordinate references and fresh-clone validation** **Correct.** The conversion needs explicit identity continuity and consumer coordination, not only smaller repository size.
+- **B. Move published tags silently so existing labels always point at the converted graph** Silent movement changes established release identity and obscures what earlier consumers used.
+- **C. Convert only the maintainer's clone and let consumers resolve differences independently** Uncoordinated old graphs can be reintroduced and consumers may lose supported-reference context.
+- **D. Keep the converted graph but discard the old mapping after a successful current build** A current build does not preserve historical release and provenance relationships.
 
-**Explanation:** Shared code becomes part of the execution trust chain. The selected answer is authorize the exact repository and review referenced content.
+**Explanation:** The conversion needs explicit identity continuity and consumer coordination, not only smaller repository size. Silent movement changes established release identity and obscures what earlier consumers used. Uncoordinated old graphs can be reintroduced and consumers may lose supported-reference context. A current build does not preserve historical release and provenance relationships.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S6](https://git-scm.com/docs/git-tag)
 
 ## L05-Q050
 
 Advanced · [CP5](README.md#task-5) · [D2.2.2](../../docs/objective-map.md), [D2.2.3](../../docs/objective-map.md)
 
-Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. The team selects this remedy: "Grant the pipeline identity scoped access to the shared repository." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Several teams consume one private deployment template. The service account can read unrelated private repositories and bypass main policies; the template is pinned correctly. Which redesign meets least privilege without losing controlled updates?
 
-- **A. Shared repository availability can affect multiple consumers** **Correct.** Version pins reduce drift but do not remove dependency risk. This directly addresses the constraint stated in this case.
-- **B. Existing history needs separate migration** Adding tracking does not remove previously committed blobs. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint.
-- **C. Migration affects collaborators and existing clones** They may need coordinated cleanup or fresh checkouts. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint.
+- **A. Narrow source access, remove unneeded bypass, document template inputs and required permissions, and test staged version updates** **Correct.** Correct pinning is only one part of the contract; effective access and the compliant update path also require control.
+- **B. Keep all privileges because the pinned revision prevents any misuse** Pinned source does not constrain the service identity's unrelated authority.
+- **C. Remove all source access and copy the template manually into each consumer** That prevents governed consumption and creates unmanaged copy drift.
+- **D. Change the pin to main while keeping broad access** A moving version adds surprise changes without narrowing privileges.
 
-**Explanation:** Version pins reduce drift but do not remove dependency risk. The selected answer is shared repository availability can affect multiple consumers.
+**Explanation:** Correct pinning is only one part of the contract; effective access and the compliant update path also require control. Pinned source does not constrain the service identity's unrelated authority. That prevents governed consumption and creates unmanaged copy drift. A moving version adds surprise changes without narrowing privileges.
 
-**Sources:** [S1](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage); [S2](https://git-scm.com/docs/scalar); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops); [S9](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops)

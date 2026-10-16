@@ -8,698 +8,792 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which next change most directly satisfies the stated requirement?
+A developer resets a private branch and loses its name for a recently created commit. Which local record may identify the previous branch position?
 
-- **A. Recover the value through a small reviewed corrective commit** The repair should match the narrow damage scope. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **B. Inspect the local reflog and create a recovery branch** **Correct.** Reflog entries can identify recently moved local references. This directly addresses the constraint stated in this case.
-- **C. Create a revert commit through the normal review workflow** Revert undoes changes without rewriting shared history. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
+```text
+HEAD@{0}: reset: moving to HEAD~1
+HEAD@{1}: commit: validated local correction
+Current branch no longer reaches the correction
+```
 
-**Explanation:** Reflog entries can identify recently moved local references. The selected answer is inspect the local reflog and create a recovery branch.
+- **A. The reflog for the relevant reference** **Correct.** Reflogs record local reference updates and can expose the previous commit identity.
+- **B. The current .gitignore patterns** Ignore rules do not record branch movement or lost commit identities.
+- **C. Only the current index contents** The index describes staged content rather than the history of moved references.
+- **D. The remote repository description** A remote description does not record this local reset operation.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** Reflogs record local reference updates and can expose the previous commit identity. Ignore rules do not record branch movement or lost commit identities. The index describes staged content rather than the history of moved references. A remote description does not record this local reset operation.
+
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q002
 
-Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which explanation best accounts for the behavior or constraint described?
+A bad commit is already on shared main and collaborators have fetched it. Which normal recovery preserves shared history?
 
-- **A. A branch-wide rewrite is broader than the required recovery** Other valid published changes must remain available. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **B. The commit became unreachable through current branch names** **Correct.** Moving a reference does not immediately delete its objects. This directly addresses the constraint stated in this case.
-- **C. The faulty commit is part of published history** Rewriting it would disrupt collaborators' existing references. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
+- **A. Create a reviewed revert commit** **Correct.** Revert records an inverse change without moving shared main backward.
+- **B. Hard-reset main to its parent and force-push as the default response** That rewrites already shared history and can disrupt collaborators.
+- **C. Delete the bad commit from one local log display** Changing display output does not alter the shared source state.
+- **D. Rename the branch so the defective commit is less visible** The code and its history remain present under the renamed reference.
 
-**Explanation:** Moving a reference does not immediately delete its objects. The selected answer is the commit became unreachable through current branch names.
+**Explanation:** Revert records an inverse change without moving shared main backward. That rewrites already shared history and can disrupt collaborators. Changing display output does not alter the shared source state. The code and its history remain present under the renamed reference.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q003
 
-Applied · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which observation provides the strongest evidence that the requested result was achieved?
+One tracked file is accidentally deleted from the working tree while unrelated files contain valuable edits. Which approach is most targeted?
 
-- **A. A recovery branch contains the expected commit and files** **Correct.** A retained reference makes the recovered work accessible. This directly addresses the constraint stated in this case.
-- **B. A new commit reverses the regression while preserving history** The visible reversal supports audit and collaboration. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
-- **C. Only the intended configuration value changes in the repair** A minimal diff demonstrates controlled recovery. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
+- **A. Reset the entire repository hard as the first step** A repository-wide discard exceeds the stated one-file recovery scope.
+- **B. Run git clean on every untracked file** Cleaning untracked files does not restore the missing tracked content.
+- **C. Reclone over the working directory without preserving edits** That can discard the unrelated work the scenario requires retaining.
+- **D. Restore only the selected path from the intended revision** **Correct.** Path-scoped restoration can repair the file without resetting unrelated work.
 
-**Explanation:** A retained reference makes the recovered work accessible. The selected answer is a recovery branch contains the expected commit and files.
+**Explanation:** A repository-wide discard exceeds the stated one-file recovery scope. Cleaning untracked files does not restore the missing tracked content. That can discard the unrelated work the scenario requires retaining. Path-scoped restoration can repair the file without resetting unrelated work.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore)
 
 ## L06-Q004
 
-Applied · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which execution safeguard most directly addresses the risk in this case?
+Why can a commit disappear from the current branch history without being immediately erased from local storage?
 
-- **A. Test the revert against subsequent dependent changes** Later commits may rely on the reverted behavior. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
-- **B. Use a backup reference and inspect the target revision** The responder must avoid introducing an obsolete configuration. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **C. Create a new branch before changing the working branch** **Correct.** A separate reference preserves evidence during recovery. This directly addresses the constraint stated in this case.
+- **A. Every reset encrypts the previous commit automatically** Reset changes repository state rather than encrypting old commits.
+- **B. A missing branch name proves the commit was never created** A reference can be deleted or moved after its commit existed.
+- **C. Git stores only one commit object per branch at a time** Branches normally refer into histories containing many commit objects.
+- **D. The branch reference moved while the commit object may still exist** **Correct.** Reachability through a name and physical object retention are different conditions.
 
-**Explanation:** A separate reference preserves evidence during recovery. The selected answer is create a new branch before changing the working branch.
+**Explanation:** Reset changes repository state rather than encrypting old commits. A reference can be deleted or moved after its commit existed. Branches normally refer into histories containing many commit objects. Reachability through a name and physical object retention are different conditions.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q005
 
-Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. The team selects this remedy: "Inspect the local reflog and create a recovery branch." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What does git revert normally produce when undoing an ordinary earlier commit on the current branch?
 
-- **A. Reflog availability is local and time limited** **Correct.** Expired unreachable objects may no longer be recoverable. This directly addresses the constraint stated in this case.
-- **B. Revert can require conflict resolution** An inverse patch is not guaranteed to apply cleanly. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
-- **C. A corrective commit preserves the mistaken change in history** Historical retention can be useful unless sensitive data requires removal. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
+- **A. A new commit applying the inverse change where it can be resolved** **Correct.** The original history remains while a subsequent change reverses its effect.
+- **B. Automatic deletion of every object introduced by the original commit** Revert changes content rather than guaranteeing object erasure.
+- **C. A new branch with no parent commits** That is not the normal inverse-change behavior of revert.
+- **D. A rollback of every external database affected by deployment** Source-control reversal does not automatically transact external runtime state.
 
-**Explanation:** Expired unreachable objects may no longer be recoverable. The selected answer is reflog availability is local and time limited.
+**Explanation:** The original history remains while a subsequent change reverses its effect. Revert changes content rather than guaranteeing object erasure. That is not the normal inverse-change behavior of revert. Source-control reversal does not automatically transact external runtime state.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q006
 
-Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which next change most directly satisfies the stated requirement?
+What does git restore --source HEAD --worktree -- config/app.json target in the exhibited case?
 
-- **A. Inspect the local reflog and create a recovery branch** Reflog entries can identify recently moved local references. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **B. Create a revert commit through the normal review workflow** **Correct.** Revert undoes changes without rewriting shared history. This directly addresses the constraint stated in this case.
-- **C. Restore only the selected file from the intended revision** A targeted restore avoids overwriting unrelated work. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
+```bash
+git restore --source HEAD --worktree -- config/app.json
+```
 
-**Explanation:** Revert undoes changes without rewriting shared history. The selected answer is create a revert commit through the normal review workflow.
+- **A. The remote repository's copy of all configuration files** The shown command restores local state rather than publishing a remote update.
+- **B. Only untracked files matching the directory name** The selected path is restored from the specified tracked source revision.
+- **C. The working-tree version of that path using HEAD as the source** **Correct.** The command specifies the source revision and only the selected working-tree path.
+- **D. Every branch reference in the repository** Restore is not a command to move all branch names.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** The shown command restores local state rather than publishing a remote update. The selected path is restored from the specified tracked source revision. The command specifies the source revision and only the selected working-tree path. Restore is not a command to move all branch names.
+
+**Sources:** [S4](https://git-scm.com/docs/git-restore)
 
 ## L06-Q007
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which explanation best accounts for the behavior or constraint described?
+After locating the desired commit in reflog, what is a safe first recovery step?
 
-- **A. The faulty commit is part of published history** **Correct.** Rewriting it would disrupt collaborators' existing references. This directly addresses the constraint stated in this case.
-- **B. The damage is limited to one working-tree path** A repository-wide reset would have excessive scope. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **C. The commit became unreachable through current branch names** Moving a reference does not immediately delete its objects. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
+- **A. Create a new recovery branch at that commit** **Correct.** A new reference preserves the found work before further investigation.
+- **B. Force-push the current mistaken branch to every remote** That can publish the wrong state and affect other collaborators.
+- **C. Delete unreachable objects to simplify the repository** That can remove the very content being recovered.
+- **D. Run another hard reset without recording the found identity** Another destructive movement can make the investigation harder.
 
-**Explanation:** Rewriting it would disrupt collaborators' existing references. The selected answer is the faulty commit is part of published history.
+**Explanation:** A new reference preserves the found work before further investigation. That can publish the wrong state and affect other collaborators. That can remove the very content being recovered. Another destructive movement can make the investigation harder.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q008
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which observation provides the strongest evidence that the requested result was achieved?
+What should a reviewer expect when a revert of an older commit conflicts with later changes?
 
-- **A. A new commit reverses the regression while preserving history** **Correct.** The visible reversal supports audit and collaboration. This directly addresses the constraint stated in this case.
-- **B. The file returns while unrelated modifications remain intact** Both restoration and preservation must be verified. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **C. A recovery branch contains the expected commit and files** A retained reference makes the recovered work accessible. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
+- **A. Assume a conflicting revert is impossible because the original commit was valid** Validity does not prevent later incompatible modifications.
+- **B. Ignore conflicts and report that the rollback completed** An unresolved operation has not established the intended corrective content.
+- **C. Force-push the older tree immediately without checking subsequent valid work** That can remove unrelated accepted changes instead of a targeted reversal.
+- **D. Resolve the inverse change against the current source and test the result** **Correct.** Later work can overlap or depend on the content being reversed.
 
-**Explanation:** The visible reversal supports audit and collaboration. The selected answer is a new commit reverses the regression while preserving history.
+**Explanation:** Validity does not prevent later incompatible modifications. An unresolved operation has not established the intended corrective content. That can remove unrelated accepted changes instead of a targeted reversal. Later work can overlap or depend on the content being reversed.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q009
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which execution safeguard most directly addresses the risk in this case?
+Why should a developer inspect git status and a path diff before restoring a deleted file?
 
-- **A. Create a new branch before changing the working branch** A separate reference preserves evidence during recovery. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **B. Test the revert against subsequent dependent changes** **Correct.** Later commits may rely on the reverted behavior. This directly addresses the constraint stated in this case.
-- **C. Inspect status and diff before restoring the path** Uncommitted work can be overwritten by restore operations. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
+- **A. Restoration may overwrite local changes and must use the intended source** **Correct.** The current index and working-tree state determine what content the command may replace.
+- **B. Status automatically uploads a backup to the remote** Status reports local state rather than creating a remote backup.
+- **C. A diff makes all restoration commands nondestructive** Inspection informs the decision but does not change overwrite behavior.
+- **D. The file's extension alone identifies the correct historical revision** Filename type does not establish which version should be restored.
 
-**Explanation:** Later commits may rely on the reverted behavior. The selected answer is test the revert against subsequent dependent changes.
+**Explanation:** The current index and working-tree state determine what content the command may replace. Status reports local state rather than creating a remote backup. Inspection informs the decision but does not change overwrite behavior. Filename type does not establish which version should be restored.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore)
 
 ## L06-Q010
 
-Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. The team selects this remedy: "Create a revert commit through the normal review workflow." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A teammate cannot find a developer's private local reset in their own reflog. What explains the difference?
 
-- **A. Revert can require conflict resolution** **Correct.** An inverse patch is not guaranteed to apply cleanly. This directly addresses the constraint stated in this case.
-- **B. Restoring content does not recreate an entire lost workflow** It repairs selected paths rather than all repository state. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **C. Reflog availability is local and time limited** Expired unreachable objects may no longer be recoverable. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
+- **A. The repository must have been converted into a shallow clone** Different local reflogs can occur without shallow history.
+- **B. Only repository administrators can retain reflog entries** Local reflog availability is not defined by remote administrative role.
+- **C. Every clone synchronizes all local branch movements on each fetch** Fetch does not copy every other clone's private operation history.
+- **D. Reflogs describe local reference updates rather than one universal shared operation history** **Correct.** Different clones do not automatically contain every other's local movements.
 
-**Explanation:** An inverse patch is not guaranteed to apply cleanly. The selected answer is revert can require conflict resolution.
+**Explanation:** Different local reflogs can occur without shallow history. Local reflog availability is not defined by remote administrative role. Fetch does not copy every other clone's private operation history. Different clones do not automatically contain every other's local movements.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q011
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which next change most directly satisfies the stated requirement?
+Which evidence demonstrates that a shared-history rollback repaired the regression while preserving auditability?
 
-- **A. Restore only the selected file from the intended revision** **Correct.** A targeted restore avoids overwriting unrelated work. This directly addresses the constraint stated in this case.
-- **B. Cherry-pick the specific fix onto the release branch** Selective application transfers the intended patch. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. Create a revert commit through the normal review workflow** Revert undoes changes without rewriting shared history. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
+- **A. The local working tree has unstaged modifications after a failed revert** Uncommitted partial changes are not a completed reviewed repair.
+- **B. A new reviewed commit reverses the faulty behavior and the earlier history remains inspectable** **Correct.** The corrective behavior and retained source history are both relevant requirements.
+- **C. The bad commit disappears from the source history entirely** That is not the normal evidence of a history-preserving revert.
+- **D. Only the branch name changes from main to recovered** A name change does not prove corrected code.
 
-**Explanation:** A targeted restore avoids overwriting unrelated work. The selected answer is restore only the selected file from the intended revision.
+**Explanation:** Uncommitted partial changes are not a completed reviewed repair. The corrective behavior and retained source history are both relevant requirements. That is not the normal evidence of a history-preserving revert. A name change does not prove corrected code.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q012
 
 Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which explanation best accounts for the behavior or constraint described?
+Which check confirms a targeted file recovery respected the request to preserve unrelated edits?
 
-- **A. The damage is limited to one working-tree path** **Correct.** A repository-wide reset would have excessive scope. This directly addresses the constraint stated in this case.
-- **B. Merging all of main would include unrelated changes** The release needs a narrower source selection. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. The faulty commit is part of published history** Rewriting it would disrupt collaborators' existing references. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
+- **A. The file exists with any nonzero size** Existence does not establish the correct content or preservation of other work.
+- **B. Only the source commit message contains the word restore** A message does not prove the actual path state.
+- **C. The restored path has expected content and other modified paths retain their intended diffs** **Correct.** Both the repair and the preservation constraint must be verified.
+- **D. The repository has no modifications anywhere after a hard reset** That can indicate unrelated edits were discarded.
 
-**Explanation:** A repository-wide reset would have excessive scope. The selected answer is the damage is limited to one working-tree path.
+**Explanation:** Existence does not establish the correct content or preservation of other work. A message does not prove the actual path state. Both the repair and the preservation constraint must be verified. That can indicate unrelated edits were discarded.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore)
 
 ## L06-Q013
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which observation provides the strongest evidence that the requested result was achieved?
+A recovery guide promises any reset commit can always be restored through reflog. The repository has run cleanup for months since the mistake. What correction is necessary?
 
-- **A. The file returns while unrelated modifications remain intact** **Correct.** Both restoration and preservation must be verified. This directly addresses the constraint stated in this case.
-- **B. The release branch contains the fix and passes its tests** The patch must work on the older baseline. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. A new commit reverses the regression while preserving history** The visible reversal supports audit and collaboration. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
+- **A. A commit message alone is sufficient to regenerate the exact source tree** Descriptive text does not contain the complete missing object graph.
+- **B. Recovery depends on retained reflog entries and objects, so preserve a found reference promptly and avoid guaranteeing expired data recovery** **Correct.** Local retention and garbage collection can remove the evidence or unreachable content needed by the method.
+- **C. Reflog is a permanent remote backup independent of local garbage collection** Its local retention does not provide that unconditional backup guarantee.
+- **D. Running more hard resets recreates the missing earlier objects** New reference movements cannot reconstruct deleted content.
 
-**Explanation:** Both restoration and preservation must be verified. The selected answer is the file returns while unrelated modifications remain intact.
+**Explanation:** Descriptive text does not contain the complete missing object graph. Local retention and garbage collection can remove the evidence or unreachable content needed by the method. Its local retention does not provide that unconditional backup guarantee. New reference movements cannot reconstruct deleted content.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q014
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which execution safeguard most directly addresses the risk in this case?
+A published commit introduced a configuration bug, and later valid commits depend on parts of its refactoring. What is the safest recovery plan?
 
-- **A. Test the revert against subsequent dependent changes** Later commits may rely on the reverted behavior. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
-- **B. Inspect status and diff before restoring the path** **Correct.** Uncommitted work can be overwritten by restore operations. This directly addresses the constraint stated in this case.
-- **C. Inspect dependencies and record the original commit identity** A selected commit may rely on other changes. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
+- **A. Force main back before the original commit and assume dependent changes will reappear automatically** Reference rewinding removes later history from that branch and does not reconstruct its valid changes.
+- **B. Run an unresolved revert and treat its nonzero exit as an acceptable deployed rollback** A stopped operation has not established a usable corrected revision.
+- **C. Revert all later commits indiscriminately because one earlier change was defective** That expands the damage scope without evaluating which accepted work remains valid.
+- **D. Review and implement a targeted inverse or corrective change against current main, resolving dependencies and testing the resulting behavior** **Correct.** The repair must undo the defect without discarding valid later work.
 
-**Explanation:** Uncommitted work can be overwritten by restore operations. The selected answer is inspect status and diff before restoring the path.
+**Explanation:** Reference rewinding removes later history from that branch and does not reconstruct its valid changes. A stopped operation has not established a usable corrected revision. That expands the damage scope without evaluating which accepted work remains valid. The repair must undo the defect without discarding valid later work.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q015
 
-Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. The team selects this remedy: "Restore only the selected file from the intended revision." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A configuration file is deleted only from the working tree, another file has staged edits, and a third has unstaged edits. The developer needs the configuration from HEAD without losing either other change. Which plan fits?
 
-- **A. Revert can require conflict resolution** An inverse patch is not guaranteed to apply cleanly. That addresses a different requirement: Shared regression. It does not directly resolve this case's stated constraint.
-- **B. Restoring content does not recreate an entire lost workflow** **Correct.** It repairs selected paths rather than all repository state. This directly addresses the constraint stated in this case.
-- **C. Cherry-picking creates a different commit identity** Later reconciliation can require duplicate-change awareness. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
+- **A. Inspect status, restore only the configuration path from HEAD to the working tree, and verify the other staged and unstaged diffs** **Correct.** The scoped operation targets the missing file without a broad reset of the index or working tree.
+- **B. Use git reset --hard HEAD and then infer the missing edits from shell history** That discards unrelated tracked modifications instead of preserving them.
+- **C. Use git restore --staged --worktree . for the entire repository** The broad path and both destinations can overwrite unrelated staged and unstaged work.
+- **D. Delete the index and reclone every tracked path** That is broader than the requested repair and risks the valuable local state.
 
-**Explanation:** It repairs selected paths rather than all repository state. The selected answer is restoring content does not recreate an entire lost workflow.
+**Explanation:** The scoped operation targets the missing file without a broad reset of the index or working tree. That discards unrelated tracked modifications instead of preserving them. The broad path and both destinations can overwrite unrelated staged and unstaged work. That is broader than the requested repair and risks the valuable local state.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore); [S5](https://git-scm.com/docs/git-reset)
 
 ## L06-Q016
 
-Foundational · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which next change most directly satisfies the stated requirement?
+A supported release needs one fix from main without its unrelated next-version changes. Which Git operation is commonly appropriate?
 
-- **A. Restore only the selected file from the intended revision** A targeted restore avoids overwriting unrelated work. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **B. Cherry-pick the specific fix onto the release branch** **Correct.** Selective application transfers the intended patch. This directly addresses the constraint stated in this case.
-- **C. Revoke the token first then coordinate history removal** Credential invalidation must precede repository cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
+```text
+release/v1: A---B---C
+main:       A---B---C---D---E---F
+Required patch: E
+D and F contain incompatible next-version work
+```
 
-**Explanation:** Selective application transfers the intended patch. The selected answer is cherry-pick the specific fix onto the release branch.
+- **A. Merge all of main and remove the incompatible code afterward** That broadens the patch scope and complicates supported-release validation.
+- **B. Move the supported release tag to main without applying a patch** Changing the reference does not preserve the supported baseline.
+- **C. Copy only the commit message into a new empty commit** A message does not apply the corrective source changes.
+- **D. Cherry-pick the intended commit onto the supported branch** **Correct.** Selective application can transfer the patch without merging all newer development.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** That broadens the patch scope and complicates supported-release validation. Changing the reference does not preserve the supported baseline. A message does not apply the corrective source changes. Selective application can transfer the patch without merging all newer development.
+
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q017
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which explanation best accounts for the behavior or constraint described?
+A real token was committed publicly and then deleted from the latest file. What should happen first in the response?
 
-- **A. Merging all of main would include unrelated changes** **Correct.** The release needs a narrower source selection. This directly addresses the constraint stated in this case.
-- **B. Deleting the current file leaves earlier objects accessible** Version history preserves previously committed content. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **C. The damage is limited to one working-tree path** A repository-wide reset would have excessive scope. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
+- **A. Revoke or rotate the exposed credential** **Correct.** Current-file removal does not invalidate a value available in history or copies.
+- **B. Rewrite the history and keep the same live token indefinitely** The disclosed credential remains usable even if some repository copies are cleaned.
+- **C. Add the filename to gitignore and declare the exposure resolved** Ignore rules do not revoke a credential or erase historical content.
+- **D. Rename the token variable while retaining its value** A new variable name does not change the compromised secret.
 
-**Explanation:** The release needs a narrower source selection. The selected answer is merging all of main would include unrelated changes.
+**Explanation:** Current-file removal does not invalidate a value available in history or copies. The disclosed credential remains usable even if some repository copies are cleaned. Ignore rules do not revoke a credential or erase historical content. A new variable name does not change the compromised secret.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q018
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which observation provides the strongest evidence that the requested result was achieved?
+After history cleanup, a collaborator pushes an old branch and the removed file reappears. What caused the regression?
 
-- **A. The old token is unusable and known history references are cleaned** Security recovery needs both revocation and content cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **B. The file returns while unrelated modifications remain intact** Both restoration and preservation must be verified. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **C. The release branch contains the fix and passes its tests** **Correct.** The patch must work on the older baseline. This directly addresses the constraint stated in this case.
+- **A. The signing key regenerated the deleted file** Signing does not recreate source objects from removed files.
+- **B. The new branch name forced the server to restore a backup** A branch name alone does not imply automatic historical restoration.
+- **C. The collaborator reintroduced references to the old content graph** **Correct.** Cleaning one remote history does not automatically clean every existing clone.
+- **D. Gitignore automatically recreated the old file** Ignore configuration does not reconstruct historical content.
 
-**Explanation:** The patch must work on the older baseline. The selected answer is the release branch contains the fix and passes its tests.
+**Explanation:** Signing does not recreate source objects from removed files. A branch name alone does not imply automatic historical restoration. Cleaning one remote history does not automatically clean every existing clone. Ignore configuration does not reconstruct historical content.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q019
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which execution safeguard most directly addresses the risk in this case?
+A tracked configuration file was deleted several commits ago. Which inspection can locate the deletion and prior version?
 
-- **A. Inspect status and diff before restoring the path** Uncommitted work can be overwritten by restore operations. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **B. Inspect dependencies and record the original commit identity** **Correct.** A selected commit may rely on other changes. This directly addresses the constraint stated in this case.
-- **C. Coordinate forks clones caches and affected collaborators** History rewriting alone cannot erase every external copy. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
+- **A. Only the filesystem creation date of the repository folder** That timestamp does not identify a source-level deletion commit.
+- **B. Only the names of currently open pull requests** An older accepted change may no longer have an open request.
+- **C. The file's Git path history** **Correct.** The relevant commit sequence can identify when that tracked path changed or disappeared.
+- **D. Only git status on the current clean checkout** Status does not list every committed historical deletion.
 
-**Explanation:** A selected commit may rely on other changes. The selected answer is inspect dependencies and record the original commit identity.
+**Explanation:** That timestamp does not identify a source-level deletion commit. An older accepted change may no longer have an open request. The relevant commit sequence can identify when that tracked path changed or disappeared. Status does not list every committed historical deletion.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q020
 
-Advanced · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. The team selects this remedy: "Cherry-pick the specific fix onto the release branch." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A conflicted cherry-pick should be abandoned, and the developer does not need its resolution edits. Which supported operation is relevant?
 
-- **A. Public disclosure cannot be fully undone** Treat the credential as compromised regardless of cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **B. Restoring content does not recreate an entire lost workflow** It repairs selected paths rather than all repository state. That addresses a different requirement: One missing file. It does not directly resolve this case's stated constraint.
-- **C. Cherry-picking creates a different commit identity** **Correct.** Later reconciliation can require duplicate-change awareness. This directly addresses the constraint stated in this case.
+```text
+On branch release/v1
+You are currently cherry-picking commit <patch>
+Unmerged paths: config/app.json
+Decision: abandon the entire cherry-pick attempt
+```
 
-**Explanation:** Later reconciliation can require duplicate-change awareness. The selected answer is cherry-picking creates a different commit identity.
+- **A. git fetch --prune** Fetching remote references does not cancel a local cherry-pick operation.
+- **B. git cherry-pick --abort** **Correct.** The operation cancels the in-progress cherry-pick and restores its prior state where supported.
+- **C. git cherry-pick --continue** Continue attempts to complete the operation after resolution rather than abandon it.
+- **D. git cherry-pick --skip** Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** Fetching remote references does not cancel a local cherry-pick operation. The operation cancels the in-progress cherry-pick and restores its prior state where supported. Continue attempts to complete the operation after resolution rather than abandon it. Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work.
+
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q021
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which next change most directly satisfies the stated requirement?
+Why does a cherry-picked fix usually have a different commit identity on the target branch?
 
-- **A. Coordinate fresh clones or careful cleanup before resuming pushes** Old references can reintroduce removed objects. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **B. Cherry-pick the specific fix onto the release branch** Selective application transfers the intended patch. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. Revoke the token first then coordinate history removal** **Correct.** Credential invalidation must precede repository cleanup. This directly addresses the constraint stated in this case.
+- **A. Cherry-picking always changes the author's original source files arbitrarily** A new identity does not imply arbitrary semantic changes.
+- **B. A commit hash depends only on its human-readable message** The message is only part of a commit's object content.
+- **C. The new commit has its own ancestry and commit metadata** **Correct.** Equivalent patch content does not imply an identical commit object.
+- **D. Git randomly encrypts all copied commit hashes** Commit identity is derived from object content rather than random encryption.
 
-**Explanation:** Credential invalidation must precede repository cleanup. The selected answer is revoke the token first then coordinate history removal.
+**Explanation:** A new identity does not imply arbitrary semantic changes. The message is only part of a commit's object content. Equivalent patch content does not imply an identical commit object. Commit identity is derived from object content rather than random encryption.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q022
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which explanation best accounts for the behavior or constraint described?
+Why does a later commit deleting a secret fail to remove the earlier exposure?
 
-- **A. Deleting the current file leaves earlier objects accessible** **Correct.** Version history preserves previously committed content. This directly addresses the constraint stated in this case.
-- **B. A stale collaborator branch still contains the original history** Server cleanup does not rewrite every local clone. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **C. Merging all of main would include unrelated changes** The release needs a narrower source selection. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
+```text
+Commit A: adds service-token.txt
+Commit B: deletes service-token.txt
+Public clone containing Commit A already exists
+```
 
-**Explanation:** Version history preserves previously committed content. The selected answer is deleting the current file leaves earlier objects accessible.
+- **A. Earlier revisions and external copies can still contain the value** **Correct.** Version history preserves prior content until a separate cleanup, and copies may remain.
+- **B. Deleting a file automatically disables all credentials it contains** Source changes do not generally revoke external service credentials.
+- **C. A public repository automatically destroys every old commit on merge** Normal merging retains history rather than erasing older versions.
+- **D. Only repository administrators can read any previous public version** Historical public content is not protected by that assumed role boundary.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** Version history preserves prior content until a separate cleanup, and copies may remain. Source changes do not generally revoke external service credentials. Normal merging retains history rather than erasing older versions. Historical public content is not protected by that assumed role boundary.
+
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q023
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which observation provides the strongest evidence that the requested result was achieved?
+Which coordination step helps prevent old sensitive history returning after a rewrite?
 
-- **A. The release branch contains the fix and passes its tests** The patch must work on the older baseline. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **B. The old token is unusable and known history references are cleaned** **Correct.** Security recovery needs both revocation and content cleanup. This directly addresses the constraint stated in this case.
-- **C. New pushes do not reference the removed sensitive objects** All active collaboration paths must use cleaned history. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
+- **A. Have collaborators use the documented cleaned-history recovery or fresh-clone procedure before resuming affected pushes** **Correct.** Their local references must not reintroduce the old graph.
+- **B. Ask collaborators only to rename their old branch** The same old commits can remain under the new name.
+- **C. Keep every old branch as the default push target without review** That preserves references to the content intended for removal.
+- **D. Delete only the cleaned repository's README** Documentation content is not the historical graph being reintroduced.
 
-**Explanation:** Security recovery needs both revocation and content cleanup. The selected answer is the old token is unusable and known history references are cleaned.
+**Explanation:** Their local references must not reintroduce the old graph. The same old commits can remain under the new name. That preserves references to the content intended for removal. Documentation content is not the historical graph being reintroduced.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q024
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which execution safeguard most directly addresses the risk in this case?
+Why is a clean current working tree insufficient to explain a file missing from an older commit?
 
-- **A. Temporarily control writes during the coordinated rewrite** Concurrent pushes can undermine the cleanup boundary. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **B. Inspect dependencies and record the original commit identity** A selected commit may rely on other changes. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. Coordinate forks clones caches and affected collaborators** **Correct.** History rewriting alone cannot erase every external copy. This directly addresses the constraint stated in this case.
+- **A. Clean status proves that every historical version contains identical files** Cleanliness does not imply unchanged past source trees.
+- **B. Git status includes a full chronological file-deletion report** It is not a substitute for historical log inspection.
+- **C. A missing file must be untracked if status is clean** The file may have been tracked and later removed in committed history.
+- **D. Clean status concerns current index and working-tree differences** **Correct.** Committed history requires a separate historical inspection.
 
-**Explanation:** History rewriting alone cannot erase every external copy. The selected answer is coordinate forks clones caches and affected collaborators.
+**Explanation:** Cleanliness does not imply unchanged past source trees. It is not a substitute for historical log inspection. The file may have been tracked and later removed in committed history. Committed history requires a separate historical inspection.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q025
 
-Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. The team selects this remedy: "Revoke the token first then coordinate history removal." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What should git status be checked for after cancelling a conflicted cherry-pick?
 
-- **A. History rewriting changes commit hashes** Open pull requests and signatures may need reconciliation. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **B. Cherry-picking creates a different commit identity** Later reconciliation can require duplicate-change awareness. That addresses a different requirement: Patch transfer. It does not directly resolve this case's stated constraint.
-- **C. Public disclosure cannot be fully undone** **Correct.** Treat the credential as compromised regardless of cleanup. This directly addresses the constraint stated in this case.
+- **A. No unintended in-progress operation and the expected branch state** **Correct.** The cancellation result should match the intended pre-operation baseline.
+- **B. Only whether conflict markers disappeared from the editor** An editor view does not establish that the repository operation ended or that the expected branch state was restored.
+- **C. Only whether the original source commit still exists** Source commit existence does not show whether the local cherry-pick remains in progress.
+- **D. Only whether the staged diff is empty, without checking operation state** An empty index alone does not establish the intended branch and in-progress operation state.
 
-**Explanation:** Treat the credential as compromised regardless of cleanup. The selected answer is public disclosure cannot be fully undone.
+**Explanation:** The cancellation result should match the intended pre-operation baseline. An editor view does not establish that the repository operation ended or that the expected branch state was restored. Source commit existence does not show whether the local cherry-pick remains in progress. An empty index alone does not establish the intended branch and in-progress operation state.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q026
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which next change most directly satisfies the stated requirement?
+What should be checked before accepting a cherry-picked fix on an older release branch?
 
-- **A. Revoke the token first then coordinate history removal** Credential invalidation must precede repository cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **B. Coordinate fresh clones or careful cleanup before resuming pushes** **Correct.** Old references can reintroduce removed objects. This directly addresses the constraint stated in this case.
-- **C. Inspect path history before restoring the selected version** Historical inspection identifies the relevant deletion and source. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
+- **A. Only that the original main build was green** That run can contain prerequisites absent from the older release.
+- **B. Only that the source and destination branch names look similar** Naming does not establish code compatibility.
+- **C. Only that the new commit has the same number of lines** Diff size does not prove the surrounding contracts match.
+- **D. Dependencies and behavior against that older branch's actual baseline** **Correct.** The transferred patch may rely on changes not selected with it.
 
-**Explanation:** Old references can reintroduce removed objects. The selected answer is coordinate fresh clones or careful cleanup before resuming pushes.
+**Explanation:** That run can contain prerequisites absent from the older release. Naming does not establish code compatibility. Diff size does not prove the surrounding contracts match. The transferred patch may rely on changes not selected with it.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q027
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which explanation best accounts for the behavior or constraint described?
+What outcome is needed in addition to coordinated history cleanup after credential exposure?
 
-- **A. Current status cannot explain committed historical changes** The deletion is already part of repository history. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **B. Deleting the current file leaves earlier objects accessible** Version history preserves previously committed content. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **C. A stale collaborator branch still contains the original history** **Correct.** Server cleanup does not rewrite every local clone. This directly addresses the constraint stated in this case.
+- **A. The secret file is absent from the default-branch tip** Current-tree removal does not invalidate the credential retained in earlier copies.
+- **B. The old credential no longer authorizes access** **Correct.** Security response must invalidate the leaked capability, not merely its visible file.
+- **C. The credential is deleted from the local environment file only** Local removal does not revoke the external capability already exposed.
+- **D. The repository scan no longer reports the historical token string** A clean scanner result is not independent proof that the external credential stopped authorizing access.
 
-**Explanation:** Server cleanup does not rewrite every local clone. The selected answer is a stale collaborator branch still contains the original history.
+**Explanation:** Current-tree removal does not invalidate the credential retained in earlier copies. Security response must invalidate the leaked capability, not merely its visible file. Local removal does not revoke the external capability already exposed. A clean scanner result is not independent proof that the external credential stopped authorizing access.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q028
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which observation provides the strongest evidence that the requested result was achieved?
+What should a postcleanup verification inspect beyond the current default-branch file tree?
 
-- **A. The old token is unusable and known history references are cleaned** Security recovery needs both revocation and content cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
-- **B. New pushes do not reference the removed sensitive objects** **Correct.** All active collaboration paths must use cleaned history. This directly addresses the constraint stated in this case.
-- **C. The path log identifies the deletion and prior usable revision** This establishes the precise restoration source. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
+- **A. Known affected refs and repositories within the defined cleanup scope** **Correct.** Other branches or copies can retain the unwanted historical object relationships.
+- **B. Only the file's current absence in the editor** The latest tree does not cover the defined historical exposure scope.
+- **C. Only the number of commits on main** A count does not identify whether sensitive objects remain referenced.
+- **D. Only the commit author's new display name** Attribution changes do not prove content removal.
 
-**Explanation:** All active collaboration paths must use cleaned history. The selected answer is new pushes do not reference the removed sensitive objects.
+**Explanation:** Other branches or copies can retain the unwanted historical object relationships. The latest tree does not cover the defined historical exposure scope. A count does not identify whether sensitive objects remain referenced. Attribution changes do not prove content removal.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q029
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which execution safeguard most directly addresses the risk in this case?
+What should be selected before restoring a historically deleted configuration file?
 
-- **A. Temporarily control writes during the coordinated rewrite** **Correct.** Concurrent pushes can undermine the cleanup boundary. This directly addresses the constraint stated in this case.
-- **B. Restore to a recovery branch and inspect the diff** Historical files may be incompatible with current code. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **C. Coordinate forks clones caches and affected collaborators** History rewriting alone cannot erase every external copy. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
+```bash
+git log -- config/app.json
+git show <intended-commit>:config/app.json
+```
 
-**Explanation:** Concurrent pushes can undermine the cleanup boundary. The selected answer is temporarily control writes during the coordinated rewrite.
+- **A. Only a filename with the same extension** Similar type does not identify the correct configuration.
+- **B. The oldest possible commit regardless of current application format** An arbitrary old version can be incompatible with today's code.
+- **C. Every file changed anywhere in the deletion commit** The requested repair may concern only one specific path.
+- **D. The intended source revision and path** **Correct.** Recovery needs a deliberate content version rather than whichever file is easiest to find.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Explanation:** Similar type does not identify the correct configuration. An arbitrary old version can be incompatible with today's code. The requested repair may concern only one specific path. Recovery needs a deliberate content version rather than whichever file is easiest to find.
+
+**Sources:** [S4](https://git-scm.com/docs/git-restore); [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q030
 
-Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. The team selects this remedy: "Coordinate fresh clones or careful cleanup before resuming pushes." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A developer resolved several conflicts but now wants to abort and may need that work later. What should happen first?
 
-- **A. History rewriting changes commit hashes** **Correct.** Open pull requests and signatures may need reconciliation. This directly addresses the constraint stated in this case.
-- **B. Recovery can restore obsolete configuration** Content correctness still requires present-day validation. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **C. Public disclosure cannot be fully undone** Treat the credential as compromised regardless of cleanup. That addresses a different requirement: Exposed credential. It does not directly resolve this case's stated constraint.
+- **A. Force-push the unresolved index as a commit** An unresolved operation is not a reviewed valid source state to publish.
+- **B. Delete the branch and assume reflog contains every unstaged edit** Reference logs are not a universal backup of arbitrary uncommitted content.
+- **C. Preserve the valuable resolution changes in an appropriate separate record before discarding them** **Correct.** Cancellation can remove work performed during the unresolved operation.
+- **D. Run abort repeatedly until the edits reappear** Repeating cancellation does not create a backup of discarded resolution work.
 
-**Explanation:** Open pull requests and signatures may need reconciliation. The selected answer is history rewriting changes commit hashes.
+**Explanation:** An unresolved operation is not a reviewed valid source state to publish. Reference logs are not a universal backup of arbitrary uncommitted content. Cancellation can remove work performed during the unresolved operation. Repeating cancellation does not create a backup of discarded resolution work.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q031
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which next change most directly satisfies the stated requirement?
+A cherry-pick conflicts. What state indicates that the operation still requires attention rather than having completed successfully?
 
-- **A. Abort the in-progress cherry-pick after protecting unrelated work** The operation has a supported cancellation path. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
-- **B. Coordinate fresh clones or careful cleanup before resuming pushes** Old references can reintroduce removed objects. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **C. Inspect path history before restoring the selected version** **Correct.** Historical inspection identifies the relevant deletion and source. This directly addresses the constraint stated in this case.
+- **A. The target branch has fewer local commits than main** Relative history length does not establish completion of the selected operation.
+- **B. Git reports unresolved paths and an in-progress cherry-pick** **Correct.** The candidate change is awaiting resolution or deliberate cancellation.
+- **C. A new remote tag appears with the original commit message** Tag creation does not resolve an active local patch operation.
+- **D. The author closes the terminal window** Closing the shell does not necessarily clear the repository's operation state.
 
-**Explanation:** Historical inspection identifies the relevant deletion and source. The selected answer is inspect path history before restoring the selected version.
+**Explanation:** Relative history length does not establish completion of the selected operation. The candidate change is awaiting resolution or deliberate cancellation. Tag creation does not resolve an active local patch operation. Closing the shell does not necessarily clear the repository's operation state.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q032
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which explanation best accounts for the behavior or constraint described?
+Why must forks clones and downstream references be considered during sensitive-history cleanup?
 
-- **A. A stale collaborator branch still contains the original history** Server cleanup does not rewrite every local clone. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **B. Current status cannot explain committed historical changes** **Correct.** The deletion is already part of repository history. This directly addresses the constraint stated in this case.
-- **C. Git is waiting for conflict resolution in an active operation** The repository has not completed the intended patch application. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
+- **A. The unwanted content can remain outside the rewritten primary reference** **Correct.** A central rewrite does not automatically alter every existing copy.
+- **B. Every fork is automatically deleted when the source branch changes** Forks and clones have independent content and lifecycle.
+- **C. A collaborator's old branch can never reintroduce removed history** A push can restore references to an old graph if not coordinated.
+- **D. The newest commit's clean diff proves no copy contains the value** A current diff cannot establish absence from historical or external storage.
 
-**Explanation:** The deletion is already part of repository history. The selected answer is current status cannot explain committed historical changes.
+**Explanation:** A central rewrite does not automatically alter every existing copy. Forks and clones have independent content and lifecycle. A push can restore references to an old graph if not coordinated. A current diff cannot establish absence from historical or external storage.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q033
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which observation provides the strongest evidence that the requested result was achieved?
+Why should pushes be coordinated or temporarily constrained during a shared-history rewrite?
 
-- **A. The path log identifies the deletion and prior usable revision** **Correct.** This establishes the precise restoration source. This directly addresses the constraint stated in this case.
-- **B. Status shows no active cherry-pick and the branch baseline returns** The cancellation should restore the pre-operation state. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
-- **C. New pushes do not reference the removed sensitive objects** All active collaboration paths must use cleaned history. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
+- **A. Every simultaneous read request corrupts the repository** Read activity is not the write-race problem described.
+- **B. A temporary coordination window permanently removes future review needs** The migration does not replace ordinary source governance.
+- **C. Concurrent old-history writes can undermine the cleaned reference boundary** **Correct.** The transition needs a consistent agreement about which history is authoritative.
+- **D. Git cannot perform a rewrite unless every user deletes their account** Account deletion is unrelated to coordinated reference management.
 
-**Explanation:** This establishes the precise restoration source. The selected answer is the path log identifies the deletion and prior usable revision.
+**Explanation:** Read activity is not the write-race problem described. The migration does not replace ordinary source governance. The transition needs a consistent agreement about which history is authoritative. Account deletion is unrelated to coordinated reference management.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q034
 
 Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which execution safeguard most directly addresses the risk in this case?
+Why should a historical-file recovery normally begin on a reviewable recovery branch?
 
-- **A. Temporarily control writes during the coordinated rewrite** Concurrent pushes can undermine the cleanup boundary. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
-- **B. Restore to a recovery branch and inspect the diff** **Correct.** Historical files may be incompatible with current code. This directly addresses the constraint stated in this case.
-- **C. Inspect and preserve valuable edits before cancellation** Recovery commands can discard conflict-resolution work. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
+- **A. A branch automatically converts obsolete configuration formats** Source branching does not migrate application schemas.
+- **B. Main cannot contain any restored file** A reviewed restoration can eventually become an accepted mainline change.
+- **C. The recovery branch removes all prior audit history** A new reference ordinarily preserves rather than erases source history.
+- **D. The restored content can be inspected and tested against today's baseline** **Correct.** Historical existence does not guarantee present-day correctness.
 
-**Explanation:** Historical files may be incompatible with current code. The selected answer is restore to a recovery branch and inspect the diff.
+**Explanation:** Source branching does not migrate application schemas. A reviewed restoration can eventually become an accepted mainline change. A new reference ordinarily preserves rather than erases source history. Historical existence does not guarantee present-day correctness.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore)
 
 ## L06-Q035
 
-Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. The team selects this remedy: "Inspect path history before restoring the selected version." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A multi-commit cherry-pick stops on one unwanted patch, but later selected patches are still needed. Which distinction matters?
 
-- **A. Recovery can restore obsolete configuration** **Correct.** Content correctness still requires present-day validation. This directly addresses the constraint stated in this case.
-- **B. Aborting removes the attempted resolution work** A later retry may require resolving the conflict again. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
-- **C. History rewriting changes commit hashes** Open pull requests and signatures may need reconciliation. That addresses a different requirement: History rewrite fallout. It does not directly resolve this case's stated constraint.
+- **A. Continue discards every unresolved conflict automatically** Continuing requires the operation's expected resolution state.
+- **B. Fetch chooses which local patch should be skipped** Remote retrieval does not decide a local sequence's conflict outcome.
+- **C. Skip continues the sequence past the current patch, while abort cancels the operation** **Correct.** The intended continuation determines which supported recovery action fits.
+- **D. Skip and abort always perform exactly the same operation** Their handling of the remaining sequence is materially different.
 
-**Explanation:** Content correctness still requires present-day validation. The selected answer is recovery can restore obsolete configuration.
+**Explanation:** Continuing requires the operation's expected resolution state. Remote retrieval does not decide a local sequence's conflict outcome. The intended continuation determines which supported recovery action fits. Their handling of the remaining sequence is materially different.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q036
 
-Foundational · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which next change most directly satisfies the stated requirement?
+A security fix from main depends on a refactor unavailable on the supported release. The release must keep its old API. Which approach is strongest?
 
-- **A. Untrack the file and separately assess historical exposure** Ignore rules do not remove existing tracked history. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **B. Inspect path history before restoring the selected version** Historical inspection identifies the relevant deletion and source. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **C. Abort the in-progress cherry-pick after protecting unrelated work** **Correct.** The operation has a supported cancellation path. This directly addresses the constraint stated in this case.
+- **A. Adapt or backport the minimal correction for the old contract, test it there, and record the relationship to the original fix** **Correct.** The desired behavior matters, while blindly importing newer dependencies can violate support compatibility.
+- **B. Cherry-pick the fix and suppress the missing-symbol compilation errors** The resulting source does not become valid by hiding the error.
+- **C. Merge the entire refactor and remove the supported API tests** That abandons the stated compatibility requirement.
+- **D. Assume a conflict-free cherry-pick proves the runtime dependencies are present** Textual applicability is weaker evidence than building and testing the target baseline.
 
-**Explanation:** The operation has a supported cancellation path. The selected answer is abort the in-progress cherry-pick after protecting unrelated work.
+**Explanation:** The desired behavior matters, while blindly importing newer dependencies can violate support compatibility. The resulting source does not become valid by hiding the error. That abandons the stated compatibility requirement. Textual applicability is weaker evidence than building and testing the target baseline.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick)
 
 ## L06-Q037
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which explanation best accounts for the behavior or constraint described?
+An attacker could already have copied a public token before revocation. The team wants to claim the incident is erased after rewriting history. Which report is accurate?
 
-- **A. Current status cannot explain committed historical changes** The deletion is already part of repository history. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **B. Git is waiting for conflict resolution in an active operation** **Correct.** The repository has not completed the intended patch application. This directly addresses the constraint stated in this case.
-- **C. Gitignore governs untracked-file handling rather than prior commits** Previously committed data remains part of repository objects. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
+- **A. Report only that the current file lacks the token without mentioning revocation or historical exposure** That omits the central security consequences and response evidence.
+- **B. State that the credential was invalidated and known repository exposure was cleaned, while acknowledging that prior public copies cannot be guaranteed erased** **Correct.** Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible.
+- **C. State that a rewritten default branch proves every observer deleted their copy** A repository operation cannot control unknown external retention.
+- **D. Keep the original token active to avoid disrupting integrations and call the rewrite sufficient** Avoiding rotation leaves the compromised capability usable.
 
-**Explanation:** The repository has not completed the intended patch application. The selected answer is git is waiting for conflict resolution in an active operation.
+**Explanation:** That omits the central security consequences and response evidence. Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible. A repository operation cannot control unknown external retention. Avoiding rotation leaves the compromised capability usable.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q038
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which observation provides the strongest evidence that the requested result was achieved?
+A sensitive file exists in multiple maintained branches and a fork. The team has authority over the primary repository but not the fork. Which response is appropriate?
 
-- **A. Status shows no active cherry-pick and the branch baseline returns** **Correct.** The cancellation should restore the pre-operation state. This directly addresses the constraint stated in this case.
-- **B. The path is no longer tracked and exposure is addressed** Future prevention and historical cleanup are separate outcomes. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **C. The path log identifies the deletion and prior usable revision** This establishes the precise restoration source. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
+- **A. Leave the token live until the external fork responds** Revocation should not wait for complete control over every historical copy.
+- **B. Invalidate the secret, coordinate cleanup of owned affected refs, contact the relevant fork owner through the approved process, and avoid claiming universal erasure** **Correct.** The response must respect ownership while distinguishing controlled cleanup from external copies.
+- **C. Delete the entire external fork using the primary repository's administrative role** Authority over one repository does not imply ownership of another.
+- **D. Rewrite only main and report every maintained branch and fork clean** That claim exceeds the evidence and scope of the operation.
 
-**Explanation:** The cancellation should restore the pre-operation state. The selected answer is status shows no active cherry-pick and the branch baseline returns.
+**Explanation:** Revocation should not wait for complete control over every historical copy. The response must respect ownership while distinguishing controlled cleanup from external copies. Authority over one repository does not imply ownership of another. That claim exceeds the evidence and scope of the operation.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q039
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which execution safeguard most directly addresses the risk in this case?
+An old configuration file is recovered, but the application now expects a different schema and secrets must come from a vault. What should the engineer do?
 
-- **A. Use secret scanning and credential rotation where relevant** Untracking a file does not invalidate leaked secrets. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **B. Restore to a recovery branch and inspect the diff** Historical files may be incompatible with current code. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **C. Inspect and preserve valuable edits before cancellation** **Correct.** Recovery commands can discard conflict-resolution work. This directly addresses the constraint stated in this case.
+- **A. Restore the entire old application to avoid reading the configuration diff** That broadens scope beyond the required configuration recovery.
+- **B. Copy the old secret values into the new file and rely on repository privacy** Reintroducing historical credentials does not satisfy the current external-secret design.
+- **C. Review and adapt the needed nonsensitive configuration to the current contract, then test the repair** **Correct.** Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed.
+- **D. Deploy the recovered file unchanged because it once worked** Earlier success does not establish compatibility or safe secret handling today.
 
-**Explanation:** Recovery commands can discard conflict-resolution work. The selected answer is inspect and preserve valuable edits before cancellation.
+**Explanation:** That broadens scope beyond the required configuration recovery. Reintroducing historical credentials does not satisfy the current external-secret design. Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed. Earlier success does not establish compatibility or safe secret handling today.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore); [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q040
 
-Advanced · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. The team selects this remedy: "Abort the in-progress cherry-pick after protecting unrelated work." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The developer needs to abandon a failed cherry-pick but retain valuable new conflict-resolution work and unrelated local edits. Which sequence is safest?
 
-- **A. Ignore patterns are a preventive convenience** They are not a complete data-protection mechanism. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **B. Recovery can restore obsolete configuration** Content correctness still requires present-day validation. That addresses a different requirement: Unknown deletion. It does not directly resolve this case's stated constraint.
-- **C. Aborting removes the attempted resolution work** **Correct.** A later retry may require resolving the conflict again. This directly addresses the constraint stated in this case.
+- **A. Delete the whole working directory and recover from the remote later** The remote may not contain the valuable local state being preserved.
+- **B. Inspect repository state, preserve the work that must survive, use the supported abort path, and verify the resulting diffs** **Correct.** Cancellation safety depends on explicitly protecting changes rather than assuming all uncommitted work is journaled.
+- **C. Use reset --hard immediately because reflog necessarily records every unstaged byte** Reflog does not guarantee recovery of arbitrary working-tree edits.
+- **D. Continue the cherry-pick with unresolved paths so no current files disappear** An unresolved operation does not establish a valid desired commit.
 
-**Explanation:** A later retry may require resolving the conflict again. The selected answer is aborting removes the attempted resolution work.
+**Explanation:** The remote may not contain the valuable local state being preserved. Cancellation safety depends on explicitly protecting changes rather than assuming all uncommitted work is journaled. Reflog does not guarantee recovery of arbitrary working-tree edits. An unresolved operation does not establish a valid desired commit.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick); [S5](https://git-scm.com/docs/git-reset)
 
 ## L06-Q041
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which next change most directly satisfies the stated requirement?
+A live credential was committed, shared, then removed from the current tree and added to gitignore. A teammate says the incident is closed. Which response addresses the remaining exposure?
 
-- **A. Abort the in-progress cherry-pick after protecting unrelated work** The operation has a supported cancellation path. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
-- **B. Untrack the file and separately assess historical exposure** **Correct.** Ignore rules do not remove existing tracked history. This directly addresses the constraint stated in this case.
-- **C. Recover the value through a small reviewed corrective commit** The repair should match the narrow damage scope. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
+- **A. Change only the file name so scanners no longer match it** Renaming does not invalidate the exposed credential or establish that historical exposure is resolved.
+- **B. Revoke or rotate the credential, investigate use, and coordinate any required historical cleanup and downstream copies** **Correct.** Ignoring and current-tree removal do not invalidate an exposed credential or remove existing historical copies.
+- **C. Accept closure because gitignore prevents the old commit from being fetched** Gitignore does not remove tracked history or access to earlier commits.
+- **D. Rewrite history first and keep the credential active until every clone is updated** History cleanup does not revoke access, so containment should not wait for all copies to be reconciled.
 
-**Explanation:** Ignore rules do not remove existing tracked history. The selected answer is untrack the file and separately assess historical exposure.
+**Explanation:** Renaming does not invalidate the exposed credential or establish that historical exposure is resolved. Ignoring and current-tree removal do not invalidate an exposed credential or remove existing historical copies. Gitignore does not remove tracked history or access to earlier commits. History cleanup does not revoke access, so containment should not wait for all copies to be reconciled.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository); [S10](https://git-scm.com/docs/gitignore)
 
 ## L06-Q042
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which explanation best accounts for the behavior or constraint described?
+A shared main branch has a bad commit followed by two valid releases. Other developers have fetched it. Which repair best preserves public history and the valid later work?
 
-- **A. A branch-wide rewrite is broader than the required recovery** Other valid published changes must remain available. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **B. Git is waiting for conflict resolution in an active operation** The repository has not completed the intended patch application. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
-- **C. Gitignore governs untracked-file handling rather than prior commits** **Correct.** Previously committed data remains part of repository objects. This directly addresses the constraint stated in this case.
+- **A. Apply the inverse patch without testing whether later commits changed the same behavior** A textual inverse still needs review against the current source and relevant tests.
+- **B. Create a reviewed revert or targeted corrective commit and validate the current branch** **Correct.** A forward correction preserves shared history and can address the regression without discarding subsequent work.
+- **C. Reset main to before the bad commit and force-push as the default repair** That rewrites history already consumed by others and can discard the later valid releases.
+- **D. Delete the two later release tags and stop the investigation** Tag deletion does not implement the needed source repair and harms traceability.
 
-**Explanation:** Previously committed data remains part of repository objects. The selected answer is gitignore governs untracked-file handling rather than prior commits.
+**Explanation:** A textual inverse still needs review against the current source and relevant tests. A forward correction preserves shared history and can address the regression without discarding subsequent work. That rewrites history already consumed by others and can discard the later valid releases. Tag deletion does not implement the needed source repair and harms traceability.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert)
 
 ## L06-Q043
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which observation provides the strongest evidence that the requested result was achieved?
+A responder needs one configuration file from a known-good commit, but the working tree contains unrelated uncommitted fixes. Which repair minimizes the intended change scope?
 
-- **A. The path is no longer tracked and exposure is addressed** **Correct.** Future prevention and historical cleanup are separate outcomes. This directly addresses the constraint stated in this case.
-- **B. Only the intended configuration value changes in the repair** A minimal diff demonstrates controlled recovery. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **C. Status shows no active cherry-pick and the branch baseline returns** The cancellation should restore the pre-operation state. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
+- **A. Run reset --hard to the old commit before checking status** This can discard unrelated tracked edits and move the whole branch unnecessarily.
+- **B. Revert every commit since the known-good version** That changes unrelated accepted work rather than only the requested configuration.
+- **C. Copy the entire old tree over the current checkout** A whole-tree replacement expands the recovery beyond the single intended file.
+- **D. Inspect status, preserve unrelated work, restore the target path from the chosen revision, and review the resulting diff** **Correct.** A targeted restore can recover the desired file without resetting all tracked work, provided the overwrite scope is reviewed.
 
-**Explanation:** Future prevention and historical cleanup are separate outcomes. The selected answer is the path is no longer tracked and exposure is addressed.
+**Explanation:** This can discard unrelated tracked edits and move the whole branch unnecessarily. That changes unrelated accepted work rather than only the requested configuration. A whole-tree replacement expands the recovery beyond the single intended file. A targeted restore can recover the desired file without resetting all tracked work, provided the overwrite scope is reviewed.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S4](https://git-scm.com/docs/git-restore); [S5](https://git-scm.com/docs/git-reset); [S8](https://git-scm.com/docs/git-status)
 
 ## L06-Q044
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which execution safeguard most directly addresses the risk in this case?
+A branch reset made a useful commit unreachable from named branches. Reflog still lists it, but maintenance expiry is approaching. What sequence best protects the recovery investigation?
 
-- **A. Use secret scanning and credential rotation where relevant** **Correct.** Untracking a file does not invalidate leaked secrets. This directly addresses the constraint stated in this case.
-- **B. Use a backup reference and inspect the target revision** The responder must avoid introducing an obsolete configuration. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **C. Inspect and preserve valuable edits before cancellation** Recovery commands can discard conflict-resolution work. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
+- **A. Reset shared main immediately to the candidate before checking its contents** That changes shared state before confirming the recovered commit and its compatibility.
+- **B. Inspect the candidate and create a rescue reference before continuing analysis** **Correct.** A new reference preserves reachability while the investigator verifies whether this is the desired work.
+- **C. Wait for the next garbage collection and then inspect the same reflog entry** Expiry and pruning can remove the recovery opportunity rather than stabilize it.
+- **D. Assume another developer's reflog contains this local reset** Reflogs are local and need not record another checkout's reference movement.
 
-**Explanation:** Untracking a file does not invalidate leaked secrets. The selected answer is use secret scanning and credential rotation where relevant.
+**Explanation:** That changes shared state before confirming the recovered commit and its compatibility. A new reference preserves reachability while the investigator verifies whether this is the desired work. Expiry and pruning can remove the recovery opportunity rather than stabilize it. Reflogs are local and need not record another checkout's reference movement.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog)
 
 ## L06-Q045
 
 Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. The team selects this remedy: "Untrack the file and separately assess historical exposure." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A tracked local-settings file should leave version control while each developer keeps a local copy. History contains no secret. Which reviewed change best fits?
 
-- **A. Ignore patterns are a preventive convenience** **Correct.** They are not a complete data-protection mechanism. This directly addresses the constraint stated in this case.
-- **B. A corrective commit preserves the mistaken change in history** Historical retention can be useful unless sensitive data requires removal. That addresses a different requirement: Destructive reset proposal. It does not directly resolve this case's stated constraint.
-- **C. Aborting removes the attempted resolution work** A later retry may require resolving the conflict again. That addresses a different requirement: Conflict recovery. It does not directly resolve this case's stated constraint.
+- **A. Rewrite all repository history to remove the nonsecret path** A full history rewrite is unnecessary for the stated future-tracking requirement and adds disruption.
+- **B. Untrack the path with the cached removal option, add the ignore rule, and verify the committed diff and local file** **Correct.** This changes future tracking while retaining the working copy and does not pretend to erase history.
+- **C. Add only a gitignore rule and leave the tracked file unchanged** Ignore rules do not automatically stop tracking a file already in the index.
+- **D. Use a normal file deletion and commit it without documenting local replacement** That removes the local file rather than preserving the requested local configuration copy.
 
-**Explanation:** They are not a complete data-protection mechanism. The selected answer is ignore patterns are a preventive convenience.
+**Explanation:** A full history rewrite is unnecessary for the stated future-tracking requirement and adds disruption. This changes future tracking while retaining the working copy and does not pretend to erase history. Ignore rules do not automatically stop tracking a file already in the index. That removes the local file rather than preserving the requested local configuration copy.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S9](https://git-scm.com/docs/git-rm); [S10](https://git-scm.com/docs/gitignore)
 
 ## L06-Q046
 
-Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which next change most directly satisfies the stated requirement?
+The exhibit shows staged changes in config.json and unstaged changes in service.cs. An operator wants to discard only the unstaged service.cs edit while keeping the index intact. Which action fits?
 
-- **A. Inspect the local reflog and create a recovery branch** Reflog entries can identify recently moved local references. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **B. Untrack the file and separately assess historical exposure** Ignore rules do not remove existing tracked history. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **C. Recover the value through a small reviewed corrective commit** **Correct.** The repair should match the narrow damage scope. This directly addresses the constraint stated in this case.
+```text
+git status --short
+M  config.json
+ M service.cs
 
-**Explanation:** The repair should match the narrow damage scope. The selected answer is recover the value through a small reviewed corrective commit.
+git diff --cached --stat
+config.json | 2 +-
+```
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+- **A. Commit every current file before discarding service.cs** That accepts the undesired edit into history instead of applying the requested selective discard.
+- **B. Restore only service.cs in the working tree and confirm both status and staged diff afterward** **Correct.** Path-scoped working-tree restoration can preserve the staged configuration change while removing the selected unstaged edit.
+- **C. Reset --hard HEAD for the whole repository** That also discards staged tracked work outside the requested path.
+- **D. Restore config.json from HEAD with the staged option** That targets the configuration index entry the operator wants to keep.
+
+**Explanation:** That accepts the undesired edit into history instead of applying the requested selective discard. Path-scoped working-tree restoration can preserve the staged configuration change while removing the selected unstaged edit. That also discards staged tracked work outside the requested path. That targets the configuration index entry the operator wants to keep.
+
+**Sources:** [S4](https://git-scm.com/docs/git-restore); [S8](https://git-scm.com/docs/git-status)
 
 ## L06-Q047
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which explanation best accounts for the behavior or constraint described?
+A hotfix commit from main is cherry-picked into release/1.x, but it depends on a schema change absent there. The pick reports success. What should determine readiness?
 
-- **A. A branch-wide rewrite is broader than the required recovery** **Correct.** Other valid published changes must remain available. This directly addresses the constraint stated in this case.
-- **B. The commit became unreachable through current branch names** Moving a reference does not immediately delete its objects. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **C. Gitignore governs untracked-file handling rather than prior commits** Previously committed data remains part of repository objects. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
+- **A. Merge all of main so the dependency appears automatically** That can import unrelated next-version changes forbidden by the supported release boundary.
+- **B. Treat the source branch's old passing build as the target's acceptance result** The target branch has different inputs and needs relevant validation.
+- **C. Review dependencies and test the resulting behavior against release/1.x before accepting the transferred fix** **Correct.** A mechanically successful cherry-pick does not establish compatibility with the target branch's runtime contract.
+- **D. Accept it because no textual conflict means no behavioral dependency exists** Git conflict detection does not evaluate schema or semantic compatibility.
 
-**Explanation:** Other valid published changes must remain available. The selected answer is a branch-wide rewrite is broader than the required recovery.
+**Explanation:** That can import unrelated next-version changes forbidden by the supported release boundary. The target branch has different inputs and needs relevant validation. A mechanically successful cherry-pick does not establish compatibility with the target branch's runtime contract. Git conflict detection does not evaluate schema or semantic compatibility.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S6](https://git-scm.com/docs/git-cherry-pick); [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q048
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which observation provides the strongest evidence that the requested result was achieved?
+Two reflog entries contain similar configuration fixes; only one includes a later security change. The release must retain that security correction. Which evidence should choose the rescue commit?
 
-- **A. A recovery branch contains the expected commit and files** A retained reference makes the recovered work accessible. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **B. The path is no longer tracked and exposure is addressed** Future prevention and historical cleanup are separate outcomes. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **C. Only the intended configuration value changes in the repair** **Correct.** A minimal diff demonstrates controlled recovery. This directly addresses the constraint stated in this case.
+- **A. Choose the oldest candidate because it predates the regression** The oldest candidate may also omit the later required security correction.
+- **B. Choose the candidate with the shorter commit message** Message length has no relationship to the required code contents.
+- **C. Inspect each candidate's tree, ancestry, and relevant diff against the required release behavior** **Correct.** Reflog chronology alone does not establish that a candidate contains every required correction.
+- **D. Choose whichever reflog message mentions configuration first** A message keyword does not establish the candidate's full content or ancestry.
 
-**Explanation:** A minimal diff demonstrates controlled recovery. The selected answer is only the intended configuration value changes in the repair.
+**Explanation:** The oldest candidate may also omit the later required security correction. Message length has no relationship to the required code contents. Reflog chronology alone does not establish that a candidate contains every required correction. A message keyword does not establish the candidate's full content or ancestry.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S7](https://git-scm.com/docs/git-log)
 
 ## L06-Q049
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which execution safeguard most directly addresses the risk in this case?
+A removed token remains in fork history and cached artifacts. The team has rotated it, but a proposed history rewrite is being described as complete erasure. What should the recovery report say?
 
-- **A. Use secret scanning and credential rotation where relevant** Untracking a file does not invalidate leaked secrets. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **B. Use a backup reference and inspect the target revision** **Correct.** The responder must avoid introducing an obsolete configuration. This directly addresses the constraint stated in this case.
-- **C. Create a new branch before changing the working branch** A separate reference preserves evidence during recovery. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
+- **A. No useful mitigation occurred until every external byte is erased** Verified revocation is meaningful containment even while copy-removal work remains.
+- **B. Containment is complete only to the extent verified; history rewriting cannot guarantee removal from all external copies** **Correct.** Rotation addresses credential validity, while copied content and retention need separately scoped follow-up and honest limits.
+- **C. The rotated token never existed because its current validity is false** Invalidation does not erase the original exposure or investigation evidence.
+- **D. A forced rewrite proves all forks and caches were purged** The local rewrite cannot establish that every external copy has disappeared.
 
-**Explanation:** The responder must avoid introducing an obsolete configuration. The selected answer is use a backup reference and inspect the target revision.
+**Explanation:** Verified revocation is meaningful containment even while copy-removal work remains. Rotation addresses credential validity, while copied content and retention need separately scoped follow-up and honest limits. Invalidation does not erase the original exposure or investigation evidence. The local rewrite cannot establish that every external copy has disappeared.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 
 ## L06-Q050
 
-Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. The team selects this remedy: "Recover the value through a small reviewed corrective commit." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A shared branch has a normal configuration regression and an earlier leaked credential. The team wants the least disruptive complete recovery. Which policy distinguishes the problems correctly?
 
-- **A. Reflog availability is local and time limited** Expired unreachable objects may no longer be recoverable. That addresses a different requirement: Lost local commit. It does not directly resolve this case's stated constraint.
-- **B. Ignore patterns are a preventive convenience** They are not a complete data-protection mechanism. That addresses a different requirement: Fake cleanup. It does not directly resolve this case's stated constraint.
-- **C. A corrective commit preserves the mistaken change in history** **Correct.** Historical retention can be useful unless sensitive data requires removal. This directly addresses the constraint stated in this case.
+- **A. Revert both commits and consider the credential secure because its addition is reversed** A revert preserves historical exposure and does not invalidate the secret.
+- **B. Rewrite the whole shared branch for both issues without considering consumers** History rewriting adds disruption and is not the default requirement for an ordinary regression.
+- **C. Rotate the credential and leave the configuration regression because security is higher priority** Containment does not eliminate the separate requirement to restore correct application behavior.
+- **D. Use a forward source correction for the regression, immediately revoke the credential, and separately review necessary coordinated sensitive-history cleanup** **Correct.** Ordinary code recovery and credential exposure have different containment and history requirements.
 
-**Explanation:** Historical retention can be useful unless sensitive data requires removal. The selected answer is a corrective commit preserves the mistaken change in history.
+**Explanation:** A revert preserves historical exposure and does not invalidate the secret. History rewriting adds disruption and is not the default requirement for an ordinary regression. Containment does not eliminate the separate requirement to restore correct application behavior. Ordinary code recovery and credential exposure have different containment and history requirements.
 
-**Sources:** [S1](https://git-scm.com/docs/git-reflog); [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+**Sources:** [S2](https://git-scm.com/docs/git-revert); [S3](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)

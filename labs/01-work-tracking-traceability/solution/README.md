@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The reciprocal URLs must resolve to the exact owned project/repository. A passing work-item index is useful planning evidence, but source-to-production traceability remains a separate integration milestone.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Create a GitHub work item with acceptance criteria
 

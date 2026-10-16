@@ -10,498 +10,592 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which next change most directly satisfies the stated requirement?
+A developer resets a private branch and loses its name for a recently created commit. Which local record may identify the previous branch position?
 
-- **A.** Recover the value through a small reviewed corrective commit
-- **B.** Inspect the local reflog and create a recovery branch
-- **C.** Create a revert commit through the normal review workflow
+```text
+HEAD@{0}: reset: moving to HEAD~1
+HEAD@{1}: commit: validated local correction
+Current branch no longer reaches the correction
+```
+
+- **A.** The reflog for the relevant reference
+- **B.** The current .gitignore patterns
+- **C.** Only the current index contents
+- **D.** The remote repository description
 
 ## L06-Q002
 
-Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which explanation best accounts for the behavior or constraint described?
+A bad commit is already on shared main and collaborators have fetched it. Which normal recovery preserves shared history?
 
-- **A.** A branch-wide rewrite is broader than the required recovery
-- **B.** The commit became unreachable through current branch names
-- **C.** The faulty commit is part of published history
+- **A.** Create a reviewed revert commit
+- **B.** Hard-reset main to its parent and force-push as the default response
+- **C.** Delete the bad commit from one local log display
+- **D.** Rename the branch so the defective commit is less visible
 
 ## L06-Q003
 
-Applied · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which observation provides the strongest evidence that the requested result was achieved?
+One tracked file is accidentally deleted from the working tree while unrelated files contain valuable edits. Which approach is most targeted?
 
-- **A.** A recovery branch contains the expected commit and files
-- **B.** A new commit reverses the regression while preserving history
-- **C.** Only the intended configuration value changes in the repair
+- **A.** Reset the entire repository hard as the first step
+- **B.** Run git clean on every untracked file
+- **C.** Reclone over the working directory without preserving edits
+- **D.** Restore only the selected path from the intended revision
 
 ## L06-Q004
 
-Applied · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. Which execution safeguard most directly addresses the risk in this case?
+Why can a commit disappear from the current branch history without being immediately erased from local storage?
 
-- **A.** Test the revert against subsequent dependent changes
-- **B.** Use a backup reference and inspect the target revision
-- **C.** Create a new branch before changing the working branch
+- **A.** Every reset encrypts the previous commit automatically
+- **B.** A missing branch name proves the commit was never created
+- **C.** Git stores only one commit object per branch at a time
+- **D.** The branch reference moved while the commit object may still exist
 
 ## L06-Q005
 
-Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Lost local commit: A developer resets a private branch and needs a recently created commit that no branch now references. The team selects this remedy: "Inspect the local reflog and create a recovery branch." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What does git revert normally produce when undoing an ordinary earlier commit on the current branch?
 
-- **A.** Reflog availability is local and time limited
-- **B.** Revert can require conflict resolution
-- **C.** A corrective commit preserves the mistaken change in history
+- **A.** A new commit applying the inverse change where it can be resolved
+- **B.** Automatic deletion of every object introduced by the original commit
+- **C.** A new branch with no parent commits
+- **D.** A rollback of every external database affected by deployment
 
 ## L06-Q006
 
-Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which next change most directly satisfies the stated requirement?
+What does git restore --source HEAD --worktree -- config/app.json target in the exhibited case?
 
-- **A.** Inspect the local reflog and create a recovery branch
-- **B.** Create a revert commit through the normal review workflow
-- **C.** Restore only the selected file from the intended revision
+```bash
+git restore --source HEAD --worktree -- config/app.json
+```
+
+- **A.** The remote repository's copy of all configuration files
+- **B.** Only untracked files matching the directory name
+- **C.** The working-tree version of that path using HEAD as the source
+- **D.** Every branch reference in the repository
 
 ## L06-Q007
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which explanation best accounts for the behavior or constraint described?
+After locating the desired commit in reflog, what is a safe first recovery step?
 
-- **A.** The faulty commit is part of published history
-- **B.** The damage is limited to one working-tree path
-- **C.** The commit became unreachable through current branch names
+- **A.** Create a new recovery branch at that commit
+- **B.** Force-push the current mistaken branch to every remote
+- **C.** Delete unreachable objects to simplify the repository
+- **D.** Run another hard reset without recording the found identity
 
 ## L06-Q008
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which observation provides the strongest evidence that the requested result was achieved?
+What should a reviewer expect when a revert of an older commit conflicts with later changes?
 
-- **A.** A new commit reverses the regression while preserving history
-- **B.** The file returns while unrelated modifications remain intact
-- **C.** A recovery branch contains the expected commit and files
+- **A.** Assume a conflicting revert is impossible because the original commit was valid
+- **B.** Ignore conflicts and report that the rollback completed
+- **C.** Force-push the older tree immediately without checking subsequent valid work
+- **D.** Resolve the inverse change against the current source and test the result
 
 ## L06-Q009
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. Which execution safeguard most directly addresses the risk in this case?
+Why should a developer inspect git status and a path diff before restoring a deleted file?
 
-- **A.** Create a new branch before changing the working branch
-- **B.** Test the revert against subsequent dependent changes
-- **C.** Inspect status and diff before restoring the path
+- **A.** Restoration may overwrite local changes and must use the intended source
+- **B.** Status automatically uploads a backup to the remote
+- **C.** A diff makes all restoration commands nondestructive
+- **D.** The file's extension alone identifies the correct historical revision
 
 ## L06-Q010
 
-Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Shared regression: A bad commit is already on main and many collaborators have fetched it; the team needs a reviewable rollback. The team selects this remedy: "Create a revert commit through the normal review workflow." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A teammate cannot find a developer's private local reset in their own reflog. What explains the difference?
 
-- **A.** Revert can require conflict resolution
-- **B.** Restoring content does not recreate an entire lost workflow
-- **C.** Reflog availability is local and time limited
+- **A.** The repository must have been converted into a shallow clone
+- **B.** Only repository administrators can retain reflog entries
+- **C.** Every clone synchronizes all local branch movements on each fetch
+- **D.** Reflogs describe local reference updates rather than one universal shared operation history
 
 ## L06-Q011
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which next change most directly satisfies the stated requirement?
+Which evidence demonstrates that a shared-history rollback repaired the regression while preserving auditability?
 
-- **A.** Restore only the selected file from the intended revision
-- **B.** Cherry-pick the specific fix onto the release branch
-- **C.** Create a revert commit through the normal review workflow
+- **A.** The local working tree has unstaged modifications after a failed revert
+- **B.** A new reviewed commit reverses the faulty behavior and the earlier history remains inspectable
+- **C.** The bad commit disappears from the source history entirely
+- **D.** Only the branch name changes from main to recovered
 
 ## L06-Q012
 
 Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which explanation best accounts for the behavior or constraint described?
+Which check confirms a targeted file recovery respected the request to preserve unrelated edits?
 
-- **A.** The damage is limited to one working-tree path
-- **B.** Merging all of main would include unrelated changes
-- **C.** The faulty commit is part of published history
+- **A.** The file exists with any nonzero size
+- **B.** Only the source commit message contains the word restore
+- **C.** The restored path has expected content and other modified paths retain their intended diffs
+- **D.** The repository has no modifications anywhere after a hard reset
 
 ## L06-Q013
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which observation provides the strongest evidence that the requested result was achieved?
+A recovery guide promises any reset commit can always be restored through reflog. The repository has run cleanup for months since the mistake. What correction is necessary?
 
-- **A.** The file returns while unrelated modifications remain intact
-- **B.** The release branch contains the fix and passes its tests
-- **C.** A new commit reverses the regression while preserving history
+- **A.** A commit message alone is sufficient to regenerate the exact source tree
+- **B.** Recovery depends on retained reflog entries and objects, so preserve a found reference promptly and avoid guaranteeing expired data recovery
+- **C.** Reflog is a permanent remote backup independent of local garbage collection
+- **D.** Running more hard resets recreates the missing earlier objects
 
 ## L06-Q014
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. Which execution safeguard most directly addresses the risk in this case?
+A published commit introduced a configuration bug, and later valid commits depend on parts of its refactoring. What is the safest recovery plan?
 
-- **A.** Test the revert against subsequent dependent changes
-- **B.** Inspect status and diff before restoring the path
-- **C.** Inspect dependencies and record the original commit identity
+- **A.** Force main back before the original commit and assume dependent changes will reappear automatically
+- **B.** Run an unresolved revert and treat its nonzero exit as an acceptable deployed rollback
+- **C.** Revert all later commits indiscriminately because one earlier change was defective
+- **D.** Review and implement a targeted inverse or corrective change against current main, resolving dependencies and testing the resulting behavior
 
 ## L06-Q015
 
-Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-One missing file: A developer accidentally deletes one file but wants to preserve unrelated uncommitted edits in other files. The team selects this remedy: "Restore only the selected file from the intended revision." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A configuration file is deleted only from the working tree, another file has staged edits, and a third has unstaged edits. The developer needs the configuration from HEAD without losing either other change. Which plan fits?
 
-- **A.** Revert can require conflict resolution
-- **B.** Restoring content does not recreate an entire lost workflow
-- **C.** Cherry-picking creates a different commit identity
+- **A.** Inspect status, restore only the configuration path from HEAD to the working tree, and verify the other staged and unstaged diffs
+- **B.** Use git reset --hard HEAD and then infer the missing edits from shell history
+- **C.** Use git restore --staged --worktree . for the entire repository
+- **D.** Delete the index and reclone every tracked path
 
 ## L06-Q016
 
-Foundational · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which next change most directly satisfies the stated requirement?
+A supported release needs one fix from main without its unrelated next-version changes. Which Git operation is commonly appropriate?
 
-- **A.** Restore only the selected file from the intended revision
-- **B.** Cherry-pick the specific fix onto the release branch
-- **C.** Revoke the token first then coordinate history removal
+```text
+release/v1: A---B---C
+main:       A---B---C---D---E---F
+Required patch: E
+D and F contain incompatible next-version work
+```
+
+- **A.** Merge all of main and remove the incompatible code afterward
+- **B.** Move the supported release tag to main without applying a patch
+- **C.** Copy only the commit message into a new empty commit
+- **D.** Cherry-pick the intended commit onto the supported branch
 
 ## L06-Q017
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which explanation best accounts for the behavior or constraint described?
+A real token was committed publicly and then deleted from the latest file. What should happen first in the response?
 
-- **A.** Merging all of main would include unrelated changes
-- **B.** Deleting the current file leaves earlier objects accessible
-- **C.** The damage is limited to one working-tree path
+- **A.** Revoke or rotate the exposed credential
+- **B.** Rewrite the history and keep the same live token indefinitely
+- **C.** Add the filename to gitignore and declare the exposure resolved
+- **D.** Rename the token variable while retaining its value
 
 ## L06-Q018
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which observation provides the strongest evidence that the requested result was achieved?
+After history cleanup, a collaborator pushes an old branch and the removed file reappears. What caused the regression?
 
-- **A.** The old token is unusable and known history references are cleaned
-- **B.** The file returns while unrelated modifications remain intact
-- **C.** The release branch contains the fix and passes its tests
+- **A.** The signing key regenerated the deleted file
+- **B.** The new branch name forced the server to restore a backup
+- **C.** The collaborator reintroduced references to the old content graph
+- **D.** Gitignore automatically recreated the old file
 
 ## L06-Q019
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. Which execution safeguard most directly addresses the risk in this case?
+A tracked configuration file was deleted several commits ago. Which inspection can locate the deletion and prior version?
 
-- **A.** Inspect status and diff before restoring the path
-- **B.** Inspect dependencies and record the original commit identity
-- **C.** Coordinate forks clones caches and affected collaborators
+- **A.** Only the filesystem creation date of the repository folder
+- **B.** Only the names of currently open pull requests
+- **C.** The file's Git path history
+- **D.** Only git status on the current clean checkout
 
 ## L06-Q020
 
-Advanced · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Patch transfer: A supported release needs one reviewed fix from main without taking unrelated next-version features. The team selects this remedy: "Cherry-pick the specific fix onto the release branch." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A conflicted cherry-pick should be abandoned, and the developer does not need its resolution edits. Which supported operation is relevant?
 
-- **A.** Public disclosure cannot be fully undone
-- **B.** Restoring content does not recreate an entire lost workflow
-- **C.** Cherry-picking creates a different commit identity
+```text
+On branch release/v1
+You are currently cherry-picking commit <patch>
+Unmerged paths: config/app.json
+Decision: abandon the entire cherry-pick attempt
+```
+
+- **A.** git fetch --prune
+- **B.** git cherry-pick --abort
+- **C.** git cherry-pick --continue
+- **D.** git cherry-pick --skip
 
 ## L06-Q021
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which next change most directly satisfies the stated requirement?
+Why does a cherry-picked fix usually have a different commit identity on the target branch?
 
-- **A.** Coordinate fresh clones or careful cleanup before resuming pushes
-- **B.** Cherry-pick the specific fix onto the release branch
-- **C.** Revoke the token first then coordinate history removal
+- **A.** Cherry-picking always changes the author's original source files arbitrarily
+- **B.** A commit hash depends only on its human-readable message
+- **C.** The new commit has its own ancestry and commit metadata
+- **D.** Git randomly encrypts all copied commit hashes
 
 ## L06-Q022
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which explanation best accounts for the behavior or constraint described?
+Why does a later commit deleting a secret fail to remove the earlier exposure?
 
-- **A.** Deleting the current file leaves earlier objects accessible
-- **B.** A stale collaborator branch still contains the original history
-- **C.** Merging all of main would include unrelated changes
+```text
+Commit A: adds service-token.txt
+Commit B: deletes service-token.txt
+Public clone containing Commit A already exists
+```
+
+- **A.** Earlier revisions and external copies can still contain the value
+- **B.** Deleting a file automatically disables all credentials it contains
+- **C.** A public repository automatically destroys every old commit on merge
+- **D.** Only repository administrators can read any previous public version
 
 ## L06-Q023
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which observation provides the strongest evidence that the requested result was achieved?
+Which coordination step helps prevent old sensitive history returning after a rewrite?
 
-- **A.** The release branch contains the fix and passes its tests
-- **B.** The old token is unusable and known history references are cleaned
-- **C.** New pushes do not reference the removed sensitive objects
+- **A.** Have collaborators use the documented cleaned-history recovery or fresh-clone procedure before resuming affected pushes
+- **B.** Ask collaborators only to rename their old branch
+- **C.** Keep every old branch as the default push target without review
+- **D.** Delete only the cleaned repository's README
 
 ## L06-Q024
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. Which execution safeguard most directly addresses the risk in this case?
+Why is a clean current working tree insufficient to explain a file missing from an older commit?
 
-- **A.** Temporarily control writes during the coordinated rewrite
-- **B.** Inspect dependencies and record the original commit identity
-- **C.** Coordinate forks clones caches and affected collaborators
+- **A.** Clean status proves that every historical version contains identical files
+- **B.** Git status includes a full chronological file-deletion report
+- **C.** A missing file must be untracked if status is clean
+- **D.** Clean status concerns current index and working-tree differences
 
 ## L06-Q025
 
-Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Exposed credential: A real token was committed publicly and then deleted in a later commit, but remains in earlier revisions. The team selects this remedy: "Revoke the token first then coordinate history removal." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What should git status be checked for after cancelling a conflicted cherry-pick?
 
-- **A.** History rewriting changes commit hashes
-- **B.** Cherry-picking creates a different commit identity
-- **C.** Public disclosure cannot be fully undone
+- **A.** No unintended in-progress operation and the expected branch state
+- **B.** Only whether conflict markers disappeared from the editor
+- **C.** Only whether the original source commit still exists
+- **D.** Only whether the staged diff is empty, without checking operation state
 
 ## L06-Q026
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which next change most directly satisfies the stated requirement?
+What should be checked before accepting a cherry-picked fix on an older release branch?
 
-- **A.** Revoke the token first then coordinate history removal
-- **B.** Coordinate fresh clones or careful cleanup before resuming pushes
-- **C.** Inspect path history before restoring the selected version
+- **A.** Only that the original main build was green
+- **B.** Only that the source and destination branch names look similar
+- **C.** Only that the new commit has the same number of lines
+- **D.** Dependencies and behavior against that older branch's actual baseline
 
 ## L06-Q027
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which explanation best accounts for the behavior or constraint described?
+What outcome is needed in addition to coordinated history cleanup after credential exposure?
 
-- **A.** Current status cannot explain committed historical changes
-- **B.** Deleting the current file leaves earlier objects accessible
-- **C.** A stale collaborator branch still contains the original history
+- **A.** The secret file is absent from the default-branch tip
+- **B.** The old credential no longer authorizes access
+- **C.** The credential is deleted from the local environment file only
+- **D.** The repository scan no longer reports the historical token string
 
 ## L06-Q028
 
 Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which observation provides the strongest evidence that the requested result was achieved?
+What should a postcleanup verification inspect beyond the current default-branch file tree?
 
-- **A.** The old token is unusable and known history references are cleaned
-- **B.** New pushes do not reference the removed sensitive objects
-- **C.** The path log identifies the deletion and prior usable revision
+- **A.** Known affected refs and repositories within the defined cleanup scope
+- **B.** Only the file's current absence in the editor
+- **C.** Only the number of commits on main
+- **D.** Only the commit author's new display name
 
 ## L06-Q029
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. Which execution safeguard most directly addresses the risk in this case?
+What should be selected before restoring a historically deleted configuration file?
 
-- **A.** Temporarily control writes during the coordinated rewrite
-- **B.** Restore to a recovery branch and inspect the diff
-- **C.** Coordinate forks clones caches and affected collaborators
+```bash
+git log -- config/app.json
+git show <intended-commit>:config/app.json
+```
+
+- **A.** Only a filename with the same extension
+- **B.** The oldest possible commit regardless of current application format
+- **C.** Every file changed anywhere in the deletion commit
+- **D.** The intended source revision and path
 
 ## L06-Q030
 
-Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-History rewrite fallout: After removing a sensitive file, a collaborator pushes an old branch and the unwanted history reappears. The team selects this remedy: "Coordinate fresh clones or careful cleanup before resuming pushes." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A developer resolved several conflicts but now wants to abort and may need that work later. What should happen first?
 
-- **A.** History rewriting changes commit hashes
-- **B.** Recovery can restore obsolete configuration
-- **C.** Public disclosure cannot be fully undone
+- **A.** Force-push the unresolved index as a commit
+- **B.** Delete the branch and assume reflog contains every unstaged edit
+- **C.** Preserve the valuable resolution changes in an appropriate separate record before discarding them
+- **D.** Run abort repeatedly until the edits reappear
 
 ## L06-Q031
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which next change most directly satisfies the stated requirement?
+A cherry-pick conflicts. What state indicates that the operation still requires attention rather than having completed successfully?
 
-- **A.** Abort the in-progress cherry-pick after protecting unrelated work
-- **B.** Coordinate fresh clones or careful cleanup before resuming pushes
-- **C.** Inspect path history before restoring the selected version
+- **A.** The target branch has fewer local commits than main
+- **B.** Git reports unresolved paths and an in-progress cherry-pick
+- **C.** A new remote tag appears with the original commit message
+- **D.** The author closes the terminal window
 
 ## L06-Q032
 
-Foundational · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which explanation best accounts for the behavior or constraint described?
+Why must forks clones and downstream references be considered during sensitive-history cleanup?
 
-- **A.** A stale collaborator branch still contains the original history
-- **B.** Current status cannot explain committed historical changes
-- **C.** Git is waiting for conflict resolution in an active operation
+- **A.** The unwanted content can remain outside the rewritten primary reference
+- **B.** Every fork is automatically deleted when the source branch changes
+- **C.** A collaborator's old branch can never reintroduce removed history
+- **D.** The newest commit's clean diff proves no copy contains the value
 
 ## L06-Q033
 
-Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which observation provides the strongest evidence that the requested result was achieved?
+Why should pushes be coordinated or temporarily constrained during a shared-history rewrite?
 
-- **A.** The path log identifies the deletion and prior usable revision
-- **B.** Status shows no active cherry-pick and the branch baseline returns
-- **C.** New pushes do not reference the removed sensitive objects
+- **A.** Every simultaneous read request corrupts the repository
+- **B.** A temporary coordination window permanently removes future review needs
+- **C.** Concurrent old-history writes can undermine the cleaned reference boundary
+- **D.** Git cannot perform a rewrite unless every user deletes their account
 
 ## L06-Q034
 
 Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. Which execution safeguard most directly addresses the risk in this case?
+Why should a historical-file recovery normally begin on a reviewable recovery branch?
 
-- **A.** Temporarily control writes during the coordinated rewrite
-- **B.** Restore to a recovery branch and inspect the diff
-- **C.** Inspect and preserve valuable edits before cancellation
+- **A.** A branch automatically converts obsolete configuration formats
+- **B.** Main cannot contain any restored file
+- **C.** The recovery branch removes all prior audit history
+- **D.** The restored content can be inspected and tested against today's baseline
 
 ## L06-Q035
 
-Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Unknown deletion: A file is absent from the current tree, and the responder does not know which earlier commit removed it. The team selects this remedy: "Inspect path history before restoring the selected version." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A multi-commit cherry-pick stops on one unwanted patch, but later selected patches are still needed. Which distinction matters?
 
-- **A.** Recovery can restore obsolete configuration
-- **B.** Aborting removes the attempted resolution work
-- **C.** History rewriting changes commit hashes
+- **A.** Continue discards every unresolved conflict automatically
+- **B.** Fetch chooses which local patch should be skipped
+- **C.** Skip continues the sequence past the current patch, while abort cancels the operation
+- **D.** Skip and abort always perform exactly the same operation
 
 ## L06-Q036
 
-Foundational · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which next change most directly satisfies the stated requirement?
+A security fix from main depends on a refactor unavailable on the supported release. The release must keep its old API. Which approach is strongest?
 
-- **A.** Untrack the file and separately assess historical exposure
-- **B.** Inspect path history before restoring the selected version
-- **C.** Abort the in-progress cherry-pick after protecting unrelated work
+- **A.** Adapt or backport the minimal correction for the old contract, test it there, and record the relationship to the original fix
+- **B.** Cherry-pick the fix and suppress the missing-symbol compilation errors
+- **C.** Merge the entire refactor and remove the supported API tests
+- **D.** Assume a conflict-free cherry-pick proves the runtime dependencies are present
 
 ## L06-Q037
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which explanation best accounts for the behavior or constraint described?
+An attacker could already have copied a public token before revocation. The team wants to claim the incident is erased after rewriting history. Which report is accurate?
 
-- **A.** Current status cannot explain committed historical changes
-- **B.** Git is waiting for conflict resolution in an active operation
-- **C.** Gitignore governs untracked-file handling rather than prior commits
+- **A.** Report only that the current file lacks the token without mentioning revocation or historical exposure
+- **B.** State that the credential was invalidated and known repository exposure was cleaned, while acknowledging that prior public copies cannot be guaranteed erased
+- **C.** State that a rewritten default branch proves every observer deleted their copy
+- **D.** Keep the original token active to avoid disrupting integrations and call the rewrite sufficient
 
 ## L06-Q038
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which observation provides the strongest evidence that the requested result was achieved?
+A sensitive file exists in multiple maintained branches and a fork. The team has authority over the primary repository but not the fork. Which response is appropriate?
 
-- **A.** Status shows no active cherry-pick and the branch baseline returns
-- **B.** The path is no longer tracked and exposure is addressed
-- **C.** The path log identifies the deletion and prior usable revision
+- **A.** Leave the token live until the external fork responds
+- **B.** Invalidate the secret, coordinate cleanup of owned affected refs, contact the relevant fork owner through the approved process, and avoid claiming universal erasure
+- **C.** Delete the entire external fork using the primary repository's administrative role
+- **D.** Rewrite only main and report every maintained branch and fork clean
 
 ## L06-Q039
 
-Applied · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. Which execution safeguard most directly addresses the risk in this case?
+An old configuration file is recovered, but the application now expects a different schema and secrets must come from a vault. What should the engineer do?
 
-- **A.** Use secret scanning and credential rotation where relevant
-- **B.** Restore to a recovery branch and inspect the diff
-- **C.** Inspect and preserve valuable edits before cancellation
+- **A.** Restore the entire old application to avoid reading the configuration diff
+- **B.** Copy the old secret values into the new file and rely on repository privacy
+- **C.** Review and adapt the needed nonsensitive configuration to the current contract, then test the repair
+- **D.** Deploy the recovered file unchanged because it once worked
 
 ## L06-Q040
 
-Advanced · [CP1](README.md#task-1) · [D2.2.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Conflict recovery: A cherry-pick stops with conflicts, and the developer wants to abandon it without leaving a half-applied operation. The team selects this remedy: "Abort the in-progress cherry-pick after protecting unrelated work." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The developer needs to abandon a failed cherry-pick but retain valuable new conflict-resolution work and unrelated local edits. Which sequence is safest?
 
-- **A.** Ignore patterns are a preventive convenience
-- **B.** Recovery can restore obsolete configuration
-- **C.** Aborting removes the attempted resolution work
+- **A.** Delete the whole working directory and recover from the remote later
+- **B.** Inspect repository state, preserve the work that must survive, use the supported abort path, and verify the resulting diffs
+- **C.** Use reset --hard immediately because reflog necessarily records every unstaged byte
+- **D.** Continue the cherry-pick with unresolved paths so no current files disappear
 
 ## L06-Q041
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which next change most directly satisfies the stated requirement?
+A live credential was committed, shared, then removed from the current tree and added to gitignore. A teammate says the incident is closed. Which response addresses the remaining exposure?
 
-- **A.** Abort the in-progress cherry-pick after protecting unrelated work
-- **B.** Untrack the file and separately assess historical exposure
-- **C.** Recover the value through a small reviewed corrective commit
+- **A.** Change only the file name so scanners no longer match it
+- **B.** Revoke or rotate the credential, investigate use, and coordinate any required historical cleanup and downstream copies
+- **C.** Accept closure because gitignore prevents the old commit from being fetched
+- **D.** Rewrite history first and keep the credential active until every clone is updated
 
 ## L06-Q042
 
-Foundational · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which explanation best accounts for the behavior or constraint described?
+A shared main branch has a bad commit followed by two valid releases. Other developers have fetched it. Which repair best preserves public history and the valid later work?
 
-- **A.** A branch-wide rewrite is broader than the required recovery
-- **B.** Git is waiting for conflict resolution in an active operation
-- **C.** Gitignore governs untracked-file handling rather than prior commits
+- **A.** Apply the inverse patch without testing whether later commits changed the same behavior
+- **B.** Create a reviewed revert or targeted corrective commit and validate the current branch
+- **C.** Reset main to before the bad commit and force-push as the default repair
+- **D.** Delete the two later release tags and stop the investigation
 
 ## L06-Q043
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which observation provides the strongest evidence that the requested result was achieved?
+A responder needs one configuration file from a known-good commit, but the working tree contains unrelated uncommitted fixes. Which repair minimizes the intended change scope?
 
-- **A.** The path is no longer tracked and exposure is addressed
-- **B.** Only the intended configuration value changes in the repair
-- **C.** Status shows no active cherry-pick and the branch baseline returns
+- **A.** Run reset --hard to the old commit before checking status
+- **B.** Revert every commit since the known-good version
+- **C.** Copy the entire old tree over the current checkout
+- **D.** Inspect status, preserve unrelated work, restore the target path from the chosen revision, and review the resulting diff
 
 ## L06-Q044
 
-Applied · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. Which execution safeguard most directly addresses the risk in this case?
+A branch reset made a useful commit unreachable from named branches. Reflog still lists it, but maintenance expiry is approaching. What sequence best protects the recovery investigation?
 
-- **A.** Use secret scanning and credential rotation where relevant
-- **B.** Use a backup reference and inspect the target revision
-- **C.** Inspect and preserve valuable edits before cancellation
+- **A.** Reset shared main immediately to the candidate before checking its contents
+- **B.** Inspect the candidate and create a rescue reference before continuing analysis
+- **C.** Wait for the next garbage collection and then inspect the same reflog entry
+- **D.** Assume another developer's reflog contains this local reset
 
 ## L06-Q045
 
 Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Fake cleanup: A team adds a sensitive file to gitignore after committing it and assumes the tracked copy disappears from history. The team selects this remedy: "Untrack the file and separately assess historical exposure." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A tracked local-settings file should leave version control while each developer keeps a local copy. History contains no secret. Which reviewed change best fits?
 
-- **A.** Ignore patterns are a preventive convenience
-- **B.** A corrective commit preserves the mistaken change in history
-- **C.** Aborting removes the attempted resolution work
+- **A.** Rewrite all repository history to remove the nonsecret path
+- **B.** Untrack the path with the cached removal option, add the ignore rule, and verify the committed diff and local file
+- **C.** Add only a gitignore rule and leave the tracked file unchanged
+- **D.** Use a normal file deletion and commit it without documenting local replacement
 
 ## L06-Q046
 
-Foundational · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which next change most directly satisfies the stated requirement?
+The exhibit shows staged changes in config.json and unstaged changes in service.cs. An operator wants to discard only the unstaged service.cs edit while keeping the index intact. Which action fits?
 
-- **A.** Inspect the local reflog and create a recovery branch
-- **B.** Untrack the file and separately assess historical exposure
-- **C.** Recover the value through a small reviewed corrective commit
+```text
+git status --short
+M  config.json
+ M service.cs
+
+git diff --cached --stat
+config.json | 2 +-
+```
+
+- **A.** Commit every current file before discarding service.cs
+- **B.** Restore only service.cs in the working tree and confirm both status and staged diff afterward
+- **C.** Reset --hard HEAD for the whole repository
+- **D.** Restore config.json from HEAD with the staged option
 
 ## L06-Q047
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which explanation best accounts for the behavior or constraint described?
+A hotfix commit from main is cherry-picked into release/1.x, but it depends on a schema change absent there. The pick reports success. What should determine readiness?
 
-- **A.** A branch-wide rewrite is broader than the required recovery
-- **B.** The commit became unreachable through current branch names
-- **C.** Gitignore governs untracked-file handling rather than prior commits
+- **A.** Merge all of main so the dependency appears automatically
+- **B.** Treat the source branch's old passing build as the target's acceptance result
+- **C.** Review dependencies and test the resulting behavior against release/1.x before accepting the transferred fix
+- **D.** Accept it because no textual conflict means no behavioral dependency exists
 
 ## L06-Q048
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D2.2.5](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which observation provides the strongest evidence that the requested result was achieved?
+Two reflog entries contain similar configuration fixes; only one includes a later security change. The release must retain that security correction. Which evidence should choose the rescue commit?
 
-- **A.** A recovery branch contains the expected commit and files
-- **B.** The path is no longer tracked and exposure is addressed
-- **C.** Only the intended configuration value changes in the repair
+- **A.** Choose the oldest candidate because it predates the regression
+- **B.** Choose the candidate with the shorter commit message
+- **C.** Inspect each candidate's tree, ancestry, and relevant diff against the required release behavior
+- **D.** Choose whichever reflog message mentions configuration first
 
 ## L06-Q049
 
-Applied · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.6](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. Which execution safeguard most directly addresses the risk in this case?
+A removed token remains in fork history and cached artifacts. The team has rotated it, but a proposed history rewrite is being described as complete erasure. What should the recovery report say?
 
-- **A.** Use secret scanning and credential rotation where relevant
-- **B.** Use a backup reference and inspect the target revision
-- **C.** Create a new branch before changing the working branch
+- **A.** No useful mitigation occurred until every external byte is erased
+- **B.** Containment is complete only to the extent verified; history rewriting cannot guarantee removal from all external copies
+- **C.** The rotated token never existed because its current validity is false
+- **D.** A forced rewrite proves all forks and caches were purged
 
 ## L06-Q050
 
-Advanced · [CP3](README.md#task-3) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D2.2.5](../../docs/objective-map.md), [D2.2.6](../../docs/objective-map.md)
 
-Destructive reset proposal: A responder suggests resetting shared main to recover one accidentally removed configuration value. The team selects this remedy: "Recover the value through a small reviewed corrective commit." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A shared branch has a normal configuration regression and an earlier leaked credential. The team wants the least disruptive complete recovery. Which policy distinguishes the problems correctly?
 
-- **A.** Reflog availability is local and time limited
-- **B.** Ignore patterns are a preventive convenience
-- **C.** A corrective commit preserves the mistaken change in history
+- **A.** Revert both commits and consider the credential secure because its addition is reversed
+- **B.** Rewrite the whole shared branch for both issues without considering consumers
+- **C.** Rotate the credential and leave the configuration regression because security is higher priority
+- **D.** Use a forward source correction for the regression, immediately revoke the credential, and separately review necessary coordinated sensitive-history cleanup

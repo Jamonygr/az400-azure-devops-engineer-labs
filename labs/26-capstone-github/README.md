@@ -201,9 +201,15 @@ if($LASTEXITCODE -ne 0){throw 'Self-contained capstone packaging failed.'}
  git -C $p add .;$staged=@(git -C $p diff --cached --name-only)
 if($staged.Count -gt 0){git -C $p commit -m "[$RunId] Deliver tested observable API and gated deployment review"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'};git -C $p branch -M main;git -C $p push -u origin main
  (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'capstone-sha.txt')
+
+$coreSha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()
+$coreCi=Join-Path $p '.github/workflows/ci.yml'
+$coreManifest=git -C $p show "${coreSha}:deployment/package-manifest.json"|ConvertFrom-Json
+if($coreManifest.releaseActivated){throw 'The initial core source must keep release activation dormant.'}
+@{sourceRevision=$coreSha;ciPath='.github/workflows/ci.yml';ciSha256=(Get-FileHash -LiteralPath $coreCi -Algorithm SHA256).Hash;ciBlob=(git -C $p rev-parse "${coreSha}:.github/workflows/ci.yml").Trim();releaseActivated=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'core-publication.json')
 ```
 
-Expected state: A reviewed commit enables CI; cloud deployment remains outside the active workflow directory.
+Expected state: A reviewed commit enables CI; cloud deployment remains outside the active workflow directory. Historical CI-only source revision and CI file hashes remain independently inspectable after the separate protected release activation.
 
 Positive validation:
 
@@ -221,7 +227,7 @@ $t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw
  if($t -match 'azure/login|az deployment|pull_request_target'){throw 'Publishing capstone CI must not start cloud deployment.'}
 ```
 
-Evidence to retain: Exact commit SHA and active-versus-dormant file locations.
+Evidence to retain: Exact commit SHA and active-versus-dormant file locations. core-publication.json links the baseline commit, exact CI path, SHA256 and Git blob; current protected release evidence is separate.
 
 Common failure and safe retry: Activate a separately reviewed deployment only after federation, SQL/network prerequisites, environment approval, and costs are authorized.
 
@@ -393,11 +399,13 @@ The operation executes this reviewed lane:
 ```powershell
 $p=Join-Path $WorkRoot 'capstone'
 if(-not $env:AZ400_SQL_MIGRATION_CONNECTION){throw 'Load the reviewed Entra SQL connection through approved secret handling first.'}
+$ownerToken=(Get-Content (Join-Path $WorkRoot 'run.json') -Raw|ConvertFrom-Json).ownerToken
+if($ownerToken -notmatch '^[a-f0-9]{32}$'){throw 'Exact run ownership marker is missing.'}
 $o=Get-Content (Join-Path $WorkRoot 'workload-outputs.json') -Raw|ConvertFrom-Json
 $prefix="/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/"
 if(-not $o.appResourceId.value.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Application ID is outside the journal-owned group.'}
 $appName=$o.appName.value;$appUrl=$o.appUrl.value;$workspace=$o.workspaceCustomerId.value
-& (Join-Path $p 'deployment/scripts/Assert-OwnedWorkload.ps1') -SubscriptionId $SubscriptionId -ResourceGroup $ResourceGroup -RunId $RunId -AppName $appName -WorkspaceId $workspace
+& (Join-Path $p 'deployment/scripts/Assert-OwnedWorkload.ps1') -SubscriptionId $SubscriptionId -ResourceGroup $ResourceGroup -RunId $RunId -OwnerToken $ownerToken -AppName $appName -WorkspaceId $workspace
 $baselineSha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()
 if($baselineSha -notmatch '^[a-f0-9]{40}$' -or $baselineSha -match '^0{40}$'){throw 'Baseline revision is invalid.'}
 $baselineRun=(Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt')).Trim()
@@ -410,7 +418,7 @@ foreach($name in @('AZ400_MIGRATION_CLIENT_ID','AZ400_DEPLOYMENT_CLIENT_ID','AZ4
  if(-not [Environment]::GetEnvironmentVariable($name)){throw "Bootstrap input $name is missing."}
 }
 foreach($scope in @('production-database','production')){
- $values=@{AZURE_TENANT_ID=$env:AZ400_TENANT_ID;AZURE_SUBSCRIPTION_ID=$SubscriptionId;AZURE_RESOURCE_GROUP=$ResourceGroup;LAB_RUN_ID=$RunId;AZURE_WEBAPP_NAME=$appName;LOG_ANALYTICS_WORKSPACE_ID=$workspace}
+ $values=@{AZURE_TENANT_ID=$env:AZ400_TENANT_ID;AZURE_SUBSCRIPTION_ID=$SubscriptionId;AZURE_RESOURCE_GROUP=$ResourceGroup;LAB_RUN_ID=$RunId;LAB_OWNERSHIP_MARKER=$ownerToken;AZURE_WEBAPP_NAME=$appName;LOG_ANALYTICS_WORKSPACE_ID=$workspace}
  if($scope -eq 'production-database'){$values.AZURE_MIGRATION_CLIENT_ID=$env:AZ400_MIGRATION_CLIENT_ID}else{$values.AZURE_CLIENT_ID=$env:AZ400_DEPLOYMENT_CLIENT_ID}
  foreach($key in $values.Keys){gh variable set $key --repo $GhRepo --env $scope --body $values[$key]}
 }

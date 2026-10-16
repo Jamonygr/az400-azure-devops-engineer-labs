@@ -8,698 +8,794 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 Foundational · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which next change most directly satisfies the stated requirement?
+The sample contains TodoWrites flag configuration but no deployment occurs when its value changes. What concept does this illustrate?
 
-- **A. Use the existing feature flag as a kill switch** Runtime configuration can change exposure quickly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **B. Remove obsolete flags and simplify the associated code paths** Flags need a complete retirement lifecycle. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **C. Guard exposure with a disabled release feature flag** **Correct.** Deployment and user exposure can be controlled separately. This directly addresses the constraint stated in this case.
+- **A. A flag grants Azure subscription permissions** Application behavior configuration does not authorize identity access to Azure resources.
+- **B. Deployment and feature exposure are separate controls** **Correct.** Existing executable code can change allowed behavior without requiring a new binary deployment.
+- **C. A feature flag is a database backup** Exposure control does not store or restore durable database data.
+- **D. Every flag update recompiles the application automatically** Configuration changes do not inherently invoke the source compiler or build pipeline.
 
-**Explanation:** Deployment and user exposure can be controlled separately. The selected answer is guard exposure with a disabled release feature flag.
+**Explanation:** Existing executable code can change allowed behavior without requiring a new binary deployment. Configuration changes do not inherently invoke the source compiler or build pipeline. Exposure control does not store or restore durable database data. Application behavior configuration does not authorize identity access to Azure resources.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q002
 
-Foundational · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which explanation best accounts for the behavior or constraint described?
+The disabled-flag test rejects writes while reads stay healthy. Which required behavior does that observation establish?
 
-- **A. Temporary rollout controls accumulated without cleanup** The configuration state space has become unnecessary complexity. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **B. Code presence does not require immediate feature availability** **Correct.** The application can evaluate a release-time switch. This directly addresses the constraint stated in this case.
-- **C. The failure is isolated to a flag-controlled capability** A full binary rollback may be unnecessary. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
+```text
+TodoWrites=false
+POST /todos: rejected
+GET /todos: healthy
+```
 
-**Explanation:** The application can evaluate a release-time switch. The selected answer is code presence does not require immediate feature availability.
+- **A. The write capability can be stopped without disabling reads** **Correct.** The test demonstrates the stated separation between risky mutations and retained read functionality.
+- **B. The cloud App Configuration store was contacted successfully** A local application test does not prove remote configuration retrieval or authorization.
+- **C. The entire application is unavailable whenever the flag is disabled** Successful reads contradict that claim of complete application unavailability.
+- **D. Every database schema was rolled back** Feature exposure changes do not execute schema recovery or destructive migration reversal.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** The test demonstrates the stated separation between risky mutations and retained read functionality. Successful reads contradict that claim of complete application unavailability. A local application test does not prove remote configuration retrieval or authorization. Feature exposure changes do not execute schema recovery or destructive migration reversal.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q003
 
-Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which observation provides the strongest evidence that the requested result was achieved?
+The lab creates an Entra-only configuration store and needs to modify feature data through CLI. Which permission boundary matters?
 
-- **A. The supported behavior remains after obsolete branches are removed** Cleanup needs behavioral regression evidence. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **B. The deployed feature stays hidden until the flag is enabled** **Correct.** The test distinguishes deployment from exposure. This directly addresses the constraint stated in this case.
-- **C. Disabling the flag restores the defined healthy path** The proof must observe user-facing behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
+- **A. The intended identity needs the scoped data-plane role** **Correct.** Management resource existence does not automatically authorize reading or changing feature key-values.
+- **B. Only the number of local unit tests** Test counts cannot grant a principal remote store data-plane permissions.
+- **C. Only the app store friendly display name** Naming does not grant the selected identity permission over configuration data.
+- **D. Only the repository contents permission** GitHub source authority does not directly authorize Azure configuration data operations.
 
-**Explanation:** The test distinguishes deployment from exposure. The selected answer is the deployed feature stays hidden until the flag is enabled.
+**Explanation:** Management resource existence does not automatically authorize reading or changing feature key-values. Naming does not grant the selected identity permission over configuration data. GitHub source authority does not directly authorize Azure configuration data operations. Test counts cannot grant a principal remote store data-plane permissions.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q004
 
-Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. Which execution safeguard most directly addresses the risk in this case?
+The learner enables TodoWrites in the owned store. Which independent read verifies that data-plane feature update outcome?
 
-- **A. Check consumers and configuration references before deleting flags** A shared flag may still control another application. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **B. Validate both flag states before launch** **Correct.** Disabled paths can still contain defects. This directly addresses the constraint stated in this case.
-- **C. Restrict flag changes and retain an audit trail** Exposure controls can affect production behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
+- **A. Read only the configured identity data-plane role assignment** Authorization enables a request but does not establish the actual stored feature value after mutation.
+- **B. Read only a previously exported feature JSON file** A stale local snapshot does not establish that the remote provider accepted and retained the intended update.
+- **C. Query that exact feature and inspect its actual enabled state** **Correct.** A fresh service read establishes stored feature state rather than only the submitted request.
+- **D. Read only the original feature creation response** An earlier creation observation does not show the state after the newly requested enable operation.
 
-**Explanation:** Disabled paths can still contain defects. The selected answer is validate both flag states before launch.
+**Explanation:** A fresh service read establishes stored feature state rather than only the submitted request. A stale local snapshot does not establish that the remote provider accepted and retained the intended update. Authorization enables a request but does not establish the actual stored feature value after mutation. An earlier creation observation does not show the state after the newly requested enable operation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q005
 
-Advanced · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
 
-Dark launch: Code is deployed successfully, but product owners want the new checkout hidden until a planned launch. The team selects this remedy: "Guard exposure with a disabled release feature flag." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The exercise ends by disabling TodoWrites as a kill switch. What state should the fault assertion expect?
 
-- **A. Flag propagation and refresh behavior affect response time** A switch is not necessarily observed instantly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **B. Flag removal is a code and configuration change** It deserves the normal review and release process. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **C. Feature flags need owners and removal dates** **Correct.** Temporary flags create lasting branching complexity. This directly addresses the constraint stated in this case.
+- **A. The database was automatically dropped** A feature state update does not perform destructive database resource cleanup.
+- **B. The application binary was removed from every slot** Disabling behavior does not require deleting deployed executable application content.
+- **C. Any feature anywhere is enabled** An unrelated feature state cannot establish the expected scoped kill-switch setting.
+- **D. The exact owned feature is off** **Correct.** The asserted state must match the intended final exposure boundary after the exercise.
 
-**Explanation:** Temporary flags create lasting branching complexity. The selected answer is feature flags need owners and removal dates.
+**Explanation:** The asserted state must match the intended final exposure boundary after the exercise. An unrelated feature state cannot establish the expected scoped kill-switch setting. Disabling behavior does not require deleting deployed executable application content. A feature state update does not perform destructive database resource cleanup.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q006
 
-Foundational · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which next change most directly satisfies the stated requirement?
+A dependency has a brief transient interruption. Which resilience technique can repeat a safe operation with bounded delay?
 
-- **A. Guard exposure with a disabled release feature flag** Deployment and user exposure can be controlled separately. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **B. Use the existing feature flag as a kill switch** **Correct.** Runtime configuration can change exposure quickly. This directly addresses the constraint stated in this case.
-- **C. Use stable targeting appropriate to the user journey** Consistent assignment supports coherent multi-request behavior. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
+- **A. A permanent database schema deletion** Destructive schema change does not address a transient dependency service interruption.
+- **B. A bounded retry policy** **Correct.** Retries can address temporary failures when repetition is safe and time is limited.
+- **C. A different artifact display label** Naming does not alter dependency request handling or bounded retry behavior.
+- **D. An unlimited tight loop without delay** Unbounded repetition can amplify load and exceed the caller acceptable latency budget.
 
-**Explanation:** Runtime configuration can change exposure quickly. The selected answer is use the existing feature flag as a kill switch.
+**Explanation:** Retries can address temporary failures when repetition is safe and time is limited. Unbounded repetition can amplify load and exceed the caller acceptable latency budget. Destructive schema change does not address a transient dependency service interruption. Naming does not alter dependency request handling or bounded retry behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q007
 
-Applied · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which explanation best accounts for the behavior or constraint described?
+A dependency fails persistently and repeated calls worsen its overload. What pattern can temporarily stop sending requests?
 
-- **A. Random per-request assignment changes experience mid-workflow** A percentage alone does not establish stable cohorts. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. Code presence does not require immediate feature availability** The application can evaluate a release-time switch. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **C. The failure is isolated to a flag-controlled capability** **Correct.** A full binary rollback may be unnecessary. This directly addresses the constraint stated in this case.
+- **A. Infinite retries from every caller** Unbounded repeated traffic can amplify the underlying overload rather than relieve it.
+- **B. A circuit breaker with defined recovery probes** **Correct.** The breaker limits repeated calls while the dependency remains in an unhealthy state.
+- **C. A feature name containing reliable** A label does not implement request suppression or recovery state transitions.
+- **D. A larger log retention duration** Keeping evidence longer does not reduce live calls to the failing dependency.
 
-**Explanation:** A full binary rollback may be unnecessary. The selected answer is the failure is isolated to a flag-controlled capability.
+**Explanation:** The breaker limits repeated calls while the dependency remains in an unhealthy state. Unbounded repeated traffic can amplify the underlying overload rather than relieve it. A label does not implement request suppression or recovery state transitions. Keeping evidence longer does not reduce live calls to the failing dependency.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q008
 
-Applied · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which observation provides the strongest evidence that the requested result was achieved?
+A temporary release flag has no owner or removal date. Which lifecycle control is missing?
 
-- **A. A selected user keeps the intended variant across the journey** The verification must span several related requests. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. The deployed feature stays hidden until the flag is enabled** The test distinguishes deployment from exposure. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **C. Disabling the flag restores the defined healthy path** **Correct.** The proof must observe user-facing behavior. This directly addresses the constraint stated in this case.
+- **A. Only a longer display description** More prose does not establish responsible ownership or an actual removal plan.
+- **B. Only a different application archive name** Artifact labels do not manage the lifetime of application exposure conditions.
+- **C. Only a new source branch for each user** Branch proliferation does not govern runtime flag ownership or expiry.
+- **D. Ownership and expiry or cleanup planning** **Correct.** Exposure switches need accountable maintenance rather than accumulating permanent obsolete branching behavior.
 
-**Explanation:** The proof must observe user-facing behavior. The selected answer is disabling the flag restores the defined healthy path.
+**Explanation:** Exposure switches need accountable maintenance rather than accumulating permanent obsolete branching behavior. More prose does not establish responsible ownership or an actual removal plan. Branch proliferation does not govern runtime flag ownership or expiry. Artifact labels do not manage the lifetime of application exposure conditions.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q009
 
-Applied · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. Which execution safeguard most directly addresses the risk in this case?
+A learner runs dotnet test with a filter matching no tests, then claims the kill-switch behavior passed. What must validation check?
 
-- **A. Avoid exposing sensitive identity attributes in flag telemetry** Targeting data can reveal user information. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. Validate both flag states before launch** Disabled paths can still contain defects. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **C. Restrict flag changes and retain an audit trail** **Correct.** Exposure controls can affect production behavior. This directly addresses the constraint stated in this case.
+- **A. Only that the command returned zero** Process success without discovered assertions does not prove application behavior was exercised.
+- **B. Only that the filter contains the word Feature** A descriptive filter can still match no actual test cases.
+- **C. At least one intended assertion executed and passed** **Correct.** A zero-test successful process cannot establish the actual required feature behavior.
+- **D. Only the current store enabled state** Provider flag state does not demonstrate a local application behavioral test ran.
 
-**Explanation:** Exposure controls can affect production behavior. The selected answer is restrict flag changes and retain an audit trail.
+**Explanation:** A zero-test successful process cannot establish the actual required feature behavior. Process success without discovered assertions does not prove application behavior was exercised. A descriptive filter can still match no actual test cases. Provider flag state does not demonstrate a local application behavioral test ran.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q010
 
-Advanced · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Emergency disable: A new recommendation feature increases errors, and responders need to stop exposure without rebuilding the application. The team selects this remedy: "Use the existing feature flag as a kill switch." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The identity can create a configuration store but cannot read its feature values. What distinction explains this result?
 
-- **A. Feature flags need owners and removal dates** Temporary flags create lasting branching complexity. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **B. Flag propagation and refresh behavior affect response time** **Correct.** A switch is not necessarily observed instantly. This directly addresses the constraint stated in this case.
-- **C. Stable targeting requires identity and assignment design** Anonymous or changing identities complicate consistency. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
+```text
+Store creation: succeeded
+Feature read with selected identity: authorization denied
+```
 
-**Explanation:** A switch is not necessarily observed instantly. The selected answer is flag propagation and refresh behavior affect response time.
+- **A. A successful local test always grants remote read access** Test execution does not assign roles to the identity making a provider request.
+- **B. Management-plane and data-plane permissions are separate** **Correct.** Resource provisioning authority does not automatically grant permission to consume configuration data.
+- **C. Feature reads require repository administrator membership** Source-control roles do not directly confer Azure configuration data access.
+- **D. Every created store must contain corrupt feature data** An authorization denial does not establish that the stored values are invalid.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** Resource provisioning authority does not automatically grant permission to consume configuration data. An authorization denial does not establish that the stored values are invalid. Source-control roles do not directly confer Azure configuration data access. Test execution does not assign roles to the identity making a provider request.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q011
 
-Foundational · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which next change most directly satisfies the stated requirement?
+The CLI reports TodoWrites enabled in the store, but the sample has not been configured to consume that store. What remains unproven?
 
-- **A. Implement and verify the intended configuration refresh path** The client must observe updates after startup. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Use the existing feature flag as a kill switch** Runtime configuration can change exposure quickly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **C. Use stable targeting appropriate to the user journey** **Correct.** Consistent assignment supports coherent multi-request behavior. This directly addresses the constraint stated in this case.
+- **A. The provider returned an enabled feature** That observed state can be valid even while application integration remains absent.
+- **B. The feature name can be queried explicitly** The query itself demonstrates inspectable provider feature data for that scoped name.
+- **C. The running sample behavior follows the remote flag** **Correct.** Changing provider state does not establish that the application reads that configuration source.
+- **D. Local and cloud observations need separate reporting** Distinct exercised boundaries should remain explicit instead of being conflated.
 
-**Explanation:** Consistent assignment supports coherent multi-request behavior. The selected answer is use stable targeting appropriate to the user journey.
+**Explanation:** Changing provider state does not establish that the application reads that configuration source. That observed state can be valid even while application integration remains absent. The query itself demonstrates inspectable provider feature data for that scoped name. Distinct exercised boundaries should remain explicit instead of being conflated.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q012
 
-Foundational · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which explanation best accounts for the behavior or constraint described?
+A retry policy repeats a failed payment request without an idempotency contract. What risk should review highlight?
 
-- **A. Configuration was loaded once without effective refresh** A remote change does not automatically update application memory. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. The failure is isolated to a flag-controlled capability** A full binary rollback may be unnecessary. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **C. Random per-request assignment changes experience mid-workflow** **Correct.** A percentage alone does not establish stable cohorts. This directly addresses the constraint stated in this case.
+- **A. A feature label prevents duplicate transactions** Configuration naming does not implement a server-side idempotency boundary.
+- **B. Every retry automatically rolls back the first operation** Request repetition does not inherently undo a previously committed side effect.
+- **C. More retries always reduce total dependency load** Repeated operations increase attempts and can amplify load during a failure.
+- **D. Repeated attempts can duplicate the side effect** **Correct.** An uncertain first result does not establish that repeating a mutation is safe.
 
-**Explanation:** A percentage alone does not establish stable cohorts. The selected answer is random per-request assignment changes experience mid-workflow.
+**Explanation:** An uncertain first result does not establish that repeating a mutation is safe. Request repetition does not inherently undo a previously committed side effect. Repeated operations increase attempts and can amplify load during a failure. Configuration naming does not implement a server-side idempotency boundary.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q013
 
-Applied · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which observation provides the strongest evidence that the requested result was achieved?
+A release flag allows enabling a new capability gradually for selected users. What targeting requirement supports a stable experience?
 
-- **A. The application observes the new value within the documented interval** The test should measure actual propagation. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Disabling the flag restores the defined healthy path** The proof must observe user-facing behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **C. A selected user keeps the intended variant across the journey** **Correct.** The verification must span several related requests. This directly addresses the constraint stated in this case.
+- **A. Consistent cohort assignment for the intended users** **Correct.** Gradual exposure should identify who receives the capability rather than change randomly per request.
+- **B. Only the number of generated configuration files** File count cannot establish the actual runtime targeting decision logic.
+- **C. Only a source branch named canary** Branch labels do not implement runtime user targeting or stable cohort assignment.
+- **D. Only the application package creation date** Artifact age does not determine which users receive feature behavior.
 
-**Explanation:** The verification must span several related requests. The selected answer is a selected user keeps the intended variant across the journey.
+**Explanation:** Gradual exposure should identify who receives the capability rather than change randomly per request. Branch labels do not implement runtime user targeting or stable cohort assignment. Artifact age does not determine which users receive feature behavior. File count cannot establish the actual runtime targeting decision logic.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q014
 
-Applied · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. Which execution safeguard most directly addresses the risk in this case?
+The caller has a short response budget, but retry delays can exceed it. Which bound should the policy respect?
 
-- **A. Choose safe behavior when refresh temporarily fails** Configuration connectivity should not create uncontrolled exposure. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Restrict flag changes and retain an audit trail** Exposure controls can affect production behavior. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **C. Avoid exposing sensitive identity attributes in flag telemetry** **Correct.** Targeting data can reveal user information. This directly addresses the constraint stated in this case.
+- **A. The overall operation latency and cancellation budget** **Correct.** Retries must fit the caller actual acceptable execution window rather than grow indefinitely.
+- **B. Only the maximum number of simultaneous requests** Concurrency limits do not by themselves bound the total duration of one retrying logical operation.
+- **C. Only a maximum retry count without considering delays** Even a finite attempt count can exceed the caller deadline when delays and individual timeouts accumulate.
+- **D. Only a separate timeout for each individual attempt** Per-attempt limits do not necessarily bound cumulative delays and execution within the caller overall deadline.
 
-**Explanation:** Targeting data can reveal user information. The selected answer is avoid exposing sensitive identity attributes in flag telemetry.
+**Explanation:** Per-attempt limits do not necessarily bound cumulative delays and execution within the caller overall deadline. Concurrency limits do not by themselves bound the total duration of one retrying logical operation. Even a finite attempt count can exceed the caller deadline when delays and individual timeouts accumulate. Retries must fit the caller actual acceptable execution window rather than grow indefinitely.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q015
 
-Advanced · [CP5](README.md#task-5) · [D3.4.6](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Unstable cohort: A percentage rollout gives the same user different behavior on successive requests and breaks a multi-step workflow. The team selects this remedy: "Use stable targeting appropriate to the user journey." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Writes are rejected with TodoWrites disabled, but the test never checks reads. What required behavior is still missing evidence?
 
-- **A. Faster refresh can increase configuration traffic** Responsiveness and service usage need balance. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Flag propagation and refresh behavior affect response time** A switch is not necessarily observed instantly. That addresses a different requirement: Emergency disable. It does not directly resolve this case's stated constraint.
-- **C. Stable targeting requires identity and assignment design** **Correct.** Anonymous or changing identities complicate consistency. This directly addresses the constraint stated in this case.
+- **A. The Azure subscription has no residual resources** An application assertion does not establish remote cleanup or inventory absence.
+- **B. Reads remain healthy while writes are disabled** **Correct.** The exercise requires both denied mutations and preserved read behavior under the flag.
+- **C. The store has an independent reviewer configured** Local feature behavior does not prove any provider resource approval policy.
+- **D. The application must have been recompiled** Changing exposure does not require a rebuild unless the implementation explicitly does so.
 
-**Explanation:** Anonymous or changing identities complicate consistency. The selected answer is stable targeting requires identity and assignment design.
+**Explanation:** The exercise requires both denied mutations and preserved read behavior under the flag. Changing exposure does not require a rebuild unless the implementation explicitly does so. An application assertion does not establish remote cleanup or inventory absence. Local feature behavior does not prove any provider resource approval policy.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q016
 
-Foundational · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which next change most directly satisfies the stated requirement?
+Every client retries immediately after a shared outage and the dependency receives a synchronized burst. What delay technique can reduce that synchronization?
 
-- **A. Use stable targeting appropriate to the user journey** Consistent assignment supports coherent multi-request behavior. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. Implement and verify the intended configuration refresh path** **Correct.** The client must observe updates after startup. This directly addresses the constraint stated in this case.
-- **C. Use bounded retries with suitable delay for transient errors** A short transient fault may succeed later. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
+```text
+1000 clients
+Failure at same instant
+Retry delay: zero for every attempt
+```
 
-**Explanation:** The client must observe updates after startup. The selected answer is implement and verify the intended configuration refresh path.
+- **A. The same fixed zero delay for every client** Immediate synchronized repetition can amplify the dependency load after the outage.
+- **B. Renaming the dependency connection string** A friendly configuration label does not change request timing or retry synchronization.
+- **C. Infinite retry count with no deadline** Removing bounds extends load and can exceed acceptable user latency indefinitely.
+- **D. Backoff with jitter and bounded attempts** **Correct.** Varying delayed retries can reduce synchronized pressure while keeping recovery attempts limited.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** Varying delayed retries can reduce synchronized pressure while keeping recovery attempts limited. Immediate synchronized repetition can amplify the dependency load after the outage. Removing bounds extends load and can exceed acceptable user latency indefinitely. A friendly configuration label does not change request timing or retry synchronization.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q017
 
 Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which explanation best accounts for the behavior or constraint described?
+The feature name is correct but the command targets another configuration store. What must the validation compare?
 
-- **A. The failure is temporary rather than a permanent invalid request** Retry policy must classify the error correctly. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Random per-request assignment changes experience mid-workflow** A percentage alone does not establish stable cohorts. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **C. Configuration was loaded once without effective refresh** **Correct.** A remote change does not automatically update application memory. This directly addresses the constraint stated in this case.
+- **A. The exact run-owned store and feature identity** **Correct.** Matching a key name alone cannot establish that the authorized scoped resource was changed.
+- **B. Only the application local directory name** Filesystem naming does not establish the provider store boundary used by the request.
+- **C. Only the learner login display name** Available identity does not identify which resource the operation actually targeted.
+- **D. Only whether any TodoWrites key exists** The same key can legitimately exist in multiple unrelated stores.
 
-**Explanation:** A remote change does not automatically update application memory. The selected answer is configuration was loaded once without effective refresh.
+**Explanation:** Matching a key name alone cannot establish that the authorized scoped resource was changed. The same key can legitimately exist in multiple unrelated stores. Available identity does not identify which resource the operation actually targeted. Filesystem naming does not establish the provider store boundary used by the request.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q018
 
-Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which observation provides the strongest evidence that the requested result was achieved?
+A newly granted narrow data role is not yet effective. What retry approach preserves least privilege?
 
-- **A. A selected user keeps the intended variant across the journey** The verification must span several related requests. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. The application observes the new value within the documented interval** **Correct.** The test should measure actual propagation. This directly addresses the constraint stated in this case.
-- **C. Transient faults recover within the permitted request budget** The test should include an eventual successful response. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
+- **A. Treat the failed read as successful because assignment was requested** Submitted intent does not establish effective provider data access.
+- **B. Copy a personal administrator access key into source** Stored broad credentials introduce unnecessary exposure and abandon the intended identity design.
+- **C. Immediately assign subscription Owner to every identity** Broadening permissions exceeds the data operation and can hide the actual prerequisite issue.
+- **D. Bounded read retries with the exact identity and scope verified** **Correct.** Propagation delay should be diagnosed without reflexively broadening the intended authorization boundary.
 
-**Explanation:** The test should measure actual propagation. The selected answer is the application observes the new value within the documented interval.
+**Explanation:** Propagation delay should be diagnosed without reflexively broadening the intended authorization boundary. Broadening permissions exceeds the data operation and can hide the actual prerequisite issue. Stored broad credentials introduce unnecessary exposure and abandon the intended identity design. Submitted intent does not establish effective provider data access.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q019
 
-Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. Which execution safeguard most directly addresses the risk in this case?
+The breaker is open after persistent failures. What should normal calls do until its recovery policy allows a probe?
 
-- **A. Retry only operations safe to repeat** Repeated nonidempotent actions can duplicate side effects. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Avoid exposing sensitive identity attributes in flag telemetry** Targeting data can reveal user information. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **C. Choose safe behavior when refresh temporarily fails** **Correct.** Configuration connectivity should not create uncontrolled exposure. This directly addresses the constraint stated in this case.
+- **A. Send all normal requests concurrently to test recovery** That bypasses the intended suppression and can recreate dependency overload immediately.
+- **B. Fail fast or use a deliberately defined fallback** **Correct.** An open breaker limits repeated dependency pressure rather than continuing every normal request.
+- **C. Delete the application artifact before each request** Package deletion is unrelated to controlled dependency request suppression.
+- **D. Declare every skipped dependency call successful without a contract** Suppressing requests does not establish successful completion of required business behavior.
 
-**Explanation:** Configuration connectivity should not create uncontrolled exposure. The selected answer is choose safe behavior when refresh temporarily fails.
+**Explanation:** An open breaker limits repeated dependency pressure rather than continuing every normal request. That bypasses the intended suppression and can recreate dependency overload immediately. Suppressing requests does not establish successful completion of required business behavior. Package deletion is unrelated to controlled dependency request suppression.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q020
 
-Advanced · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Stale flag: Operators change a feature in App Configuration, but the running application continues using its startup value. The team selects this remedy: "Implement and verify the intended configuration refresh path." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A flag defaults to enabled if configuration cannot load, but the capability performs risky writes. What design review is required?
 
-- **A. Stable targeting requires identity and assignment design** Anonymous or changing identities complicate consistency. That addresses a different requirement: Unstable cohort. It does not directly resolve this case's stated constraint.
-- **B. Faster refresh can increase configuration traffic** **Correct.** Responsiveness and service usage need balance. This directly addresses the constraint stated in this case.
-- **C. Retries increase latency and downstream load** Unbounded repetition can worsen an outage. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
+- **A. Use the flag display name as authorization** Friendly naming does not establish permission to expose a risky capability.
+- **B. Assume every flag must always default enabled** Default choice depends on capability risk and required service continuity behavior.
+- **C. Assume every missing value means deployment succeeded** Configuration absence is not evidence of successful source-to-runtime promotion.
+- **D. Choose an explicit risk-appropriate fallback behavior** **Correct.** An unavailable configuration source needs deliberate behavior rather than an accidental exposure default.
 
-**Explanation:** Responsiveness and service usage need balance. The selected answer is faster refresh can increase configuration traffic.
+**Explanation:** An unavailable configuration source needs deliberate behavior rather than an accidental exposure default. Default choice depends on capability risk and required service continuity behavior. Configuration absence is not evidence of successful source-to-runtime promotion. Friendly naming does not establish permission to expose a risky capability.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which next change most directly satisfies the stated requirement?
+The local test changes one flag value but the application's test configuration overrides it elsewhere. What should diagnosis inspect?
 
-- **A. Use a circuit breaker with a recovery probe** Persistent failures require limiting repeated dependency calls. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
-- **B. Implement and verify the intended configuration refresh path** The client must observe updates after startup. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **C. Use bounded retries with suitable delay for transient errors** **Correct.** A short transient fault may succeed later. This directly addresses the constraint stated in this case.
+- **A. The effective configuration precedence used by the application** **Correct.** A declared file value may not be the actual value consumed at runtime.
+- **B. Only the JSON file modification timestamp** Recency does not establish precedence across environment and other configuration providers.
+- **C. Only the number of retained build artifacts** Output inventory does not explain how the application resolves its configuration sources.
+- **D. Only whether the file configuration value is syntactically valid** Valid JSON can be overridden by a higher-priority environment or configuration provider value.
 
-**Explanation:** A short transient fault may succeed later. The selected answer is use bounded retries with suitable delay for transient errors.
+**Explanation:** A declared file value may not be the actual value consumed at runtime. Recency does not establish precedence across environment and other configuration providers. Valid JSON can be overridden by a higher-priority environment or configuration provider value. Output inventory does not explain how the application resolves its configuration sources.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which explanation best accounts for the behavior or constraint described?
+A dependency returns a permanent validation error for malformed input. Which retry classification is appropriate?
 
-- **A. The failure is temporary rather than a permanent invalid request** **Correct.** Retry policy must classify the error correctly. This directly addresses the constraint stated in this case.
-- **B. Retries alone amplify sustained unavailability** The application continues spending resources on known failures. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
-- **C. Configuration was loaded once without effective refresh** A remote change does not automatically update application memory. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
+- **A. Delete the test report to avoid classifying the error** Removing evidence does not change the actual dependency response semantics.
+- **B. Retry forever because every non-success must be transient** That can amplify load without changing the invalid request or its cause.
+- **C. Do not blindly retry the unchanged invalid request** **Correct.** Permanent input failure is not a transient condition repetition can normally repair.
+- **D. Use progressively broader database privileges per retry** Authorization expansion cannot repair malformed business input and adds unnecessary risk.
 
-**Explanation:** Retry policy must classify the error correctly. The selected answer is the failure is temporary rather than a permanent invalid request.
+**Explanation:** Permanent input failure is not a transient condition repetition can normally repair. That can amplify load without changing the invalid request or its cause. Authorization expansion cannot repair malformed business input and adds unnecessary risk. Removing evidence does not change the actual dependency response semantics.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which observation provides the strongest evidence that the requested result was achieved?
+A flag update succeeds but the application caches configuration for several minutes. What should kill-switch expectations include?
 
-- **A. The application observes the new value within the documented interval** The test should measure actual propagation. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Transient faults recover within the permitted request budget** **Correct.** The test should include an eventual successful response. This directly addresses the constraint stated in this case.
-- **C. Calls are curtailed while the breaker is open** The evidence should show reduced failing dependency traffic. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
+- **A. Only the current enabled state shown in the store** Stored state does not show when running consumers refresh or stop using cached configuration.
+- **B. The actual refresh and propagation latency** **Correct.** Stored configuration state can differ temporarily from the value used by running instances.
+- **C. An assumption that every instance changes instantaneously** A provider write does not guarantee immediate refresh of all application caches.
+- **D. Only the last source commit timestamp** Source timing does not establish runtime configuration refresh behavior.
 
-**Explanation:** The test should include an eventual successful response. The selected answer is transient faults recover within the permitted request budget.
+**Explanation:** Stored state does not show when running consumers refresh or stop using cached configuration. Stored configuration state can differ temporarily from the value used by running instances. A provider write does not guarantee immediate refresh of all application caches. Source timing does not establish runtime configuration refresh behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q024
 
 Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. Which execution safeguard most directly addresses the risk in this case?
+The breaker permits a limited request after an open period to check recovery. Which state behavior does this describe?
 
-- **A. Choose safe behavior when refresh temporarily fails** Configuration connectivity should not create uncontrolled exposure. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **B. Retry only operations safe to repeat** **Correct.** Repeated nonidempotent actions can duplicate side effects. This directly addresses the constraint stated in this case.
-- **C. Define a safe failure or fallback experience** Stopping calls still leaves user requests to handle. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
+- **A. A half-open recovery probe** **Correct.** Limited trial traffic tests dependency recovery before normal call volume resumes.
+- **B. Unlimited closed-state traffic with no limits** A bounded probe is different from restoring unrestricted ordinary calls immediately.
+- **C. A feature deletion operation in the store** Dependency call state transitions do not require deleting application feature definitions.
+- **D. An automatic database migration rollback** Breaker recovery does not perform schema reversal or data restoration.
 
-**Explanation:** Repeated nonidempotent actions can duplicate side effects. The selected answer is retry only operations safe to repeat.
+**Explanation:** Limited trial traffic tests dependency recovery before normal call volume resumes. A bounded probe is different from restoring unrestricted ordinary calls immediately. Breaker recovery does not perform schema reversal or data restoration. Dependency call state transitions do not require deleting application feature definitions.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Transient failure: An external dependency occasionally returns a temporary failure, and the application immediately fails every affected request. The team selects this remedy: "Use bounded retries with suitable delay for transient errors." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The capability is fully adopted but the old release flag still branches production code. What maintenance action should the owner consider?
 
-- **A. Circuit breakers add states and recovery tuning** Incorrect thresholds can reject healthy calls unnecessarily. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
-- **B. Faster refresh can increase configuration traffic** Responsiveness and service usage need balance. That addresses a different requirement: Stale flag. It does not directly resolve this case's stated constraint.
-- **C. Retries increase latency and downstream load** **Correct.** Unbounded repetition can worsen an outage. This directly addresses the constraint stated in this case.
+- **A. Delete all current configuration without checking consumers** Broad removal can break unrelated active features and violates a scoped cleanup approach.
+- **B. Remove obsolete flag paths through a reviewed cleanup change** **Correct.** Permanent stale switches increase complexity after their exposure-control purpose has ended.
+- **C. Replace the flag with an unrestricted administrator token** Runtime exposure control is unrelated to granting broad resource mutation authority.
+- **D. Keep every temporary flag forever without review** Unbounded accumulation leaves obsolete behavior branches and unclear ownership in production code.
 
-**Explanation:** Unbounded repetition can worsen an outage. The selected answer is retries increase latency and downstream load.
+**Explanation:** Permanent stale switches increase complexity after their exposure-control purpose has ended. Unbounded accumulation leaves obsolete behavior branches and unclear ownership in production code. Broad removal can break unrelated active features and violates a scoped cleanup approach. Runtime exposure control is unrelated to granting broad resource mutation authority.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q026
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which next change most directly satisfies the stated requirement?
+The lab uses Entra authentication instead of store access keys. What operational benefit does this support while still needing role review?
 
-- **A. Use bounded retries with suitable delay for transient errors** A short transient fault may succeed later. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Use a circuit breaker with a recovery probe** **Correct.** Persistent failures require limiting repeated dependency calls. This directly addresses the constraint stated in this case.
-- **C. Add jitter to bounded backoff** Spread retries to avoid synchronized load spikes. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. Automatically granting write authority to every tenant user** Entra identity does not imply unrestricted configuration store access for all users.
+- **B. Eliminating every need for access control** Authentication method does not establish that all callers should receive data mutation rights.
+- **C. Guaranteeing application reads the store without configuration** Authentication capability does not wire the application to a remote provider automatically.
+- **D. Avoiding a stored shared secret for the intended data operation** **Correct.** Identity-based access reduces shared key handling without eliminating resource authorization requirements.
 
-**Explanation:** Persistent failures require limiting repeated dependency calls. The selected answer is use a circuit breaker with a recovery probe.
+**Explanation:** Identity-based access reduces shared key handling without eliminating resource authorization requirements. Authentication method does not establish that all callers should receive data mutation rights. Entra identity does not imply unrestricted configuration store access for all users. Authentication capability does not wire the application to a remote provider automatically.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q027
 
 Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which explanation best accounts for the behavior or constraint described?
+An operation retries five times in each of three nested layers. What should resilience review examine?
 
-- **A. The failure is temporary rather than a permanent invalid request** Retry policy must classify the error correctly. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Retries alone amplify sustained unavailability** **Correct.** The application continues spending resources on known failures. This directly addresses the constraint stated in this case.
-- **C. Identical retry timing coordinates the entire client population** Recovery receives a concentrated surge. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+```text
+Outer layer: up to 5 attempts
+Middle layer: up to 5 attempts
+Inner dependency: up to 5 attempts
+```
 
-**Explanation:** The application continues spending resources on known failures. The selected answer is retries alone amplify sustained unavailability.
+- **A. Assume nested retries always cancel each other out** Independent retry policies can compound rather than eliminate repeated downstream operations.
+- **B. Only whether the outer retry uses exponential backoff** The inner layers can still multiply downstream calls independently of the outer delay strategy.
+- **C. Multiplicative attempts and the combined downstream load** **Correct.** Nested policies can multiply calls far beyond the apparent retry count at one layer.
+- **D. Only the outer layer configured retry count** Nested downstream policies can multiply attempts beyond the limit visible in one caller layer.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** Nested policies can multiply calls far beyond the apparent retry count at one layer. Nested downstream policies can multiply attempts beyond the limit visible in one caller layer. The inner layers can still multiply downstream calls independently of the outer delay strategy. Independent retry policies can compound rather than eliminate repeated downstream operations.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q028
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which observation provides the strongest evidence that the requested result was achieved?
+The feature-disabled test proves rejected writes, but no enabled test exists. What additional behavioral case improves the contract?
 
-- **A. Transient faults recover within the permitted request budget** The test should include an eventual successful response. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Calls are curtailed while the breaker is open** **Correct.** The evidence should show reduced failing dependency traffic. This directly addresses the constraint stated in this case.
-- **C. Retry traffic is distributed rather than spiking in lockstep** The measurement must observe aggregate timing. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. Verify intended writes succeed when the feature is enabled** **Correct.** Both accepted and denied exposure states need observable behavior rather than one negative path alone.
+- **B. Verify only that the provider reports the flag enabled** Stored configuration does not execute the application enabled write path or prove the test consumes it.
+- **C. Verify only the local workspace has been deleted** Cleanup evidence does not establish the allowed application operation succeeds.
+- **D. Verify only that the JSON contains the feature name** A declaration cannot establish actual enabled application behavior during execution.
 
-**Explanation:** The evidence should show reduced failing dependency traffic. The selected answer is calls are curtailed while the breaker is open.
+**Explanation:** Both accepted and denied exposure states need observable behavior rather than one negative path alone. A declaration cannot establish actual enabled application behavior during execution. Stored configuration does not execute the application enabled write path or prove the test consumes it. Cleanup evidence does not establish the allowed application operation succeeds.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q029
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. Which execution safeguard most directly addresses the risk in this case?
+An operator enables TodoWrites in a development label while production consumes another label. What must the acceptance check establish?
 
-- **A. Retry only operations safe to repeat** Repeated nonidempotent actions can duplicate side effects. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Define a safe failure or fallback experience** **Correct.** Stopping calls still leaves user requests to handle. This directly addresses the constraint stated in this case.
-- **C. Keep an overall retry and timeout budget** Random delay should not create unbounded waiting. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. Only whether the source branch is called production** A branch label does not establish the store variant actually read by the app.
+- **B. Only whether the CLI process produced JSON** Output existence does not identify the effective environment configuration variant.
+- **C. Only whether any feature with the name is on** Unrelated variants can differ without affecting the intended consumer configuration.
+- **D. The exact feature variant consumed by the intended environment** **Correct.** A matching key in another configuration variant does not control the target runtime behavior.
 
-**Explanation:** Stopping calls still leaves user requests to handle. The selected answer is define a safe failure or fallback experience.
+**Explanation:** A matching key in another configuration variant does not control the target runtime behavior. Unrelated variants can differ without affecting the intended consumer configuration. A branch label does not establish the store variant actually read by the app. Output existence does not identify the effective environment configuration variant.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q030
 
-Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Dependency outage: A backend remains unavailable for ten minutes, but every request repeatedly retries it and saturates resources. The team selects this remedy: "Use a circuit breaker with a recovery probe." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A breaker opens on any error including caller validation failures. What unintended behavior can result?
 
-- **A. Retries increase latency and downstream load** Unbounded repetition can worsen an outage. That addresses a different requirement: Transient failure. It does not directly resolve this case's stated constraint.
-- **B. Circuit breakers add states and recovery tuning** **Correct.** Incorrect thresholds can reject healthy calls unnecessarily. This directly addresses the constraint stated in this case.
-- **C. Jitter improves distribution rather than fixing capacity** The backend still needs sufficient healthy throughput. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. The artifact digest loses cryptographic integrity** Runtime error classification does not mutate a previously recorded package checksum.
+- **B. The feature store must revoke all identities** A breaker decision does not itself change cloud identity assignments or grants.
+- **C. Valid traffic can be blocked because failures were misclassified** **Correct.** The breaker should reflect dependency health rather than unrelated bad client input.
+- **D. The database schema automatically becomes compatible** Failure classification does not repair application database model compatibility.
 
-**Explanation:** Incorrect thresholds can reject healthy calls unnecessarily. The selected answer is circuit breakers add states and recovery tuning.
+**Explanation:** The breaker should reflect dependency health rather than unrelated bad client input. Failure classification does not repair application database model compatibility. A breaker decision does not itself change cloud identity assignments or grants. Runtime error classification does not mutate a previously recorded package checksum.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q031
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which next change most directly satisfies the stated requirement?
+The flag controls writes but a privileged background worker bypasses its check. What exposure contract should review address?
 
-- **A. Add jitter to bounded backoff** **Correct.** Spread retries to avoid synchronized load spikes. This directly addresses the constraint stated in this case.
-- **B. Use an idempotency mechanism for the payment operation** Ambiguous outcomes require safe repeat semantics. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **C. Use a circuit breaker with a recovery probe** Persistent failures require limiting repeated dependency calls. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
+- **A. All intended risky write paths honor the selected control** **Correct.** A kill switch is incomplete when another required mutation path ignores it.
+- **B. Only whether the background worker has a narrower deployment role** Deployment authority does not establish that runtime business mutation checks actually consult the feature decision.
+- **C. Only whether the public API unit test rejects writes** A passing API test leaves the separate background mutation path unexercised under the kill switch.
+- **D. Only the public API response formatting** Presentation of one endpoint does not control background execution mutations.
 
-**Explanation:** Spread retries to avoid synchronized load spikes. The selected answer is add jitter to bounded backoff.
+**Explanation:** A passing API test leaves the separate background mutation path unexercised under the kill switch. Deployment authority does not establish that runtime business mutation checks actually consult the feature decision. A kill switch is incomplete when another required mutation path ignores it. Presentation of one endpoint does not control background execution mutations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q032
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which explanation best accounts for the behavior or constraint described?
+A retry policy fits each individual timeout but total attempts exceed the caller deadline. What bound is missing?
 
-- **A. Retries alone amplify sustained unavailability** The application continues spending resources on known failures. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
-- **B. Identical retry timing coordinates the entire client population** **Correct.** Recovery receives a concentrated surge. This directly addresses the constraint stated in this case.
-- **C. Timeout does not prove the first operation failed** The server may have committed before the response was lost. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
+- **A. Only a unique name for each retry attempt** Naming does not enforce cumulative execution time or cancellation of later attempts.
+- **B. Only a source branch protection rule** Code review policy does not itself bound runtime dependency request latency.
+- **C. Only a maximum application artifact size** Output storage size does not constrain live request retry duration.
+- **D. A combined retry and timeout budget for the whole operation** **Correct.** Per-attempt limits do not automatically satisfy the end-to-end acceptable response deadline.
 
-**Explanation:** Recovery receives a concentrated surge. The selected answer is identical retry timing coordinates the entire client population.
+**Explanation:** Per-attempt limits do not automatically satisfy the end-to-end acceptable response deadline. Output storage size does not constrain live request retry duration. Naming does not enforce cumulative execution time or cancellation of later attempts. Code review policy does not itself bound runtime dependency request latency.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q033
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which observation provides the strongest evidence that the requested result was achieved?
+A learner can read flags but needs to change only the owned training store. Which permission request is most appropriate?
 
-- **A. Repeating one payment identity creates one charge** The evidence must include the ambiguous retry path. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **B. Calls are curtailed while the breaker is open** The evidence should show reduced failing dependency traffic. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
-- **C. Retry traffic is distributed rather than spiking in lockstep** **Correct.** The measurement must observe aggregate timing. This directly addresses the constraint stated in this case.
+- **A. A shared production access key committed into YAML** Persisting broad secret material in source abandons the intended scoped identity-based access.
+- **B. Collection administrator in Azure DevOps** A DevOps collection role does not directly authorize Azure configuration data writes.
+- **C. The necessary data role scoped to that exact store** **Correct.** The authority should match the required feature mutation and authorized disposable boundary.
+- **D. Subscription-wide Owner for every participant** That grants unrelated administrative operations beyond the limited configuration exercise requirement.
 
-**Explanation:** The measurement must observe aggregate timing. The selected answer is retry traffic is distributed rather than spiking in lockstep.
+**Explanation:** The authority should match the required feature mutation and authorized disposable boundary. That grants unrelated administrative operations beyond the limited configuration exercise requirement. A DevOps collection role does not directly authorize Azure configuration data writes. Persisting broad secret material in source abandons the intended scoped identity-based access.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q034
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. Which execution safeguard most directly addresses the risk in this case?
+The command updates the provider flag, while local test configuration stays unchanged. What should the result report distinguish?
 
-- **A. Keep an overall retry and timeout budget** **Correct.** Random delay should not create unbounded waiting. This directly addresses the constraint stated in this case.
-- **B. Persist and validate the idempotency key with operation state** A transient client-only key cannot prevent duplicate server effects. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **C. Define a safe failure or fallback experience** Stopping calls still leaves user requests to handle. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
+- **A. A database migration completed implicitly** Feature operations do not apply database schema programs or recovery procedures.
+- **B. A failed source build necessarily** Different configuration sources do not establish that application compilation failed.
+- **C. Actual provider control from separately tested local application behavior** **Correct.** Both observations can be valid without establishing that the runtime consumes the remote value.
+- **D. A complete live feature integration automatically** A provider value change cannot prove unconfigured application ingestion and refresh behavior.
 
-**Explanation:** Random delay should not create unbounded waiting. The selected answer is keep an overall retry and timeout budget.
+**Explanation:** Both observations can be valid without establishing that the runtime consumes the remote value. A provider value change cannot prove unconfigured application ingestion and refresh behavior. Feature operations do not apply database schema programs or recovery procedures. Different configuration sources do not establish that application compilation failed.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q035
 
-Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Retry storm: Thousands of clients retry at exactly the same interval after a short dependency outage. The team selects this remedy: "Add jitter to bounded backoff." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A request times out after the server may have committed its mutation. What must safe retry design consider?
 
-- **A. Jitter improves distribution rather than fixing capacity** **Correct.** The backend still needs sufficient healthy throughput. This directly addresses the constraint stated in this case.
-- **B. Idempotency records need lifecycle and conflict handling** The same key cannot silently identify different operations. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **C. Circuit breakers add states and recovery tuning** Incorrect thresholds can reject healthy calls unnecessarily. That addresses a different requirement: Dependency outage. It does not directly resolve this case's stated constraint.
+```text
+Client: timeout
+Server: mutation may have committed
+Retry: same operation
+```
 
-**Explanation:** The backend still needs sufficient healthy throughput. The selected answer is jitter improves distribution rather than fixing capacity.
+- **A. The second request is automatically a database rollback** Repeating an operation does not inherently reverse the first committed mutation.
+- **B. A timeout guarantees nothing was applied remotely** The server can commit before the response is lost or delayed.
+- **C. The unknown outcome and an idempotency mechanism** **Correct.** A missing response does not prove the first operation had no lasting side effect.
+- **D. The caller should remove all request identifiers** Stable correlation or idempotency keys can help distinguish repeated attempts safely.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** A missing response does not prove the first operation had no lasting side effect. The server can commit before the response is lost or delayed. Repeating an operation does not inherently reverse the first committed mutation. Stable correlation or idempotency keys can help distinguish repeated attempts safely.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q036
 
-Foundational · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which next change most directly satisfies the stated requirement?
+The dependency recovers, but the breaker never allows any probe after opening. What availability defect remains?
 
-- **A. Use an idempotency mechanism for the payment operation** **Correct.** Ambiguous outcomes require safe repeat semantics. This directly addresses the constraint stated in this case.
-- **B. Define a safe default and last-known-good policy** Configuration failure should have deliberate exposure behavior. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **C. Add jitter to bounded backoff** Spread retries to avoid synchronized load spikes. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. The policy cannot observe recovery and resume legitimate traffic** **Correct.** A breaker needs a reviewed recovery mechanism rather than permanent suppression without reassessment.
+- **B. Force the breaker closed immediately after any timeout** An unconditional reset can resume full pressure without establishing that the failing dependency recovered.
+- **C. Every request should be counted as successful while blocked** Suppressing dependency execution does not prove business operations actually completed.
+- **D. The artifact version must be decremented automatically** Runtime recovery policy does not require changing application package identity.
 
-**Explanation:** Ambiguous outcomes require safe repeat semantics. The selected answer is use an idempotency mechanism for the payment operation.
+**Explanation:** A breaker needs a reviewed recovery mechanism rather than permanent suppression without reassessment. Runtime recovery policy does not require changing application package identity. Suppressing dependency execution does not prove business operations actually completed. An unconditional reset can resume full pressure without establishing that the failing dependency recovered.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q037
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which explanation best accounts for the behavior or constraint described?
+A flag decision uses raw user email in retained telemetry to identify cohorts. What design improvement preserves useful exposure evidence?
 
-- **A. Identical retry timing coordinates the entire client population** Recovery receives a concentrated surge. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
-- **B. Timeout does not prove the first operation failed** **Correct.** The server may have committed before the response was lost. This directly addresses the constraint stated in this case.
-- **C. An unavailable configuration source creates an ambiguous decision** The application needs a documented fallback. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
+- **A. Log every authentication token beside the email** Sensitive credentials are unnecessary for recording a feature exposure decision.
+- **B. Use artifact size as the user identity** Package metadata does not provide a meaningful stable feature targeting identity.
+- **C. Delete all decision outcomes and retain only the email** That removes useful behavior evidence while preserving unnecessary identifying material.
+- **D. Use appropriate minimized identifiers under the evidence policy** **Correct.** Targeting analysis should not unnecessarily retain personal values beyond the operational need.
 
-**Explanation:** The server may have committed before the response was lost. The selected answer is timeout does not prove the first operation failed.
+**Explanation:** Targeting analysis should not unnecessarily retain personal values beyond the operational need. Sensitive credentials are unnecessary for recording a feature exposure decision. That removes useful behavior evidence while preserving unnecessary identifying material. Package metadata does not provide a meaningful stable feature targeting identity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q038
 
-Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which observation provides the strongest evidence that the requested result was achieved?
+The test named DisabledFlagRejectsWritesWhileReadsRemainHealthy passes. Which claim should remain outside that observation unless separately tested?
 
-- **A. The unvalidated feature remains within its safe exposure policy** Test the outage rather than only healthy flag reads. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **B. Retry traffic is distributed rather than spiking in lockstep** The measurement must observe aggregate timing. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
-- **C. Repeating one payment identity creates one charge** **Correct.** The evidence must include the ambiguous retry path. This directly addresses the constraint stated in this case.
+- **A. The remote configuration store exported live values to the deployed app** **Correct.** An in-process behavioral test does not establish remote ingestion or hosted configuration integration.
+- **B. The tested read path stayed healthy** That is another asserted property of the named local execution case.
+- **C. The selected local configuration produced a passing result** The actual test report can support its observed local outcome.
+- **D. The disabled test case rejected the write path** That is part of the explicitly exercised behavioral case and assertions.
 
-**Explanation:** The evidence must include the ambiguous retry path. The selected answer is repeating one payment identity creates one charge.
+**Explanation:** An in-process behavioral test does not establish remote ingestion or hosted configuration integration. That is part of the explicitly exercised behavioral case and assertions. That is another asserted property of the named local execution case. The actual test report can support its observed local outcome.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q039
 
 Applied · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. Which execution safeguard most directly addresses the risk in this case?
+The application service uses both dependency retries and a circuit breaker during outages. What relationship should their composition preserve?
 
-- **A. Persist and validate the idempotency key with operation state** **Correct.** A transient client-only key cannot prevent duplicate server effects. This directly addresses the constraint stated in this case.
-- **B. Avoid treating all fallback data as permanently fresh** Stale configuration can retain outdated exposure decisions. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **C. Keep an overall retry and timeout budget** Random delay should not create unbounded waiting. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
+- **A. Retries should ignore every open breaker state** Bypassing suppression can recreate the dependency overload the breaker was designed to reduce.
+- **B. The breaker should grant broader resource permissions on failure** Dependency resilience does not authorize privilege escalation as an error response.
+- **C. Bounded safe retries without defeating dependency failure suppression** **Correct.** Combined policies should avoid uncontrolled calls when the breaker intends to limit pressure.
+- **D. Every retry must rebuild the application package** Runtime request handling does not require generating new deployment binaries for each attempt.
 
-**Explanation:** A transient client-only key cannot prevent duplicate server effects. The selected answer is persist and validate the idempotency key with operation state.
+**Explanation:** Combined policies should avoid uncontrolled calls when the breaker intends to limit pressure. Bypassing suppression can recreate the dependency overload the breaker was designed to reduce. Dependency resilience does not authorize privilege escalation as an error response. Runtime request handling does not require generating new deployment binaries for each attempt.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry); [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q040
 
-Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Duplicate payment: A timeout leads a client to repeat a payment request, and the customer is charged twice. The team selects this remedy: "Use an idempotency mechanism for the payment operation." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The feature is disabled after a failed release, but instances continue accepting writes because refresh is stale. What acceptance evidence matters?
 
-- **A. Safe defaults may reduce feature availability** The tradeoff should match the feature's risk. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **B. Jitter improves distribution rather than fixing capacity** The backend still needs sufficient healthy throughput. That addresses a different requirement: Retry storm. It does not directly resolve this case's stated constraint.
-- **C. Idempotency records need lifecycle and conflict handling** **Correct.** The same key cannot silently identify different operations. This directly addresses the constraint stated in this case.
+- **A. Only the successful provider disable request** A control operation can succeed while running consumers still use cached configuration.
+- **B. Only the JSON file creation date** Local source metadata does not show current deployed request acceptance behavior.
+- **C. Only an earlier healthy read response** A read probe cannot establish that the write capability is now disabled.
+- **D. Observed denied writes after the actual runtime refresh boundary** **Correct.** Stored flag state alone does not establish the behavior currently serving requests.
 
-**Explanation:** The same key cannot silently identify different operations. The selected answer is idempotency records need lifecycle and conflict handling.
+**Explanation:** Stored flag state alone does not establish the behavior currently serving requests. A control operation can succeed while running consumers still use cached configuration. Local source metadata does not show current deployed request acceptance behavior. A read probe cannot establish that the write capability is now disabled.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q041
 
-Foundational · [CP2](README.md#task-2) · [D3.4.5](../../docs/objective-map.md), [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which next change most directly satisfies the stated requirement?
+Three layers each make up to three total attempts for one logical write. What risk must the combined policy bound?
 
-- **A. Use an idempotency mechanism for the payment operation** Ambiguous outcomes require safe repeat semantics. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **B. Define a safe default and last-known-good policy** **Correct.** Configuration failure should have deliberate exposure behavior. This directly addresses the constraint stated in this case.
-- **C. Remove obsolete flags and simplify the associated code paths** Flags need a complete retirement lifecycle. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
+```text
+Layer A: max 3 total attempts
+Layer B: max 3 total attempts per A
+Layer C: max 3 total attempts per B
+```
 
-**Explanation:** Configuration failure should have deliberate exposure behavior. The selected answer is define a safe default and last-known-good policy.
+- **A. A guaranteed reduction to zero calls on every failure** Retry composition does not automatically supply a circuit breaker or universal suppression.
+- **B. Only three total attempts regardless of layer composition** That ignores multiplication when each layer independently repeats its downstream operation.
+- **C. Up to twenty-seven downstream attempts and repeated side effects** **Correct.** Independent nested attempts can multiply rather than remain limited to one layer count.
+- **D. Automatic schema rollback after the ninth attempt** Repeated calls do not imply a safe database reversal mechanism.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** Independent nested attempts can multiply rather than remain limited to one layer count. That ignores multiplication when each layer independently repeats its downstream operation. Retry composition does not automatically supply a circuit breaker or universal suppression. Repeated calls do not imply a safe database reversal mechanism.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q042
 
-Foundational · [CP2](README.md#task-2) · [D3.4.5](../../docs/objective-map.md), [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which explanation best accounts for the behavior or constraint described?
+A risky write flag defaults off, but a missing value is interpreted as enabled by one client library. What must the rollout contract verify?
 
-- **A. Temporary rollout controls accumulated without cleanup** The configuration state space has become unnecessary complexity. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **B. Timeout does not prove the first operation failed** The server may have committed before the response was lost. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **C. An unavailable configuration source creates an ambiguous decision** **Correct.** The application needs a documented fallback. This directly addresses the constraint stated in this case.
+- **A. Only a successful provider list operation** Inventory does not execute each application's fallback path when configuration is unavailable.
+- **B. Consistent explicit fallback semantics across actual consumers** **Correct.** A configuration declaration is insufficient when different clients interpret missing values differently.
+- **C. Only identical friendly flag names in documentation** Shared spelling does not guarantee equivalent missing-value behavior in executable consumers.
+- **D. Only the maximum number of active source branches** Branch count does not determine runtime feature decision semantics.
 
-**Explanation:** The application needs a documented fallback. The selected answer is an unavailable configuration source creates an ambiguous decision.
+**Explanation:** A configuration declaration is insufficient when different clients interpret missing values differently. Shared spelling does not guarantee equivalent missing-value behavior in executable consumers. Inventory does not execute each application's fallback path when configuration is unavailable. Branch count does not determine runtime feature decision semantics.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q043
 
-Applied · [CP2](README.md#task-2) · [D3.4.5](../../docs/objective-map.md), [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which observation provides the strongest evidence that the requested result was achieved?
+A payment request times out after commit and a retry uses a new idempotency key. What safety property has been lost?
 
-- **A. Repeating one payment identity creates one charge** The evidence must include the ambiguous retry path. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **B. The unvalidated feature remains within its safe exposure policy** **Correct.** Test the outage rather than only healthy flag reads. This directly addresses the constraint stated in this case.
-- **C. The supported behavior remains after obsolete branches are removed** Cleanup needs behavioral regression evidence. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
+- **A. The timeout proves the first attempt never committed** A missing response cannot establish that remote side effects did not occur.
+- **B. The server cannot recognize the attempts as one logical operation** **Correct.** Changing the deduplication identity can allow the repeated request to create another side effect.
+- **C. The retry becomes read-only because it has a key** A request identifier does not alter the business mutation semantics.
+- **D. Every new key automatically reverses the previous committed payment** Idempotency identity does not perform compensating financial operations or database reversal.
 
-**Explanation:** Test the outage rather than only healthy flag reads. The selected answer is the unvalidated feature remains within its safe exposure policy.
+**Explanation:** Changing the deduplication identity can allow the repeated request to create another side effect. Idempotency identity does not perform compensating financial operations or database reversal. A request identifier does not alter the business mutation semantics. A missing response cannot establish that remote side effects did not occur.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q044
 
-Applied · [CP2](README.md#task-2) · [D3.4.5](../../docs/objective-map.md), [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. Which execution safeguard most directly addresses the risk in this case?
+A breaker probes recovery with a full production burst immediately after the open period. What should its recovery policy constrain?
 
-- **A. Persist and validate the idempotency key with operation state** A transient client-only key cannot prevent duplicate server effects. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **B. Avoid treating all fallback data as permanently fresh** **Correct.** Stale configuration can retain outdated exposure decisions. This directly addresses the constraint stated in this case.
-- **C. Check consumers and configuration references before deleting flags** A shared flag may still control another application. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
+- **A. Only whether a single successful probe response can be logged** A logged response without defined concurrency and transition rules does not bound the recovery traffic burst.
+- **B. Limited half-open trial traffic and clear success/failure transitions** **Correct.** Recovery needs controlled observation rather than immediately recreating the original overload pressure.
+- **C. Only whether the open-state timer has expired** Time passage permits a controlled probe but does not establish that full production traffic is safe.
+- **D. Only whether the breaker has a nonzero wait duration** Waiting alone does not constrain how much trial traffic is sent when the recovery period begins.
 
-**Explanation:** Stale configuration can retain outdated exposure decisions. The selected answer is avoid treating all fallback data as permanently fresh.
+**Explanation:** Time passage permits a controlled probe but does not establish that full production traffic is safe. Recovery needs controlled observation rather than immediately recreating the original overload pressure. Waiting alone does not constrain how much trial traffic is sent when the recovery period begins. A logged response without defined concurrency and transition rules does not bound the recovery traffic burst.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
 ## L16-Q045
 
-Advanced · [CP2](README.md#task-2) · [D3.4.5](../../docs/objective-map.md), [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.4.6](../../docs/objective-map.md)
 
-Flag service unavailable: A configuration outage occurs during rollout, and an unknown flag value would expose an unvalidated feature. The team selects this remedy: "Define a safe default and last-known-good policy." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Production instances refresh flags at different times, and a kill switch must stop writes within a defined window. Which acceptance plan fits?
 
-- **A. Flag removal is a code and configuration change** It deserves the normal review and release process. That addresses a different requirement: Expired experiment. It does not directly resolve this case's stated constraint.
-- **B. Idempotency records need lifecycle and conflict handling** The same key cannot silently identify different operations. That addresses a different requirement: Duplicate payment. It does not directly resolve this case's stated constraint.
-- **C. Safe defaults may reduce feature availability** **Correct.** The tradeoff should match the feature's risk. This directly addresses the constraint stated in this case.
+```text
+Kill-switch objective: all instances stop writes within window
+Instance A: refreshed
+Instance B: stale enabled cache
+```
 
-**Explanation:** The tradeoff should match the feature's risk. The selected answer is safe defaults may reduce feature availability.
+- **A. Declare immediate global success from one stored disabled value** One service value does not establish every actual consumer stopped risky behavior.
+- **B. Remove instance identity from all evidence and infer consistency** Losing correlation prevents checking the required per-instance propagation boundary.
+- **C. Increase the allowed window silently whenever an instance is stale** Changing the objective to fit failure abandons the reviewed operational requirement.
+- **D. Measure per-instance effective behavior within the bounded propagation objective** **Correct.** A provider update is only one part of the complete runtime exposure transition.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** A provider update is only one part of the complete runtime exposure transition. One service value does not establish every actual consumer stopped risky behavior. Losing correlation prevents checking the required per-instance propagation boundary. Changing the objective to fit failure abandons the reviewed operational requirement.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q046
 
-Foundational · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.4.6](../../docs/objective-map.md)
 
-Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which next change most directly satisfies the stated requirement?
+A temporary role assignment is requested at store scope, but the resulting grant is subscription-wide. What should validation do despite successful feature writes?
 
-- **A. Remove obsolete flags and simplify the associated code paths** **Correct.** Flags need a complete retirement lifecycle. This directly addresses the constraint stated in this case.
-- **B. Guard exposure with a disabled release feature flag** Deployment and user exposure can be controlled separately. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **C. Define a safe default and last-known-good policy** Configuration failure should have deliberate exposure behavior. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
+```text
+Requested scope: exact App Configuration store
+Actual role assignment scope: subscription
+```
 
-**Explanation:** Flags need a complete retirement lifecycle. The selected answer is remove obsolete flags and simplify the associated code paths.
+- **A. Retain the grant indefinitely to avoid propagation delays** Convenience does not justify broader persistent authority than the approved exercise requires.
+- **B. Change the ownership journal to claim the whole subscription** Editing ownership evidence cannot authorize adopting unrelated existing resource boundaries.
+- **C. Reject the overbroad scope and reconcile the intended assignment** **Correct.** Operational success does not satisfy the separate least-privilege authorization boundary.
+- **D. Pass because the feature write worked** Successful execution does not establish that its effective permissions are appropriately limited.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Explanation:** Operational success does not satisfy the separate least-privilege authorization boundary. Successful execution does not establish that its effective permissions are appropriately limited. Editing ownership evidence cannot authorize adopting unrelated existing resource boundaries. Convenience does not justify broader persistent authority than the approved exercise requires.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-enable-rbac)
 
 ## L16-Q047
 
-Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which explanation best accounts for the behavior or constraint described?
+A transient dependency outage triggers retries while requests continue arriving faster than recovery capacity. Which combined concern needs review?
 
-- **A. An unavailable configuration source creates an ambiguous decision** The application needs a documented fallback. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **B. Temporary rollout controls accumulated without cleanup** **Correct.** The configuration state space has become unnecessary complexity. This directly addresses the constraint stated in this case.
-- **C. Code presence does not require immediate feature availability** The application can evaluate a release-time switch. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
+- **A. Retry amplification, backoff, load limits and the end-to-end deadline** **Correct.** Resilience must control added pressure rather than merely increase per-request attempt counts.
+- **B. Only the last successful package version** Artifact history does not quantify current retry pressure and dependency recovery capacity.
+- **C. Only whether a local policy file says reliable:true** A declaration does not implement measured safe behavior under accumulating live load.
+- **D. Only the maximum attempts configured in one selected retry layer** One layer count does not establish aggregate retry pressure or the total caller deadline across the system.
 
-**Explanation:** The configuration state space has become unnecessary complexity. The selected answer is temporary rollout controls accumulated without cleanup.
+**Explanation:** Resilience must control added pressure rather than merely increase per-request attempt counts. One layer count does not establish aggregate retry pressure or the total caller deadline across the system. Artifact history does not quantify current retry pressure and dependency recovery capacity. A declaration does not implement measured safe behavior under accumulating live load.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
 
 ## L16-Q048
 
-Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.4.6](../../docs/objective-map.md)
 
-Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which observation provides the strongest evidence that the requested result was achieved?
+The disabled-feature test mocks the entire request handler to always reject writes. What evidence would better establish the actual capability boundary?
 
-- **A. The deployed feature stays hidden until the flag is enabled** The test distinguishes deployment from exposure. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
-- **B. The unvalidated feature remains within its safe exposure policy** Test the outage rather than only healthy flag reads. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **C. The supported behavior remains after obsolete branches are removed** **Correct.** Cleanup needs behavioral regression evidence. This directly addresses the constraint stated in this case.
+- **A. Exercise the real handler under enabled and disabled configurations** **Correct.** A predetermined substitute response cannot prove the actual application feature logic controls behavior.
+- **B. Rename the mock to production-handler** A friendly label cannot make a test double establish real application behavior.
+- **C. Infer success from remote store role assignments** Data authorization does not execute or verify the local handler feature decision.
+- **D. Add more identical mocked rejected responses** Repeating a fixed substitute does not exercise the actual intended implementation path.
 
-**Explanation:** Cleanup needs behavioral regression evidence. The selected answer is the supported behavior remains after obsolete branches are removed.
+**Explanation:** A predetermined substitute response cannot prove the actual application feature logic controls behavior. Repeating a fixed substitute does not exercise the actual intended implementation path. A friendly label cannot make a test double establish real application behavior. Data authorization does not execute or verify the local handler feature decision.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q049
 
-Applied · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
 
-Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. Which execution safeguard most directly addresses the risk in this case?
+A long-lived flag interacts with a second flag to create four behavior combinations, but only one is tested. What maintenance risk should review address?
 
-- **A. Avoid treating all fallback data as permanently fresh** Stale configuration can retain outdated exposure decisions. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **B. Check consumers and configuration references before deleting flags** **Correct.** A shared flag may still control another application. This directly addresses the constraint stated in this case.
-- **C. Validate both flag states before launch** Disabled paths can still contain defects. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
+- **A. Only the fact that each switch passed its standalone unit test** Individually healthy flags do not establish behavior when their conditional execution paths interact.
+- **B. Untested interaction states and accumulated conditional complexity** **Correct.** Independent switches can combine into behavior paths beyond a single healthy test case.
+- **C. Flags automatically remove all possible regression paths** Runtime configuration can introduce additional combinations rather than eliminate testing obligations.
+- **D. Only the count of YAML comment lines** Documentation size does not establish executable interaction coverage across configuration combinations.
 
-**Explanation:** A shared flag may still control another application. The selected answer is check consumers and configuration references before deleting flags.
+**Explanation:** Individually healthy flags do not establish behavior when their conditional execution paths interact. Independent switches can combine into behavior paths beyond a single healthy test case. Runtime configuration can introduce additional combinations rather than eliminate testing obligations. Documentation size does not establish executable interaction coverage across configuration combinations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management)
 
 ## L16-Q050
 
-Advanced · [CP1](README.md#task-1) · [D3.4.6](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.5](../../docs/objective-map.md)
 
-Expired experiment: Several old flags remain after launch, creating hard-to-test combinations that no team owns. The team selects this remedy: "Remove obsolete flags and simplify the associated code paths." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release disables risky writes while dependency retries continue in background tasks, and telemetry still shows mutations. What must incident recovery verify?
 
-- **A. Safe defaults may reduce feature availability** The tradeoff should match the feature's risk. That addresses a different requirement: Flag service unavailable. It does not directly resolve this case's stated constraint.
-- **B. Flag removal is a code and configuration change** **Correct.** It deserves the normal review and release process. This directly addresses the constraint stated in this case.
-- **C. Feature flags need owners and removal dates** Temporary flags create lasting branching complexity. That addresses a different requirement: Dark launch. It does not directly resolve this case's stated constraint.
+- **A. Only that a breaker configuration file exists** A declaration does not prove the running tasks actually suppress unsafe operations.
+- **B. Every relevant mutation path and effective runtime policy stopped the risk** **Correct.** One flag value cannot prove all background work and retry behavior honor the containment boundary.
+- **C. Only the latest successful source build** Compilation evidence does not establish current runtime containment of ongoing side effects.
+- **D. Only the stored disabled value because background behavior is unrelated** Background mutation can continue the very impact the operational kill switch should contain.
 
-**Explanation:** It deserves the normal review and release process. The selected answer is flag removal is a code and configuration change.
+**Explanation:** One flag value cannot prove all background work and retry behavior honor the containment boundary. Background mutation can continue the very impact the operational kill switch should contain. Compilation evidence does not establish current runtime containment of ongoing side effects. A declaration does not prove the running tasks actually suppress unsafe operations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management); [S2](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker); [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry); [S4](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)

@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 A passing test command with zero discovered tests is rejected. The coverage gate must consume the actual Cobertura rate and reject an increased threshold above that rate.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Restore locked sample dependencies
 
@@ -55,15 +55,15 @@ Retain and inspect: Actual value, threshold, tested scope, and gate decision.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Improve exercised behavior; threshold changes require reviewed justification.
 
-## CP5 — Separate test layers and external load gates
+## CP5 — Execute release gate decisions across test layers
 
-Test layers and release gates are explicit; load testing requires a separate sandbox endpoint.
+A four-case local gate accepts healthy evidence and independently blocks failed tests, low coverage and a security finding. No load traffic is sent.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
 | `D3.2.2` | explained | Compare unit/integration/end-to-end responsibilities using the sample test strategy. |
 
-Retain and inspect: Layer-to-risk matrix and approval requirements for future load tests.
+Retain and inspect: Four computed decisions, the executed unit/HTTP tests from earlier tasks, and the separately authorized load-test boundary.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Keep load generation outside ordinary PR CI and bound concurrency, duration, and cost.
 

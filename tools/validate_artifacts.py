@@ -93,7 +93,7 @@ def validate(root: Path) -> list[str]:
         if (root / copy).read_text() != grants:
             errors.append(f"SQL permission fixture drift: {copy}")
     quality = (root / ".github/workflows/quality.yml").read_text()
-    for contract in ("Test-Coverage.ps1", "Test-Containers.ps1 -Application -SqlServer", "test_capstone_packaging.py"):
+    for contract in ("Test-Coverage.ps1", "Test-Containers.ps1 -Application -SqlServer", "python -m unittest discover -s tests -p 'test_*.py'"):
         if contract not in quality:
             errors.append(f"Offline CI is missing executable contract {contract}")
     print(f"Artifacts: {len(artifacts)} labs, {yaml_count} YAML documents, {json_count} JSON fixtures; syntax and static contracts inspected.")

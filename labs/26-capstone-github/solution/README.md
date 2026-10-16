@@ -34,13 +34,13 @@ Interpret both the passing behavior and denied path in the README. If they disag
 
 ## CP3 — Publish CI while preserving the dormant deployment gate
 
-A reviewed commit enables CI; cloud deployment remains outside the active workflow directory.
+A reviewed commit enables CI; cloud deployment remains outside the active workflow directory. Historical CI-only source revision and CI file hashes remain independently inspectable after the separate protected release activation.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
 | `D3.3.5` | practiced | Publish CI plus a dependency-complete dormant deployment bundle. |
 
-Retain and inspect: Exact commit SHA and active-versus-dormant file locations.
+Retain and inspect: Exact commit SHA and active-versus-dormant file locations. core-publication.json links the baseline commit, exact CI path, SHA256 and Git blob; current protected release evidence is separate.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Activate a separately reviewed deployment only after federation, SQL/network prerequisites, environment approval, and costs are authorized.
 

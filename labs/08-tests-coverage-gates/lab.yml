@@ -93,13 +93,13 @@
     },
     {
       "id": "CP5",
-      "title": "Separate test layers and external load gates",
-      "commands": "$strategy=[ordered]@{unit='pure behavior checks';integration='WebApplicationFactory with isolated SQLite';load='separate approved endpoint and budget';release=@('tests pass','coverage>=0.65','security checks clear');productionTrafficAllowed=$false}\n $strategy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'test-strategy.json')\n",
-      "expected": "Test layers and release gates are explicit; load testing requires a separate sandbox endpoint.",
-      "positive": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }\n",
-      "negative": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n",
-      "validate": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }\n\n$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n",
-      "evidence": "Layer-to-risk matrix and approval requirements for future load tests.",
+      "title": "Execute release gate decisions across test layers",
+      "commands": "$strategy=[ordered]@{unit='pure behavior checks';integration='WebApplicationFactory with isolated SQLite';load='separate approved endpoint and budget';release=@('tests pass','coverage>=0.65','security checks clear');productionTrafficAllowed=$false}\n $strategy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'test-strategy.json')\n$cases=@(@{id='healthy';tests=$true;coverage=0.80;security=$true;expected=$true},@{id='failed-test';tests=$false;coverage=0.90;security=$true;expected=$false},@{id='low-coverage';tests=$true;coverage=0.64;security=$true;expected=$false},@{id='security-block';tests=$true;coverage=0.90;security=$false;expected=$false})\n$results=foreach($case in $cases){\n $allowed=$case.tests -and $case.coverage -ge 0.65 -and $case.security\n if($allowed -ne $case.expected){throw \"Release gate decision failed: $($case.id)\"}\n @{id=$case.id;allowed=$allowed}\n}\n@{fixtureOnly=$true;results=@($results);loadTrafficSent=$false}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'gate-decisions.json')\n",
+      "expected": "A four-case local gate accepts healthy evidence and independently blocks failed tests, low coverage and a security finding. No load traffic is sent.",
+      "positive": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }\n$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json\nif(@($g.results).Count -ne 4 -or @($g.results|Where-Object allowed).Count -ne 1 -or -not ($g.results|Where-Object id -eq 'healthy').allowed){throw 'Release gate truth table is incomplete.'}\n",
+      "negative": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json\nif($g.loadTrafficSent -or @($g.results|Where-Object {$_.id -ne 'healthy' -and $_.allowed}).Count){throw 'A negative gate case was accepted or load was sent.'}\n",
+      "validate": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }\n$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json\nif(@($g.results).Count -ne 4 -or @($g.results|Where-Object allowed).Count -ne 1 -or -not ($g.results|Where-Object id -eq 'healthy').allowed){throw 'Release gate truth table is incomplete.'}\n\n$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json\nif($g.loadTrafficSent -or @($g.results|Where-Object {$_.id -ne 'healthy' -and $_.allowed}).Count){throw 'A negative gate case was accepted or load was sent.'}\n",
+      "evidence": "Four computed decisions, the executed unit/HTTP tests from earlier tasks, and the separately authorized load-test boundary.",
       "fix": "Keep load generation outside ordinary PR CI and bound concurrency, duration, and cost.",
       "coverage": [
         {
@@ -200,8 +200,8 @@
     "topology": "WebApplicationFactory hosts the sample API in process, with an isolated SQLite database for integration behavior. xUnit exercises HTTP boundaries and Coverlet/TRX provide independent coverage and test results. The sample release gate evaluates measured coverage and passing tests; external load testing requires a separately approved target and budget."
   },
   "verification": {
-    "status": "not-run",
-    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+    "status": "offline-tested",
+    "scope": "The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live."
   },
   "solutionNotes": "A passing test command with zero discovered tests is rejected. The coverage gate must consume the actual Cobertura rate and reject an increased threshold above that rate."
 }

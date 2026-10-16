@@ -6,700 +6,884 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 ## L25-Q001
 
-Foundational · [CP5](README.md#task-5) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Slow log query: A responder searches all retained request rows before applying the incident time window. Which next change most directly satisfies the stated requirement?
+A KQL request table has a Boolean success column. Which aggregation counts only failed rows?
 
-- **A. Summarize counts by a five-minute time bin** Time bins preserve the requested trend structure. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **B. Project only the fields required for diagnosis** Narrow output limits unnecessary data disclosure. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **C. Filter time and relevant scope early in the KQL query** **Correct.** Early selective filtering reduces unnecessary processing. This directly addresses the constraint stated in this case.
+```kusto
+datatable(success:bool)[true,false,true,false]
+```
 
-**Explanation:** Early selective filtering reduces unnecessary processing. The selected answer is filter time and relevant scope early in the KQL query.
+- **A. sum(durationMs)** Summing duration computes time rather than the number of failed requests.
+- **B. countif(success == false)** **Correct.** The Boolean predicate selects failed rows before the aggregation counts them.
+- **C. count()** An unqualified count includes successful and failed rows together.
+- **D. countif(success == true)** This predicate counts successes rather than failures.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Summing duration computes time rather than the number of failed requests. The Boolean predicate selects failed rows before the aggregation counts them. An unqualified count includes successful and failed rows together. This predicate counts successes rather than failures.
+
+**Sources:** [S5](https://learn.microsoft.com/en-us/kusto/query/countif-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q002
 
-Foundational · [CP5](README.md#task-5) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Slow log query: A responder searches all retained request rows before applying the incident time window. Which explanation best accounts for the behavior or constraint described?
+A correlation query must retain every request, including requests with no dependency span. Which join kind fits?
 
-- **A. The export includes more sensitive context than the task needs** Query access does not justify broad redistribution. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **B. The query scans data outside the investigation window** **Correct.** Broad scans increase work without adding relevant evidence. This directly addresses the constraint stated in this case.
-- **C. A single aggregate collapses the incident timeline** It cannot show when the volume changed. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
+- **A. leftouter with dependencies on the left** This preserves dependencies rather than all requests.
+- **B. leftsemi with requests on the left** A left semi join keeps only requests that have a matching right-side record.
+- **C. leftouter with requests on the left** **Correct.** A left outer join preserves unmatched records from its left input.
+- **D. inner with requests on the left** An inner join returns only requests with matching dependency records.
 
-**Explanation:** Broad scans increase work without adding relevant evidence. The selected answer is the query scans data outside the investigation window.
+**Explanation:** This preserves dependencies rather than all requests. A left semi join keeps only requests that have a matching right-side record. A left outer join preserves unmatched records from its left input. An inner join returns only requests with matching dependency records.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric)
 
 ## L25-Q003
 
-Applied · [CP5](README.md#task-5) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
 
-Slow log query: A responder searches all retained request rows before applying the incident time window. Which observation provides the strongest evidence that the requested result was achieved?
+Two service spans belong to one distributed transaction but have different span IDs. Which identity is shared across the trace?
 
-- **A. The result has ordered five-minute buckets and counts** The evidence should match the requested temporal granularity. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **B. The report contains relevant timing without unnecessary payload data** The evidence should inspect the exported artifact. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **C. The narrowed query returns the same relevant incident records** **Correct.** Optimization should preserve the investigation's intended population. This directly addresses the constraint stated in this case.
+- **A. The span ID** Each span has its own identity rather than every span sharing one span ID.
+- **B. The service process ID** A trace can cross processes and machines with different process identifiers.
+- **C. The HTTP response status code** Many unrelated requests share status codes, and status is not trace identity.
+- **D. The trace ID** **Correct.** A trace groups spans under a shared trace identity while individual spans have distinct identities.
 
-**Explanation:** Optimization should preserve the investigation's intended population. The selected answer is the narrowed query returns the same relevant incident records.
+**Explanation:** Each span has its own identity rather than every span sharing one span ID. A trace can cross processes and machines with different process identifiers. Many unrelated requests share status codes, and status is not trace identity. A trace groups spans under a shared trace identity while individual spans have distinct identities.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S2](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts)
 
 ## L25-Q004
 
-Applied · [CP5](README.md#task-5) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Slow log query: A responder searches all retained request rows before applying the incident time window. Which execution safeguard most directly addresses the risk in this case?
+An operator wants only the last hour of request telemetry before calculating latency. Which KQL operator filters the input rows?
 
-- **A. Verify timezone and timestamp meaning before narrowing** **Correct.** A wrong time window can hide important events. This directly addresses the constraint stated in this case.
-- **B. Choose bins appropriate to the sample density** Sparse data can make fine-grained charts misleading. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **C. Apply appropriate access and retention to investigation results** Derived reports can outlive the original controlled query. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
+- **A. sort** Sorting changes row order rather than which timestamps are included.
+- **B. where** **Correct.** The where operator selects rows satisfying the requested time predicate.
+- **C. project** Projection selects columns rather than enforcing the requested row condition.
+- **D. summarize** Aggregation groups or reduces rows but does not itself express the initial time filter.
 
-**Explanation:** A wrong time window can hide important events. The selected answer is verify timezone and timestamp meaning before narrowing.
+**Explanation:** Sorting changes row order rather than which timestamps are included. The where operator selects rows satisfying the requested time predicate. Projection selects columns rather than enforcing the requested row condition. Aggregation groups or reduces rows but does not itself express the initial time filter.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric)
 
 ## L25-Q005
 
-Advanced · [CP5](README.md#task-5) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Slow log query: A responder searches all retained request rows before applying the incident time window. The team selects this remedy: "Filter time and relevant scope early in the KQL query." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The API's average duration is low, but a minority of requests is very slow. Which aggregation directly describes a high latency percentile?
 
-- **A. Minimal projections may require follow-up queries** Reduced exposure can add a small diagnostic step. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **B. Very narrow windows can miss preceding causal events** **Correct.** Expand deliberately when the investigation requires context. This directly addresses the constraint stated in this case.
-- **C. Coarser bins smooth short spikes** Granularity changes the behavior visible to responders. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
+- **A. countif(Success == false)** Failure count does not directly describe the latency distribution.
+- **B. max(TimeGenerated)** The latest event time describes freshness rather than request duration.
+- **C. percentile(DurationMs, 95)** **Correct.** This estimates a high point of the duration distribution rather than its arithmetic mean.
+- **D. avg(DurationMs)** The mean can conceal the slow minority the operator needs to examine.
 
-**Explanation:** Expand deliberately when the investigation requires context. The selected answer is very narrow windows can miss preceding causal events.
+**Explanation:** Failure count does not directly describe the latency distribution. The latest event time describes freshness rather than request duration. This estimates a high point of the duration distribution rather than its arithmetic mean. The mean can conceal the slow minority the operator needs to examine.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S6](https://learn.microsoft.com/en-us/kusto/query/percentiles-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q006
 
-Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which next change most directly satisfies the stated requirement?
+A local .NET ActivityListener observes an application span in a unit test. What does that result prove?
 
-- **A. Summarize counts by a five-minute time bin** **Correct.** Time bins preserve the requested trend structure. This directly addresses the constraint stated in this case.
-- **B. Inspect latency percentiles and the slow-request cohort** Tail behavior can be hidden by an average. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **C. Filter time and relevant scope early in the KQL query** Early selective filtering reduces unnecessary processing. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
+- **A. The tested instrumentation emitted a span observed by the local listener** **Correct.** Local observation establishes span creation in that execution, not successful remote export.
+- **B. The span was ingested into Azure Monitor** A local listener is independent of an Azure exporter and ingestion pipeline.
+- **C. Every production request will be sampled** A local test cannot establish the production sampling policy for all traffic.
+- **D. The cloud workspace has the correct retention policy** Span observation does not inspect workspace configuration.
 
-**Explanation:** Time bins preserve the requested trend structure. The selected answer is summarize counts by a five-minute time bin.
+**Explanation:** Local observation establishes span creation in that execution, not successful remote export. A local listener is independent of an Azure exporter and ingestion pipeline. A local test cannot establish the production sampling policy for all traffic. Span observation does not inspect workspace configuration.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs)
 
 ## L25-Q007
 
-Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md)
 
-Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which explanation best accounts for the behavior or constraint described?
+A workspace-based query joins AppRequests and AppDependencies. Which shared column is used for operation-level correlation?
 
-- **A. Most fast requests dilute the slow minority** A central measure does not describe every user. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **B. The query scans data outside the investigation window** Broad scans increase work without adding relevant evidence. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
-- **C. A single aggregate collapses the incident timeline** **Correct.** It cannot show when the volume changed. This directly addresses the constraint stated in this case.
+```text
+Workspace query context
+Left table: AppRequests
+Right table: AppDependencies
+```
 
-**Explanation:** It cannot show when the volume changed. The selected answer is a single aggregate collapses the incident timeline.
+- **A. Name** Different requests and dependencies can share names without belonging to one operation.
+- **B. ResultCode** A status or result code describes outcome rather than transaction identity.
+- **C. DurationMs** Similar durations do not establish that two spans belong to the same operation.
+- **D. OperationId** **Correct.** The workspace table schemas expose OperationId as the operation correlation identity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Different requests and dependencies can share names without belonging to one operation. A status or result code describes outcome rather than transaction identity. Similar durations do not establish that two spans belong to the same operation. The workspace table schemas expose OperationId as the operation correlation identity.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q008
 
-Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which observation provides the strongest evidence that the requested result was achieved?
+A KQL summarize computes count() by operation name. What does each output row represent?
 
-- **A. The result has ordered five-minute buckets and counts** **Correct.** The evidence should match the requested temporal granularity. This directly addresses the constraint stated in this case.
-- **B. The latency distribution exposes the affected slow tail** The evidence must reveal the exceptional experience. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **C. The narrowed query returns the same relevant incident records** Optimization should preserve the investigation's intended population. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
+- **A. One original request with unchanged columns** Aggregation reduces each group rather than preserving every source row and column.
+- **B. One row per workspace regardless of operation names** Grouping by operation name can produce several rows in one workspace.
+- **C. One sorted list containing every original request** Summarize produces aggregate rows rather than merely changing original-row order.
+- **D. One distinct operation-name group and its aggregated request count** **Correct.** The by expression defines groups, and the aggregation is calculated within each group.
 
-**Explanation:** The evidence should match the requested temporal granularity. The selected answer is the result has ordered five-minute buckets and counts.
+**Explanation:** Aggregation reduces each group rather than preserving every source row and column. Grouping by operation name can produce several rows in one workspace. Summarize produces aggregate rows rather than merely changing original-row order. The by expression defines groups, and the aggregation is calculated within each group.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S13](https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric)
 
 ## L25-Q009
 
-Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. Which execution safeguard most directly addresses the risk in this case?
+A VM dashboard reports available memory in megabytes. Which comparison is meaningful?
 
-- **A. Verify timezone and timestamp meaning before narrowing** A wrong time window can hide important events. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
-- **B. Choose bins appropriate to the sample density** **Correct.** Sparse data can make fine-grained charts misleading. This directly addresses the constraint stated in this case.
-- **C. Compare equivalent operations and relevant user populations** Mixed endpoints can distort latency interpretation. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
+- **A. Compare the raw value directly with a CPU percentage threshold** Memory size and processor utilization are different dimensions.
+- **B. Treat the number as a disk latency in milliseconds** The same numeric value does not make different physical quantities interchangeable.
+- **C. Assume any positive available-memory value proves no pressure** A positive amount can still be inadequate for the workload and its resource context.
+- **D. Compare it with a threshold expressed in the same memory unit and scope** **Correct.** Unit consistency is needed before interpreting whether the observed memory crosses a threshold.
 
-**Explanation:** Sparse data can make fine-grained charts misleading. The selected answer is choose bins appropriate to the sample density.
+**Explanation:** Memory size and processor utilization are different dimensions. The same numeric value does not make different physical quantities interchangeable. A positive amount can still be inadequate for the workload and its resource context. Unit consistency is needed before interpreting whether the observed memory crosses a threshold.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q010
 
-Advanced · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Trend requirement: Operations needs five-minute request counts rather than one total for the entire incident. The team selects this remedy: "Summarize counts by a five-minute time bin." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A new .NET ActivitySource is named Training.Todos, but the collector subscribes only to Training.Payments. Why might the custom span be absent?
 
-- **A. Coarser bins smooth short spikes** **Correct.** Granularity changes the behavior visible to responders. This directly addresses the constraint stated in this case.
-- **B. Percentiles need sufficient representative observations** Small or sampled populations require caution. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **C. Very narrow windows can miss preceding causal events** Expand deliberately when the investigation requires context. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
+- **A. The source name must be a GitHub repository URL** ActivitySource names identify instrumentation sources and are not required to be repository URLs.
+- **B. The collector does not subscribe to the actual source name** **Correct.** Custom ActivitySource collection depends on matching the intended instrumentation source.
+- **C. A span can be collected only when its name matches the process executable** The ActivitySource name need not equal the executable filename.
+- **D. Every ActivitySource automatically exports to every Azure resource** Producing instrumentation does not automatically configure exporter destinations.
 
-**Explanation:** Granularity changes the behavior visible to responders. The selected answer is coarser bins smooth short spikes.
+**Explanation:** ActivitySource names identify instrumentation sources and are not required to be repository URLs. Custom ActivitySource collection depends on matching the intended instrumentation source. The ActivitySource name need not equal the executable filename. Producing instrumentation does not automatically configure exporter destinations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S10](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-instrumentation-walkthroughs)
 
 ## L25-Q011
 
-Foundational · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which next change most directly satisfies the stated requirement?
+A KQL result includes many internal columns. Which operator selects just operation name and latency for the final output?
 
-- **A. Inspect latency percentiles and the slow-request cohort** **Correct.** Tail behavior can be hidden by an average. This directly addresses the constraint stated in this case.
-- **B. Correlate request and dependency telemetry by trace context** Distributed tracing links records across service boundaries. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **C. Summarize counts by a five-minute time bin** Time bins preserve the requested trend structure. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
+- **A. take** Limiting row count does not remove unwanted columns.
+- **B. distinct TimeGenerated** This changes the row set and grouping around a timestamp instead of selecting the requested fields.
+- **C. project** **Correct.** Projection explicitly selects the intended result columns and can assign expressions.
+- **D. where** Filtering rows does not by itself choose the displayed column set.
 
-**Explanation:** Tail behavior can be hidden by an average. The selected answer is inspect latency percentiles and the slow-request cohort.
+**Explanation:** Limiting row count does not remove unwanted columns. This changes the row set and grouping around a timestamp instead of selecting the requested fields. Projection explicitly selects the intended result columns and can assign expressions. Filtering rows does not by itself choose the displayed column set.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric)
 
 ## L25-Q012
 
-Foundational · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which explanation best accounts for the behavior or constraint described?
+An operator sees fewer trace records than total application requests after sampling was enabled. Which interpretation is appropriate?
 
-- **A. A single aggregate collapses the incident timeline** It cannot show when the volume changed. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **B. Most fast requests dilute the slow minority** **Correct.** A central measure does not describe every user. This directly addresses the constraint stated in this case.
-- **C. Timestamp proximity alone does not identify one transaction** Concurrent requests overlap in time. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
+- **A. Sampling changes the actual number of requests users sent** Collection policy changes observation rather than historical incoming traffic.
+- **B. A sampled trace no longer needs operation correlation** Trace identity remains important for relating the collected spans.
+- **C. The stored trace set can represent only a sampled subset of requests** **Correct.** Sampling deliberately reduces collected trace records, so raw row count need not equal total traffic.
+- **D. Every missing row proves a failed application request** Sampling can omit healthy and failing observations according to its policy.
 
-**Explanation:** A central measure does not describe every user. The selected answer is most fast requests dilute the slow minority.
+**Explanation:** Collection policy changes observation rather than historical incoming traffic. Trace identity remains important for relating the collected spans. Sampling deliberately reduces collected trace records, so raw row count need not equal total traffic. Sampling can omit healthy and failing observations according to its policy.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling)
 
 ## L25-Q013
 
-Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which observation provides the strongest evidence that the requested result was achieved?
+Requests contain op1 and op2; dependencies contain one record for op1. What row count results from an explicit inner join on operation identity?
 
-- **A. The result has ordered five-minute buckets and counts** The evidence should match the requested temporal granularity. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **B. The latency distribution exposes the affected slow tail** **Correct.** The evidence must reveal the exceptional experience. This directly addresses the constraint stated in this case.
-- **C. The failing request links to its backend dependency chain** The trace should preserve causal relationships. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
+```text
+requests: op1, op2
+dependencies: op1 -> sql
+join: kind=inner on operation_Id
+```
 
-**Explanation:** The evidence must reveal the exceptional experience. The selected answer is the latency distribution exposes the affected slow tail.
+- **A. Three** An inner join does not append all source rows as a union.
+- **B. Zero** The matching op1 pair contributes one result row.
+- **C. One** **Correct.** Only op1 has a match in both inputs, so op2 is excluded.
+- **D. Two** That would require retaining the unmatched request, which inner join does not do.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** An inner join does not append all source rows as a union. The matching op1 pair contributes one result row. Only op1 has a match in both inputs, so op2 is excluded. That would require retaining the unmatched request, which inner join does not do.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric); [S16](https://learn.microsoft.com/en-us/kusto/query/join-inner?view=microsoft-fabric)
 
 ## L25-Q014
 
-Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-Average hides pain: Mean latency is normal while a small set of users experience very slow requests. Which execution safeguard most directly addresses the risk in this case?
+Disk I/O latency spikes during the same interval as application latency. What conclusion is justified before further investigation?
 
-- **A. Propagate supported trace context across every relevant hop** A missing boundary can fragment the transaction. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **B. Choose bins appropriate to the sample density** Sparse data can make fine-grained charts misleading. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **C. Compare equivalent operations and relevant user populations** **Correct.** Mixed endpoints can distort latency interpretation. This directly addresses the constraint stated in this case.
+- **A. Disk latency is proven to be the sole root cause** Coinciding signals do not rule out other causes or identify a causal path.
+- **B. The application must be healthy because CPU is below its threshold** A low CPU value does not exclude storage or application problems.
+- **C. Increasing memory is proven to resolve the incident** The observed disk signal does not establish that a memory change will fix it.
+- **D. Disk contention is a hypothesis to investigate in the matching resource and time window** **Correct.** Temporal correlation can guide diagnosis but does not alone establish the cause of the application delay.
 
-**Explanation:** Mixed endpoints can distort latency interpretation. The selected answer is compare equivalent operations and relevant user populations.
+**Explanation:** Coinciding signals do not rule out other causes or identify a causal path. A low CPU value does not exclude storage or application problems. The observed disk signal does not establish that a memory change will fix it. Temporal correlation can guide diagnosis but does not alone establish the cause of the application delay.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q015
 
-Advanced · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Average hides pain: Mean latency is normal while a small set of users experience very slow requests. The team selects this remedy: "Inspect latency percentiles and the slow-request cohort." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A query uses a datatable of three authored requests. What scope should its resulting latency summary claim?
 
-- **A. Incomplete instrumentation limits trace completeness** Correlation cannot reconstruct every missing event. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **B. Coarser bins smooth short spikes** Granularity changes the behavior visible to responders. That addresses a different requirement: Trend requirement. It does not directly resolve this case's stated constraint.
-- **C. Percentiles need sufficient representative observations** **Correct.** Small or sampled populations require caution. This directly addresses the constraint stated in this case.
+- **A. A complete inventory of all workspace requests** A datatable supplies its own rows rather than enumerating every ingested table.
+- **B. A successful live telemetry exporter test** Executing a synthetic table does not exercise application export or ingestion.
+- **C. A calculation over those three synthetic rows** **Correct.** The result demonstrates query behavior for the supplied fixture, not production traffic characteristics.
+- **D. A measured production service-level objective** Synthetic rows do not establish production request outcomes or demand.
 
-**Explanation:** Small or sampled populations require caution. The selected answer is percentiles need sufficient representative observations.
+**Explanation:** A datatable supplies its own rows rather than enumerating every ingested table. Executing a synthetic table does not exercise application export or ingestion. The result demonstrates query behavior for the supplied fixture, not production traffic characteristics. Synthetic rows do not establish production request outcomes or demand.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric)
 
 ## L25-Q016
 
-Foundational · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which next change most directly satisfies the stated requirement?
+The exhibited query counts failures across three rows. Which result should validation expect?
 
-- **A. Correlate request and dependency telemetry by trace context** **Correct.** Distributed tracing links records across service boundaries. This directly addresses the constraint stated in this case.
-- **B. Restore trace-context propagation between the services** Telemetry collection and correlation are separate requirements. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **C. Inspect latency percentiles and the slow-request cohort** Tail behavior can be hidden by an average. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
+```kusto
+datatable(durationMs:real,success:bool)[10.0,true,30.0,true,100.0,false]
+| summarize requests=count(), failures=countif(success == false)
+```
 
-**Explanation:** Distributed tracing links records across service boundaries. The selected answer is correlate request and dependency telemetry by trace context.
+- **A. requests = 3 and failures = 2** Two rows are successful, so this reverses the meaning of the failure predicate.
+- **B. requests = 1 and failures = 1** The failure predicate affects countif but does not filter the separate total count.
+- **C. requests = 2 and failures = 0** The total includes the failed row, which also contributes one failure.
+- **D. requests = 3 and failures = 1** **Correct.** All three rows are counted, and only the false success value matches the failure predicate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Two rows are successful, so this reverses the meaning of the failure predicate. The failure predicate affects countif but does not filter the separate total count. The total includes the failed row, which also contributes one failure. All three rows are counted, and only the false success value matches the failure predicate.
+
+**Sources:** [S5](https://learn.microsoft.com/en-us/kusto/query/countif-aggregation-function?view=microsoft-fabric); [S13](https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric)
 
 ## L25-Q017
 
-Applied · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which explanation best accounts for the behavior or constraint described?
+The shown request/dependency correlation drops op2 after changing one word. Which repair restores the requirement to retain requests with no dependency?
 
-- **A. Most fast requests dilute the slow minority** A central measure does not describe every user. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **B. Timestamp proximity alone does not identify one transaction** **Correct.** Concurrent requests overlap in time. This directly addresses the constraint stated in this case.
-- **C. The receiving service starts a disconnected trace** It cannot associate the call with its upstream parent. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
+```kusto
+requests
+| join kind=inner dependencies on operation_Id
+| project operation_Id, name, target, durationMs
+```
 
-**Explanation:** Concurrent requests overlap in time. The selected answer is timestamp proximity alone does not identify one transaction.
+- **A. Change kind=inner to kind=leftouter while keeping requests on the left** **Correct.** The left outer flavor preserves op2 even without a dependency match.
+- **B. Change the join key from operation identity to duration** Duration equality is not transaction identity and cannot correctly retain unmatched requests.
+- **C. Reverse the inputs while keeping an inner join** An inner join still excludes op2 regardless of input order.
+- **D. Add a dependency record for op2 solely to satisfy the expected count** Inventing telemetry hides the missing-span case rather than testing correct join behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** The left outer flavor preserves op2 even without a dependency match. Duration equality is not transaction identity and cannot correctly retain unmatched requests. An inner join still excludes op2 regardless of input order. Inventing telemetry hides the missing-span case rather than testing correct join behavior.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric)
 
 ## L25-Q018
 
-Applied · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which observation provides the strongest evidence that the requested result was achieved?
+The exhibited code starts an Activity but has no interested listener. The returned value may be null. Which instrumentation style handles that supported behavior?
 
-- **A. The failing request links to its backend dependency chain** **Correct.** The trace should preserve causal relationships. This directly addresses the constraint stated in this case.
-- **B. A test request appears as one linked distributed trace** The proof should span the repaired service boundary. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **C. The latency distribution exposes the affected slow tail** The evidence must reveal the exceptional experience. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
+```csharp
+using var span = source.StartActivity("TodoWrite");
+span.SetTag("todo.operation", "write");
+```
 
-**Explanation:** The trace should preserve causal relationships. The selected answer is the failing request links to its backend dependency chain.
+- **A. Assume every StartActivity call sends data directly to Azure** Activity creation and remote exporting are separate concerns.
+- **B. Replace the source with a static shared Activity that is never stopped** Reusing one never-ending span would misrepresent distinct operations and their lifetimes.
+- **C. Use null-safe tag access and configure an interested listener or collector for observation** **Correct.** StartActivity can return null when no listener requests it, so instrumentation should tolerate that optimized path.
+- **D. Throw immediately whenever StartActivity returns null** A null Activity can be normal when nothing is collecting the source.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Activity creation and remote exporting are separate concerns. Reusing one never-ending span would misrepresent distinct operations and their lifetimes. StartActivity can return null when no listener requests it, so instrumentation should tolerate that optimized path. A null Activity can be normal when nothing is collecting the source.
+
+**Sources:** [S10](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-instrumentation-walkthroughs)
 
 ## L25-Q019
 
-Applied · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. Which execution safeguard most directly addresses the risk in this case?
+A query against AppRequests fails because it references duration rather than DurationMs. What should be checked before changing data ingestion?
 
-- **A. Compare equivalent operations and relevant user populations** Mixed endpoints can distort latency interpretation. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **B. Propagate supported trace context across every relevant hop** **Correct.** A missing boundary can fragment the transaction. This directly addresses the constraint stated in this case.
-- **C. Use supported context handling rather than ad hoc identifiers** Custom copying can create incorrect or spoofable relationships. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
+```kusto
+AppRequests
+| where TimeGenerated > ago(1h)
+| summarize p95=percentile(duration,95)
+```
 
-**Explanation:** A missing boundary can fragment the transaction. The selected answer is propagate supported trace context across every relevant hop.
+- **A. Whether a longer time range automatically renames columns** Time selection does not change a table's schema.
+- **B. Whether the operation name contains the missing column as text** A value in one column does not define another column.
+- **C. Whether the workspace needs to be recreated for every new query** An incorrect field name does not justify recreating the query destination.
+- **D. The actual table schema and field naming for the selected query context** **Correct.** Workspace table names and columns differ from legacy application query aliases.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Time selection does not change a table's schema. A value in one column does not define another column. An incorrect field name does not justify recreating the query destination. Workspace table names and columns differ from legacy application query aliases.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests)
 
 ## L25-Q020
 
-Advanced · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Cross-service failure: A browser request fails after several backend calls, and logs need to be tied to the same transaction. The team selects this remedy: "Correlate request and dependency telemetry by trace context." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A query summarizes requests by bin(TimeGenerated, 5m). What reporting behavior does this provide?
 
-- **A. Third-party services may not preserve context** Some trace boundaries require documented limitations. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **B. Percentiles need sufficient representative observations** Small or sampled populations require caution. That addresses a different requirement: Average hides pain. It does not directly resolve this case's stated constraint.
-- **C. Incomplete instrumentation limits trace completeness** **Correct.** Correlation cannot reconstruct every missing event. This directly addresses the constraint stated in this case.
+```kusto
+AppRequests
+| where TimeGenerated > ago(1h)
+| summarize requests=count() by bin(TimeGenerated,5m)
+```
 
-**Explanation:** Correlation cannot reconstruct every missing event. The selected answer is incomplete instrumentation limits trace completeness.
+- **A. A separate aggregate for each populated five-minute interval** **Correct.** Binning defines time groups for the aggregation rather than one result over the full period.
+- **B. One aggregate per individual millisecond timestamp** Five-minute bins combine timestamps into broader intervals.
+- **C. A guaranteed output row for every empty five-minute interval** A simple grouped summarize does not manufacture missing time buckets.
+- **D. A five-minute delay before every query completes** The bin size controls grouping, not a mandatory execution delay.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Binning defines time groups for the aggregation rather than one result over the full period. Five-minute bins combine timestamps into broader intervals. A simple grouped summarize does not manufacture missing time buckets. The bin size controls grouping, not a mandatory execution delay.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric); [S13](https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric)
 
 ## L25-Q021
 
-Foundational · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which next change most directly satisfies the stated requirement?
+Two sampled AppRequests rows have ItemCount values 10 and 20. Which aggregation estimates represented request volume?
 
-- **A. Correlate CPU pressure with request and process behavior** Sustained host pressure is a plausible performance contributor. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **B. Correlate request and dependency telemetry by trace context** Distributed tracing links records across service boundaries. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **C. Restore trace-context propagation between the services** **Correct.** Telemetry collection and correlation are separate requirements. This directly addresses the constraint stated in this case.
+```text
+Stored AppRequests rows
+row A: ItemCount=10
+row B: ItemCount=20
+```
 
-**Explanation:** Telemetry collection and correlation are separate requirements. The selected answer is restore trace-context propagation between the services.
+- **A. avg(ItemCount)** The average weight is not the total represented request count.
+- **B. sum(ItemCount)** **Correct.** ItemCount records how many telemetry items a stored row represents, so the weights total 30.
+- **C. count()** Raw row count is two and ignores the provided representation weights.
+- **D. max(ItemCount)** The largest weight alone omits the represented requests in the other row.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** The average weight is not the total represented request count. ItemCount records how many telemetry items a stored row represents, so the weights total 30. Raw row count is two and ignores the provided representation weights. The largest weight alone omits the represented requests in the other row.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S11](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling)
 
 ## L25-Q022
 
-Foundational · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which explanation best accounts for the behavior or constraint described?
+A workspace query scans 90 days and every column although the incident concerns one service in the last 30 minutes. Which optimization is most directly useful?
 
-- **A. The infrastructure signal indicates constrained compute headroom** Correlation needs application context before concluding causation. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **B. Timestamp proximity alone does not identify one transaction** Concurrent requests overlap in time. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **C. The receiving service starts a disconnected trace** **Correct.** It cannot associate the call with its upstream parent. This directly addresses the constraint stated in this case.
+- **A. Increase the lookback to one year to give the engine more data** More unrelated data increases work without serving the stated diagnostic question.
+- **B. Remove all predicates and sort the entire workspace first** That broadens work before eliminating irrelevant records.
+- **C. Replace operation identity with free-text matching across every column** Broad text scanning weakens correlation precision and can add avoidable cost.
+- **D. Apply selective time and service filters early and project only needed columns** **Correct.** Reducing the scanned data and carried columns targets unnecessary query work without changing the incident scope.
 
-**Explanation:** It cannot associate the call with its upstream parent. The selected answer is the receiving service starts a disconnected trace.
+**Explanation:** More unrelated data increases work without serving the stated diagnostic question. That broadens work before eliminating irrelevant records. Broad text scanning weakens correlation precision and can add avoidable cost. Reducing the scanned data and carried columns targets unnecessary query work without changing the incident scope.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
 
 ## L25-Q023
 
-Applied · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which observation provides the strongest evidence that the requested result was achieved?
+One request has two matching dependency rows and another has none. How many rows does the shown leftouter join produce?
 
-- **A. The incident view aligns CPU pressure with affected operations** The evidence should compare time and workload scope. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **B. The failing request links to its backend dependency chain** The trace should preserve causal relationships. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **C. A test request appears as one linked distributed trace** **Correct.** The proof should span the repaired service boundary. This directly addresses the constraint stated in this case.
+```kusto
+let requests=datatable(operation_Id:string)["a","b"];
+let dependencies=datatable(operation_Id:string,target:string)["a","sql","a","cache"];
+requests | join kind=leftouter dependencies on operation_Id
+```
 
-**Explanation:** The proof should span the repaired service boundary. The selected answer is a test request appears as one linked distributed trace.
+- **A. Two** A left outer join can expand a left record when multiple right records match.
+- **B. One** This omits both the second dependency match and the unmatched request.
+- **C. Four** The unmatched request contributes one row, not one row for every right-side dependency.
+- **D. Three** **Correct.** The first request yields two matches, and the unmatched second request is retained once.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** A left outer join can expand a left record when multiple right records match. This omits both the second dependency match and the unmatched request. The unmatched request contributes one row, not one row for every right-side dependency. The first request yields two matches, and the unmatched second request is retained once.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric)
 
 ## L25-Q024
 
-Applied · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md)
 
-Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. Which execution safeguard most directly addresses the risk in this case?
+Several requests occur within the same second. Which correlation method best avoids assigning a dependency to the wrong request?
 
-- **A. Avoid scaling before confirming the bottleneck and workload** An expensive change can mask a different root cause. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **B. Propagate supported trace context across every relevant hop** A missing boundary can fragment the transaction. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **C. Use supported context handling rather than ad hoc identifiers** **Correct.** Custom copying can create incorrect or spoofable relationships. This directly addresses the constraint stated in this case.
+- **A. Use operation identity and the available parent/span relationships** **Correct.** Distributed trace identities distinguish concurrent transactions and their individual span relationships.
+- **B. Join only on a one-second timestamp bucket** Concurrent unrelated transactions can share a time bucket.
+- **C. Join on equal response duration** Duration similarity is not an identity relationship.
+- **D. Join on the same HTTP result code** Many unrelated operations share a status code.
 
-**Explanation:** Custom copying can create incorrect or spoofable relationships. The selected answer is use supported context handling rather than ad hoc identifiers.
+**Explanation:** Distributed trace identities distinguish concurrent transactions and their individual span relationships. Concurrent unrelated transactions can share a time bucket. Duration similarity is not an identity relationship. Many unrelated operations share a status code.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S2](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q025
 
-Advanced · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-Broken trace: Two services emit telemetry but every call appears as an unrelated operation because trace context is dropped. The team selects this remedy: "Restore trace-context propagation between the services." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The fixture reports network errors as fraction 0.004. Which percentage should the interpretation record?
 
-- **A. Incomplete instrumentation limits trace completeness** Correlation cannot reconstruct every missing event. That addresses a different requirement: Cross-service failure. It does not directly resolve this case's stated constraint.
-- **B. Third-party services may not preserve context** **Correct.** Some trace boundaries require documented limitations. This directly addresses the constraint stated in this case.
-- **C. Correlation does not prove causation** A controlled comparison or deeper profiling may be needed. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
+```json
+{"networkErrorRate":0.004,"unit":"fraction"}
+```
 
-**Explanation:** Some trace boundaries require documented limitations. The selected answer is third-party services may not preserve context.
+- **A. 40 percent** This overstates the conversion by a factor of one hundred.
+- **B. 0.4 percent** **Correct.** Multiplying the fraction by 100 yields 0.4 percent.
+- **C. 4 percent** This overstates the fraction-to-percentage conversion by a factor of ten.
+- **D. 0.004 percent** This repeats the fraction value without converting it to percentage units.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** This overstates the conversion by a factor of one hundred. Multiplying the fraction by 100 yields 0.4 percent. This overstates the fraction-to-percentage conversion by a factor of ten. This repeats the fraction value without converting it to percentage units.
+
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q026
 
-Foundational · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which next change most directly satisfies the stated requirement?
+An analyst wants the failure rate of all observed requests, but filters to failed rows before calculating countif(false) divided by count(). What is the flaw?
 
-- **A. Correlate CPU pressure with request and process behavior** **Correct.** Sustained host pressure is a plausible performance contributor. This directly addresses the constraint stated in this case.
-- **B. Investigate storage performance rather than assuming CPU shortage** The strongest pressure signal is the storage layer. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **C. Restore trace-context propagation between the services** Telemetry collection and correlation are separate requirements. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
+```kusto
+AppRequests
+| where Success == false
+| summarize failures=countif(Success == false), requests=count()
+| extend failureRate=100.0*failures/requests
+```
 
-**Explanation:** Sustained host pressure is a plausible performance contributor. The selected answer is correlate CPU pressure with request and process behavior.
+- **A. The query must group by request name to count any rows** Grouping by name is optional and does not repair the missing successful population.
+- **B. The denominator now contains only failures, so it no longer represents all requests** **Correct.** Filtering out successes before the ratio makes the population inconsistent with the requested failure rate.
+- **C. countif cannot operate on Boolean expressions** Boolean predicates are exactly what countif expects.
+- **D. A rate cannot be calculated with numeric aggregates** A consistent numerator and denominator can express a request failure rate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Grouping by name is optional and does not repair the missing successful population. Filtering out successes before the ratio makes the population inconsistent with the requested failure rate. Boolean predicates are exactly what countif expects. A consistent numerator and denominator can express a request failure rate.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric); [S5](https://learn.microsoft.com/en-us/kusto/query/countif-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q027
 
-Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
 
-CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which explanation best accounts for the behavior or constraint described?
+A three-request fixture produces a high percentile of 100 ms. What should the learner avoid claiming from this result?
 
-- **A. Compute utilization alone does not explain the observed bottleneck** A different resource can limit throughput. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **B. The receiving service starts a disconnected trace** It cannot associate the call with its upstream parent. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **C. The infrastructure signal indicates constrained compute headroom** **Correct.** Correlation needs application context before concluding causation. This directly addresses the constraint stated in this case.
+- **A. A precise production tail-latency guarantee at real demand** **Correct.** A tiny synthetic population demonstrates calculation behavior rather than a statistically robust production promise.
+- **B. That one fixture request was as slow as the reported tail observation** The supplied synthetic data can legitimately include a slow observation.
+- **C. That the query can be validated against a controlled input** Controlled fixture validation is a useful and appropriately bounded exercise.
+- **D. That units should appear in the metric name** Explicit milliseconds help readers interpret the result correctly.
 
-**Explanation:** Correlation needs application context before concluding causation. The selected answer is the infrastructure signal indicates constrained compute headroom.
+**Explanation:** A tiny synthetic population demonstrates calculation behavior rather than a statistically robust production promise. The supplied synthetic data can legitimately include a slow observation. Controlled fixture validation is a useful and appropriately bounded exercise. Explicit milliseconds help readers interpret the result correctly.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S6](https://learn.microsoft.com/en-us/kusto/query/percentiles-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q028
 
-Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which observation provides the strongest evidence that the requested result was achieved?
+The local span test passes, but Azure Monitor has no matching operation. Which evidence should be investigated next?
 
-- **A. A test request appears as one linked distributed trace** The proof should span the repaired service boundary. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **B. The incident view aligns CPU pressure with affected operations** **Correct.** The evidence should compare time and workload scope. This directly addresses the constraint stated in this case.
-- **C. Disk pressure and affected work correlate in the incident window** The evidence should target the constrained resource. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
+- **A. Whether the test can replace the workspace query entirely** A local observation cannot prove successful remote telemetry ingestion.
+- **B. Exporter configuration, destination, transport, sampling, and ingestion for the same operation** **Correct.** Local emission is one stage; the remote collection path must be validated independently.
+- **C. Only the span test's assertion count** Additional local assertions cannot establish that the remote export path works.
+- **D. Only whether the Git working tree is clean** Source status does not diagnose exporter destination or ingestion.
 
-**Explanation:** The evidence should compare time and workload scope. The selected answer is the incident view aligns CPU pressure with affected operations.
+**Explanation:** A local observation cannot prove successful remote telemetry ingestion. Local emission is one stage; the remote collection path must be validated independently. Additional local assertions cannot establish that the remote export path works. Source status does not diagnose exporter destination or ingestion.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs); [S12](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
 
 ## L25-Q029
 
-Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md)
 
-CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. Which execution safeguard most directly addresses the risk in this case?
+A request and dependency share OperationId. The engineer wants to know which request span directly initiated that dependency. What additional relationship is relevant?
 
-- **A. Use supported context handling rather than ad hoc identifiers** Custom copying can create incorrect or spoofable relationships. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
-- **B. Avoid scaling before confirming the bottleneck and workload** **Correct.** An expensive change can mask a different root cause. This directly addresses the constraint stated in this case.
-- **C. Check storage limits and application access patterns before resizing** Provisioned capacity is only one possible cause. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
+```text
+request: Id=request-span; OperationId=trace-a
+dependency: Id=dep-span; OperationId=trace-a; ParentId=request-span
+```
 
-**Explanation:** An expensive change can mask a different root cause. The selected answer is avoid scaling before confirming the bottleneck and workload.
+- **A. The alphabetical order of their Name values** Names do not encode the direct parent-child span relationship.
+- **B. The larger DurationMs value** A longer duration does not identify which span initiated another.
+- **C. The later ingestion timestamp alone** Ingestion order can differ from execution order and is not a parent identifier.
+- **D. The dependency ParentId compared with the parent span's Id** **Correct.** OperationId groups the transaction, while parent/span identities describe the direct relationship.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Names do not encode the direct parent-child span relationship. A longer duration does not identify which span initiated another. Ingestion order can differ from execution order and is not a parent identifier. OperationId groups the transaction, while parent/span identities describe the direct relationship.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q030
 
-Advanced · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-CPU saturation: Application latency rises while the host's CPU remains near capacity throughout the same period. The team selects this remedy: "Correlate CPU pressure with request and process behavior." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+CPU is reported for vm-a over 10:00–10:05, while a slow request ran on vm-b at 11:00. What is the main problem with claiming CPU caused this request's delay?
 
-- **A. Correlation does not prove causation** **Correct.** A controlled comparison or deeper profiling may be needed. This directly addresses the constraint stated in this case.
-- **B. More storage performance can increase cost** Application optimization may be a better remedy. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **C. Third-party services may not preserve context** Some trace boundaries require documented limitations. That addresses a different requirement: Broken trace. It does not directly resolve this case's stated constraint.
+- **A. CPU is never relevant to application latency** CPU can be relevant when measured in the appropriate execution context.
+- **B. A request must always execute on the VM with the highest CPU** The highest utilization elsewhere does not identify the request's actual host.
+- **C. All infrastructure metrics need the same numeric unit as latency** Different dimensions can be compared contextually without pretending they share units.
+- **D. The resource and observation window do not match the affected request** **Correct.** Unrelated resource and time measurements cannot establish the proposed request-level explanation.
 
-**Explanation:** A controlled comparison or deeper profiling may be needed. The selected answer is correlation does not prove causation.
+**Explanation:** CPU can be relevant when measured in the appropriate execution context. The highest utilization elsewhere does not identify the request's actual host. Different dimensions can be compared contextually without pretending they share units. Unrelated resource and time measurements cannot establish the proposed request-level explanation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q031
 
-Foundational · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which next change most directly satisfies the stated requirement?
+After a leftouter join, durationMs is a real-valued dependency column. How can the query identify retained requests with no dependency value?
 
-- **A. Join on appropriate correlation keys and expected cardinality** The relationship must match the intended data model. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **B. Correlate CPU pressure with request and process behavior** Sustained host pressure is a plausible performance contributor. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **C. Investigate storage performance rather than assuming CPU shortage** **Correct.** The strongest pressure signal is the storage layer. This directly addresses the constraint stated in this case.
+```kusto
+requests
+| join kind=leftouter dependencies on operation_Id
+// durationMs is real in the right input
+```
 
-**Explanation:** The strongest pressure signal is the storage layer. The selected answer is investigate storage performance rather than assuming CPU shortage.
+- **A. isnull(operation_Id) on the preserved left key** The left request's operation identity remains present for an unmatched request.
+- **B. isnull(durationMs)** **Correct.** An unmatched right-side real column has a null value that can be tested explicitly.
+- **C. durationMs == 0** A real dependency can have zero duration, while null is not a zero measurement.
+- **D. durationMs > 0** This selects positive measured durations rather than the missing right-side values.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** The left request's operation identity remains present for an unmatched request. An unmatched right-side real column has a null value that can be tested explicitly. A real dependency can have zero duration, while null is not a zero measurement. This selects positive measured durations rather than the missing right-side values.
+
+**Sources:** [S15](https://learn.microsoft.com/en-us/kusto/query/isnull-function?view=microsoft-fabric); [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric)
 
 ## L25-Q032
 
-Foundational · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which explanation best accounts for the behavior or constraint described?
+A summarize groups by operation name, but the author then projects a raw request ID that was neither grouped nor aggregated. Why does the query fail?
 
-- **A. A nonunique key creates many-to-many combinations** The result overstates the number of relevant events. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **B. The infrastructure signal indicates constrained compute headroom** Correlation needs application context before concluding causation. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **C. Compute utilization alone does not explain the observed bottleneck** **Correct.** A different resource can limit throughput. This directly addresses the constraint stated in this case.
+```kusto
+AppRequests
+| summarize total=count() by Name
+| project Name, Id, total
+```
 
-**Explanation:** A different resource can limit throughput. The selected answer is compute utilization alone does not explain the observed bottleneck.
+- **A. Request IDs must always be numeric** String identifiers are valid; the issue is column availability after aggregation.
+- **B. Summarize automatically encrypts request identifiers** Aggregation changes the result schema rather than encrypting arbitrary fields.
+- **C. The aggregate result does not retain arbitrary ungrouped source columns** **Correct.** Only grouping keys and computed aggregates are available after this summarize.
+- **D. Every project operator requires a join first** Projection can operate directly on a valid table without a join.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** String identifiers are valid; the issue is column availability after aggregation. Aggregation changes the result schema rather than encrypting arbitrary fields. Only grouping keys and computed aggregates are available after this summarize. Projection can operate directly on a valid table without a join.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric); [S13](https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric)
 
 ## L25-Q033
 
-Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which observation provides the strongest evidence that the requested result was achieved?
+The same expensive filtered dataset is referenced several times in one query. An engineer proposes materialize without measurement. What is the right evaluation?
 
-- **A. The incident view aligns CPU pressure with affected operations** The evidence should compare time and workload scope. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **B. Disk pressure and affected work correlate in the incident window** **Correct.** The evidence should target the constrained resource. This directly addresses the constraint stated in this case.
-- **C. Joined counts match the expected transaction relationships** Verification should compare input and output cardinality. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
+- **A. Remove all early filters so the cached expression serves every possible question** That can materialize far more data than the actual query needs.
+- **B. Treat successful parsing as proof of lower execution cost** Syntax validity does not establish performance or resource improvement.
+- **C. Benchmark the intended reuse and memory tradeoff on the filtered projected dataset** **Correct.** Materialization can help reuse, but its benefit depends on data size and query shape.
+- **D. Assume materialize always speeds up any query regardless of size** Extra materialization can consume resources and is not universally beneficial.
 
-**Explanation:** The evidence should target the constrained resource. The selected answer is disk pressure and affected work correlate in the incident window.
+**Explanation:** That can materialize far more data than the actual query needs. Syntax validity does not establish performance or resource improvement. Materialization can help reuse, but its benefit depends on data size and query shape. Extra materialization can consume resources and is not universally beneficial.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
 
 ## L25-Q034
 
 Applied · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. Which execution safeguard most directly addresses the risk in this case?
+Memory available falls during the incident while disk queue and latency rise. Which next step best tests a contention hypothesis?
 
-- **A. Inspect uniqueness and select only needed fields** Large accidental joins waste resources and confuse diagnosis. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **B. Avoid scaling before confirming the bottleneck and workload** An expensive change can mask a different root cause. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **C. Check storage limits and application access patterns before resizing** **Correct.** Provisioned capacity is only one possible cause. This directly addresses the constraint stated in this case.
+- **A. Declare a network root cause solely because multiple metrics moved** The observed signals do not specifically establish a network failure.
+- **B. Increase every resource allocation and treat any later recovery as controlled proof** A broad simultaneous change obscures which factor mattered and can waste resources.
+- **C. Ignore memory because only CPU can affect request latency** Memory pressure and storage behavior can affect service response times.
+- **D. Inspect matching workload, paging or I/O evidence, and per-resource time series before choosing a mitigation** **Correct.** Several correlated signals guide a targeted investigation but do not alone identify the exact limiting mechanism.
 
-**Explanation:** Provisioned capacity is only one possible cause. The selected answer is check storage limits and application access patterns before resizing.
+**Explanation:** The observed signals do not specifically establish a network failure. A broad simultaneous change obscures which factor mattered and can waste resources. Memory pressure and storage behavior can affect service response times. Several correlated signals guide a targeted investigation but do not alone identify the exact limiting mechanism.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q035
 
-Advanced · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Disk-bound workload: CPU is moderate, but disk latency and queueing rise sharply during slow background processing. The team selects this remedy: "Investigate storage performance rather than assuming CPU shortage." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A query groups by every unique request ID to summarize average duration, producing almost as many rows as its input. The goal is one trend per operation type. What should change?
 
-- **A. Deduplication can hide legitimate repeated events** Choose keys based on meaning rather than convenient reduction. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **B. Correlation does not prove causation** A controlled comparison or deeper profiling may be needed. That addresses a different requirement: CPU saturation. It does not directly resolve this case's stated constraint.
-- **C. More storage performance can increase cost** **Correct.** Application optimization may be a better remedy. This directly addresses the constraint stated in this case.
+- **A. Group by the bounded operation type and intended time bucket instead of the unique request ID** **Correct.** The grouping dimension should match the trend question rather than preserve per-request cardinality.
+- **B. Add more unique identifiers to the grouping keys** That preserves or increases cardinality instead of producing the requested trend.
+- **C. Use take 1 before aggregation** That discards most observations and cannot represent the operation-type trend.
+- **D. Rename the request ID column operation type without changing its values** Changing a name does not change the distinct grouping population.
 
-**Explanation:** Application optimization may be a better remedy. The selected answer is more storage performance can increase cost.
+**Explanation:** The grouping dimension should match the trend question rather than preserve per-request cardinality. That preserves or increases cardinality instead of producing the requested trend. That discards most observations and cannot represent the operation-type trend. Changing a name does not change the distinct grouping population.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric); [S13](https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric)
 
 ## L25-Q036
 
-Foundational · [CP4](README.md#task-4) · [D5.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which next change most directly satisfies the stated requirement?
+A custom span appears without its expected completion duration because observation occurs only at ActivityStarted. What collection point should be reviewed?
 
-- **A. Join on appropriate correlation keys and expected cardinality** **Correct.** The relationship must match the intended data model. This directly addresses the constraint stated in this case.
-- **B. Account for the configured sampling and aggregation semantics** Retained events may represent more requests than raw rows. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **C. Investigate storage performance rather than assuming CPU shortage** The strongest pressure signal is the storage layer. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
+```csharp
+ActivitySource.AddActivityListener(new ActivityListener {
+    ShouldListenTo = s => s.Name == "Training.Todos",
+    Sample = (ref ActivityCreationOptions<ActivityContext> o) => ActivitySamplingResult.AllDataAndRecorded,
+    ActivityStarted = a => Capture(a.Duration)
+});
+```
 
-**Explanation:** The relationship must match the intended data model. The selected answer is join on appropriate correlation keys and expected cardinality.
+- **A. Assign the same fixed duration to all spans** A fabricated value does not measure completed work.
+- **B. Start a second root Activity whenever the first Activity starts** A second span does not supply the original span's final completion evidence.
+- **C. Observe the completed Activity at ActivityStopped for final duration and populated information** **Correct.** Start callbacks can occur before the work has finished and before final data is available.
+- **D. Use the process startup timestamp as every span's end time** Process lifecycle is different from each operation's completion.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** A fabricated value does not measure completed work. A second span does not supply the original span's final completion evidence. Start callbacks can occur before the work has finished and before final data is available. Process lifecycle is different from each operation's completion.
+
+**Sources:** [S10](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-instrumentation-walkthroughs); [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs)
 
 ## L25-Q037
 
-Applied · [CP4](README.md#task-4) · [D5.2.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.4](../../docs/objective-map.md)
 
-Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which explanation best accounts for the behavior or constraint described?
+The query selects slow requests, sorts them descending by DurationMs, and takes ten. What does the result describe?
 
-- **A. The compared measurements have different population semantics** Sampling changes what is physically stored. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **B. Compute utilization alone does not explain the observed bottleneck** A different resource can limit throughput. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **C. A nonunique key creates many-to-many combinations** **Correct.** The result overstates the number of relevant events. This directly addresses the constraint stated in this case.
+```kusto
+AppRequests
+| where TimeGenerated > ago(30m) and DurationMs > 1000
+| sort by DurationMs desc
+| take 10
+```
 
-**Explanation:** The result overstates the number of relevant events. The selected answer is a nonunique key creates many-to-many combinations.
+- **A. All requests that failed during the day** The filter and ordering described concern slow observations, not necessarily failure state or a full day.
+- **B. The ten slowest observed requests within the filtered population** **Correct.** Filtering establishes scope, descending duration orders the observations, and take limits that ordered result.
+- **C. The ten most recent requests regardless of duration** Sorting by duration does not sort by request timestamp.
+- **D. A statistically precise 99th-percentile value** Selecting ten records is not the same operation as estimating a specified percentile.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** The filter and ordering described concern slow observations, not necessarily failure state or a full day. Filtering establishes scope, descending duration orders the observations, and take limits that ordered result. Sorting by duration does not sort by request timestamp. Selecting ten records is not the same operation as estimating a specified percentile.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric)
 
 ## L25-Q038
 
-Applied · [CP4](README.md#task-4) · [D5.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md)
 
-Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which observation provides the strongest evidence that the requested result was achieved?
+A test changes a leftouter join to inner. Its positive assertion checks only that one matched dependency exists, so the test still passes. Which negative assertion detects the regression?
 
-- **A. The adjusted interpretation agrees with the known collection model** The result should explain rather than ignore sampling. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **B. Disk pressure and affected work correlate in the incident window** The evidence should target the constrained resource. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **C. Joined counts match the expected transaction relationships** **Correct.** Verification should compare input and output cardinality. This directly addresses the constraint stated in this case.
+- **A. Assert that the query string is nonempty** Nonempty text does not establish the join's row-retention behavior.
+- **B. Assert that the workspace ID has not changed** Destination identity is separate from whether the query drops unmatched requests.
+- **C. Assert that the known unmatched request remains in the result** **Correct.** Both join kinds retain the matched pair, but only the intended leftouter behavior retains the unmatched request.
+- **D. Assert that at least one dependency has a target** That checks only the already preserved matched pair.
 
-**Explanation:** Verification should compare input and output cardinality. The selected answer is joined counts match the expected transaction relationships.
+**Explanation:** Nonempty text does not establish the join's row-retention behavior. Destination identity is separate from whether the query drops unmatched requests. Both join kinds retain the matched pair, but only the intended leftouter behavior retains the unmatched request. That checks only the already preserved matched pair.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric); [S16](https://learn.microsoft.com/en-us/kusto/query/join-inner?view=microsoft-fabric)
 
 ## L25-Q039
 
-Applied · [CP4](README.md#task-4) · [D5.2.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md)
 
-Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. Which execution safeguard most directly addresses the risk in this case?
+A dashboard's raw request count falls after the sampling rate decreases, but incoming traffic is unchanged. Which analysis is appropriate?
 
-- **A. Check storage limits and application access patterns before resizing** Provisioned capacity is only one possible cause. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **B. Inspect uniqueness and select only needed fields** **Correct.** Large accidental joins waste resources and confuse diagnosis. This directly addresses the constraint stated in this case.
-- **C. Document which metrics and logs are sampled** Consumers need to know the data's limitations. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
+- **A. Conclude every dropped row was an error** Sampling does not establish the outcome of omitted requests by itself.
+- **B. Disable all operation identifiers to reduce sampling** Removing correlation identifiers does not correct the interpretation of sampled counts.
+- **C. Inspect sampling and representation weights before interpreting the stored row-count trend** **Correct.** Stored rows can change with collection policy even when actual demand is stable.
+- **D. Report a demand decrease equal to the raw row decrease** This confuses telemetry storage volume with incoming request volume.
 
-**Explanation:** Large accidental joins waste resources and confuse diagnosis. The selected answer is inspect uniqueness and select only needed fields.
+**Explanation:** Sampling does not establish the outcome of omitted requests by itself. Removing correlation identifiers does not correct the interpretation of sampled counts. Stored rows can change with collection policy even when actual demand is stable. This confuses telemetry storage volume with incoming request volume.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S11](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling)
 
 ## L25-Q040
 
-Advanced · [CP4](README.md#task-4) · [D5.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Join explosion: A KQL join multiplies records because both sides contain many rows for the same nonunique operation label. The team selects this remedy: "Join on appropriate correlation keys and expected cardinality." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A workspace executes all synthetic KQL exercises successfully while the application's exporter remains unconfigured. Which completion statement is accurate?
 
-- **A. More storage performance can increase cost** Application optimization may be a better remedy. That addresses a different requirement: Disk-bound workload. It does not directly resolve this case's stated constraint.
-- **B. Deduplication can hide legitimate repeated events** **Correct.** Choose keys based on meaning rather than convenient reduction. This directly addresses the constraint stated in this case.
-- **C. Sampling reduces volume but can omit individual traces** Cost savings trade against event-level completeness. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
+- **A. Synthetic query behavior and local instrumentation can pass while live application ingestion remains unverified** **Correct.** The two evidence lanes do not establish the missing application-to-cloud export path.
+- **B. The real application tracing integration is complete because a workspace can execute queries** A query endpoint does not prove that application telemetry reaches it.
+- **C. The local instrumentation test is invalid because the exporter is absent** Local emission can be tested independently of remote collection.
+- **D. Synthetic KQL results should be labeled as real user traffic to unify reporting** That would misrepresent the input source and the scope of the observed results.
 
-**Explanation:** Choose keys based on meaning rather than convenient reduction. The selected answer is deduplication can hide legitimate repeated events.
+**Explanation:** The two evidence lanes do not establish the missing application-to-cloud export path. A query endpoint does not prove that application telemetry reaches it. Local emission can be tested independently of remote collection. That would misrepresent the input source and the scope of the observed results.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S12](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview); [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs)
 
 ## L25-Q041
 
-Foundational · [CP2](README.md#task-2) · [D5.1.2](../../docs/objective-map.md), [D5.2.2](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which next change most directly satisfies the stated requirement?
+Two intervals contain 10 requests with two failures and 990 requests with 18 failures. A dashboard averages the two percentages. Which calculation represents overall failure rate?
 
-- **A. Account for the configured sampling and aggregation semantics** **Correct.** Retained events may represent more requests than raw rows. This directly addresses the constraint stated in this case.
-- **B. Project only the fields required for diagnosis** Narrow output limits unnecessary data disclosure. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **C. Join on appropriate correlation keys and expected cardinality** The relationship must match the intended data model. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
+```text
+Window A: requests=10; failures=2
+Window B: requests=990; failures=18
+```
 
-**Explanation:** Retained events may represent more requests than raw rows. The selected answer is account for the configured sampling and aggregation semantics.
+- **A. The mean of 20 percent and about 1.82 percent, or about 10.91 percent** An unweighted average gives the ten-request interval the same influence as the 990-request interval.
+- **B. The larger interval's rate alone, about 1.82 percent** That omits the failures and requests in the first interval.
+- **C. Two failures divided by 1000 requests, or 0.2 percent** That combines one interval's numerator with both intervals' denominator.
+- **D. Total failures divided by total requests: 20 divided by 1000, or 2 percent** **Correct.** Combining consistent counts weights intervals by their actual request populations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** An unweighted average gives the ten-request interval the same influence as the 990-request interval. That omits the failures and requests in the first interval. That combines one interval's numerator with both intervals' denominator. Combining consistent counts weights intervals by their actual request populations.
+
+**Sources:** [S5](https://learn.microsoft.com/en-us/kusto/query/countif-aggregation-function?view=microsoft-fabric); [S19](https://learn.microsoft.com/en-us/kusto/query/sumif-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q042
 
-Foundational · [CP2](README.md#task-2) · [D5.1.2](../../docs/objective-map.md), [D5.2.2](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which explanation best accounts for the behavior or constraint described?
+One request has five dependencies and another has none. A dashboard averages request duration after a leftouter dependency join. Why can the mean change even though no request duration changed?
 
-- **A. The compared measurements have different population semantics** **Correct.** Sampling changes what is physically stored. This directly addresses the constraint stated in this case.
-- **B. The export includes more sensitive context than the task needs** Query access does not justify broad redistribution. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **C. A nonunique key creates many-to-many combinations** The result overstates the number of relevant events. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
+```text
+Requests: r1 duration=100 ms; r2 duration=10 ms
+Dependencies: five rows matching r1; no row matching r2
+Query: leftouter join, then avg(requestDurationMs)
+```
 
-**Explanation:** Sampling changes what is physically stored. The selected answer is the compared measurements have different population semantics.
+- **A. Every dependency automatically adds its duration to the request duration column** Joining does not itself change a preserved request duration by summing dependencies.
+- **B. Operation IDs become random after a join** Join output multiplicity does not randomize the stored correlation identifiers.
+- **C. The first request is repeated five times, so join multiplicity reweights the request average** **Correct.** Request metrics should be aggregated at the intended request identity or protected from dependency fan-out.
+- **D. A leftouter join always deletes requests that have no dependencies** The unmatched request remains, so deletion is not the reason here.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Joining does not itself change a preserved request duration by summing dependencies. Join output multiplicity does not randomize the stored correlation identifiers. Request metrics should be aggregated at the intended request identity or protected from dependency fan-out. The unmatched request remains, so deletion is not the reason here.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric); [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q043
 
-Applied · [CP2](README.md#task-2) · [D5.1.2](../../docs/objective-map.md), [D5.2.2](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D5.2.3](../../docs/objective-map.md)
 
-Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which observation provides the strongest evidence that the requested result was achieved?
+The API request and downstream service span occur together but have different trace IDs after an HTTP boundary. CPU is normal. What investigation best targets the missing trace continuity?
 
-- **A. The adjusted interpretation agrees with the known collection model** **Correct.** The result should explain rather than ignore sampling. This directly addresses the constraint stated in this case.
-- **B. The report contains relevant timing without unnecessary payload data** The evidence should inspect the exported artifact. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **C. Joined counts match the expected transaction relationships** Verification should compare input and output cardinality. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
+- **A. Join all spans in the same second and declare the trace repaired** Concurrent operations can share a second, so that invents unsupported relationships.
+- **B. Increase the API CPU allocation to make trace IDs equal** Processor capacity does not establish trace context propagation.
+- **C. Replace every downstream trace ID with the most recent API trace ID** Overwriting observed identity can join unrelated requests and corrupt diagnostic provenance.
+- **D. Check W3C context propagation and the downstream instrumentation before correlating by identity** **Correct.** A broken propagation boundary can create a new trace, and timestamp proximity cannot safely repair that identity relationship.
 
-**Explanation:** The result should explain rather than ignore sampling. The selected answer is the adjusted interpretation agrees with the known collection model.
+**Explanation:** Concurrent operations can share a second, so that invents unsupported relationships. Processor capacity does not establish trace context propagation. Overwriting observed identity can join unrelated requests and corrupt diagnostic provenance. A broken propagation boundary can create a new trace, and timestamp proximity cannot safely repair that identity relationship.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S2](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts); [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q044
 
-Applied · [CP2](README.md#task-2) · [D5.1.2](../../docs/objective-map.md), [D5.2.2](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D5.1.2](../../docs/objective-map.md)
 
-Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. Which execution safeguard most directly addresses the risk in this case?
+The local ActivityListener test passes, but a production-like request has no remote span. The collector subscribes to the correct source; exporter retries show a destination error. What readiness decision follows?
 
-- **A. Apply appropriate access and retention to investigation results** Derived reports can outlive the original controlled query. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
-- **B. Inspect uniqueness and select only needed fields** Large accidental joins waste resources and confuse diagnosis. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **C. Document which metrics and logs are sampled** **Correct.** Consumers need to know the data's limitations. This directly addresses the constraint stated in this case.
+```text
+Local ActivityListener: TodoWrite observed
+Collector source selection: Training.Todos
+Exporter: retries exhausted; destination rejected
+Azure query: no matching operation
+```
 
-**Explanation:** Consumers need to know the data's limitations. The selected answer is document which metrics and logs are sampled.
+- **A. Local span emission is verified; resolve the exporter destination failure and verify the same operation's ingestion before claiming integration** **Correct.** The observed stages identify a working producer and a failing remote collection boundary.
+- **B. Mark integration complete because correct source subscription is the last required stage** Correct subscription does not prove successful export and ingestion.
+- **C. Rewrite the ActivitySource names because any missing remote span proves emission failed** The passing listener and destination error point to a different boundary.
+- **D. Delete the local test because it cannot diagnose every exporter failure** The test remains useful evidence for instrumentation even though it does not cover the whole path.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** The observed stages identify a working producer and a failing remote collection boundary. Correct subscription does not prove successful export and ingestion. The passing listener and destination error point to a different boundary. The test remains useful evidence for instrumentation even though it does not cover the whole path.
+
+**Sources:** [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs); [S10](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-instrumentation-walkthroughs); [S12](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
 
 ## L25-Q045
 
-Advanced · [CP2](README.md#task-2) · [D5.1.2](../../docs/objective-map.md), [D5.2.2](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D5.2.2](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sampling mismatch: A responder compares raw retained telemetry rows with a full service request count and concludes traffic vanished. The team selects this remedy: "Account for the configured sampling and aggregation semantics." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A sample contains successful rows representing 900 requests and failed rows representing 100. The raw row ratio is 50 percent because there is one row of each type. Which rate and interpretation fit?
 
-- **A. Deduplication can hide legitimate repeated events** Choose keys based on meaning rather than convenient reduction. That addresses a different requirement: Join explosion. It does not directly resolve this case's stated constraint.
-- **B. Sampling reduces volume but can omit individual traces** **Correct.** Cost savings trade against event-level completeness. This directly addresses the constraint stated in this case.
-- **C. Minimal projections may require follow-up queries** Reduced exposure can add a small diagnostic step. That addresses a different requirement: Sensitive projection. It does not directly resolve this case's stated constraint.
+```text
+Stored rows:
+Success=true,  ItemCount=900
+Success=false, ItemCount=100
+```
 
-**Explanation:** Cost savings trade against event-level completeness. The selected answer is sampling reduces volume but can omit individual traces.
+- **A. A 50 percent rate because every stored row always represents one request** ItemCount explicitly shows unequal numbers represented by these stored rows.
+- **B. A 100 percent rate because the failure row has a positive weight** Positive failed volume does not mean every represented request failed.
+- **C. A zero percent rate because sampled failures should be ignored** Sampling does not make the represented failure evidence irrelevant.
+- **D. A represented failure rate of 10 percent using the corresponding ItemCount weights** **Correct.** The provided representation weights total 1000 requests with 100 failures; raw row count ignores sampling representation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** ItemCount explicitly shows unequal numbers represented by these stored rows. Positive failed volume does not mean every represented request failed. Sampling does not make the represented failure evidence irrelevant. The provided representation weights total 1000 requests with 100 failures; raw row count ignores sampling representation.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S11](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-sampling); [S19](https://learn.microsoft.com/en-us/kusto/query/sumif-aggregation-function?view=microsoft-fabric)
 
 ## L25-Q046
 
-Foundational · [CP1](README.md#task-1) · [D5.2.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which next change most directly satisfies the stated requirement?
+A correlation query joins 90 days of all services, then filters one operation in a ten-minute incident. It returns correct rows but is expensive. Which optimization preserves the intended result most directly?
 
-- **A. Project only the fields required for diagnosis** **Correct.** Narrow output limits unnecessary data disclosure. This directly addresses the constraint stated in this case.
-- **B. Filter time and relevant scope early in the KQL query** Early selective filtering reduces unnecessary processing. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
-- **C. Account for the configured sampling and aggregation semantics** Retained events may represent more requests than raw rows. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
+- **A. Change to a timestamp-only join because it has fewer key characters** Shorter key text does not establish correct identity matching or lower total cost.
+- **B. Keep all history and add more output columns for future reuse** That increases the carried population rather than the specific incident's diagnostic value.
+- **C. Replace the query with the first ten dependency rows from any service** An arbitrary sample no longer answers the scoped correlation question.
+- **D. Apply equivalent time and scope filters to each input early, project required fields, and verify result equivalence before tuning join strategy** **Correct.** Reducing irrelevant input targets cost without changing the incident's identity-based correlation contract.
 
-**Explanation:** Narrow output limits unnecessary data disclosure. The selected answer is project only the fields required for diagnosis.
+**Explanation:** Shorter key text does not establish correct identity matching or lower total cost. That increases the carried population rather than the specific incident's diagnostic value. An arbitrary sample no longer answers the scoped correlation question. Reducing irrelevant input targets cost without changing the incident's identity-based correlation contract.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization); [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric)
 
 ## L25-Q047
 
-Applied · [CP1](README.md#task-1) · [D5.2.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D5.2.1](../../docs/objective-map.md)
 
-Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which explanation best accounts for the behavior or constraint described?
+The fixture's slowest request overlaps CPU 75 percent and disk latency 14 ms on its host. Another host peaks at CPU 99 percent outside the window. What report best supports a bounded diagnosis?
 
-- **A. The export includes more sensitive context than the task needs** **Correct.** Query access does not justify broad redistribution. This directly addresses the constraint stated in this case.
-- **B. The query scans data outside the investigation window** Broad scans increase work without adding relevant evidence. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
-- **C. The compared measurements have different population semantics** Sampling changes what is physically stored. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
+- **A. Declare CPU 99 percent the root cause because it is the largest number** The maximum belongs to a different host and time, so it is not relevant causal evidence for this request.
+- **B. Compare 75 and 14 directly and choose CPU because its numeric value is higher** Percent utilization and milliseconds measure different quantities and cannot be ranked by raw magnitude.
+- **C. Declare no issue because CPU is below 100 percent** A bottleneck or slow path can exist without processor utilization reaching its absolute maximum.
+- **D. Investigate CPU and disk contention on the request's host and time window, without claiming causation or using the unrelated maximum** **Correct.** Matching scope and units support a targeted hypothesis; an unrelated host maximum does not explain this operation.
 
-**Explanation:** Query access does not justify broad redistribution. The selected answer is the export includes more sensitive context than the task needs.
+**Explanation:** The maximum belongs to a different host and time, so it is not relevant causal evidence for this request. Percent utilization and milliseconds measure different quantities and cannot be ranked by raw magnitude. A bottleneck or slow path can exist without processor utilization reaching its absolute maximum. Matching scope and units support a targeted hypothesis; an unrelated host maximum does not explain this operation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)
 
 ## L25-Q048
 
-Applied · [CP1](README.md#task-1) · [D5.2.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which observation provides the strongest evidence that the requested result was achieved?
+A leftouter join must retain every request and attach only dependency matches with real durationMs greater than 50. Requests with no qualifying dependency must remain with empty right-side values. Which design fits?
 
-- **A. The adjusted interpretation agrees with the known collection model** The result should explain rather than ignore sampling. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **B. The report contains relevant timing without unnecessary payload data** **Correct.** The evidence should inspect the exported artifact. This directly addresses the constraint stated in this case.
-- **C. The narrowed query returns the same relevant incident records** Optimization should preserve the investigation's intended population. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
+```kusto
+requests
+| join kind=leftouter dependencies on operation_Id
+| where durationMs > 50
+```
 
-**Explanation:** The evidence should inspect the exported artifact. The selected answer is the report contains relevant timing without unnecessary payload data.
+- **A. Filter slow dependencies in the right input before the leftouter join and retain the unmatched-request interpretation** **Correct.** Right-side prefiltering preserves all left requests while limiting which dependency records can match.
+- **B. Keep the post-join duration filter unchanged** For unmatched real values the comparison does not pass, so those requests disappear.
+- **C. Use an inner join and append a count of all original requests as a label** The label does not restore the missing individual unmatched request records.
+- **D. Replace missing durations with 1000 ms before filtering** That fabricates slow dependency measurements for requests with no observed dependency.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** Right-side prefiltering preserves all left requests while limiting which dependency records can match. For unmatched real values the comparison does not pass, so those requests disappear. The label does not restore the missing individual unmatched request records. That fabricates slow dependency measurements for requests with no observed dependency.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/kusto/query/join-leftouter?view=microsoft-fabric); [S15](https://learn.microsoft.com/en-us/kusto/query/isnull-function?view=microsoft-fabric)
 
 ## L25-Q049
 
-Applied · [CP1](README.md#task-1) · [D5.2.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D5.2.3](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. Which execution safeguard most directly addresses the risk in this case?
+A query copied from a legacy application context uses requests, operation_Id, and timespan duration. The workspace contains AppRequests and AppDependencies with DurationMs. What migration review is required?
 
-- **A. Document which metrics and logs are sampled** Consumers need to know the data's limitations. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **B. Apply appropriate access and retention to investigation results** **Correct.** Derived reports can outlive the original controlled query. This directly addresses the constraint stated in this case.
-- **C. Verify timezone and timestamp meaning before narrowing** A wrong time window can hide important events. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
+```text
+Legacy application context: requests.operation_Id, requests.duration (timespan)
+Workspace schema: AppRequests.OperationId, AppRequests.DurationMs (real)
+```
 
-**Explanation:** Derived reports can outlive the original controlled query. The selected answer is apply appropriate access and retention to investigation results.
+- **A. Change the join key to Name because it exists in both contexts** A common display name is not a substitute for operation correlation identity.
+- **B. Translate table and column names using the actual schemas, preserve numeric milliseconds, and validate correlation on known operations** **Correct.** Query-context differences affect naming and units, so a mechanical partial rename is insufficient.
+- **C. Rename only requests to AppRequests and keep every legacy field and conversion unchanged** The workspace columns and duration representation also differ.
+- **D. Multiply DurationMs by 1000 because every Azure duration column is seconds** The column already declares milliseconds, so that changes the units incorrectly.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Explanation:** A common display name is not a substitute for operation correlation identity. Query-context differences affect naming and units, so a mechanical partial rename is insufficient. The workspace columns and duration representation also differ. The column already declares milliseconds, so that changes the units incorrectly.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/apprequests); [S8](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/appdependencies)
 
 ## L25-Q050
 
-Advanced · [CP1](README.md#task-1) · [D5.2.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D5.1.2](../../docs/objective-map.md), [D5.2.1](../../docs/objective-map.md), [D5.2.4](../../docs/objective-map.md)
 
-Sensitive projection: A useful incident query exports complete request payloads when only operation names and timing are needed. The team selects this remedy: "Project only the fields required for diagnosis." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The lab's Python fixture returns expected aggregates, a local listener sees a span, and synthetic KQL passes in a workspace. Real production exporter behavior has never run. Which evidence-based handoff is accurate?
 
-- **A. Very narrow windows can miss preceding causal events** Expand deliberately when the investigation requires context. That addresses a different requirement: Slow log query. It does not directly resolve this case's stated constraint.
-- **B. Sampling reduces volume but can omit individual traces** Cost savings trade against event-level completeness. That addresses a different requirement: Sampling mismatch. It does not directly resolve this case's stated constraint.
-- **C. Minimal projections may require follow-up queries** **Correct.** Reduced exposure can add a small diagnostic step. This directly addresses the constraint stated in this case.
+- **A. Record each verified local or synthetic result separately and leave live export, production trace coverage, and causal diagnosis pending their own evidence** **Correct.** Several useful tests can pass without establishing unexecuted integration or production conclusions.
+- **B. Report complete production tracing because three independent checks passed** Independence does not expand their scope beyond local and synthetic inputs.
+- **C. Discard the Python reference because only a cloud query can establish any numeric correctness** A reference calculation is useful when clearly labeled and not represented as KQL-engine execution.
+- **D. Mark the highest infrastructure metric as the confirmed incident cause to complete the report** Synthetic maxima and correlation do not establish production causation.
 
-**Explanation:** Reduced exposure can add a small diagnostic step. The selected answer is minimal projections may require follow-up queries.
+**Explanation:** Several useful tests can pass without establishing unexecuted integration or production conclusions. Independence does not expand their scope beyond local and synthetic inputs. A reference calculation is useful when clearly labeled and not represented as KQL-engine execution. Synthetic maxima and correlation do not establish production causation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators); [S2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data); [S3](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/query-optimization)
+**Sources:** [S1](https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=microsoft-fabric); [S2](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts); [S9](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs); [S14](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-performance)

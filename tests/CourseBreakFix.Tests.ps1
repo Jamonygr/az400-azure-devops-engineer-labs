@@ -90,8 +90,8 @@ Describe 'Course fault contract <LabId>' -ForEach (0..27 | ForEach-Object { @{ L
         Write-JsonFixture 'coverage-gate.json' @{ minimum = 0.65; actual = 0.84; passed = $true }
         Write-Fixture 'github-ci/samples/DevOps.Api/Healthy.cs' 'class Healthy {}'
         Write-Fixture 'github-ci/samples/DevOps.slnx' '<Solution />'
-        Write-Fixture 'azure-ci/samples/DevOps.slnx' '<Solution />'
-        Write-Fixture 'azure-ci/azure-pipelines.yml' 'steps: [{script: "dotnet test samples/DevOps.slnx"}]'
+        Write-Fixture 'azure-ci/samples/Build-Release.ps1' "Write-Output 'fixture release'"
+        Write-Fixture 'azure-ci/azure-pipelines.yml' 'steps: [{pwsh: "./samples/Build-Release.ps1"}]'
         Write-JsonFixture 'job-graph.json' @(@{ job = 'build'; needs = @() }, @{ job = 'test'; needs = @('build') }, @{ job = 'package'; needs = @('test') })
         Write-Fixture 'execution-order.txt' "build`ntest`npackage"
         Write-JsonFixture 'runner-design.json' @{ untrustedPR = 'hosted ephemeral'; credentialLifetime = 'job' }

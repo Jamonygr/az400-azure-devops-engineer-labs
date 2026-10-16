@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "21",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -14,1918 +14,1978 @@
     {
       "id": "S3",
       "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references"
+    },
+    {
+      "id": "S5",
+      "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"
     }
   ],
   "questions": [
     {
       "id": "L21-Q001",
-      "checkpointId": "CP1",
-      "caseId": "L21-C01",
-      "task": "remedy",
-      "caseContext": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which next change most directly satisfies the stated requirement?",
+      "question": "A GitHub deployment job needs Azure access without storing a long-lived client secret. Which authentication pattern should be selected?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the job the required id-token permission",
-          "rationale": "OIDC token issuance needs an explicit workflow permission. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "A personal administrator token in workflow source",
+          "rationale": "Committed personal credentials expose privileged access and do not implement workload federation."
         },
         {
           "key": "B",
-          "text": "Assign the necessary narrow Azure resource role",
-          "rationale": "Authentication and resource authorization are separate decisions. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "An App Service publish profile for every Azure operation",
+          "rationale": "Publish profiles are deployment credentials rather than general secret-free Azure workload authentication."
         },
         {
           "key": "C",
-          "text": "Use GitHub OIDC with a matching Azure federated identity credential",
-          "rationale": "Federation exchanges a trusted short-lived assertion. This directly addresses the constraint stated in this case."
+          "text": "OIDC workload identity federation",
+          "rationale": "Federation exchanges trusted workload identity for short-lived Azure authentication without a stored client secret."
+        },
+        {
+          "key": "D",
+          "text": "A shared client secret in repository settings",
+          "rationale": "A stored reusable secret retains the credential rotation and leakage burden federation avoids."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Federation exchanges a trusted short-lived assertion. The selected answer is use GitHub OIDC with a matching Azure federated identity credential.",
+      "explanation": "Committed personal credentials expose privileged access and do not implement workload federation. Publish profiles are deployment credentials rather than general secret-free Azure workload authentication. Federation exchanges trusted workload identity for short-lived Azure authentication without a stored client secret. A stored reusable secret retains the credential rotation and leakage burden federation avoids.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q002",
-      "checkpointId": "CP1",
-      "caseId": "L21-C01",
-      "task": "diagnosis",
-      "caseContext": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The Azure login action cannot request a GitHub OIDC token because the job lacks permission. Which permission is required?",
       "options": [
         {
           "key": "A",
-          "text": "Identity identifiers do not authorize token issuance",
-          "rationale": "The workflow permission is separate from Azure configuration. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "packages write",
+          "rationale": "Package publication permission does not provide the required workload identity token permission."
         },
         {
           "key": "B",
-          "text": "A valid token does not carry unlimited Azure permissions",
-          "rationale": "The identity still needs a role assignment. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "id-token write",
+          "rationale": "This permission allows the job to request an OIDC token for federation."
         },
         {
           "key": "C",
-          "text": "The current design relies on a reusable stored secret",
-          "rationale": "The platform supports a secretless authentication path. This directly addresses the constraint stated in this case."
+          "text": "contents write",
+          "rationale": "Repository content write permission does not authorize requesting an OIDC identity token."
+        },
+        {
+          "key": "D",
+          "text": "actions write",
+          "rationale": "Workflow management permission is different from the job's OIDC token request capability."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Package publication permission does not provide the required workload identity token permission. This permission allows the job to request an OIDC token for federation. Repository content write permission does not authorize requesting an OIDC identity token. Workflow management permission is different from the job's OIDC token request capability.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L21-Q003",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.2.2",
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "A GitHub job uses environment production. Which default subject should its Azure federated credential match for repository owner/course?",
+      "options": [
+        {
+          "key": "A",
+          "text": "repo:owner/course:environment:production",
+          "rationale": "Environment jobs use an environment-qualified subject rather than the normal branch subject."
+        },
+        {
+          "key": "B",
+          "text": "repo:owner/course:ref:refs/heads/main",
+          "rationale": "The branch-qualified default does not match this job's environment-qualified subject claim."
+        },
+        {
+          "key": "C",
+          "text": "repo:owner/course:pull_request",
+          "rationale": "A pull-request subject does not match the protected production environment job."
+        },
+        {
+          "key": "D",
+          "text": "repo:other/course:environment:production",
+          "rationale": "The different repository owner makes the subject identify another workload context."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Environment jobs use an environment-qualified subject rather than the normal branch subject. The branch-qualified default does not match this job's environment-qualified subject claim. A pull-request subject does not match the protected production environment job. The different repository owner makes the subject identify another workload context.",
+      "sourceIds": [
+        "S2"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "repository: owner/course\njob:\n  environment: production\n  permissions:\n    contents: read\n    id-token: write"
+      }
+    },
+    {
+      "id": "L21-Q004",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.2.2",
+        "D4.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "The workflow can request an OIDC token but Azure rejects the exchange. Which fields should be compared to the federated credential?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Issuer, subject and audience",
+          "rationale": "Federation requires the presented workload claims to match the configured trust relationship."
+        },
+        {
+          "key": "B",
+          "text": "Only the Azure client ID and resource group",
+          "rationale": "Application selection and target scope alone do not validate issuer, subject and audience trust matching."
+        },
+        {
+          "key": "C",
+          "text": "Only the Azure role names assigned to the principal",
+          "rationale": "Authorization roles cannot repair a mismatch in the workload token exchange trust claims."
+        },
+        {
+          "key": "D",
+          "text": "Only the token expiry time and issuance time",
+          "rationale": "Token timing does not establish the configured subject, issuer and audience trust relationship."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Federation requires the presented workload claims to match the configured trust relationship. Application selection and target scope alone do not validate issuer, subject and audience trust matching. Authorization roles cannot repair a mismatch in the workload token exchange trust claims. Token timing does not establish the configured subject, issuer and audience trust relationship.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L21-Q005",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.2.2",
+        "D4.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "The workflow adds environment production after federation was configured for main's branch subject. Token issuance succeeds but exchange fails. Which correction preserves protected-environment trust?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Trust every repository subject broadly",
+          "rationale": "Broad trust unnecessarily expands which workloads can obtain the production Azure identity."
+        },
+        {
+          "key": "B",
+          "text": "Add repository contents write permission",
+          "rationale": "Content write does not change the OIDC subject or repair Azure trust matching."
+        },
+        {
+          "key": "C",
+          "text": "Configure the exact production-environment subject",
+          "rationale": "Adding an environment changes the default subject, so trust must match that protected workload."
+        },
+        {
+          "key": "D",
+          "text": "Remove the environment and bypass its approval",
+          "rationale": "Removing protection changes the required release governance instead of correcting intended federation claims."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The platform supports a secretless authentication path. The selected answer is the current design relies on a reusable stored secret.",
+      "explanation": "Broad trust unnecessarily expands which workloads can obtain the production Azure identity. Content write does not change the OIDC subject or repair Azure trust matching. Adding an environment changes the default subject, so trust must match that protected workload. Removing protection changes the required release governance instead of correcting intended federation claims.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q003",
-      "checkpointId": "CP1",
-      "caseId": "L21-C01",
-      "task": "verification",
-      "caseContext": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret.",
-      "objectiveIds": [
-        "D4.2.2"
+        "S2"
       ],
-      "difficulty": "applied",
-      "question": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The intended deployment succeeds while other groups remain inaccessible",
-          "rationale": "The repair should prove narrow effective access. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The trusted job obtains Azure access without a client secret",
-          "rationale": "The proof should exercise the actual token exchange. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "The trusted job requests an OIDC token successfully",
-          "rationale": "Issuance must work before Azure exchange can succeed. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The proof should exercise the actual token exchange. The selected answer is the trusted job obtains Azure access without a client secret.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q004",
-      "checkpointId": "CP1",
-      "caseId": "L21-C01",
-      "task": "safeguard",
-      "caseContext": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret.",
-      "objectiveIds": [
-        "D4.2.2"
-      ],
-      "difficulty": "applied",
-      "question": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Verify tenant subscription and principal before changing assignments",
-          "rationale": "Granting the right role to the wrong identity does not help. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Restrict the federated subject audience and Azure role scope",
-          "rationale": "Token issuance alone should not authorize unrelated workflows. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Keep unrelated token permissions minimal",
-          "rationale": "Enabling OIDC does not require broad repository write access. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Token issuance alone should not authorize unrelated workflows. The selected answer is restrict the federated subject audience and Azure role scope.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q005",
-      "checkpointId": "CP1",
-      "caseId": "L21-C01",
-      "task": "tradeoff",
-      "caseContext": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret.",
-      "objectiveIds": [
-        "D4.2.2"
-      ],
-      "difficulty": "advanced",
-      "question": "Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. The team selects this remedy: \"Use GitHub OIDC with a matching Azure federated identity credential.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Federation requires precise trust configuration",
-          "rationale": "A mismatched claim can prevent otherwise valid deployment. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Token issuance is only one authentication stage",
-          "rationale": "Azure trust and authorization must also be correct. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Federation removes reusable secrets rather than authorization work",
-          "rationale": "Roles and access reviews remain required. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "A mismatched claim can prevent otherwise valid deployment. The selected answer is federation requires precise trust configuration.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+      "exhibit": {
+        "language": "text",
+        "code": "Configured trust subject: repo:owner/course:ref:refs/heads/main\nNew job configuration: environment: production\nToken issuance: succeeded\nAzure exchange: subject mismatch"
+      }
     },
     {
       "id": "L21-Q006",
       "checkpointId": "CP2",
-      "caseId": "L21-C02",
-      "task": "remedy",
-      "caseContext": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which next change most directly satisfies the stated requirement?",
+      "question": "The repository is renamed while its production credential still trusts the previous default subject. What should federation maintenance review?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the job the required id-token permission",
-          "rationale": "OIDC token issuance needs an explicit workflow permission. This directly addresses the constraint stated in this case."
+          "text": "Only the client's existing Azure role assignments",
+          "rationale": "Role permissions cannot repair a mismatched workload identity subject during token exchange."
         },
         {
           "key": "B",
-          "text": "Match trust configuration to the actual intended subject claims",
-          "rationale": "Environment and branch contexts can produce different subjects. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only the workflow artifact expiration date",
+          "rationale": "Artifact retention does not update or validate identity federation claim matching."
         },
         {
           "key": "C",
-          "text": "Use GitHub OIDC with a matching Azure federated identity credential",
-          "rationale": "Federation exchanges a trusted short-lived assertion. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Only whether package restore succeeds",
+          "rationale": "Dependency restoration does not exercise the deployment workload's OIDC trust relationship."
+        },
+        {
+          "key": "D",
+          "text": "The exact current subject and configured trust",
+          "rationale": "Repository context is part of the default subject and can invalidate the old trust mapping."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "OIDC token issuance needs an explicit workflow permission. The selected answer is grant the job the required id-token permission.",
+      "explanation": "Role permissions cannot repair a mismatched workload identity subject during token exchange. Artifact retention does not update or validate identity federation claim matching. Dependency restoration does not exercise the deployment workload's OIDC trust relationship. Repository context is part of the default subject and can invalidate the old trust mapping.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q007",
-      "checkpointId": "CP2",
-      "caseId": "L21-C02",
-      "task": "diagnosis",
-      "caseContext": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D4.2.2"
       ],
       "difficulty": "applied",
-      "question": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The token exchange succeeds, but creating an Azure resource returns authorization denied. Which control should be checked next?",
       "options": [
         {
           "key": "A",
-          "text": "The current design relies on a reusable stored secret",
-          "rationale": "The platform supports a secretless authentication path. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "The repository's package publish permission",
+          "rationale": "Package publishing rights do not determine Azure management-plane resource authorization."
         },
         {
           "key": "B",
-          "text": "Identity identifiers do not authorize token issuance",
-          "rationale": "The workflow permission is separate from Azure configuration. This directly addresses the constraint stated in this case."
+          "text": "The identity's role assignment and target scope",
+          "rationale": "Authentication success does not grant resource permissions beyond the identity's effective authorization."
         },
         {
           "key": "C",
-          "text": "The token subject no longer matches the credential's trust",
-          "rationale": "The workflow changed its identity context. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "The GitHub OIDC issuer alone",
+          "rationale": "A successful exchange already demonstrates sufficient trust for that authentication step."
+        },
+        {
+          "key": "D",
+          "text": "The action's id-token permission alone",
+          "rationale": "Token-request permission does not independently authorize Azure resource creation operations."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The workflow permission is separate from Azure configuration. The selected answer is identity identifiers do not authorize token issuance.",
+      "explanation": "Package publishing rights do not determine Azure management-plane resource authorization. Authentication success does not grant resource permissions beyond the identity's effective authorization. A successful exchange already demonstrates sufficient trust for that authentication step. Token-request permission does not independently authorize Azure resource creation operations.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q008",
       "checkpointId": "CP2",
-      "caseId": "L21-C02",
-      "task": "verification",
-      "caseContext": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.3"
       ],
       "difficulty": "applied",
-      "question": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "An Azure Pipelines connection should use short-lived workload authentication rather than a reusable secret. Which connection capability should be evaluated?",
       "options": [
         {
           "key": "A",
-          "text": "The intended environment job authenticates while other subjects are denied",
-          "rationale": "Positive and negative tests establish the trust boundary. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Workload identity federation",
+          "rationale": "Federated service connections avoid retaining the service principal's long-lived client secret."
         },
         {
           "key": "B",
-          "text": "The trusted job obtains Azure access without a client secret",
-          "rationale": "The proof should exercise the actual token exchange. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "A service principal secret without expiration",
+          "rationale": "A perpetual reusable secret increases lifecycle exposure instead of implementing federation."
         },
         {
           "key": "C",
-          "text": "The trusted job requests an OIDC token successfully",
-          "rationale": "Issuance must work before Azure exchange can succeed. This directly addresses the constraint stated in this case."
+          "text": "A user's interactive password",
+          "rationale": "A shared human credential is not the intended pipeline workload authentication model."
+        },
+        {
+          "key": "D",
+          "text": "A stored publish profile for all resource operations",
+          "rationale": "App publishing credentials do not replace scoped Azure resource-manager workload federation."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Issuance must work before Azure exchange can succeed. The selected answer is the trusted job requests an OIDC token successfully.",
+      "explanation": "Federated service connections avoid retaining the service principal's long-lived client secret. A perpetual reusable secret increases lifecycle exposure instead of implementing federation. A shared human credential is not the intended pipeline workload authentication model. App publishing credentials do not replace scoped Azure resource-manager workload federation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L21-Q009",
       "checkpointId": "CP2",
-      "caseId": "L21-C02",
-      "task": "safeguard",
-      "caseContext": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.3"
       ],
       "difficulty": "applied",
-      "question": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A WIF service connection should be usable by only one approved release definition. Which authorization setting fits?",
       "options": [
         {
           "key": "A",
-          "text": "Do not broaden the subject merely to silence the error",
-          "rationale": "A wildcard-like shortcut could admit unintended executions. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Copy connection credentials into variable groups",
+          "rationale": "Duplicating credentials is unnecessary and does not enforce the intended consumer authorization boundary."
         },
         {
           "key": "B",
-          "text": "Restrict the federated subject audience and Azure role scope",
-          "rationale": "Token issuance alone should not authorize unrelated workflows. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Remove environment checks after enabling federation",
+          "rationale": "Federation authenticates workload identity but does not replace release approval and resource checks."
         },
         {
           "key": "C",
-          "text": "Keep unrelated token permissions minimal",
-          "rationale": "Enabling OIDC does not require broad repository write access. This directly addresses the constraint stated in this case."
+          "text": "Authorize the specific pipeline",
+          "rationale": "Connection use should be limited to explicitly approved pipeline definitions consuming its deployment authority."
+        },
+        {
+          "key": "D",
+          "text": "Grant access to every pipeline",
+          "rationale": "Organization-wide pipeline access expands use beyond the single approved release definition."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Enabling OIDC does not require broad repository write access. The selected answer is keep unrelated token permissions minimal.",
+      "explanation": "Duplicating credentials is unnecessary and does not enforce the intended consumer authorization boundary. Federation authenticates workload identity but does not replace release approval and resource checks. Connection use should be limited to explicitly approved pipeline definitions consuming its deployment authority. Organization-wide pipeline access expands use beyond the single approved release definition.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L21-Q010",
-      "checkpointId": "CP2",
-      "caseId": "L21-C02",
-      "task": "tradeoff",
-      "caseContext": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D4.2.2"
       ],
       "difficulty": "advanced",
-      "question": "Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. The team selects this remedy: \"Grant the job the required id-token permission.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A migration identity needs database schema rights while an application deployment identity must not migrate SQL. Which design preserves federation and separation of duties?",
       "options": [
         {
           "key": "A",
-          "text": "Federation requires precise trust configuration",
-          "rationale": "A mismatched claim can prevent otherwise valid deployment. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Use one broadly privileged identity for both",
+          "rationale": "A shared principal merges migration and application powers contrary to the separation requirement."
         },
         {
           "key": "B",
-          "text": "Token issuance is only one authentication stage",
-          "rationale": "Azure trust and authorization must also be correct. This directly addresses the constraint stated in this case."
+          "text": "Use two connection names pointing to the same broad principal",
+          "rationale": "Different labels do not separate the effective permissions of a shared identity."
         },
         {
           "key": "C",
-          "text": "Tight subject matching adds configuration maintenance",
-          "rationale": "Workflow context changes need coordinated trust updates. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Trust all repositories to both identities",
+          "rationale": "Broad workload trust increases access without preserving the intended release capability boundaries."
+        },
+        {
+          "key": "D",
+          "text": "Separate trusted identities and scoped protected stages",
+          "rationale": "Distinct principals and protected stages prevent app deployment authority from implying database migration authority."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Azure trust and authorization must also be correct. The selected answer is token issuance is only one authentication stage.",
+      "explanation": "A shared principal merges migration and application powers contrary to the separation requirement. Different labels do not separate the effective permissions of a shared identity. Broad workload trust increases access without preserving the intended release capability boundaries. Distinct principals and protected stages prevent app deployment authority from implying database migration authority.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"migration\":{\"stage\":\"production-database\",\"rights\":\"reviewed schema changes\"},\"application\":{\"stage\":\"production\",\"rights\":\"deploy application only\"}}"
+      }
     },
     {
       "id": "L21-Q011",
       "checkpointId": "CP2",
-      "caseId": "L21-C03",
-      "task": "remedy",
-      "caseContext": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which next change most directly satisfies the stated requirement?",
+      "question": "The GitHub federation job grants contents read and id-token write. What does id-token write itself permit?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the job the required id-token permission",
-          "rationale": "OIDC token issuance needs an explicit workflow permission. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "Reading every environment secret automatically",
+          "rationale": "Secret availability remains governed by workflow context and protected environment controls."
         },
         {
           "key": "B",
-          "text": "Match trust configuration to the actual intended subject claims",
-          "rationale": "Environment and branch contexts can produce different subjects. This directly addresses the constraint stated in this case."
+          "text": "Requesting the job's OIDC token",
+          "rationale": "The permission enables token issuance rather than automatically authorizing Azure resource operations."
         },
         {
           "key": "C",
-          "text": "Use the current service connection's documented issuer and subject",
-          "rationale": "Federation values must match the actual connection configuration. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Writing any Azure resource directly",
+          "rationale": "Azure resource writes still require a trusted exchange and scoped Azure authorization."
+        },
+        {
+          "key": "D",
+          "text": "Editing the repository's protected branch directly",
+          "rationale": "OIDC token permission does not confer source repository content write capability."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Environment and branch contexts can produce different subjects. The selected answer is match trust configuration to the actual intended subject claims.",
+      "explanation": "Secret availability remains governed by workflow context and protected environment controls. The permission enables token issuance rather than automatically authorizing Azure resource operations. Azure resource writes still require a trusted exchange and scoped Azure authorization. OIDC token permission does not confer source repository content write capability.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q012",
       "checkpointId": "CP2",
-      "caseId": "L21-C03",
-      "task": "diagnosis",
-      "caseContext": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A protected production identity must not be available to an unrelated repository's workflow. What trust boundary is most important?",
       "options": [
         {
           "key": "A",
-          "text": "Identity identifiers do not authorize token issuance",
-          "rationale": "The workflow permission is separate from Azure configuration. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "Match only the public GitHub issuer",
+          "rationale": "The issuer is shared by many workloads and cannot identify this intended repository alone."
         },
         {
           "key": "B",
-          "text": "The token subject no longer matches the credential's trust",
-          "rationale": "The workflow changed its identity context. This directly addresses the constraint stated in this case."
+          "text": "Grant fewer Azure CLI command arguments",
+          "rationale": "Command syntax does not narrow which external workloads the identity trust will accept."
         },
         {
           "key": "C",
-          "text": "Issuer behavior changes across service lifecycle updates",
-          "rationale": "Old examples may no longer describe new connections. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Match the intended repository and protected subject exactly",
+          "rationale": "The trust relationship must identify the specific approved workload rather than a broad caller set."
+        },
+        {
+          "key": "D",
+          "text": "Match only the production environment label without repository context",
+          "rationale": "An environment label alone cannot distinguish trusted production workloads from other repositories."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "The workflow changed its identity context. The selected answer is the token subject no longer matches the credential's trust.",
+      "explanation": "The issuer is shared by many workloads and cannot identify this intended repository alone. Command syntax does not narrow which external workloads the identity trust will accept. The trust relationship must identify the specific approved workload rather than a broad caller set. An environment label alone cannot distinguish trusted production workloads from other repositories.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q013",
-      "checkpointId": "CP2",
-      "caseId": "L21-C03",
-      "task": "verification",
-      "caseContext": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D4.2.2"
       ],
       "difficulty": "applied",
-      "question": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A pipeline identity cannot create its own role assignment during setup. Which bootstrap decision respects separation of privilege?",
       "options": [
         {
           "key": "A",
-          "text": "The intended environment job authenticates while other subjects are denied",
-          "rationale": "Positive and negative tests establish the trust boundary. This directly addresses the constraint stated in this case."
+          "text": "Have an authorized operator grant the reviewed narrow scope",
+          "rationale": "Initial authorization may require a privileged operator without giving the workload permanent broad rights."
         },
         {
           "key": "B",
-          "text": "The federated credential matches the connection's emitted claims",
-          "rationale": "The evidence should come from the configured service. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Grant subscription Owner permanently to the workload",
+          "rationale": "Permanent broad rights exceed the ongoing deployment task's least-privilege authorization need."
         },
         {
           "key": "C",
-          "text": "The trusted job requests an OIDC token successfully",
-          "rationale": "Issuance must work before Azure exchange can succeed. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "Skip the assignment and claim deployment is ready",
+          "rationale": "Missing required authorization means actual protected resource operations remain unverified or denied."
+        },
+        {
+          "key": "D",
+          "text": "Put an administrator password in the pipeline file",
+          "rationale": "Committed reusable credentials expose secrets rather than establishing a reviewed scoped authorization grant."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Positive and negative tests establish the trust boundary. The selected answer is the intended environment job authenticates while other subjects are denied.",
+      "explanation": "Initial authorization may require a privileged operator without giving the workload permanent broad rights. Permanent broad rights exceed the ongoing deployment task's least-privilege authorization need. Missing required authorization means actual protected resource operations remain unverified or denied. Committed reusable credentials expose secrets rather than establishing a reviewed scoped authorization grant.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L21-Q014",
       "checkpointId": "CP2",
-      "caseId": "L21-C03",
-      "task": "safeguard",
-      "caseContext": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "applied",
-      "question": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "An OIDC trust entry exists in Azure, but only a local JSON syntax check ran. What remains unverified?",
       "options": [
         {
           "key": "A",
-          "text": "Review the announced issuer retirement and migration scope",
-          "rationale": "Affected existing connections need deliberate migration planning. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Actual exchange and protected resource authorization",
+          "rationale": "A valid trust document does not exercise the provider's token validation or resource permissions."
         },
         {
           "key": "B",
-          "text": "Keep unrelated token permissions minimal",
-          "rationale": "Enabling OIDC does not require broad repository write access. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "Whether the trust document parses locally",
+          "rationale": "The local syntax check already establishes that limited document parsing result."
         },
         {
           "key": "C",
-          "text": "Do not broaden the subject merely to silence the error",
-          "rationale": "A wildcard-like shortcut could admit unintended executions. This directly addresses the constraint stated in this case."
+          "text": "Whether the workflow text contains a client ID",
+          "rationale": "Source presence does not establish successful execution or provider acceptance of that identity."
+        },
+        {
+          "key": "D",
+          "text": "Whether environment names can be written as strings",
+          "rationale": "Representing a name does not prove protected environment behavior or federation integration."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A wildcard-like shortcut could admit unintended executions. The selected answer is do not broaden the subject merely to silence the error.",
+      "explanation": "A valid trust document does not exercise the provider's token validation or resource permissions. The local syntax check already establishes that limited document parsing result. Source presence does not establish successful execution or provider acceptance of that identity. Representing a name does not prove protected environment behavior or federation integration.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q015",
       "checkpointId": "CP2",
-      "caseId": "L21-C03",
-      "task": "tradeoff",
-      "caseContext": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails.",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. The team selects this remedy: \"Match trust configuration to the actual intended subject claims.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Federation works for deployment, but a fork pull request would run on a trusted private runner with access to credential caches. Which control preserves both identity and runner boundaries?",
       "options": [
         {
           "key": "A",
-          "text": "Cloud and identity scenarios can differ",
-          "rationale": "Avoid assuming every connection uses one universal issuer. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Keep the private runner and hide the connection name",
+          "rationale": "Obscuring metadata does not prevent untrusted job code from reaching available runner capabilities."
         },
         {
           "key": "B",
-          "text": "Token issuance is only one authentication stage",
-          "rationale": "Azure trust and authorization must also be correct. That addresses a different requirement: Missing OIDC token. It does not directly resolve this case's stated constraint."
+          "text": "Grant id-token write to every pull request",
+          "rationale": "Broader token issuance does not isolate untrusted code from the privileged execution environment."
         },
         {
           "key": "C",
-          "text": "Tight subject matching adds configuration maintenance",
-          "rationale": "Workflow context changes need coordinated trust updates. This directly addresses the constraint stated in this case."
+          "text": "Replace federation with a permanent secret",
+          "rationale": "A reusable credential increases exposure rather than resolving the runner trust boundary."
+        },
+        {
+          "key": "D",
+          "text": "Separate untrusted CI from protected ephemeral deployment runners",
+          "rationale": "Federation does not make executing untrusted code on a privileged persistent runner safe."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Workflow context changes need coordinated trust updates. The selected answer is tight subject matching adds configuration maintenance.",
+      "explanation": "Obscuring metadata does not prevent untrusted job code from reaching available runner capabilities. Broader token issuance does not isolate untrusted code from the privileged execution environment. A reusable credential increases exposure rather than resolving the runner trust boundary. Federation does not make executing untrusted code on a privileged persistent runner safe.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Trusted private runner: persistent workspace; Azure CLI cache present\nProposed workload: arbitrary fork pull-request source\nDeployment protection: production environment approval"
+      }
     },
     {
       "id": "L21-Q016",
-      "checkpointId": "CP1",
-      "caseId": "L21-C04",
-      "task": "remedy",
-      "caseContext": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.1.3",
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which next change most directly satisfies the stated requirement?",
+      "question": "A federated credential uses the expected subject but an unintended audience. What should be corrected before changing Azure resource permissions?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the identity the necessary scoped secret-data access",
-          "rationale": "Authentication does not imply secret authorization. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "The test coverage threshold",
+          "rationale": "Coverage policy is unrelated to the OIDC audience accepted by the identity provider."
         },
         {
           "key": "B",
-          "text": "Match trust configuration to the actual intended subject claims",
-          "rationale": "Environment and branch contexts can produce different subjects. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "The audience in the trust configuration",
+          "rationale": "Claim mismatch must be resolved at token exchange rather than by broadening resource permissions."
         },
         {
           "key": "C",
-          "text": "Use the current service connection's documented issuer and subject",
-          "rationale": "Federation values must match the actual connection configuration. This directly addresses the constraint stated in this case."
+          "text": "The target resource's Reader assignment",
+          "rationale": "A data or management role cannot make an untrusted audience pass federation validation."
+        },
+        {
+          "key": "D",
+          "text": "The application package's output path",
+          "rationale": "Artifact layout does not determine identity token audience matching during federation."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Federation values must match the actual connection configuration. The selected answer is use the current service connection's documented issuer and subject.",
+      "explanation": "Coverage policy is unrelated to the OIDC audience accepted by the identity provider. Claim mismatch must be resolved at token exchange rather than by broadening resource permissions. A data or management role cannot make an untrusted audience pass federation validation. Artifact layout does not determine identity token audience matching during federation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L21-Q017",
       "checkpointId": "CP1",
-      "caseId": "L21-C04",
-      "task": "diagnosis",
-      "caseContext": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values.",
       "objectiveIds": [
-        "D4.1.3",
-        "D4.2.2"
+        "D4.2.2",
+        "D4.1.3"
       ],
       "difficulty": "applied",
-      "question": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which explanation best accounts for the behavior or constraint described?",
+      "question": "An old secret-based connection is retained during WIF migration for rollback. Which lifecycle control should accompany that temporary fallback?",
       "options": [
         {
           "key": "A",
-          "text": "Issuer behavior changes across service lifecycle updates",
-          "rationale": "Old examples may no longer describe new connections. This directly addresses the constraint stated in this case."
+          "text": "Authorize the fallback connection for every pipeline",
+          "rationale": "Broad use expands the credential's reach beyond the reviewed migration recovery need."
         },
         {
           "key": "B",
-          "text": "Management access and data-plane secret access differ",
-          "rationale": "A successful login cannot read every protected value. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "Explicit expiry, access limits and a removal plan",
+          "rationale": "Temporary fallback credentials still require bounded exposure and a deliberate retirement lifecycle."
         },
         {
           "key": "C",
-          "text": "The token subject no longer matches the credential's trust",
-          "rationale": "The workflow changed its identity context. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Remove all expiration and monitoring",
+          "rationale": "Unlimited fallback lifetime increases credential exposure and makes migration cleanup less reliable."
+        },
+        {
+          "key": "D",
+          "text": "Commit the fallback secret beside the new YAML",
+          "rationale": "Source publication exposes the reusable credential rather than safely preserving a limited fallback."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Old examples may no longer describe new connections. The selected answer is issuer behavior changes across service lifecycle updates.",
+      "explanation": "Broad use expands the credential's reach beyond the reviewed migration recovery need. Temporary fallback credentials still require bounded exposure and a deliberate retirement lifecycle. Unlimited fallback lifetime increases credential exposure and makes migration cleanup less reliable. Source publication exposes the reusable credential rather than safely preserving a limited fallback.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L21-Q018",
       "checkpointId": "CP1",
-      "caseId": "L21-C04",
-      "task": "verification",
-      "caseContext": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values.",
       "objectiveIds": [
-        "D4.1.3",
         "D4.2.2"
       ],
       "difficulty": "applied",
-      "question": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A deployment identity has the correct production subject, but the workflow deploys an app outside the journal-owned group. Which check should block promotion?",
       "options": [
         {
           "key": "A",
-          "text": "The federated credential matches the connection's emitted claims",
-          "rationale": "The evidence should come from the configured service. This directly addresses the constraint stated in this case."
+          "text": "Only a matching app-name prefix",
+          "rationale": "A prefix can match resources outside the exact owned group or run."
         },
         {
           "key": "B",
-          "text": "The task retrieves only the intended secret under its identity",
-          "rationale": "The test should verify both allowed and unrelated denied access. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the identity has any Contributor grant",
+          "rationale": "A grant elsewhere cannot establish that this specific app target belongs to the owned group."
         },
         {
           "key": "C",
-          "text": "The intended environment job authenticates while other subjects are denied",
-          "rationale": "Positive and negative tests establish the trust boundary. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The evidence should come from the configured service. The selected answer is the federated credential matches the connection's emitted claims.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q019",
-      "checkpointId": "CP1",
-      "caseId": "L21-C04",
-      "task": "safeguard",
-      "caseContext": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values.",
-      "objectiveIds": [
-        "D4.1.3",
-        "D4.2.2"
-      ],
-      "difficulty": "applied",
-      "question": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Do not broaden the subject merely to silence the error",
-          "rationale": "A wildcard-like shortcut could admit unintended executions. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Exact subscription, group and resource ownership assertions",
+          "rationale": "Correct workload authentication does not authorize adopting an unrelated resource target."
         },
         {
-          "key": "B",
-          "text": "Review the announced issuer retirement and migration scope",
-          "rationale": "Affected existing connections need deliberate migration planning. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Avoid granting broad vault administration as a shortcut",
-          "rationale": "The deployment only needs limited secret consumption. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Affected existing connections need deliberate migration planning. The selected answer is review the announced issuer retirement and migration scope.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q020",
-      "checkpointId": "CP1",
-      "caseId": "L21-C04",
-      "task": "tradeoff",
-      "caseContext": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values.",
-      "objectiveIds": [
-        "D4.1.3",
-        "D4.2.2"
-      ],
-      "difficulty": "advanced",
-      "question": "Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. The team selects this remedy: \"Use the current service connection's documented issuer and subject.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Tight subject matching adds configuration maintenance",
-          "rationale": "Workflow context changes need coordinated trust updates. That addresses a different requirement: Subject mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Cloud and identity scenarios can differ",
-          "rationale": "Avoid assuming every connection uses one universal issuer. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Vault access adds a runtime service dependency",
-          "rationale": "Plan for availability and bounded failure handling. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Avoid assuming every connection uses one universal issuer. The selected answer is cloud and identity scenarios can differ.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q021",
-      "checkpointId": "CP3",
-      "caseId": "L21-C05",
-      "task": "remedy",
-      "caseContext": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment.",
-      "objectiveIds": [
-        "D4.2.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Store it as a protected secure file or supported secret-store artifact",
-          "rationale": "Sensitive deployment files need controlled distribution. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Use the current service connection's documented issuer and subject",
-          "rationale": "Federation values must match the actual connection configuration. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Grant the identity the necessary scoped secret-data access",
-          "rationale": "Authentication does not imply secret authorization. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Only successful azure login output",
+          "rationale": "Authentication success alone cannot establish the deployment target's ownership boundary."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Authentication does not imply secret authorization. The selected answer is grant the identity the necessary scoped secret-data access.",
+      "explanation": "A prefix can match resources outside the exact owned group or run. A grant elsewhere cannot establish that this specific app target belongs to the owned group. Correct workload authentication does not authorize adopting an unrelated resource target. Authentication success alone cannot establish the deployment target's ownership boundary.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L21-Q019",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.2.2",
+        "D4.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "A connection is configured with WIF, and its pipeline consumer is authorized. Which additional prerequisite still affects real deployment execution?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Unlimited artifact retention as authentication",
+          "rationale": "Retention controls stored outputs rather than the agent's ability to reach protected services."
+        },
+        {
+          "key": "B",
+          "text": "An automatically inherited production environment approval",
+          "rationale": "Federation does not automatically create or exercise protected-resource approval checks."
+        },
+        {
+          "key": "C",
+          "text": "Agent routing and protected-resource access",
+          "rationale": "Federated authentication does not supply private DNS, network routing or environment approval automatically."
+        },
+        {
+          "key": "D",
+          "text": "A copied user password in every job",
+          "rationale": "WIF does not require adding a human password to enable deployment execution."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Retention controls stored outputs rather than the agent's ability to reach protected services. Federation does not automatically create or exercise protected-resource approval checks. Federated authentication does not supply private DNS, network routing or environment approval automatically. WIF does not require adding a human password to enable deployment execution.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L21-Q020",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.2.2"
+      ],
+      "difficulty": "advanced",
+      "question": "Token exchange succeeds on the protected runner, but the migration stage cannot reach private SQL and the app stage lacks schema rights by design. Which response respects both constraints?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Move migration to a public hosted runner because token exchange works",
+          "rationale": "Working token exchange does not provide that hosted runner a route to the private SQL endpoint."
+        },
+        {
+          "key": "B",
+          "text": "Treat token exchange as proof the migration passed",
+          "rationale": "Authentication success cannot establish network reachability or completed schema migration execution."
+        },
+        {
+          "key": "C",
+          "text": "Fix migration routing while keeping identities separate",
+          "rationale": "Private connectivity must be restored without broadening the app identity into a schema migrator."
+        },
+        {
+          "key": "D",
+          "text": "Run schema changes under the app identity",
+          "rationale": "That workaround breaks the explicitly required separation of deployment and database migration authority."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Private connectivity must be restored without broadening the app identity into a schema migrator. Working token exchange does not provide that hosted runner a route to the private SQL endpoint. Authentication success cannot establish network reachability or completed schema migration execution. That workaround breaks the explicitly required separation of deployment and database migration authority.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Migration WIF token exchange: passed\nPrivate SQL DNS: unresolved from current worker\nApp deployment identity: deliberately lacks schema-alter permission"
+      }
+    },
+    {
+      "id": "L21-Q021",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D4.2.1"
+      ],
+      "difficulty": "foundational",
+      "question": "An app setting should reference a Key Vault secret instead of containing plaintext. Which reference scheme should validation accept?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An HTTPS vault secret URI",
+          "rationale": "A secure vault reference identifies the secret through the protected HTTPS endpoint."
+        },
+        {
+          "key": "B",
+          "text": "An HTTP vault secret URI",
+          "rationale": "Plain HTTP does not satisfy the required secure vault-reference endpoint scheme."
+        },
+        {
+          "key": "C",
+          "text": "A plaintext secret value with the same name",
+          "rationale": "A literal value is not a reference and exposes the secret directly in configuration."
+        },
+        {
+          "key": "D",
+          "text": "A relative local filesystem path",
+          "rationale": "A local path does not identify a Key Vault secret through its service URI."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A secure vault reference identifies the secret through the protected HTTPS endpoint. Plain HTTP does not satisfy the required secure vault-reference endpoint scheme. A literal value is not a reference and exposes the secret directly in configuration. A local path does not identify a Key Vault secret through its service URI.",
+      "sourceIds": [
+        "S4"
       ]
     },
     {
       "id": "L21-Q022",
       "checkpointId": "CP3",
-      "caseId": "L21-C05",
-      "task": "diagnosis",
-      "caseContext": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment.",
       "objectiveIds": [
         "D4.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A URI's hostname begins with a valid vault name but ends with an attacker-controlled suffix. Which parser behavior is correct?",
       "options": [
         {
           "key": "A",
-          "text": "Management access and data-plane secret access differ",
-          "rationale": "A successful login cannot read every protected value. This directly addresses the constraint stated in this case."
+          "text": "Accept it if HTTPS is present",
+          "rationale": "TLS scheme alone does not establish that the hostname belongs to the expected service."
         },
         {
           "key": "B",
-          "text": "Source control makes the certificate broadly and historically available",
-          "rationale": "Repository access becomes credential access. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Accept it if the path contains secrets",
+          "rationale": "Path text cannot establish the endpoint's trusted hostname or actual vault ownership."
         },
         {
           "key": "C",
-          "text": "Issuer behavior changes across service lifecycle updates",
-          "rationale": "Old examples may no longer describe new connections. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Reject the spoofed hostname",
+          "rationale": "A suffix beyond the trusted vault domain identifies a different endpoint despite a familiar prefix."
+        },
+        {
+          "key": "D",
+          "text": "Accept any hostname containing vault.azure.net",
+          "rationale": "Substring matching can accept attacker-controlled domains that only embed the trusted text."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A successful login cannot read every protected value. The selected answer is management access and data-plane secret access differ.",
+      "explanation": "TLS scheme alone does not establish that the hostname belongs to the expected service. Path text cannot establish the endpoint's trusted hostname or actual vault ownership. A suffix beyond the trusted vault domain identifies a different endpoint despite a familiar prefix. Substring matching can accept attacker-controlled domains that only embed the trusted text.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L21-Q023",
       "checkpointId": "CP3",
-      "caseId": "L21-C05",
-      "task": "verification",
-      "caseContext": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment.",
       "objectiveIds": [
         "D4.2.1"
       ],
       "difficulty": "applied",
-      "question": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The service should follow secret rotation without changing its reference whenever a new version is published. Which URI form supports that intent?",
       "options": [
         {
           "key": "A",
-          "text": "Only the approved signing task can obtain the protected file",
-          "rationale": "The control should apply at the consuming job boundary. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "A versionless secret reference",
+          "rationale": "A versionless reference can resolve later versions after the service's refresh behavior applies."
         },
         {
           "key": "B",
-          "text": "The federated credential matches the connection's emitted claims",
-          "rationale": "The evidence should come from the configured service. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "A reference pinned to one version",
+          "rationale": "A version identifier deliberately keeps selecting that version until configuration is changed."
         },
         {
           "key": "C",
-          "text": "The task retrieves only the intended secret under its identity",
-          "rationale": "The test should verify both allowed and unrelated denied access. This directly addresses the constraint stated in this case."
+          "text": "The current secret's plaintext value",
+          "rationale": "A copied value does not automatically follow rotation through a vault reference."
+        },
+        {
+          "key": "D",
+          "text": "A URI pointing to a specific old backup file",
+          "rationale": "A backup path is not the live versionless vault secret resolution contract."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The test should verify both allowed and unrelated denied access. The selected answer is the task retrieves only the intended secret under its identity.",
+      "explanation": "A versionless reference can resolve later versions after the service's refresh behavior applies. A version identifier deliberately keeps selecting that version until configuration is changed. A copied value does not automatically follow rotation through a vault reference. A backup path is not the live versionless vault secret resolution contract.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L21-Q024",
       "checkpointId": "CP3",
-      "caseId": "L21-C05",
-      "task": "safeguard",
-      "caseContext": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment.",
       "objectiveIds": [
         "D4.2.1"
       ],
       "difficulty": "applied",
-      "question": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A deployment must retain one tested secret version until a reviewed configuration update. Which reference form meets that requirement?",
       "options": [
         {
           "key": "A",
-          "text": "Review the announced issuer retirement and migration scope",
-          "rationale": "Affected existing connections need deliberate migration planning. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "A version-pinned secret URI",
+          "rationale": "An explicit version selects the tested secret value until the reference itself is updated."
         },
         {
           "key": "B",
-          "text": "Avoid granting broad vault administration as a shortcut",
-          "rationale": "The deployment only needs limited secret consumption. This directly addresses the constraint stated in this case."
+          "text": "A versionless secret URI",
+          "rationale": "Versionless resolution can adopt a later secret version after the service refreshes."
         },
         {
           "key": "C",
-          "text": "Delete temporary local copies after the supported task lifecycle",
-          "rationale": "Worker files can outlive the immediate process. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "A URI without a secret name",
+          "rationale": "Without the secret identifier the reference cannot select the required tested secret."
+        },
+        {
+          "key": "D",
+          "text": "A reference copied from another environment's vault",
+          "rationale": "An unrelated vault does not preserve this deployment's reviewed tested secret version."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The deployment only needs limited secret consumption. The selected answer is avoid granting broad vault administration as a shortcut.",
+      "explanation": "An explicit version selects the tested secret value until the reference itself is updated. Versionless resolution can adopt a later secret version after the service refreshes. Without the secret identifier the reference cannot select the required tested secret. An unrelated vault does not preserve this deployment's reviewed tested secret version.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L21-Q025",
       "checkpointId": "CP3",
-      "caseId": "L21-C05",
-      "task": "tradeoff",
-      "caseContext": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment.",
       "objectiveIds": [
         "D4.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. The team selects this remedy: \"Grant the identity the necessary scoped secret-data access.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Rotation publishes a new secret version, but the app intentionally pins the old tested version. Which update preserves controlled adoption while acknowledging service refresh behavior?",
       "options": [
         {
           "key": "A",
-          "text": "Cloud and identity scenarios can differ",
-          "rationale": "Avoid assuming every connection uses one universal issuer. That addresses a different requirement: Legacy issuer. It does not directly resolve this case's stated constraint."
+          "text": "Wait indefinitely for the pinned URI to select latest",
+          "rationale": "Pinning selects a specific version rather than requesting automatic latest-version resolution."
         },
         {
           "key": "B",
-          "text": "Vault access adds a runtime service dependency",
-          "rationale": "Plan for availability and bounded failure handling. This directly addresses the constraint stated in this case."
+          "text": "Change only the app role assignment while keeping the pinned URI",
+          "rationale": "Authorization changes do not select a different secret version from the explicitly pinned reference."
         },
         {
           "key": "C",
-          "text": "Secure storage still needs certificate lifecycle management",
-          "rationale": "Expiry revocation and ownership remain operational responsibilities. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Refresh the reference without changing the pinned version",
+          "rationale": "Refreshing retrieves the selected version again; it does not adopt a different version while pinning remains."
+        },
+        {
+          "key": "D",
+          "text": "Review the new version and update the pinned reference explicitly",
+          "rationale": "Pinned references do not automatically advance, so rotation adoption needs a reviewed configuration change."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Plan for availability and bounded failure handling. The selected answer is vault access adds a runtime service dependency.",
+      "explanation": "Pinned references do not automatically advance, so rotation adoption needs a reviewed configuration change. Pinning selects a specific version rather than requesting automatic latest-version resolution. Authorization changes do not select a different secret version from the explicitly pinned reference. Refreshing retrieves the selected version again; it does not adopt a different version while pinning remains.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Configured URI: https://training.vault.azure.net/secrets/signing-key/version-a\nVault now contains: version-a, version-b\nPolicy: reviewed adoption only; no plaintext configuration"
+      }
     },
     {
       "id": "L21-Q026",
-      "checkpointId": "CP4",
-      "caseId": "L21-C06",
-      "task": "remedy",
-      "caseContext": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.2.3"
+        "D4.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which next change most directly satisfies the stated requirement?",
+      "question": "The local reference parser accepts a valid HTTPS URI but never contacts Key Vault. Which conclusion is justified?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the identity the necessary scoped secret-data access",
-          "rationale": "Authentication does not imply secret authorization. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "Secret value successfully retrieved from the vault",
+          "rationale": "No service call ran to obtain the actual protected secret value."
         },
         {
           "key": "B",
-          "text": "Store it as a protected secure file or supported secret-store artifact",
-          "rationale": "Sensitive deployment files need controlled distribution. This directly addresses the constraint stated in this case."
+          "text": "Application rotation behavior fully verified",
+          "rationale": "A local parser cannot observe the application's cached secret resolution and refresh behavior."
         },
         {
           "key": "C",
-          "text": "Stop emitting secret-derived material to logs",
-          "rationale": "Transformation does not make a credential safe to disclose. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Vault access granted to the app automatically",
+          "rationale": "Syntax acceptance does not create the managed identity's required data-access role assignment."
+        },
+        {
+          "key": "D",
+          "text": "Reference syntax accepted; live resolution unverified",
+          "rationale": "Parsing a URI does not exercise vault identity authorization, networking or secret retrieval."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Sensitive deployment files need controlled distribution. The selected answer is store it as a protected secure file or supported secret-store artifact.",
+      "explanation": "No service call ran to obtain the actual protected secret value. A local parser cannot observe the application's cached secret resolution and refresh behavior. Syntax acceptance does not create the managed identity's required data-access role assignment. Parsing a URI does not exercise vault identity authorization, networking or secret retrieval.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L21-Q027",
-      "checkpointId": "CP4",
-      "caseId": "L21-C06",
-      "task": "diagnosis",
-      "caseContext": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.2.3"
+        "D4.2.1"
       ],
       "difficulty": "applied",
-      "question": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The app has a valid secret URI but no managed identity permission to read the secret. Which change addresses actual resolution authorization?",
       "options": [
         {
           "key": "A",
-          "text": "Management access and data-plane secret access differ",
-          "rationale": "A successful login cannot read every protected value. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "Change HTTPS to HTTP",
+          "rationale": "Weakening transport does not supply the missing vault data-access authorization."
         },
         {
           "key": "B",
-          "text": "Source control makes the certificate broadly and historically available",
-          "rationale": "Repository access becomes credential access. This directly addresses the constraint stated in this case."
+          "text": "Append the secret value to the URI",
+          "rationale": "Putting secret contents in configuration exposes sensitive data without repairing identity authorization."
         },
         {
           "key": "C",
-          "text": "Masking may not recognize derived or partial values",
-          "rationale": "Output hygiene cannot depend solely on exact-value masking. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Give the pipeline repository write permission",
+          "rationale": "Repository permissions do not determine the app identity's Key Vault secret access."
+        },
+        {
+          "key": "D",
+          "text": "Grant the intended identity narrow secret-read access",
+          "rationale": "Reference syntax does not independently authorize the application's principal to retrieve secret contents."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Repository access becomes credential access. The selected answer is source control makes the certificate broadly and historically available.",
+      "explanation": "Weakening transport does not supply the missing vault data-access authorization. Putting secret contents in configuration exposes sensitive data without repairing identity authorization. Repository permissions do not determine the app identity's Key Vault secret access. Reference syntax does not independently authorize the application's principal to retrieve secret contents.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L21-Q028",
-      "checkpointId": "CP4",
-      "caseId": "L21-C06",
-      "task": "verification",
-      "caseContext": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.2.3"
+        "D4.2.1"
       ],
       "difficulty": "applied",
-      "question": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A versionless reference points to the correct vault, but a new secret version is not visible immediately. What should operations consider before declaring rotation broken?",
       "options": [
         {
           "key": "A",
-          "text": "Logs contain no raw transformed or partial sensitive value",
-          "rationale": "Validation must inspect the actual emitted diagnostics. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "The service's documented cache and refresh behavior",
+          "rationale": "Versionless resolution can follow rotation after the application's reference refresh behavior occurs."
         },
         {
           "key": "B",
-          "text": "The task retrieves only the intended secret under its identity",
-          "rationale": "The test should verify both allowed and unrelated denied access. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
+          "text": "Versionless always means permanent first-version pinning",
+          "rationale": "A versionless reference does not deliberately select one immutable secret version."
         },
         {
           "key": "C",
-          "text": "Only the approved signing task can obtain the protected file",
-          "rationale": "The control should apply at the consuming job boundary. This directly addresses the constraint stated in this case."
+          "text": "Every cached value proves the new version is absent",
+          "rationale": "Delayed application refresh does not establish that the vault lacks the rotated version."
+        },
+        {
+          "key": "D",
+          "text": "Changing repository roles forces immediate vault refresh",
+          "rationale": "Repository roles do not control the application's secret-reference cache lifecycle."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Versionless resolution can follow rotation after the application's reference refresh behavior occurs. A versionless reference does not deliberately select one immutable secret version. Delayed application refresh does not establish that the vault lacks the rotated version. Repository roles do not control the application's secret-reference cache lifecycle.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L21-Q029",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D4.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "A secret URI passes syntax checks but private endpoint DNS fails on the app's network. Which prerequisite still needs validation?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Runtime network path to the vault",
+          "rationale": "A valid reference cannot resolve a secret without working service DNS and connectivity."
+        },
+        {
+          "key": "B",
+          "text": "Only the local URI parser's regex",
+          "rationale": "Parsing does not exercise the application's private DNS or vault routing path."
+        },
+        {
+          "key": "C",
+          "text": "Only the secret reference's version-pinning format",
+          "rationale": "Version selection syntax cannot establish private DNS resolution or the app's vault routing path."
+        },
+        {
+          "key": "D",
+          "text": "Only the secret name's letter case in documentation",
+          "rationale": "Documentation labels do not repair the runtime network path to the protected endpoint."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A valid reference cannot resolve a secret without working service DNS and connectivity. Parsing does not exercise the application's private DNS or vault routing path. Version selection syntax cannot establish private DNS resolution or the app's vault routing path. Documentation labels do not repair the runtime network path to the protected endpoint.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L21-Q030",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D4.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Two references are accepted locally, one versioned and one versionless, but no identity exchange or service reads occurred. Which evidence fields avoid overstating coverage?",
+      "options": [
+        {
+          "key": "A",
+          "text": "providerAuthorizationVerified true after parsing",
+          "rationale": "Authorization requires actual provider evidence beyond local reference structure validation."
+        },
+        {
+          "key": "B",
+          "text": "rotationPassed true after inspecting the URI",
+          "rationale": "Reference inspection cannot demonstrate version refresh behavior in the deployed application."
+        },
+        {
+          "key": "C",
+          "text": "fixtureOnly true and resolvedLive false",
+          "rationale": "Explicit limits distinguish demonstrated URI validation from unexecuted provider secret-resolution integration."
+        },
+        {
+          "key": "D",
+          "text": "resolvedLive true whenever HTTPS is present",
+          "rationale": "HTTPS syntax alone does not prove the app authenticated and retrieved the vault secret."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The control should apply at the consuming job boundary. The selected answer is only the approved signing task can obtain the protected file.",
+      "explanation": "Authorization requires actual provider evidence beyond local reference structure validation. Reference inspection cannot demonstrate version refresh behavior in the deployed application. Explicit limits distinguish demonstrated URI validation from unexecuted provider secret-resolution integration. HTTPS syntax alone does not prove the app authenticated and retrieved the vault secret.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q029",
-      "checkpointId": "CP4",
-      "caseId": "L21-C06",
-      "task": "safeguard",
-      "caseContext": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization.",
-      "objectiveIds": [
-        "D4.2.3"
+        "S4"
       ],
-      "difficulty": "applied",
-      "question": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Delete temporary local copies after the supported task lifecycle",
-          "rationale": "Worker files can outlive the immediate process. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Use synthetic secrets during deliberate leakage tests",
-          "rationale": "Testing should not expose a live credential. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Avoid granting broad vault administration as a shortcut",
-          "rationale": "The deployment only needs limited secret consumption. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Worker files can outlive the immediate process. The selected answer is delete temporary local copies after the supported task lifecycle.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q030",
-      "checkpointId": "CP4",
-      "caseId": "L21-C06",
-      "task": "tradeoff",
-      "caseContext": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization.",
-      "objectiveIds": [
-        "D4.2.3"
-      ],
-      "difficulty": "advanced",
-      "question": "Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. The team selects this remedy: \"Store it as a protected secure file or supported secret-store artifact.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Secure storage still needs certificate lifecycle management",
-          "rationale": "Expiry revocation and ownership remain operational responsibilities. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Masking is a defensive aid with limitations",
-          "rationale": "Design diagnostics to avoid secret-bearing content. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Vault access adds a runtime service dependency",
-          "rationale": "Plan for availability and bounded failure handling. That addresses a different requirement: Key Vault denial. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Expiry revocation and ownership remain operational responsibilities. The selected answer is secure storage still needs certificate lifecycle management.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+      "exhibit": {
+        "language": "json",
+        "code": "{\"accepted\":2,\"rejected\":3,\"versioned\":1,\"fixtureOnly\":true,\"resolvedLive\":false}"
+      }
     },
     {
       "id": "L21-Q031",
-      "checkpointId": "CP5",
-      "caseId": "L21-C07",
-      "task": "remedy",
-      "caseContext": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.4"
+        "D4.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which next change most directly satisfies the stated requirement?",
+      "question": "A pipeline needs a signing certificate as a protected file rather than source-controlled contents. Which Azure Pipelines facility fits?",
       "options": [
         {
           "key": "A",
-          "text": "Store it as a protected secure file or supported secret-store artifact",
-          "rationale": "Sensitive deployment files need controlled distribution. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Secure files with authorized pipeline access",
+          "rationale": "Secure files provide protected storage and controlled use of file-based sensitive material."
         },
         {
           "key": "B",
-          "text": "Stop emitting secret-derived material to logs",
-          "rationale": "Transformation does not make a credential safe to disclose. This directly addresses the constraint stated in this case."
+          "text": "A normal repository source file",
+          "rationale": "Committed file contents become part of shared history and do not provide protected-file storage."
         },
         {
           "key": "C",
-          "text": "Align version selection and consumers with the rotation plan",
-          "rationale": "Rotation must update the value the application actually reads. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "A public pipeline artifact containing the key",
+          "rationale": "Publishing key material exposes it beyond the intended protected consumption boundary."
+        },
+        {
+          "key": "D",
+          "text": "A plain-text variable containing the complete binary",
+          "rationale": "Variable storage is not the intended protected file lifecycle for a signing certificate."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Transformation does not make a credential safe to disclose. The selected answer is stop emitting secret-derived material to logs.",
+      "explanation": "Secure files provide protected storage and controlled use of file-based sensitive material. Committed file contents become part of shared history and do not provide protected-file storage. Publishing key material exposes it beyond the intended protected consumption boundary. Variable storage is not the intended protected file lifecycle for a signing certificate.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q032",
-      "checkpointId": "CP5",
-      "caseId": "L21-C07",
-      "task": "diagnosis",
-      "caseContext": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.4"
+        "D4.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A secure file exists in Library, but a pipeline cannot use it. Which control should be checked before copying it elsewhere?",
       "options": [
         {
           "key": "A",
-          "text": "Source control makes the certificate broadly and historically available",
-          "rationale": "Repository access becomes credential access. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the agent has extra disk space",
+          "rationale": "Available storage does not establish the pipeline's protected-file authorization or approval status."
         },
         {
           "key": "B",
-          "text": "Masking may not recognize derived or partial values",
-          "rationale": "Output hygiene cannot depend solely on exact-value masking. This directly addresses the constraint stated in this case."
+          "text": "The file's authorized pipelines and approvals",
+          "rationale": "Secure-file existence does not imply every pipeline has permission to download and consume it."
         },
         {
           "key": "C",
-          "text": "The consumer is still bound to an obsolete secret version",
-          "rationale": "Changing the latest value does not alter an explicit old reference. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Only the repository's default branch name",
+          "rationale": "Branch naming alone does not authorize access to the protected Library file."
+        },
+        {
+          "key": "D",
+          "text": "Only the artifact's retention setting",
+          "rationale": "Artifact retention does not grant access to a secure file stored in Library."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Output hygiene cannot depend solely on exact-value masking. The selected answer is masking may not recognize derived or partial values.",
+      "explanation": "Available storage does not establish the pipeline's protected-file authorization or approval status. Secure-file existence does not imply every pipeline has permission to download and consume it. Branch naming alone does not authorize access to the protected Library file. Artifact retention does not grant access to a secure file stored in Library.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q033",
-      "checkpointId": "CP5",
-      "caseId": "L21-C07",
-      "task": "verification",
-      "caseContext": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.4"
+        "D4.2.3"
       ],
       "difficulty": "applied",
-      "question": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The signing step downloads a private file into the agent workspace. When should the script remove its temporary working copy?",
       "options": [
         {
           "key": "A",
-          "text": "Only the approved signing task can obtain the protected file",
-          "rationale": "The control should apply at the consuming job boundary. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Only during the next unrelated pipeline run",
+          "rationale": "Delayed removal leaves material accessible beyond its intended consumption lifetime."
         },
         {
           "key": "B",
-          "text": "Logs contain no raw transformed or partial sensitive value",
-          "rationale": "Validation must inspect the actual emitted diagnostics. This directly addresses the constraint stated in this case."
+          "text": "Never because Library is encrypted",
+          "rationale": "Protected service storage does not eliminate exposure from a downloaded agent-side copy."
         },
         {
           "key": "C",
-          "text": "The consumer retrieves the intended valid version",
-          "rationale": "The evidence must identify the effective version without revealing it. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "In guaranteed cleanup after consumption",
+          "rationale": "Temporary sensitive material needs removal even when its consuming operation fails."
+        },
+        {
+          "key": "D",
+          "text": "Only after a fully successful release",
+          "rationale": "Failure paths would retain the temporary sensitive file when cleanup is success-only."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Validation must inspect the actual emitted diagnostics. The selected answer is logs contain no raw transformed or partial sensitive value.",
+      "explanation": "Delayed removal leaves material accessible beyond its intended consumption lifetime. Protected service storage does not eliminate exposure from a downloaded agent-side copy. Temporary sensitive material needs removal even when its consuming operation fails. Failure paths would retain the temporary sensitive file when cleanup is success-only.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q034",
-      "checkpointId": "CP5",
-      "caseId": "L21-C07",
-      "task": "safeguard",
-      "caseContext": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.4"
+        "D4.2.3"
       ],
       "difficulty": "applied",
-      "question": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A synthetic secure-file fixture verifies a hash before consumption. What does the hash check establish?",
       "options": [
         {
           "key": "A",
-          "text": "Delete temporary local copies after the supported task lifecycle",
-          "rationale": "Worker files can outlive the immediate process. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "The file's private key cannot be copied",
+          "rationale": "A matching digest does not establish that other processes could not access the material."
         },
         {
           "key": "B",
-          "text": "Use synthetic secrets during deliberate leakage tests",
-          "rationale": "Testing should not expose a live credential. This directly addresses the constraint stated in this case."
+          "text": "The consumed bytes match the expected fixture",
+          "rationale": "An expected digest detects changed file contents without printing the material itself."
         },
         {
           "key": "C",
-          "text": "Coordinate overlap and rollback before invalidating the old credential",
-          "rationale": "Abrupt rotation can break dependent systems. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "The pipeline is authorized in Azure DevOps",
+          "rationale": "Local integrity verification does not exercise Library access controls or provider authorization."
+        },
+        {
+          "key": "D",
+          "text": "The file was never present on disk",
+          "rationale": "Hashing generally observes file bytes and does not prove absence from the filesystem."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Testing should not expose a live credential. The selected answer is use synthetic secrets during deliberate leakage tests.",
+      "explanation": "A matching digest does not establish that other processes could not access the material. An expected digest detects changed file contents without printing the material itself. Local integrity verification does not exercise Library access controls or provider authorization. Hashing generally observes file bytes and does not prove absence from the filesystem.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q035",
-      "checkpointId": "CP5",
-      "caseId": "L21-C07",
-      "task": "tradeoff",
-      "caseContext": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.4"
+        "D4.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. The team selects this remedy: \"Stop emitting secret-derived material to logs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The consumer throws after reading the temporary signing file. What implementation ensures cleanup still runs while preserving the failure?",
       "options": [
         {
           "key": "A",
-          "text": "Secure storage still needs certificate lifecycle management",
-          "rationale": "Expiry revocation and ownership remain operational responsibilities. That addresses a different requirement: Secure file spread. It does not directly resolve this case's stated constraint."
+          "text": "Delete only after the consumer returns normally",
+          "rationale": "Normal-return cleanup does not execute when the consuming operation throws an exception."
         },
         {
           "key": "B",
-          "text": "Masking is a defensive aid with limitations",
-          "rationale": "Design diagnostics to avoid secret-bearing content. This directly addresses the constraint stated in this case."
+          "text": "Catch the error and report a successful signing result",
+          "rationale": "Suppressing failure misrepresents the signing outcome even if temporary material is removed."
         },
         {
           "key": "C",
-          "text": "Version pinning improves determinism but needs planned updates",
-          "rationale": "Automatic latest resolution has a different freshness tradeoff. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Leave the file for a future agent job",
+          "rationale": "Future cleanup extends exposure and depends on unrelated work executing correctly."
+        },
+        {
+          "key": "D",
+          "text": "Remove the file in finally and retain the error",
+          "rationale": "Guaranteed cleanup must execute on both success and failure without converting failure into success."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Design diagnostics to avoid secret-bearing content. The selected answer is masking is a defensive aid with limitations.",
+      "explanation": "Normal-return cleanup does not execute when the consuming operation throws an exception. Suppressing failure misrepresents the signing outcome even if temporary material is removed. Future cleanup extends exposure and depends on unrelated work executing correctly. Guaranteed cleanup must execute on both success and failure without converting failure into success.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "powershell",
+        "code": "try {\n  $bytes = Get-Content -LiteralPath $temporaryFile -AsByteStream\n  Invoke-SigningConsumer $bytes # throws\n}\nfinally { Remove-Item -LiteralPath $temporaryFile }"
+      }
     },
     {
       "id": "L21-Q036",
-      "checkpointId": "CP3",
-      "caseId": "L21-C08",
-      "task": "remedy",
-      "caseContext": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.1"
+        "D4.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which next change most directly satisfies the stated requirement?",
+      "question": "The local fixture consumes harmless input and deletes it on normal and failing paths. Which provider capability remains unverified?",
       "options": [
         {
           "key": "A",
-          "text": "Align version selection and consumers with the rotation plan",
-          "rationale": "Rotation must update the value the application actually reads. This directly addresses the constraint stated in this case."
+          "text": "Azure DevOps secure-file authorization and delivery",
+          "rationale": "Local file lifetime checks do not exercise protected Library permissions or remote download behavior."
         },
         {
           "key": "B",
-          "text": "Pass secrets only to a trusted deployment path",
-          "rationale": "Credential distribution should follow the execution trust boundary. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Whether finally executes after the injected failure",
+          "rationale": "The failing-path cleanup evidence directly demonstrates that local lifecycle behavior."
         },
         {
           "key": "C",
-          "text": "Stop emitting secret-derived material to logs",
-          "rationale": "Transformation does not make a credential safe to disclose. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Whether the expected harmless bytes were hash-checked",
+          "rationale": "The fixture records its local integrity and consumption observations for those test bytes."
+        },
+        {
+          "key": "D",
+          "text": "Whether the temporary local copy was removed",
+          "rationale": "The residual search and fixture results directly inspect removal of that local copy."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Rotation must update the value the application actually reads. The selected answer is align version selection and consumers with the rotation plan.",
+      "explanation": "Local file lifetime checks do not exercise protected Library permissions or remote download behavior. The failing-path cleanup evidence directly demonstrates that local lifecycle behavior. The fixture records its local integrity and consumption observations for those test bytes. The residual search and fixture results directly inspect removal of that local copy.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q037",
-      "checkpointId": "CP3",
-      "caseId": "L21-C08",
-      "task": "diagnosis",
-      "caseContext": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.1"
+        "D4.2.3"
       ],
       "difficulty": "applied",
-      "question": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A script emits the complete downloaded certificate bytes for troubleshooting. What diagnostic alternative reduces unnecessary disclosure?",
       "options": [
         {
           "key": "A",
-          "text": "The consumer is still bound to an obsolete secret version",
-          "rationale": "Changing the latest value does not alter an explicit old reference. This directly addresses the constraint stated in this case."
+          "text": "Print contents only after failure",
+          "rationale": "Failed-job logs still expose sensitive material to their viewers and retained artifacts."
         },
         {
           "key": "B",
-          "text": "Broad inheritance gives untrusted code sensitive capabilities",
-          "rationale": "A reusable interface does not make callers trustworthy. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Store contents inside the evidence JSON",
+          "rationale": "Moving contents to an artifact preserves the same unnecessary disclosure risk."
         },
         {
           "key": "C",
-          "text": "Masking may not recognize derived or partial values",
-          "rationale": "Output hygiene cannot depend solely on exact-value masking. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Record digest and lifecycle status without contents",
+          "rationale": "Integrity and cleanup metadata can support diagnosis without exposing sensitive file material."
+        },
+        {
+          "key": "D",
+          "text": "Encode bytes as Base64 in logs",
+          "rationale": "Reversible encoding still discloses the complete certificate material to log readers."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Changing the latest value does not alter an explicit old reference. The selected answer is the consumer is still bound to an obsolete secret version.",
+      "explanation": "Failed-job logs still expose sensitive material to their viewers and retained artifacts. Moving contents to an artifact preserves the same unnecessary disclosure risk. Integrity and cleanup metadata can support diagnosis without exposing sensitive file material. Reversible encoding still discloses the complete certificate material to log readers.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q038",
-      "checkpointId": "CP3",
-      "caseId": "L21-C08",
-      "task": "verification",
-      "caseContext": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.1"
+        "D4.2.3"
       ],
       "difficulty": "applied",
-      "question": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The agent directory is reused between jobs and a temporary secure-file copy remains. Which response should the lifecycle require?",
       "options": [
         {
           "key": "A",
-          "text": "Logs contain no raw transformed or partial sensitive value",
-          "rationale": "Validation must inspect the actual emitted diagnostics. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Pass because the signing step succeeded",
+          "rationale": "Functional signing success does not establish that temporary sensitive material was removed."
         },
         {
           "key": "B",
-          "text": "The consumer retrieves the intended valid version",
-          "rationale": "The evidence must identify the effective version without revealing it. This directly addresses the constraint stated in this case."
+          "text": "Delete every file across the agent's home",
+          "rationale": "Broad deletion exceeds the exact owned residual and risks unrelated credentials or configuration."
         },
         {
           "key": "C",
-          "text": "Untrusted tests cannot read the deployment credential",
-          "rationale": "The negative test should verify actual isolation. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Hide the directory listing from evidence",
+          "rationale": "Suppressing observation does not eliminate the remaining sensitive material or its exposure."
+        },
+        {
+          "key": "D",
+          "text": "Fail cleanup validation and remove the exact owned residual",
+          "rationale": "Residual sensitive files violate the intended consumption lifetime and need explicit targeted cleanup."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The evidence must identify the effective version without revealing it. The selected answer is the consumer retrieves the intended valid version.",
+      "explanation": "Functional signing success does not establish that temporary sensitive material was removed. Broad deletion exceeds the exact owned residual and risks unrelated credentials or configuration. Suppressing observation does not eliminate the remaining sensitive material or its exposure. Residual sensitive files violate the intended consumption lifetime and need explicit targeted cleanup.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q039",
-      "checkpointId": "CP3",
-      "caseId": "L21-C08",
-      "task": "safeguard",
-      "caseContext": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.1"
+        "D4.2.3"
       ],
       "difficulty": "applied",
-      "question": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team wants a real private key for the local lifecycle exercise. Which choice provides meaningful test coverage without unnecessary secret handling?",
       "options": [
         {
           "key": "A",
-          "text": "Use synthetic secrets during deliberate leakage tests",
-          "rationale": "Testing should not expose a live credential. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Report provider authorization from a local file read",
+          "rationale": "Local filesystem access does not establish Azure DevOps Library authorization or delivery."
         },
         {
           "key": "B",
-          "text": "Coordinate overlap and rollback before invalidating the old credential",
-          "rationale": "Abrupt rotation can break dependent systems. This directly addresses the constraint stated in this case."
+          "text": "Use a harmless synthetic file with the same lifecycle",
+          "rationale": "Synthetic material exercises hashing, consumption and guaranteed removal without introducing a real credential."
         },
         {
           "key": "C",
-          "text": "Review reusable-workflow caller permissions and secret propagation",
-          "rationale": "Nested execution can broaden exposure unexpectedly. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Use the production signing key and print it",
+          "rationale": "Real key exposure is unnecessary for demonstrating the local temporary-file lifetime behavior."
+        },
+        {
+          "key": "D",
+          "text": "Skip the failure path because input is synthetic",
+          "rationale": "Failure cleanup remains important regardless of whether the fixture contains a real credential."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Abrupt rotation can break dependent systems. The selected answer is coordinate overlap and rollback before invalidating the old credential.",
+      "explanation": "Local filesystem access does not establish Azure DevOps Library authorization or delivery. Synthetic material exercises hashing, consumption and guaranteed removal without introducing a real credential. Real key exposure is unnecessary for demonstrating the local temporary-file lifetime behavior. Failure cleanup remains important regardless of whether the fixture contains a real credential.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L21-Q040",
-      "checkpointId": "CP3",
-      "caseId": "L21-C08",
-      "task": "tradeoff",
-      "caseContext": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.2.1"
+        "D4.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. The team selects this remedy: \"Align version selection and consumers with the rotation plan.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Secure-file access is correctly authorized, but the consuming tool fails after opening it on a persistent agent. Which evidence is required before reporting safe consumption?",
       "options": [
         {
           "key": "A",
-          "text": "Masking is a defensive aid with limitations",
-          "rationale": "Design diagnostics to avoid secret-bearing content. That addresses a different requirement: Transformed secret. It does not directly resolve this case's stated constraint."
+          "text": "Only the Library authorization record",
+          "rationale": "Provider permission evidence does not prove temporary agent files were removed after consumer failure."
         },
         {
           "key": "B",
-          "text": "Version pinning improves determinism but needs planned updates",
-          "rationale": "Automatic latest resolution has a different freshness tradeoff. This directly addresses the constraint stated in this case."
+          "text": "Only the consumer's stdout",
+          "rationale": "Tool output alone may not establish failure handling or exact filesystem residual cleanup."
         },
         {
           "key": "C",
-          "text": "Selective secret passing requires clearer interfaces",
-          "rationale": "The extra configuration supports least privilege. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Only a passing hash check before execution",
+          "rationale": "Preconsumption integrity does not establish cleanup after a later tool failure."
+        },
+        {
+          "key": "D",
+          "text": "Both the original failure and verified temporary-file removal",
+          "rationale": "Authorization success does not remove the obligation to preserve failures and clean downloaded material."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Automatic latest resolution has a different freshness tradeoff. The selected answer is version pinning improves determinism but needs planned updates.",
+      "explanation": "Provider permission evidence does not prove temporary agent files were removed after consumer failure. Tool output alone may not establish failure handling or exact filesystem residual cleanup. Preconsumption integrity does not establish cleanup after a later tool failure. Authorization success does not remove the obligation to preserve failures and clean downloaded material.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"libraryAuthorized\":true,\"consumerOpenedFile\":true,\"consumerFailed\":true,\"temporaryFileExists\":true}"
+      }
     },
     {
       "id": "L21-Q041",
       "checkpointId": "CP5",
-      "caseId": "L21-C09",
-      "task": "remedy",
-      "caseContext": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request.",
       "objectiveIds": [
-        "D4.1.2",
         "D4.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which next change most directly satisfies the stated requirement?",
+      "question": "A pipeline needs a secret value during one step but currently prints its environment for debugging. Which logging change should be made?",
       "options": [
         {
           "key": "A",
-          "text": "Pass secrets only to a trusted deployment path",
-          "rationale": "Credential distribution should follow the execution trust boundary. This directly addresses the constraint stated in this case."
+          "text": "Rely only on masking every possible transformation",
+          "rationale": "Masking cannot guarantee coverage of encoded, split or derived secret representations."
         },
         {
           "key": "B",
-          "text": "Assign the necessary narrow Azure resource role",
-          "rationale": "Authentication and resource authorization are separate decisions. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "Print secrets only in pull requests",
+          "rationale": "Untrusted contexts and retained logs still create secret disclosure risk."
         },
         {
           "key": "C",
-          "text": "Align version selection and consumers with the rotation plan",
-          "rationale": "Rotation must update the value the application actually reads. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Move the dump into a downloadable artifact",
+          "rationale": "Artifact storage does not make unnecessary credential disclosure safe or appropriately scoped."
+        },
+        {
+          "key": "D",
+          "text": "Remove broad environment dumps and log safe metadata",
+          "rationale": "Environment dumps can disclose credentials beyond what the troubleshooting task requires."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Credential distribution should follow the execution trust boundary. The selected answer is pass secrets only to a trusted deployment path.",
+      "explanation": "Masking cannot guarantee coverage of encoded, split or derived secret representations. Untrusted contexts and retained logs still create secret disclosure risk. Artifact storage does not make unnecessary credential disclosure safe or appropriately scoped. Environment dumps can disclose credentials beyond what the troubleshooting task requires.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q042",
       "checkpointId": "CP5",
-      "caseId": "L21-C09",
-      "task": "diagnosis",
-      "caseContext": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request.",
       "objectiveIds": [
-        "D4.1.2",
         "D4.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A leaked credential is found in a committed file and is still valid. What should happen before treating Git history cleanup as sufficient?",
       "options": [
         {
           "key": "A",
-          "text": "Broad inheritance gives untrusted code sensitive capabilities",
-          "rationale": "A reusable interface does not make callers trustworthy. This directly addresses the constraint stated in this case."
+          "text": "Rewrite history and leave the credential valid",
+          "rationale": "History cleanup cannot revoke credential copies retained by other systems or users."
         },
         {
           "key": "B",
-          "text": "A valid token does not carry unlimited Azure permissions",
-          "rationale": "The identity still needs a role assignment. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "Rename the file containing the credential",
+          "rationale": "Renaming preserves the exposed value and does not change its effective access."
         },
         {
           "key": "C",
-          "text": "The consumer is still bound to an obsolete secret version",
-          "rationale": "Changing the latest value does not alter an explicit old reference. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Add the file to gitignore only",
+          "rationale": "Ignore rules do not remove tracked history or invalidate the exposed credential."
+        },
+        {
+          "key": "D",
+          "text": "Revoke or rotate the credential promptly",
+          "rationale": "Removing source references does not invalidate copies already obtained from logs, clones or history."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "A reusable interface does not make callers trustworthy. The selected answer is broad inheritance gives untrusted code sensitive capabilities.",
+      "explanation": "History cleanup cannot revoke credential copies retained by other systems or users. Renaming preserves the exposed value and does not change its effective access. Ignore rules do not remove tracked history or invalidate the exposed credential. Removing source references does not invalidate copies already obtained from logs, clones or history.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q043",
       "checkpointId": "CP5",
-      "caseId": "L21-C09",
-      "task": "verification",
-      "caseContext": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request.",
       "objectiveIds": [
-        "D4.1.2",
         "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A token is Base64-encoded before being printed, and the raw token is registered for masking. Which conclusion is safest?",
       "options": [
         {
           "key": "A",
-          "text": "The consumer retrieves the intended valid version",
-          "rationale": "The evidence must identify the effective version without revealing it. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Base64 encryption makes publication harmless",
+          "rationale": "Base64 is reversible encoding rather than encryption or credential access control."
         },
         {
           "key": "B",
-          "text": "Untrusted tests cannot read the deployment credential",
-          "rationale": "The negative test should verify actual isolation. This directly addresses the constraint stated in this case."
+          "text": "A private repository eliminates the need for redaction",
+          "rationale": "Private visibility still exposes retained output to authorized viewers and compromised accounts."
         },
         {
           "key": "C",
-          "text": "The intended deployment succeeds while other groups remain inaccessible",
-          "rationale": "The repair should prove narrow effective access. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "The encoded output can still leak the token",
+          "rationale": "A transformed secret can evade masking and remains reversible to its original value."
+        },
+        {
+          "key": "D",
+          "text": "Masking the raw token guarantees all encodings are hidden",
+          "rationale": "Masking does not promise recognition of every derived representation or transformation."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "The negative test should verify actual isolation. The selected answer is untrusted tests cannot read the deployment credential.",
+      "explanation": "Base64 is reversible encoding rather than encryption or credential access control. Private visibility still exposes retained output to authorized viewers and compromised accounts. A transformed secret can evade masking and remains reversible to its original value. Masking does not promise recognition of every derived representation or transformation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q044",
       "checkpointId": "CP5",
-      "caseId": "L21-C09",
-      "task": "safeguard",
-      "caseContext": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request.",
       "objectiveIds": [
-        "D4.1.2",
         "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The exercise searches generated evidence for a synthetic leakage marker. What should validation establish before recording the negative check as passed?",
       "options": [
         {
           "key": "A",
-          "text": "Coordinate overlap and rollback before invalidating the old credential",
-          "rationale": "Abrupt rotation can break dependent systems. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "The marker is absent from the intended output paths",
+          "rationale": "A scoped content check can verify that the synthetic sensitive value was not emitted there."
         },
         {
           "key": "B",
-          "text": "Review reusable-workflow caller permissions and secret propagation",
-          "rationale": "Nested execution can broaden exposure unexpectedly. This directly addresses the constraint stated in this case."
+          "text": "The marker variable exists in memory",
+          "rationale": "Variable existence does not establish whether the value was written into evidence files."
         },
         {
           "key": "C",
-          "text": "Verify tenant subscription and principal before changing assignments",
-          "rationale": "Granting the right role to the wrong identity does not help. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
+          "text": "The evidence directory's name contains private",
+          "rationale": "A directory label does not prove its files exclude the synthetic secret marker."
+        },
+        {
+          "key": "D",
+          "text": "No real token was used anywhere",
+          "rationale": "Synthetic input avoids real credential exposure but does not itself prove redaction worked."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Nested execution can broaden exposure unexpectedly. The selected answer is review reusable-workflow caller permissions and secret propagation.",
+      "explanation": "A scoped content check can verify that the synthetic sensitive value was not emitted there. Variable existence does not establish whether the value was written into evidence files. A directory label does not prove its files exclude the synthetic secret marker. Synthetic input avoids real credential exposure but does not itself prove redaction worked.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q045",
       "checkpointId": "CP5",
-      "caseId": "L21-C09",
-      "task": "tradeoff",
-      "caseContext": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request.",
       "objectiveIds": [
-        "D4.1.2",
         "D4.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. The team selects this remedy: \"Pass secrets only to a trusted deployment path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A secret was removed from current source, but remains in CI logs and a retained artifact. Which response covers the complete observed exposure?",
       "options": [
         {
           "key": "A",
-          "text": "Version pinning improves determinism but needs planned updates",
-          "rationale": "Automatic latest resolution has a different freshness tradeoff. That addresses a different requirement: Credential rotation. It does not directly resolve this case's stated constraint."
+          "text": "Disable the scanner to avoid duplicate findings",
+          "rationale": "Suppressing detection does not remove retained exposure or revoke a valid secret."
         },
         {
           "key": "B",
-          "text": "Selective secret passing requires clearer interfaces",
-          "rationale": "The extra configuration supports least privilege. This directly addresses the constraint stated in this case."
+          "text": "Shorten future log retention without rotating",
+          "rationale": "Future retention changes do not invalidate copies already accessible to other parties."
         },
         {
           "key": "C",
-          "text": "Federation removes reusable secrets rather than authorization work",
-          "rationale": "Roles and access reviews remain required. That addresses a different requirement: Federated but forbidden. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The extra configuration supports least privilege. The selected answer is selective secret passing requires clearer interfaces.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L21-Q046",
-      "checkpointId": "CP1",
-      "caseId": "L21-C10",
-      "task": "remedy",
-      "caseContext": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group.",
-      "objectiveIds": [
-        "D4.2.2"
-      ],
-      "difficulty": "foundational",
-      "question": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Use GitHub OIDC with a matching Azure federated identity credential",
-          "rationale": "Federation exchanges a trusted short-lived assertion. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Rotate it and address the affected retained evidence",
+          "rationale": "Current-tree cleanup alone does not remediate valid credentials exposed through other retained copies."
         },
         {
-          "key": "B",
-          "text": "Pass secrets only to a trusted deployment path",
-          "rationale": "Credential distribution should follow the execution trust boundary. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Assign the necessary narrow Azure resource role",
-          "rationale": "Authentication and resource authorization are separate decisions. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Commit another source deletion only",
+          "rationale": "A new source change leaves already exposed logs, artifacts and credentials unaffected."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Authentication and resource authorization are separate decisions. The selected answer is assign the necessary narrow Azure resource role.",
+      "explanation": "Suppressing detection does not remove retained exposure or revoke a valid secret. Future retention changes do not invalidate copies already accessible to other parties. Current-tree cleanup alone does not remediate valid credentials exposed through other retained copies. A new source change leaves already exposed logs, artifacts and credentials unaffected.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"currentSourceClean\":true,\"credentialStillValid\":true,\"exposurePaths\":[\"previous CI log\",\"retained artifact\"]}"
+      }
+    },
+    {
+      "id": "L21-Q046",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D4.2.4"
+      ],
+      "difficulty": "foundational",
+      "question": "A scanner fixture uses a recognizable fake token string while evidence intentionally records only counts. What is the best assertion for the redaction path?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assert that the output JSON is valid",
+          "rationale": "Valid JSON can still contain the complete synthetic or real secret value."
+        },
+        {
+          "key": "B",
+          "text": "Assert that at least one log exists",
+          "rationale": "File existence does not establish safe contents or proper sensitive-value handling."
+        },
+        {
+          "key": "C",
+          "text": "Assert the marker appears in every result",
+          "rationale": "Publishing the marker would contradict the intended redacted evidence handling requirement."
+        },
+        {
+          "key": "D",
+          "text": "Search output files for the exact synthetic marker",
+          "rationale": "A deterministic marker makes accidental disclosure observable without using a live credential."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Valid JSON can still contain the complete synthetic or real secret value. File existence does not establish safe contents or proper sensitive-value handling. Publishing the marker would contradict the intended redacted evidence handling requirement. A deterministic marker makes accidental disclosure observable without using a live credential.",
+      "sourceIds": [
+        "S5"
       ]
     },
     {
       "id": "L21-Q047",
-      "checkpointId": "CP1",
-      "caseId": "L21-C10",
-      "task": "diagnosis",
-      "caseContext": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A pipeline author wants to commit learner identifiers and secret-resolution responses as proof of completion. Which evidence format is preferable?",
       "options": [
         {
           "key": "A",
-          "text": "The current design relies on a reusable stored secret",
-          "rationale": "The platform supports a secretless authentication path. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Full raw service responses including tokens",
+          "rationale": "Raw responses can disclose authentication data unrelated to the shared learning evidence requirement."
         },
         {
           "key": "B",
-          "text": "Broad inheritance gives untrusted code sensitive capabilities",
-          "rationale": "A reusable interface does not make callers trustworthy. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "A screenshot showing the complete connection string",
+          "rationale": "Visual publication still reveals sensitive material and can expose reusable access credentials."
         },
         {
           "key": "C",
-          "text": "A valid token does not carry unlimited Azure permissions",
-          "rationale": "The identity still needs a role assignment. This directly addresses the constraint stated in this case."
+          "text": "A reusable production password beside the status",
+          "rationale": "A password is not needed to substantiate the checkpoint's execution outcome."
+        },
+        {
+          "key": "D",
+          "text": "Redacted statuses, hashes and scoped nonsecret observations",
+          "rationale": "Useful verification metadata can establish behavior without publishing credentials or unnecessary learner identities."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The identity still needs a role assignment. The selected answer is a valid token does not carry unlimited Azure permissions.",
+      "explanation": "Raw responses can disclose authentication data unrelated to the shared learning evidence requirement. Visual publication still reveals sensitive material and can expose reusable access credentials. A password is not needed to substantiate the checkpoint's execution outcome. Useful verification metadata can establish behavior without publishing credentials or unnecessary learner identities.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q048",
-      "checkpointId": "CP1",
-      "caseId": "L21-C10",
-      "task": "verification",
-      "caseContext": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A redaction function masks a known token but includes an unknown password under another JSON key. What limitation should the test address?",
       "options": [
         {
           "key": "A",
-          "text": "Untrusted tests cannot read the deployment credential",
-          "rationale": "The negative test should verify actual isolation. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the known token was masked in stdout",
+          "rationale": "Structured artifact fields can still leak credentials even when console output masks one known value."
         },
         {
           "key": "B",
-          "text": "The intended deployment succeeds while other groups remain inaccessible",
-          "rationale": "The repair should prove narrow effective access. This directly addresses the constraint stated in this case."
+          "text": "Coverage across sensitive fields and structured outputs",
+          "rationale": "Redaction must account for relevant output paths rather than one known value alone."
         },
         {
           "key": "C",
-          "text": "The trusted job obtains Azure access without a client secret",
-          "rationale": "The proof should exercise the actual token exchange. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Only whether one exact token string was replaced",
+          "rationale": "A single-value replacement can leave other sensitive field values exposed in the structured report."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the JSON remains pretty-printed",
+          "rationale": "Formatting does not establish that sensitive values were removed from structured evidence."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The repair should prove narrow effective access. The selected answer is the intended deployment succeeds while other groups remain inaccessible.",
+      "explanation": "Structured artifact fields can still leak credentials even when console output masks one known value. Redaction must account for relevant output paths rather than one known value alone. A single-value replacement can leave other sensitive field values exposed in the structured report. Formatting does not establish that sensitive values were removed from structured evidence.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q049",
-      "checkpointId": "CP1",
-      "caseId": "L21-C10",
-      "task": "safeguard",
-      "caseContext": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The pipeline enables shell command tracing while passing a secret to a command argument. Which change reduces log exposure most directly?",
       "options": [
         {
           "key": "A",
-          "text": "Restrict the federated subject audience and Azure role scope",
-          "rationale": "Token issuance alone should not authorize unrelated workflows. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Encode the argument before tracing it",
+          "rationale": "Reversible transformations can still disclose the underlying secret to log viewers."
         },
         {
           "key": "B",
-          "text": "Review reusable-workflow caller permissions and secret propagation",
-          "rationale": "Nested execution can broaden exposure unexpectedly. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Publish the trace only after successful deployment",
+          "rationale": "Success does not eliminate sensitive material from the retained command trace."
         },
         {
           "key": "C",
-          "text": "Verify tenant subscription and principal before changing assignments",
-          "rationale": "Granting the right role to the wrong identity does not help. This directly addresses the constraint stated in this case."
+          "text": "Avoid tracing secrets and use supported protected input mechanisms",
+          "rationale": "Command echoing can expose arguments, so secret handling must avoid unnecessary logged values."
+        },
+        {
+          "key": "D",
+          "text": "Increase trace verbosity to improve masking",
+          "rationale": "More command output can enlarge exposure rather than strengthen secret redaction guarantees."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Granting the right role to the wrong identity does not help. The selected answer is verify tenant subscription and principal before changing assignments.",
+      "explanation": "Reversible transformations can still disclose the underlying secret to log viewers. Success does not eliminate sensitive material from the retained command trace. Command echoing can expose arguments, so secret handling must avoid unnecessary logged values. More command output can enlarge exposure rather than strengthen secret redaction guarantees.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L21-Q050",
-      "checkpointId": "CP1",
-      "caseId": "L21-C10",
-      "task": "tradeoff",
-      "caseContext": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.2.2"
+        "D4.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. The team selects this remedy: \"Assign the necessary narrow Azure resource role.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The local exercise rejects unsafe references, removes synthetic files on both paths and finds no leakage marker. Federation, vault resolution and Library authorization were not executed. Which final status is accurate?",
       "options": [
         {
           "key": "A",
-          "text": "Federation requires precise trust configuration",
-          "rationale": "A mismatched claim can prevent otherwise valid deployment. That addresses a different requirement: Secretless GitHub deployment. It does not directly resolve this case's stated constraint."
+          "text": "Mark secure-file provider validation passed after local temporary-file cleanup",
+          "rationale": "Local filesystem cleanup does not exercise Azure DevOps Library authorization or protected file delivery."
         },
         {
           "key": "B",
-          "text": "Selective secret passing requires clearer interfaces",
-          "rationale": "The extra configuration supports least privilege. That addresses a different requirement: Secret inherited by tests. It does not directly resolve this case's stated constraint."
+          "text": "Local handling verified; provider integrations remain unverified",
+          "rationale": "Offline evidence covers local behavior without claiming external identity and protected-service authorization succeeded."
         },
         {
           "key": "C",
-          "text": "Federation removes reusable secrets rather than authorization work",
-          "rationale": "Roles and access reviews remain required. This directly addresses the constraint stated in this case."
+          "text": "All live secrets integrations passed",
+          "rationale": "No actual token exchange, secret retrieval or protected file download was observed."
+        },
+        {
+          "key": "D",
+          "text": "Provider failures proven by synthetic tests",
+          "rationale": "Local fixture behavior cannot establish how unexecuted external integrations would respond."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Roles and access reviews remain required. The selected answer is federation removes reusable secrets rather than authorization work.",
+      "explanation": "Offline evidence covers local behavior without claiming external identity and protected-service authorization succeeded. Local filesystem cleanup does not exercise Azure DevOps Library authorization or protected file delivery. No actual token exchange, secret retrieval or protected file download was observed. Local fixture behavior cannot establish how unexecuted external integrations would respond.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S5"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"unsafeReferencesRejected\":true,\"bothFilePathsCleaned\":true,\"leakMarkerAbsent\":true,\"federationExecuted\":false,\"vaultResolvedLive\":false,\"libraryAuthorizationVerified\":false}"
+      }
     }
   ]
 }

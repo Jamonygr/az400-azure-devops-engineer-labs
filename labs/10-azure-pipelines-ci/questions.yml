@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "10",
   "verifiedDate": "2026-10-16",
   "sources": [
     {
       "id": "S1",
-      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops"
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops"
     },
     {
       "id": "S2",
@@ -13,1913 +13,1951 @@
     },
     {
       "id": "S3",
-      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number?view=azure-devops"
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops"
+    },
+    {
+      "id": "S5",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/access-tokens?view=azure-devops"
+    },
+    {
+      "id": "S6",
+      "url": "https://learn.microsoft.com/en-us/cli/azure/pipelines?view=azure-cli-latest"
     }
   ],
   "questions": [
     {
       "id": "L10-Q001",
       "checkpointId": "CP1",
-      "caseId": "L10-C01",
-      "task": "remedy",
-      "caseContext": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access.",
       "objectiveIds": [
         "D3.3.3"
       ],
       "difficulty": "foundational",
-      "question": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which next change most directly satisfies the stated requirement?",
+      "question": "The lab uses Azure Repos, while a colleague proposes importing a GitHub repository. Which additional boundary must be prepared before that integration works?",
       "options": [
         {
           "key": "A",
-          "text": "Use a unique run identity and record source revision metadata",
-          "rationale": "Operational labels should support unambiguous build traceability. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "An authorized GitHub repository connection and pipeline access",
+          "rationale": "Another provider requires explicitly authorized repository access beyond the Azure Repos fixture."
         },
         {
           "key": "B",
-          "text": "Restore scoped GitHub app authorization for that repository",
-          "rationale": "The pipeline needs an authorized repository connection. This directly addresses the constraint stated in this case."
+          "text": "Only an annotated Git tag in Azure Repos",
+          "rationale": "A source tag does not establish access to a GitHub repository."
         },
         {
           "key": "C",
-          "text": "Define an explicit CI trigger for the intended branches",
-          "rationale": "Manual success does not establish automatic scheduling. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Only a new Azure service connection for application deployment",
+          "rationale": "Application deployment credentials do not authorize a separate external GitHub source repository connection."
+        },
+        {
+          "key": "D",
+          "text": "Only a different source YAML path in the same inaccessible provider",
+          "rationale": "Changing a configured path cannot establish the missing authorized external source repository access."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The pipeline needs an authorized repository connection. The selected answer is restore scoped GitHub app authorization for that repository.",
+      "explanation": "A source tag does not establish access to a GitHub repository. Application deployment credentials do not authorize a separate external GitHub source repository connection. Another provider requires explicitly authorized repository access beyond the Azure Repos fixture. Changing a configured path cannot establish the missing authorized external source repository access.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L10-Q002",
       "checkpointId": "CP1",
-      "caseId": "L10-C01",
-      "task": "diagnosis",
-      "caseContext": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access.",
       "objectiveIds": [
-        "D3.3.3"
+        "D3.3.1"
       ],
       "difficulty": "foundational",
-      "question": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A learner lists repositories in the owned project before cloning. Which returned values should establish the exact source boundary?",
       "options": [
         {
           "key": "A",
-          "text": "A repeated friendly label is not a unique build identifier",
-          "rationale": "Different outputs can appear to be the same build. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "Only the default branch label returned for the repository",
+          "rationale": "A branch label can repeat across many projects and does not identify the authorized repository boundary."
         },
         {
           "key": "B",
-          "text": "The source integration no longer has repository access",
-          "rationale": "YAML correctness cannot overcome denied source authorization. This directly addresses the constraint stated in this case."
+          "text": "Repository ID, project identity and approved remote URL",
+          "rationale": "These values connect the working copy to its authorized provider project boundary."
         },
         {
           "key": "C",
-          "text": "The trigger configuration excludes push-based execution",
-          "rationale": "Queueing and build behavior are independent concerns. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Only the most recent commit author name",
+          "rationale": "An author can contribute to several unrelated repositories and projects."
+        },
+        {
+          "key": "D",
+          "text": "Only the repository friendly name",
+          "rationale": "Friendly names can repeat and do not uniquely establish project ownership."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "YAML correctness cannot overcome denied source authorization. The selected answer is the source integration no longer has repository access.",
+      "explanation": "An author can contribute to several unrelated repositories and projects. A branch label can repeat across many projects and does not identify the authorized repository boundary. These values connect the working copy to its authorized provider project boundary. Friendly names can repeat and do not uniquely establish project ownership.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L10-Q003",
-      "checkpointId": "CP1",
-      "caseId": "L10-C01",
-      "task": "verification",
-      "caseContext": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.3"
+        "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The sample CI should run for main pushes in Azure Pipelines YAML. Which section defines that automatic source-change scheduling?",
       "options": [
         {
           "key": "A",
-          "text": "A matching push starts a run and an excluded push does not",
-          "rationale": "Trigger behavior needs positive and negative evidence. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "A variable named BuildDisplayBranch with main as its value",
+          "rationale": "An arbitrary variable name does not create a branch event subscription."
         },
         {
           "key": "B",
-          "text": "The artifact resolves to one run and exact commit",
-          "rationale": "The lookup must establish a single provenance chain. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "A trigger branch include rule for main",
+          "rationale": "The trigger schema selects source changes eligible to create CI runs."
         },
         {
           "key": "C",
-          "text": "A pipeline run checks out the intended private commit",
-          "rationale": "The test must verify the authenticated source path. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The test must verify the authenticated source path. The selected answer is a pipeline run checks out the intended private commit.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q004",
-      "checkpointId": "CP1",
-      "caseId": "L10-C01",
-      "task": "safeguard",
-      "caseContext": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access.",
-      "objectiveIds": [
-        "D3.3.3"
-      ],
-      "difficulty": "applied",
-      "question": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Do not treat a display number as the only content identifier",
-          "rationale": "Human labels can be configured independently of artifact bytes. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "A deployment environment named main",
+          "rationale": "Environment authorization is distinct from selecting source changes for CI execution."
         },
         {
-          "key": "B",
-          "text": "Authorize only the participating repository rather than the whole account",
-          "rationale": "Repository selection limits the connector's trust scope. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Review organization settings that affect implied YAML triggers",
-          "rationale": "Service configuration can influence default trigger behavior. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "A publish artifact step named main",
+          "rationale": "Artifact publication happens during execution and does not define source-change scheduling."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Repository selection limits the connector's trust scope. The selected answer is authorize only the participating repository rather than the whole account.",
+      "explanation": "The trigger schema selects source changes eligible to create CI runs. Artifact publication happens during execution and does not define source-change scheduling. An arbitrary variable name does not create a branch event subscription. Environment authorization is distinct from selecting source changes for CI execution.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S2"
+      ]
+    },
+    {
+      "id": "L10-Q004",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "The repository selects an exact SDK through global.json. Which UseDotNet task configuration preserves that source-controlled choice?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Remove SDK setup because YAML compilation installs every runtime",
+          "rationale": "Pipeline parsing does not automatically install all required application toolchains."
+        },
+        {
+          "key": "B",
+          "text": "Use the build number as the SDK version",
+          "rationale": "A run label is not an actual SDK compatibility or installation contract."
+        },
+        {
+          "key": "C",
+          "text": "Install whichever SDK the last pipeline used",
+          "rationale": "Historical machine state need not match the current repository SDK requirement."
+        },
+        {
+          "key": "D",
+          "text": "Enable useGlobalJson for SDK installation",
+          "rationale": "The task resolves the SDK requirement from the checked-in global.json contract."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The task resolves the SDK requirement from the checked-in global.json contract. Historical machine state need not match the current repository SDK requirement. A run label is not an actual SDK compatibility or installation contract. Pipeline parsing does not automatically install all required application toolchains.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L10-Q005",
-      "checkpointId": "CP1",
-      "caseId": "L10-C01",
-      "task": "tradeoff",
-      "caseContext": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.3"
+        "D3.3.5"
       ],
-      "difficulty": "advanced",
-      "question": "GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. The team selects this remedy: \"Restore scoped GitHub app authorization for that repository.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A YAML author places a step task directly beside stages rather than within a job. What structural repair is needed?",
       "options": [
         {
           "key": "A",
-          "text": "External integration depends on installation ownership and lifecycle",
-          "rationale": "Account and repository changes may require reauthorization. This directly addresses the constraint stated in this case."
+          "text": "Rename the task so its display name contains job",
+          "rationale": "A friendly label does not change where executable steps belong structurally."
         },
         {
           "key": "B",
-          "text": "Explicit triggers need maintenance when branch conventions change",
-          "rationale": "A renamed branch may fall outside the intended scope. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Grant subscription Owner to the build identity",
+          "rationale": "Azure authority cannot change the schema position required for a task."
         },
         {
           "key": "C",
-          "text": "Readable version labels and immutable identity serve different needs",
-          "rationale": "Keep both when users need chronology and exact provenance. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "Add more hosted parallelism to the organization",
+          "rationale": "Execution capacity cannot repair an invalid YAML pipeline document structure."
+        },
+        {
+          "key": "D",
+          "text": "Nest executable steps inside a stage job",
+          "rationale": "Pipeline structure separates stages and jobs from their executable step sequences."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Account and repository changes may require reauthorization. The selected answer is external integration depends on installation ownership and lifecycle.",
+      "explanation": "Pipeline structure separates stages and jobs from their executable step sequences. Execution capacity cannot repair an invalid YAML pipeline document structure. Azure authority cannot change the schema position required for a task. A friendly label does not change where executable steps belong structurally.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L10-Q006",
-      "checkpointId": "CP4",
-      "caseId": "L10-C02",
-      "task": "remedy",
-      "caseContext": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.2.3"
       ],
       "difficulty": "foundational",
-      "question": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which next change most directly satisfies the stated requirement?",
+      "question": "A build must retain machine-readable tests even when assertions fail. Which reporting design fits this requirement without hiding the failure?",
       "options": [
         {
           "key": "A",
-          "text": "Restore scoped GitHub app authorization for that repository",
-          "rationale": "The pipeline needs an authorized repository connection. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "Publish reports only after every test succeeds",
+          "rationale": "That discards the failure evidence needed to diagnose unsuccessful test execution."
         },
         {
           "key": "B",
-          "text": "Define an explicit CI trigger for the intended branches",
-          "rationale": "Manual success does not establish automatic scheduling. This directly addresses the constraint stated in this case."
+          "text": "Publish test results on failure while keeping tests blocking",
+          "rationale": "Failure reporting preserves diagnosis without converting unsuccessful behavioral validation into success."
         },
         {
           "key": "C",
-          "text": "Include shared build inputs in the path filter",
-          "rationale": "Validation scope must cover indirect build dependencies. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Suppress test exit codes so publication always looks green",
+          "rationale": "Hiding failures defeats the requirement for an accurate blocking quality gate."
+        },
+        {
+          "key": "D",
+          "text": "Replace results with the build queue timestamp",
+          "rationale": "A scheduling timestamp cannot establish which application assertions passed or failed."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Manual success does not establish automatic scheduling. The selected answer is define an explicit CI trigger for the intended branches.",
+      "explanation": "Failure reporting preserves diagnosis without converting unsuccessful behavioral validation into success. Hiding failures defeats the requirement for an accurate blocking quality gate. That discards the failure evidence needed to diagnose unsuccessful test execution. A scheduling timestamp cannot establish which application assertions passed or failed.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L10-Q007",
-      "checkpointId": "CP4",
-      "caseId": "L10-C02",
-      "task": "diagnosis",
-      "caseContext": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.4"
       ],
-      "difficulty": "applied",
-      "question": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "foundational",
+      "question": "A valid pipeline YAML exists only in an uncommitted local file. Why does pushing the current main branch not activate that change?",
       "options": [
         {
           "key": "A",
-          "text": "The filter tracks service files but omits shared dependencies",
-          "rationale": "A path rule cannot infer semantic relationships. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Azure Pipelines requires every build to deploy infrastructure first",
+          "rationale": "Application CI does not require a cloud infrastructure deployment before execution."
         },
         {
           "key": "B",
-          "text": "The source integration no longer has repository access",
-          "rationale": "YAML correctness cannot overcome denied source authorization. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "The repository token needs organization-wide administrator authority",
+          "rationale": "Broad authority does not make an uncommitted local file part of a push."
         },
         {
           "key": "C",
-          "text": "The trigger configuration excludes push-based execution",
-          "rationale": "Queueing and build behavior are independent concerns. This directly addresses the constraint stated in this case."
+          "text": "The solution must contain at least one database migration",
+          "rationale": "Migration content does not determine whether a local YAML edit was published."
+        },
+        {
+          "key": "D",
+          "text": "The provider reads committed repository content for its selected revision",
+          "rationale": "A local uncommitted file is not included in the remote source revision."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Queueing and build behavior are independent concerns. The selected answer is the trigger configuration excludes push-based execution.",
+      "explanation": "A local uncommitted file is not included in the remote source revision. Application CI does not require a cloud infrastructure deployment before execution. Migration content does not determine whether a local YAML edit was published. Broad authority does not make an uncommitted local file part of a push.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q008",
       "checkpointId": "CP4",
-      "caseId": "L10-C02",
-      "task": "verification",
-      "caseContext": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers.",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.1"
       ],
-      "difficulty": "applied",
-      "question": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "A setup command registers a YAML definition with skip-first-run true. What has been established at that point?",
       "options": [
         {
           "key": "A",
-          "text": "Changing the shared script schedules the dependent service pipeline",
-          "rationale": "The formerly missed input must now trigger validation. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "A production deployment passed all environment checks",
+          "rationale": "Registering CI does not execute or authorize a production deployment."
         },
         {
           "key": "B",
-          "text": "A pipeline run checks out the intended private commit",
-          "rationale": "The test must verify the authenticated source path. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "The application artifact has already passed all tests",
+          "rationale": "No queued execution means no new measured test or artifact result exists."
         },
         {
           "key": "C",
-          "text": "A matching push starts a run and an excluded push does not",
-          "rationale": "Trigger behavior needs positive and negative evidence. This directly addresses the constraint stated in this case."
+          "text": "The definition exists but a successful build is unproven",
+          "rationale": "Registration identifies executable configuration without showing that its jobs completed successfully."
+        },
+        {
+          "key": "D",
+          "text": "The build identity automatically owns the Azure subscription",
+          "rationale": "A pipeline definition does not grant unrelated Azure resource permissions."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Trigger behavior needs positive and negative evidence. The selected answer is a matching push starts a run and an excluded push does not.",
+      "explanation": "Registration identifies executable configuration without showing that its jobs completed successfully. Registering CI does not execute or authorize a production deployment. No queued execution means no new measured test or artifact result exists. A pipeline definition does not grant unrelated Azure resource permissions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q009",
-      "checkpointId": "CP4",
-      "caseId": "L10-C02",
-      "task": "safeguard",
-      "caseContext": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.2.3"
       ],
-      "difficulty": "applied",
-      "question": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A newly queued build reports status notStarted and result null. What should the learner conclude about CI completion?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize only the participating repository rather than the whole account",
-          "rationale": "Repository selection limits the connector's trust scope. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "It deployed successfully if the YAML filename is correct",
+          "rationale": "Correct configuration identity cannot replace actual completed deployment or test execution."
         },
         {
           "key": "B",
-          "text": "Review organization settings that affect implied YAML triggers",
-          "rationale": "Service configuration can influence default trigger behavior. This directly addresses the constraint stated in this case."
+          "text": "It remains pending until execution completes successfully",
+          "rationale": "Queued status and absent result do not demonstrate a finished successful build."
         },
         {
           "key": "C",
-          "text": "Test representative included and excluded paths",
-          "rationale": "Broad corrections can unintentionally rebuild every service. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "It failed permanently because no result is available immediately",
+          "rationale": "A queued job can legitimately await an approved available worker."
+        },
+        {
+          "key": "D",
+          "text": "It passed because the queue command returned an ID",
+          "rationale": "An ID identifies scheduled work rather than successful measured execution."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Service configuration can influence default trigger behavior. The selected answer is review organization settings that affect implied YAML triggers.",
+      "explanation": "Queued status and absent result do not demonstrate a finished successful build. An ID identifies scheduled work rather than successful measured execution. A queued job can legitimately await an approved available worker. Correct configuration identity cannot replace actual completed deployment or test execution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q010",
-      "checkpointId": "CP4",
-      "caseId": "L10-C02",
-      "task": "tradeoff",
-      "caseContext": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.1.4"
       ],
-      "difficulty": "advanced",
-      "question": "No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. The team selects this remedy: \"Define an explicit CI trigger for the intended branches.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A successful build publishes todo-api. Which source field must match the reviewed candidate before its artifact is accepted?",
       "options": [
         {
           "key": "A",
-          "text": "More complete filters may schedule additional work",
-          "rationale": "The cost buys coverage of genuine dependencies. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Only the moving source branch display name",
+          "rationale": "A branch can advance after an earlier artifact was produced."
         },
         {
           "key": "B",
-          "text": "External integration depends on installation ownership and lifecycle",
-          "rationale": "Account and repository changes may require reauthorization. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "Only the artifact archive filename",
+          "rationale": "A reused filename does not identify its producing source revision."
         },
         {
           "key": "C",
-          "text": "Explicit triggers need maintenance when branch conventions change",
-          "rationale": "A renamed branch may fall outside the intended scope. This directly addresses the constraint stated in this case."
+          "text": "The build sourceVersion exact commit identity",
+          "rationale": "This binds the producing execution to the source revision approved for validation."
+        },
+        {
+          "key": "D",
+          "text": "Only the build requester friendly name",
+          "rationale": "One requester can queue runs for many different source candidates."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A renamed branch may fall outside the intended scope. The selected answer is explicit triggers need maintenance when branch conventions change.",
+      "explanation": "This binds the producing execution to the source revision approved for validation. A branch can advance after an earlier artifact was produced. One requester can queue runs for many different source candidates. A reused filename does not identify its producing source revision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L10-Q011",
-      "checkpointId": "CP2",
-      "caseId": "L10-C03",
-      "task": "remedy",
-      "caseContext": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.3"
       ],
       "difficulty": "foundational",
-      "question": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which next change most directly satisfies the stated requirement?",
+      "question": "A clone retry finds a working copy whose origin differs from the resolved Azure Repos remote. How should setup proceed?",
       "options": [
         {
           "key": "A",
-          "text": "Include shared build inputs in the path filter",
-          "rationale": "Validation scope must cover indirect build dependencies. This directly addresses the constraint stated in this case."
+          "text": "Delete the organization to ensure a clean source boundary",
+          "rationale": "A clone mismatch does not authorize organization-wide destructive changes or deletion."
         },
         {
           "key": "B",
-          "text": "Use the actual authorized service connection identifier",
-          "rationale": "Task configuration must reference an available project resource. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Reset and force-push whichever origin already exists",
+          "rationale": "That can overwrite unrelated source outside the authorized disposable project boundary."
         },
         {
           "key": "C",
-          "text": "Define an explicit CI trigger for the intended branches",
-          "rationale": "Manual success does not establish automatic scheduling. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Trust the directory because its name contains pipeline",
+          "rationale": "Local directory naming does not prove a matching remote repository identity."
+        },
+        {
+          "key": "D",
+          "text": "Stop and investigate the repository identity mismatch",
+          "rationale": "A safe retry must not publish the lab change to an unrelated repository."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Validation scope must cover indirect build dependencies. The selected answer is include shared build inputs in the path filter.",
+      "explanation": "A safe retry must not publish the lab change to an unrelated repository. That can overwrite unrelated source outside the authorized disposable project boundary. Local directory naming does not prove a matching remote repository identity. A clone mismatch does not authorize organization-wide destructive changes or deletion.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L10-Q012",
-      "checkpointId": "CP2",
-      "caseId": "L10-C03",
-      "task": "diagnosis",
-      "caseContext": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.1"
       ],
       "difficulty": "foundational",
-      "question": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Two definitions share the requested pipeline name. Which additional information is necessary before reusing an existing definition safely?",
       "options": [
         {
           "key": "A",
-          "text": "The filter tracks service files but omits shared dependencies",
-          "rationale": "A path rule cannot infer semantic relationships. This directly addresses the constraint stated in this case."
+          "text": "Only the total historical build count",
+          "rationale": "Execution count does not identify the repository or registered YAML source path."
         },
         {
           "key": "B",
-          "text": "YAML parsing does not validate every external resource relationship",
-          "rationale": "The task can parse while its dependency is unresolved. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Only the requester email display value",
+          "rationale": "Requester identity does not establish the registered executable source boundary."
         },
         {
           "key": "C",
-          "text": "The trigger configuration excludes push-based execution",
-          "rationale": "Queueing and build behavior are independent concerns. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Exact repository ID, project and YAML path",
+          "rationale": "Friendly naming alone cannot establish the intended executable source and ownership boundary."
+        },
+        {
+          "key": "D",
+          "text": "Only the definition creation date",
+          "rationale": "Age does not prove the definition points to the required repository content."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A path rule cannot infer semantic relationships. The selected answer is the filter tracks service files but omits shared dependencies.",
+      "explanation": "Friendly naming alone cannot establish the intended executable source and ownership boundary. Age does not prove the definition points to the required repository content. Requester identity does not establish the registered executable source boundary. Execution count does not identify the repository or registered YAML source path.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q013",
       "checkpointId": "CP2",
-      "caseId": "L10-C03",
-      "task": "verification",
-      "caseContext": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run.",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The job creates build output but never publishes it. Why can another release pipeline not download todo-api from that run?",
       "options": [
         {
           "key": "A",
-          "text": "Changing the shared script schedules the dependent service pipeline",
-          "rationale": "The formerly missed input must now trigger validation. This directly addresses the constraint stated in this case."
+          "text": "Generated files need an explicit artifact publication step",
+          "rationale": "Runner-local output is not automatically retained as a downloadable pipeline artifact."
         },
         {
           "key": "B",
-          "text": "The task authenticates through the intended project connection",
-          "rationale": "Execution verifies the resource reference and authorization. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Package publishing requires broad organization administrator rights",
+          "rationale": "Retaining a build artifact does not justify that unrelated administrative authority."
         },
         {
           "key": "C",
-          "text": "A matching push starts a run and an excluded push does not",
-          "rationale": "Trigger behavior needs positive and negative evidence. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Every Release build configuration automatically uploads all files",
+          "rationale": "Build configuration names do not create provider artifact publication behavior."
+        },
+        {
+          "key": "D",
+          "text": "The artifact name must equal the project GUID",
+          "rationale": "A specific friendly name does not compensate for missing artifact publication."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The formerly missed input must now trigger validation. The selected answer is changing the shared script schedules the dependent service pipeline.",
+      "explanation": "Runner-local output is not automatically retained as a downloadable pipeline artifact. Build configuration names do not create provider artifact publication behavior. A specific friendly name does not compensate for missing artifact publication. Retaining a build artifact does not justify that unrelated administrative authority.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L10-Q014",
-      "checkpointId": "CP2",
-      "caseId": "L10-C03",
-      "task": "safeguard",
-      "caseContext": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.2.3"
       ],
-      "difficulty": "applied",
-      "question": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A build finishes with result partiallySucceeded because a required test failure was tolerated. What should the course gate report?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize the specific pipeline rather than every pipeline by default",
-          "rationale": "Shared resource access should remain controlled. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Incomplete because required successful validation is absent",
+          "rationale": "Partial success does not establish that every explicitly required test gate passed."
         },
         {
           "key": "B",
-          "text": "Review organization settings that affect implied YAML triggers",
-          "rationale": "Service configuration can influence default trigger behavior. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Passed because any finished build counts as success",
+          "rationale": "Completion and success are separate properties of a provider build result."
         },
         {
           "key": "C",
-          "text": "Test representative included and excluded paths",
-          "rationale": "Broad corrections can unintentionally rebuild every service. This directly addresses the constraint stated in this case."
+          "text": "Passed after changing the build display number",
+          "rationale": "A label cannot alter the actual measured execution result or policy requirement."
+        },
+        {
+          "key": "D",
+          "text": "Passed if the package upload step succeeded",
+          "rationale": "Artifact storage success does not compensate for failed required application behavioral assertions."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Broad corrections can unintentionally rebuild every service. The selected answer is test representative included and excluded paths.",
+      "explanation": "Partial success does not establish that every explicitly required test gate passed. Completion and success are separate properties of a provider build result. A label cannot alter the actual measured execution result or policy requirement. Artifact storage success does not compensate for failed required application behavioral assertions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q015",
-      "checkpointId": "CP2",
-      "caseId": "L10-C03",
-      "task": "tradeoff",
-      "caseContext": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.4"
       ],
-      "difficulty": "advanced",
-      "question": "Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. The team selects this remedy: \"Include shared build inputs in the path filter.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A retry finds the intended YAML and samples already committed with no staged diff. What source operation is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Connection names form an operational dependency",
-          "rationale": "Renaming them can require coordinated pipeline changes. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Reuse the verified revision without creating an empty commit",
+          "rationale": "A safe retry can preserve already committed intended content after boundary checks."
         },
         {
           "key": "B",
-          "text": "Explicit triggers need maintenance when branch conventions change",
-          "rationale": "A renamed branch may fall outside the intended scope. That addresses a different requirement: No automatic CI. It does not directly resolve this case's stated constraint."
+          "text": "Grant all pipelines access to every service connection",
+          "rationale": "Authorization broadening is unrelated to already committed source content."
         },
         {
           "key": "C",
-          "text": "More complete filters may schedule additional work",
-          "rationale": "The cost buys coverage of genuine dependencies. This directly addresses the constraint stated in this case."
+          "text": "Reset source to an unrelated earlier branch",
+          "rationale": "That discards intended work without fixing any actual publication requirement."
+        },
+        {
+          "key": "D",
+          "text": "Infer that hosted testing passed from no local changes",
+          "rationale": "An empty diff cannot establish a corresponding successful provider execution."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The cost buys coverage of genuine dependencies. The selected answer is more complete filters may schedule additional work.",
+      "explanation": "A safe retry can preserve already committed intended content after boundary checks. That discards intended work without fixing any actual publication requirement. An empty diff cannot establish a corresponding successful provider execution. Authorization broadening is unrelated to already committed source content.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q016",
       "checkpointId": "CP2",
-      "caseId": "L10-C04",
-      "task": "remedy",
-      "caseContext": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project.",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.3.4"
       ],
-      "difficulty": "foundational",
-      "question": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "An Azure Repos YAML pipeline declares pr: main but pull requests still lack validation. What is required for this source provider?",
       "options": [
         {
           "key": "A",
-          "text": "Include shared build inputs in the path filter",
-          "rationale": "Validation scope must cover indirect build dependencies. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Rename the CI artifact to pull-request-validation",
+          "rationale": "Artifact names do not establish provider pull-request build validation policy."
         },
         {
           "key": "B",
-          "text": "Use the actual authorized service connection identifier",
-          "rationale": "Task configuration must reference an available project resource. This directly addresses the constraint stated in this case."
+          "text": "Configure an Azure Repos build-validation branch policy",
+          "rationale": "Azure Repos pull-request validation is configured through branch policies rather than YAML PR triggers."
         },
         {
           "key": "C",
-          "text": "Publish the supported result format from the correct path",
-          "rationale": "The pipeline needs a reporting step for generated evidence. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Give every contributor permission to edit production secrets",
+          "rationale": "Contribution secret access does not configure a required branch build policy."
+        },
+        {
+          "key": "D",
+          "text": "Assume the YAML PR section overrides every repository policy",
+          "rationale": "Azure Repos does not use YAML PR triggers as that enforcement mechanism."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Task configuration must reference an available project resource. The selected answer is use the actual authorized service connection identifier.",
+      "explanation": "Azure Repos pull-request validation is configured through branch policies rather than YAML PR triggers. Artifact names do not establish provider pull-request build validation policy. Azure Repos does not use YAML PR triggers as that enforcement mechanism. Contribution secret access does not configure a required branch build policy.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "trigger:\n  branches: {include: [main]}\npr: [main]\n# Source provider: Azure Repos"
+      }
     },
     {
       "id": "L10-Q017",
       "checkpointId": "CP2",
-      "caseId": "L10-C04",
-      "task": "diagnosis",
-      "caseContext": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project.",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.3.4"
       ],
       "difficulty": "applied",
-      "question": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Main pushes touching only docs should not run application CI, while sample changes should. Which YAML design fits this scope?",
       "options": [
         {
           "key": "A",
-          "text": "Producing a result file does not automatically publish it",
-          "rationale": "Execution and result ingestion are separate operations. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Combine the main branch filter with intended sample path includes",
+          "rationale": "Both branch and changed-file criteria define the eligible CI source event."
         },
         {
           "key": "B",
-          "text": "The filter tracks service files but omits shared dependencies",
-          "rationale": "A path rule cannot infer semantic relationships. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Publish documentation under a different artifact name",
+          "rationale": "Output labeling does not determine whether a source push schedules CI."
         },
         {
           "key": "C",
-          "text": "YAML parsing does not validate every external resource relationship",
-          "rationale": "The task can parse while its dependency is unresolved. This directly addresses the constraint stated in this case."
+          "text": "Add main only to the pipeline display name",
+          "rationale": "Display labels have no effect on changed-file or branch event matching."
+        },
+        {
+          "key": "D",
+          "text": "Set every task to condition succeeded()",
+          "rationale": "Step conditions apply after scheduling rather than define eligible source changes."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The task can parse while its dependency is unresolved. The selected answer is yAML parsing does not validate every external resource relationship.",
+      "explanation": "Both branch and changed-file criteria define the eligible CI source event. Display labels have no effect on changed-file or branch event matching. Output labeling does not determine whether a source push schedules CI. Step conditions apply after scheduling rather than define eligible source changes.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q018",
       "checkpointId": "CP2",
-      "caseId": "L10-C04",
-      "task": "verification",
-      "caseContext": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project.",
       "objectiveIds": [
         "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A variable should select a template structure before jobs exist. Which expression timing matches this requirement in Azure Pipelines?",
       "options": [
         {
           "key": "A",
-          "text": "The run summary shows the expected test cases and failures",
-          "rationale": "The correct report must reach the test reporting surface. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "A compile-time parameter or template expression",
+          "rationale": "Template expansion shapes the pipeline before runtime step execution begins."
         },
         {
           "key": "B",
-          "text": "Changing the shared script schedules the dependent service pipeline",
-          "rationale": "The formerly missed input must now trigger validation. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "A test result property from a previous step",
+          "rationale": "Runtime test outcomes do not exist when initial template structure is expanded."
         },
         {
           "key": "C",
-          "text": "The task authenticates through the intended project connection",
-          "rationale": "Execution verifies the resource reference and authorization. This directly addresses the constraint stated in this case."
+          "text": "A post-build artifact display label",
+          "rationale": "An output label does not participate in pre-execution template expansion."
+        },
+        {
+          "key": "D",
+          "text": "A shell variable created in the last task",
+          "rationale": "A value produced after execution cannot shape the already expanded job graph."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Execution verifies the resource reference and authorization. The selected answer is the task authenticates through the intended project connection.",
+      "explanation": "Template expansion shapes the pipeline before runtime step execution begins. A value produced after execution cannot shape the already expanded job graph. An output label does not participate in pre-execution template expansion. Runtime test outcomes do not exist when initial template structure is expanded.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L10-Q019",
       "checkpointId": "CP2",
-      "caseId": "L10-C04",
-      "task": "safeguard",
-      "caseContext": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project.",
       "objectiveIds": [
         "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A value created during a task must be used by a later task in the same job. Which mechanism is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize the specific pipeline rather than every pipeline by default",
-          "rationale": "Shared resource access should remain controlled. This directly addresses the constraint stated in this case."
+          "text": "Set only a process-local shell variable",
+          "rationale": "A local process variable is not automatically propagated into later task processes."
         },
         {
           "key": "B",
-          "text": "Publish diagnostics even on failure without masking failed status",
-          "rationale": "Reporting should aid diagnosis while preserving the gate. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Use the supported task.setvariable logging command",
+          "rationale": "The agent processes that command to expose a variable to subsequent tasks."
         },
         {
           "key": "C",
-          "text": "Test representative included and excluded paths",
-          "rationale": "Broad corrections can unintentionally rebuild every service. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Change a YAML comment through the current shell",
+          "rationale": "Comments do not provide agent-supported runtime variable propagation between tasks."
+        },
+        {
+          "key": "D",
+          "text": "Declare the value as an already compiled parameter afterward",
+          "rationale": "Runtime data cannot retroactively change the initial template parameter expansion."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Shared resource access should remain controlled. The selected answer is authorize the specific pipeline rather than every pipeline by default.",
+      "explanation": "The agent processes that command to expose a variable to subsequent tasks. A local process variable is not automatically propagated into later task processes. Comments do not provide agent-supported runtime variable propagation between tasks. Runtime data cannot retroactively change the initial template parameter expansion.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L10-Q020",
-      "checkpointId": "CP2",
-      "caseId": "L10-C04",
-      "task": "tradeoff",
-      "caseContext": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.3.1"
       ],
-      "difficulty": "advanced",
-      "question": "Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. The team selects this remedy: \"Use the actual authorized service connection identifier.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "An earlier pipeline creation request timed out after the server accepted it. What retry prevents duplicate owned definitions?",
       "options": [
         {
           "key": "A",
-          "text": "More complete filters may schedule additional work",
-          "rationale": "The cost buys coverage of genuine dependencies. That addresses a different requirement: Path filter surprise. It does not directly resolve this case's stated constraint."
+          "text": "Always create another pipeline with a random suffix",
+          "rationale": "That can duplicate server state instead of recovering the accepted creation outcome."
         },
         {
           "key": "B",
-          "text": "Connection names form an operational dependency",
-          "rationale": "Renaming them can require coordinated pipeline changes. This directly addresses the constraint stated in this case."
+          "text": "Assume timeout guarantees no provider mutation occurred",
+          "rationale": "A transport timeout does not establish that the remote operation was rejected."
         },
         {
           "key": "C",
-          "text": "Report paths and formats are part of the task contract",
-          "rationale": "Changing the test runner may require publication updates. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Delete every pipeline in the organization before retrying",
+          "rationale": "The request only authorizes the exact disposable project resource boundary."
+        },
+        {
+          "key": "D",
+          "text": "Look up the exact owned name and repository before creating",
+          "rationale": "The response may be lost even though the server already created the resource."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The response may be lost even though the server already created the resource. That can duplicate server state instead of recovering the accepted creation outcome. The request only authorizes the exact disposable project resource boundary. A transport timeout does not establish that the remote operation was rejected.",
+      "sourceIds": [
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Create response lost after timeout\nName: ci-run42\nRepository ID: owned repository GUID"
+      }
+    },
+    {
+      "id": "L10-Q021",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "A build has status completed and result succeeded, but sourceVersion differs from the saved lab SHA. How should validation respond?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Accept because main still has the same branch name",
+          "rationale": "A moving branch can point to a different candidate after source changes."
+        },
+        {
+          "key": "B",
+          "text": "Reject the provenance mismatch despite successful execution",
+          "rationale": "Successful tests for another source revision do not validate the reviewed candidate."
+        },
+        {
+          "key": "C",
+          "text": "Accept if the requester is the same learner",
+          "rationale": "Requester identity does not replace the required exact source revision relationship."
+        },
+        {
+          "key": "D",
+          "text": "Change the saved candidate SHA without reviewing the difference",
+          "rationale": "Moving the expected target conceals rather than resolves the source validation mismatch."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Renaming them can require coordinated pipeline changes. The selected answer is connection names form an operational dependency.",
+      "explanation": "Successful tests for another source revision do not validate the reviewed candidate. A moving branch can point to a different candidate after source changes. Requester identity does not replace the required exact source revision relationship. Moving the expected target conceals rather than resolves the source validation mismatch.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q021",
-      "checkpointId": "CP5",
-      "caseId": "L10-C05",
-      "task": "remedy",
-      "caseContext": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it.",
-      "objectiveIds": [
-        "D3.2.3"
+        "S6"
       ],
-      "difficulty": "foundational",
-      "question": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Bind artifact download to the intended producing run",
-          "rationale": "Names alone do not uniquely identify build provenance. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Use the actual authorized service connection identifier",
-          "rationale": "Task configuration must reference an available project resource. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Publish the supported result format from the correct path",
-          "rationale": "The pipeline needs a reporting step for generated evidence. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The pipeline needs a reporting step for generated evidence. The selected answer is publish the supported result format from the correct path.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+      "exhibit": {
+        "language": "json",
+        "code": "{\"status\":\"completed\",\"result\":\"succeeded\",\"sourceVersion\":\"different-reviewed-sha\"}"
+      }
     },
     {
       "id": "L10-Q022",
       "checkpointId": "CP5",
-      "caseId": "L10-C05",
-      "task": "diagnosis",
-      "caseContext": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it.",
       "objectiveIds": [
-        "D3.2.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Producing a result file does not automatically publish it",
-          "rationale": "Execution and result ingestion are separate operations. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "The download selection is not tied to the validated build",
-          "rationale": "A newer or unrelated run can satisfy a loose selector. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "YAML parsing does not validate every external resource relationship",
-          "rationale": "The task can parse while its dependency is unresolved. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Execution and result ingestion are separate operations. The selected answer is producing a result file does not automatically publish it.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q023",
-      "checkpointId": "CP5",
-      "caseId": "L10-C05",
-      "task": "verification",
-      "caseContext": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it.",
-      "objectiveIds": [
-        "D3.2.3"
+        "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The previous build's artifact has the same name as today's output. Which selection preserves promotion of the approved current candidate?",
       "options": [
         {
           "key": "A",
-          "text": "The release records the expected build and artifact identity",
-          "rationale": "The evidence should match the approved source revision. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Use the current branch name as the only selector",
+          "rationale": "Branch movement prevents it uniquely identifying the intended producing execution."
         },
         {
           "key": "B",
-          "text": "The task authenticates through the intended project connection",
-          "rationale": "Execution verifies the resource reference and authorization. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Download whichever named archive was listed first",
+          "rationale": "Listing position does not prove the archive corresponds to the approved candidate."
         },
         {
           "key": "C",
-          "text": "The run summary shows the expected test cases and failures",
-          "rationale": "The correct report must reach the test reporting surface. This directly addresses the constraint stated in this case."
+          "text": "Select the successful approved build ID and verify its sourceVersion",
+          "rationale": "Run identity and source correlation distinguish independently produced artifacts with repeated names."
+        },
+        {
+          "key": "D",
+          "text": "Rebuild at release time and reuse yesterday's artifact label",
+          "rationale": "A new build changes bytes instead of selecting the approved immutable output."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The correct report must reach the test reporting surface. The selected answer is the run summary shows the expected test cases and failures.",
+      "explanation": "Run identity and source correlation distinguish independently produced artifacts with repeated names. Listing position does not prove the archive corresponds to the approved candidate. Branch movement prevents it uniquely identifying the intended producing execution. A new build changes bytes instead of selecting the approved immutable output.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S4"
+      ]
+    },
+    {
+      "id": "L10-Q023",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "A task needs a secret variable, but its script expects an environment variable that was never mapped. Which repair is appropriate?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Echo the secret into the YAML repository first",
+          "rationale": "Committing sensitive material exposes it beyond the intended limited execution boundary."
+        },
+        {
+          "key": "B",
+          "text": "Map the secret explicitly into that task environment",
+          "rationale": "Secret values need deliberate scoped exposure to the consuming process environment."
+        },
+        {
+          "key": "C",
+          "text": "Give every task every secret automatically",
+          "rationale": "Broad exposure exceeds the requirements of the single consuming task."
+        },
+        {
+          "key": "D",
+          "text": "Rename the task so its display name matches the secret",
+          "rationale": "A friendly name does not create environment variable mapping for a script."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Secret values need deliberate scoped exposure to the consuming process environment. Committing sensitive material exposes it beyond the intended limited execution boundary. Broad exposure exceeds the requirements of the single consuming task. A friendly name does not create environment variable mapping for a script.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L10-Q024",
-      "checkpointId": "CP5",
-      "caseId": "L10-C05",
-      "task": "safeguard",
-      "caseContext": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.3"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A pipeline needs source read access but no ability to modify other projects. What authorization scope fits this workload?",
       "options": [
         {
           "key": "A",
-          "text": "Check source branch and run provenance before deployment",
-          "rationale": "A matching artifact name does not establish trust. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Use collection-wide administration to avoid repository prompts",
+          "rationale": "Broad cross-project authority exceeds the stated workload and creates unnecessary exposure."
         },
         {
           "key": "B",
-          "text": "Authorize the specific pipeline rather than every pipeline by default",
-          "rationale": "Shared resource access should remain controlled. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Use a personal administrator PAT in every step",
+          "rationale": "A personal broad token introduces avoidable authority and credential lifecycle dependence."
         },
         {
           "key": "C",
-          "text": "Publish diagnostics even on failure without masking failed status",
-          "rationale": "Reporting should aid diagnosis while preserving the gate. This directly addresses the constraint stated in this case."
+          "text": "Use the project-scoped build identity with needed repository reads",
+          "rationale": "The job identity should receive only the resource access its source operations require."
+        },
+        {
+          "key": "D",
+          "text": "Grant subscription Owner to solve source repository access",
+          "rationale": "Azure resource roles do not authorize Azure Repos source operations."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Reporting should aid diagnosis while preserving the gate. The selected answer is publish diagnostics even on failure without masking failed status.",
+      "explanation": "The job identity should receive only the resource access its source operations require. Broad cross-project authority exceeds the stated workload and creates unnecessary exposure. A personal broad token introduces avoidable authority and credential lifecycle dependence. Azure resource roles do not authorize Azure Repos source operations.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L10-Q025",
-      "checkpointId": "CP5",
-      "caseId": "L10-C05",
-      "task": "tradeoff",
-      "caseContext": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.2.3"
+        "D3.3.4"
       ],
-      "difficulty": "advanced",
-      "question": "Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. The team selects this remedy: \"Publish the supported result format from the correct path.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "The workflow and source should enter the sandbox together without copied test results or local state. Which input list is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Report paths and formats are part of the task contract",
-          "rationale": "Changing the test runner may require publication updates. This directly addresses the constraint stated in this case."
+          "text": "Copy only the existing application executable",
+          "rationale": "The workflow needs reviewed source and project inputs for reproducible validation."
         },
         {
           "key": "B",
-          "text": "Explicit run selection requires promotion metadata",
-          "rationale": "That metadata supports reproducibility and rollback. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Recursively copy every file including bin and state",
+          "rationale": "Generated output and sensitive local evidence need not belong in the sandbox source."
         },
         {
           "key": "C",
-          "text": "Connection names form an operational dependency",
-          "rationale": "Renaming them can require coordinated pipeline changes. That addresses a different requirement: Task input error. It does not directly resolve this case's stated constraint."
+          "text": "Copy only directory names without file contents",
+          "rationale": "A filesystem outline does not supply the source needed for an actual build."
+        },
+        {
+          "key": "D",
+          "text": "Copy the tracked sample source allowlist",
+          "rationale": "Tracked sources distinguish authored inputs from ignored build output and learner evidence."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Changing the test runner may require publication updates. The selected answer is report paths and formats are part of the task contract.",
+      "explanation": "Tracked sources distinguish authored inputs from ignored build output and learner evidence. Generated output and sensitive local evidence need not belong in the sandbox source. The workflow needs reviewed source and project inputs for reproducible validation. A filesystem outline does not supply the source needed for an actual build.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q026",
-      "checkpointId": "CP5",
-      "caseId": "L10-C06",
-      "task": "remedy",
-      "caseContext": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.1.4"
+        "D3.3.1"
       ],
-      "difficulty": "foundational",
-      "question": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A saved definition ID points to the right repository but a different YAML path. What should the retry do?",
       "options": [
         {
           "key": "A",
-          "text": "Publish the supported result format from the correct path",
-          "rationale": "The pipeline needs a reporting step for generated evidence. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Change the expected path locally without reviewing the source",
+          "rationale": "That changes the assertion instead of validating the originally intended definition."
         },
         {
           "key": "B",
-          "text": "Bind artifact download to the intended producing run",
-          "rationale": "Names alone do not uniquely identify build provenance. This directly addresses the constraint stated in this case."
+          "text": "Queue repeatedly until one build happens to succeed",
+          "rationale": "A successful unrelated definition still does not validate the required YAML source."
         },
         {
           "key": "C",
-          "text": "Evaluate Azure Pipelines integration with GitHub before changing platforms",
-          "rationale": "Source hosting does not force a particular CI engine. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "Stop rather than silently reuse the different executable definition",
+          "rationale": "Repository identity alone does not establish that the intended pipeline source will execute."
+        },
+        {
+          "key": "D",
+          "text": "Accept because YAML paths are cosmetic labels",
+          "rationale": "The path selects actual executable source and materially changes the pipeline contract."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Names alone do not uniquely identify build provenance. The selected answer is bind artifact download to the intended producing run.",
+      "explanation": "Repository identity alone does not establish that the intended pipeline source will execute. The path selects actual executable source and materially changes the pipeline contract. That changes the assertion instead of validating the originally intended definition. A successful unrelated definition still does not validate the required YAML source.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q027",
       "checkpointId": "CP5",
-      "caseId": "L10-C06",
-      "task": "diagnosis",
-      "caseContext": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run.",
       "objectiveIds": [
-        "D3.1.4"
+        "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A queued build waits because the organization has no available hosted parallelism. Which next step addresses the actual prerequisite?",
       "options": [
         {
           "key": "A",
-          "text": "The decision assumes code and pipeline must share a platform",
-          "rationale": "Supported integration allows cross-platform composition. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "Obtain approved capacity or an authorized suitable isolated agent",
+          "rationale": "Scheduling needs a permitted worker and available execution capacity before tasks run."
         },
         {
           "key": "B",
-          "text": "Producing a result file does not automatically publish it",
-          "rationale": "Execution and result ingestion are separate operations. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
+          "text": "Increase the repository contents permission to write",
+          "rationale": "Source mutation authority does not supply a worker or hosted parallel entitlement."
         },
         {
           "key": "C",
-          "text": "The download selection is not tied to the validated build",
-          "rationale": "A newer or unrelated run can satisfy a loose selector. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A newer or unrelated run can satisfy a loose selector. The selected answer is the download selection is not tied to the validated build.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q028",
-      "checkpointId": "CP5",
-      "caseId": "L10-C06",
-      "task": "verification",
-      "caseContext": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run.",
-      "objectiveIds": [
-        "D3.1.4"
-      ],
-      "difficulty": "applied",
-      "question": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "GitHub changes build through the existing governed Azure pipeline",
-          "rationale": "The proof should include existing network and governance requirements. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "Delete the queued status from the local evidence file",
+          "rationale": "Editing local evidence does not make the provider execute the waiting build."
         },
         {
-          "key": "B",
-          "text": "The run summary shows the expected test cases and failures",
-          "rationale": "The correct report must reach the test reporting surface. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "The release records the expected build and artifact identity",
-          "rationale": "The evidence should match the approved source revision. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The evidence should match the approved source revision. The selected answer is the release records the expected build and artifact identity.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q029",
-      "checkpointId": "CP5",
-      "caseId": "L10-C06",
-      "task": "safeguard",
-      "caseContext": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run.",
-      "objectiveIds": [
-        "D3.1.4"
-      ],
-      "difficulty": "applied",
-      "question": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Publish diagnostics even on failure without masking failed status",
-          "rationale": "Reporting should aid diagnosis while preserving the gate. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Check source branch and run provenance before deployment",
-          "rationale": "A matching artifact name does not establish trust. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Assess integration identity and permissions during the trial",
-          "rationale": "Cross-platform access adds a trust relationship. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "A matching artifact name does not establish trust. The selected answer is check source branch and run provenance before deployment.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q030",
-      "checkpointId": "CP5",
-      "caseId": "L10-C06",
-      "task": "tradeoff",
-      "caseContext": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run.",
-      "objectiveIds": [
-        "D3.1.4"
-      ],
-      "difficulty": "advanced",
-      "question": "Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. The team selects this remedy: \"Bind artifact download to the intended producing run.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Report paths and formats are part of the task contract",
-          "rationale": "Changing the test runner may require publication updates. That addresses a different requirement: Unpublished Azure test results. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Explicit run selection requires promotion metadata",
-          "rationale": "That metadata supports reproducibility and rollback. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Keeping two platforms increases integration administration",
-          "rationale": "Migration may reduce tools but can lose established capabilities. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "That metadata supports reproducibility and rollback. The selected answer is explicit run selection requires promotion metadata.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q031",
-      "checkpointId": "CP4",
-      "caseId": "L10-C07",
-      "task": "remedy",
-      "caseContext": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub.",
-      "objectiveIds": [
-        "D3.3.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Evaluate Azure Pipelines integration with GitHub before changing platforms",
-          "rationale": "Source hosting does not force a particular CI engine. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Configure validation for the actual repository provider",
-          "rationale": "Trigger capabilities depend on the repository integration. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Bind artifact download to the intended producing run",
-          "rationale": "Names alone do not uniquely identify build provenance. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Disable code coverage and mark the queued result green",
+          "rationale": "Changing quality evidence cannot create execution capacity or establish success."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Source hosting does not force a particular CI engine. The selected answer is evaluate Azure Pipelines integration with GitHub before changing platforms.",
+      "explanation": "Scheduling needs a permitted worker and available execution capacity before tasks run. Changing quality evidence cannot create execution capacity or establish success. Source mutation authority does not supply a worker or hosted parallel entitlement. Editing local evidence does not make the provider execute the waiting build.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S6"
+      ]
+    },
+    {
+      "id": "L10-Q028",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "A downstream job needs an output variable produced by a named upstream task. What must its definition include?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only a matching artifact display name",
+          "rationale": "Artifact naming does not declare a runtime output variable relationship."
+        },
+        {
+          "key": "B",
+          "text": "Only a later position in the YAML file",
+          "rationale": "Textual ordering alone does not expose values between distinct job contexts."
+        },
+        {
+          "key": "C",
+          "text": "Only the same variable spelling in an unrelated shell",
+          "rationale": "Coincidental local names do not propagate values across separate job execution boundaries."
+        },
+        {
+          "key": "D",
+          "text": "An output variable reference through the dependency context",
+          "rationale": "Cross-job use needs an explicitly exposed output and the appropriate dependency mapping."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Cross-job use needs an explicitly exposed output and the appropriate dependency mapping. Coincidental local names do not propagate values across separate job execution boundaries. Textual ordering alone does not expose values between distinct job contexts. Artifact naming does not declare a runtime output variable relationship.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
-      "id": "L10-Q032",
-      "checkpointId": "CP4",
-      "caseId": "L10-C07",
-      "task": "diagnosis",
-      "caseContext": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub.",
+      "id": "L10-Q029",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.1"
+        "D3.3.5"
       ],
-      "difficulty": "foundational",
-      "question": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "applied",
+      "question": "The test task is allowed to fail for reporting, but package promotion must still be blocked. What should the final gate inspect?",
       "options": [
         {
           "key": "A",
-          "text": "Repository providers do not share identical PR validation configuration",
-          "rationale": "A copied rule may not apply in the new source context. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the first restore step succeeded",
+          "rationale": "Dependency restoration does not prove later application tests passed their assertions."
         },
         {
           "key": "B",
-          "text": "The download selection is not tied to the validated build",
-          "rationale": "A newer or unrelated run can satisfy a loose selector. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Only whether a test report file exists",
+          "rationale": "A report can contain failures and still exist as a valid file."
         },
         {
           "key": "C",
-          "text": "The decision assumes code and pipeline must share a platform",
-          "rationale": "Supported integration allows cross-platform composition. This directly addresses the constraint stated in this case."
+          "text": "Actual test counters and the required failure outcome",
+          "rationale": "Reporting tolerance must not erase evidence used for the mandatory promotion decision."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the build directory was created",
+          "rationale": "Directory creation does not establish successful required test assertion execution."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Supported integration allows cross-platform composition. The selected answer is the decision assumes code and pipeline must share a platform.",
+      "explanation": "Reporting tolerance must not erase evidence used for the mandatory promotion decision. A report can contain failures and still exist as a valid file. Directory creation does not establish successful required test assertion execution. Dependency restoration does not prove later application tests passed their assertions.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S4"
+      ]
+    },
+    {
+      "id": "L10-Q030",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "A release downloads an artifact then builds the application again. Why does this violate the intended build-once promotion model?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A new build always runs with broader project permissions",
+          "rationale": "Authority depends on configuration rather than the mere act of rebuilding source."
+        },
+        {
+          "key": "B",
+          "text": "The deployed output can differ from the validated downloaded bytes",
+          "rationale": "Rebuilding introduces a new output instead of promoting the selected immutable candidate."
+        },
+        {
+          "key": "C",
+          "text": "Downloading artifacts automatically disables all test execution",
+          "rationale": "Artifact download does not change whether a build command can execute tests."
+        },
+        {
+          "key": "D",
+          "text": "Every rebuild necessarily changes the database schema",
+          "rationale": "Application rebuilding does not inherently apply any database migration or schema operation."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Rebuilding introduces a new output instead of promoting the selected immutable candidate. Artifact download does not change whether a build command can execute tests. Authority depends on configuration rather than the mere act of rebuilding source. Application rebuilding does not inherently apply any database migration or schema operation.",
+      "sourceIds": [
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Approved CI artifact: build 101, SHA A\nRelease command: dotnet publish current main"
+      }
+    },
+    {
+      "id": "L10-Q031",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "applied",
+      "question": "A team needs one combined build for rapid main pushes while another build runs. What does trigger batch:true provide?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A subsequent CI run containing changes accumulated during active execution",
+          "rationale": "Batching reduces redundant queued source-change runs while preserving the combined pending changes."
+        },
+        {
+          "key": "B",
+          "text": "Cancellation of every active production deployment automatically",
+          "rationale": "CI trigger batching is not a universal deployment cancellation mechanism."
+        },
+        {
+          "key": "C",
+          "text": "Permission to skip all required tests after the first run",
+          "rationale": "Batching changes scheduling rather than the required quality validation contract."
+        },
+        {
+          "key": "D",
+          "text": "Automatic merging of every branch into main",
+          "rationale": "Scheduling builds does not grant source merge authorization or perform repository integration."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Batching reduces redundant queued source-change runs while preserving the combined pending changes. CI trigger batching is not a universal deployment cancellation mechanism. Batching changes scheduling rather than the required quality validation contract. Scheduling builds does not grant source merge authorization or perform repository integration.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L10-Q032",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "A failed test should stop packaging, but diagnostic publication should still run. Which condition belongs on the diagnostic task?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Remove all task failure signals from the test command",
+          "rationale": "Suppressing failure can incorrectly authorize packaging of a candidate with failed tests."
+        },
+        {
+          "key": "B",
+          "text": "Use succeeded() and expect reports after failed upstream tests",
+          "rationale": "That condition excludes the failed execution whose evidence is needed for diagnosis."
+        },
+        {
+          "key": "C",
+          "text": "Use a failure-tolerant reporting condition such as succeededOrFailed()",
+          "rationale": "Reporting can run after failure while the required packaging dependency remains blocked."
+        },
+        {
+          "key": "D",
+          "text": "Set the diagnostic task as the only required test",
+          "rationale": "Diagnostic publication does not execute the application behavioral assertions being gated."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Reporting can run after failure while the required packaging dependency remains blocked. That condition excludes the failed execution whose evidence is needed for diagnosis. Suppressing failure can incorrectly authorize packaging of a candidate with failed tests. Diagnostic publication does not execute the application behavioral assertions being gated.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L10-Q033",
       "checkpointId": "CP4",
-      "caseId": "L10-C07",
-      "task": "verification",
-      "caseContext": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub.",
       "objectiveIds": [
         "D3.3.1"
       ],
       "difficulty": "applied",
-      "question": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The learner registers a pipeline against a project other than the journal-owned sandbox. Which safeguard should reject the operation before reuse?",
       "options": [
         {
           "key": "A",
-          "text": "The release records the expected build and artifact identity",
-          "rationale": "The evidence should match the approved source revision. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Compare the returned project ID/name with the owned context",
+          "rationale": "Exact scope validation prevents accidentally adopting executable resources in another project."
         },
         {
           "key": "B",
-          "text": "GitHub changes build through the existing governed Azure pipeline",
-          "rationale": "The proof should include existing network and governance requirements. This directly addresses the constraint stated in this case."
+          "text": "Compare only its human-readable pipeline display name",
+          "rationale": "A repeated friendly name cannot establish the owning project boundary."
         },
         {
           "key": "C",
-          "text": "A test pull request produces the expected validation status",
-          "rationale": "The behavior must be checked against the actual provider. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The proof should include existing network and governance requirements. The selected answer is gitHub changes build through the existing governed Azure pipeline.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q034",
-      "checkpointId": "CP4",
-      "caseId": "L10-C07",
-      "task": "safeguard",
-      "caseContext": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub.",
-      "objectiveIds": [
-        "D3.3.1"
-      ],
-      "difficulty": "applied",
-      "question": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Check source branch and run provenance before deployment",
-          "rationale": "A matching artifact name does not establish trust. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
+          "text": "Use a broad collection administrator token to ignore scope",
+          "rationale": "More authority increases possible damage without establishing the authorized sandbox boundary."
         },
         {
-          "key": "B",
-          "text": "Assess integration identity and permissions during the trial",
-          "rationale": "Cross-platform access adds a trust relationship. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Protect the target branch with the appropriate required validation",
-          "rationale": "A triggered run must also participate in merge governance. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Cross-platform access adds a trust relationship. The selected answer is assess integration identity and permissions during the trial.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q035",
-      "checkpointId": "CP4",
-      "caseId": "L10-C07",
-      "task": "tradeoff",
-      "caseContext": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub.",
-      "objectiveIds": [
-        "D3.3.1"
-      ],
-      "difficulty": "advanced",
-      "question": "Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. The team selects this remedy: \"Evaluate Azure Pipelines integration with GitHub before changing platforms.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Explicit run selection requires promotion metadata",
-          "rationale": "That metadata supports reproducibility and rollback. That addresses a different requirement: Artifact confusion. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Keeping two platforms increases integration administration",
-          "rationale": "Migration may reduce tools but can lose established capabilities. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Provider portability may require policy changes as well as YAML",
-          "rationale": "Identical build steps do not guarantee identical governance. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Migration may reduce tools but can lose established capabilities. The selected answer is keeping two platforms increases integration administration.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q036",
-      "checkpointId": "CP4",
-      "caseId": "L10-C08",
-      "task": "remedy",
-      "caseContext": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently.",
-      "objectiveIds": [
-        "D3.3.4"
-      ],
-      "difficulty": "foundational",
-      "question": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Configure validation for the actual repository provider",
-          "rationale": "Trigger capabilities depend on the repository integration. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Stop printing sensitive command lines and use supported secret handling",
-          "rationale": "Diagnostics must not expose the secret-bearing execution input. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Evaluate Azure Pipelines integration with GitHub before changing platforms",
-          "rationale": "Source hosting does not force a particular CI engine. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Check that it contains at least one successful old build",
+          "rationale": "Past execution does not authorize mutation of an unrelated project resource."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Trigger capabilities depend on the repository integration. The selected answer is configure validation for the actual repository provider.",
+      "explanation": "Exact scope validation prevents accidentally adopting executable resources in another project. A repeated friendly name cannot establish the owning project boundary. Past execution does not authorize mutation of an unrelated project resource. More authority increases possible damage without establishing the authorized sandbox boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
+      ]
+    },
+    {
+      "id": "L10-Q034",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "The artifact name includes a release number, but its producing run is gone. What is lost for a source-to-artifact audit?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only a checksum retained beside the archive",
+          "rationale": "A digest can identify bytes while leaving their producing execution and validation relationship unavailable."
+        },
+        {
+          "key": "B",
+          "text": "Only a copy of the current pipeline YAML",
+          "rationale": "Current configuration does not establish which historical definition and source actually produced the retained artifact."
+        },
+        {
+          "key": "C",
+          "text": "The verifiable execution record connecting validation and source revision",
+          "rationale": "A friendly version label alone cannot reconstruct the original producing execution evidence."
+        },
+        {
+          "key": "D",
+          "text": "Only a package version label without the original run relationship",
+          "rationale": "A friendly package version does not reconstruct which source and quality results produced the bytes."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A digest can identify bytes while leaving their producing execution and validation relationship unavailable. Current configuration does not establish which historical definition and source actually produced the retained artifact. A friendly version label alone cannot reconstruct the original producing execution evidence. A friendly package version does not reconstruct which source and quality results produced the bytes.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L10-Q035",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "A variable group contains nonsecret build options but is authorized to all pipelines by default. What narrower design fits this exercise?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assume nonsecret means every pipeline must inherit access",
+          "rationale": "Nonsecret classification does not establish a requirement for blanket pipeline authorization."
+        },
+        {
+          "key": "B",
+          "text": "Grant every project contributor organization administrator membership",
+          "rationale": "Broad membership does not reduce variable group exposure to unrelated pipelines."
+        },
+        {
+          "key": "C",
+          "text": "Store build options in a migration identity credential",
+          "rationale": "Unrelated credential storage does not provide appropriate variable group consumption boundaries."
+        },
+        {
+          "key": "D",
+          "text": "Authorize only explicitly approved consuming pipelines",
+          "rationale": "The group should be exposed only to workloads that need its configuration."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The group should be exposed only to workloads that need its configuration. Broad membership does not reduce variable group exposure to unrelated pipelines. Unrelated credential storage does not provide appropriate variable group consumption boundaries. Nonsecret classification does not establish a requirement for blanket pipeline authorization.",
+      "sourceIds": [
+        "S5"
+      ]
+    },
+    {
+      "id": "L10-Q036",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "A learner observes a run successful on commit A then pushes commit B. What evidence is required to pass B's CI checkpoint?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A successful required execution whose sourceVersion is B",
+          "rationale": "The changed candidate needs validation evidence tied to its own exact source revision."
+        },
+        {
+          "key": "B",
+          "text": "The successful A result because both use the same YAML filename",
+          "rationale": "Unchanged workflow naming does not prove changed application source passed validation."
+        },
+        {
+          "key": "C",
+          "text": "The fact that B has a later commit timestamp",
+          "rationale": "Source recency does not establish successful test execution for the new candidate."
+        },
+        {
+          "key": "D",
+          "text": "The fact that A and B have the same author",
+          "rationale": "Authorship does not show that the changed source behavior was validated."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The changed candidate needs validation evidence tied to its own exact source revision. Unchanged workflow naming does not prove changed application source passed validation. Source recency does not establish successful test execution for the new candidate. Authorship does not show that the changed source behavior was validated.",
+      "sourceIds": [
+        "S6"
       ]
     },
     {
       "id": "L10-Q037",
-      "checkpointId": "CP4",
-      "caseId": "L10-C08",
-      "task": "diagnosis",
-      "caseContext": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Compile-time expressions refer to a runtime-generated value and resolve unexpectedly empty. Which boundary caused this error?",
       "options": [
         {
           "key": "A",
-          "text": "The decision assumes code and pipeline must share a platform",
-          "rationale": "Supported integration allows cross-platform composition. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "The agent does not support ordinary YAML comments",
+          "rationale": "Comments do not govern availability of runtime variables during template processing."
         },
         {
           "key": "B",
-          "text": "Repository providers do not share identical PR validation configuration",
-          "rationale": "A copied rule may not apply in the new source context. This directly addresses the constraint stated in this case."
+          "text": "The value does not exist during template expansion",
+          "rationale": "A later task output cannot supply data to an earlier compile-time evaluation."
         },
         {
           "key": "C",
-          "text": "A secret variable is not safe if the script deliberately emits it",
-          "rationale": "Masking is not a substitute for controlled output. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "The artifact must be compressed using a different format",
+          "rationale": "Compression choices do not change expression evaluation timing in the pipeline."
+        },
+        {
+          "key": "D",
+          "text": "The pipeline needs an additional source repository tag",
+          "rationale": "A Git tag cannot make runtime-generated data exist before tasks execute."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A copied rule may not apply in the new source context. The selected answer is repository providers do not share identical PR validation configuration.",
+      "explanation": "A later task output cannot supply data to an earlier compile-time evaluation. A Git tag cannot make runtime-generated data exist before tasks execute. Comments do not govern availability of runtime variables during template processing. Compression choices do not change expression evaluation timing in the pipeline.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L10-Q038",
-      "checkpointId": "CP4",
-      "caseId": "L10-C08",
-      "task": "verification",
-      "caseContext": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.4"
       ],
       "difficulty": "applied",
-      "question": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A script adds the reviewed workflow twice and stages no changes on retry. Which check prevents an unnecessary failing commit operation?",
       "options": [
         {
           "key": "A",
-          "text": "The task works while logs contain no sensitive value",
-          "rationale": "Both functionality and output hygiene require verification. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "Reset every branch to the initial empty commit",
+          "rationale": "That discards existing intended source without creating any necessary difference."
         },
         {
           "key": "B",
-          "text": "GitHub changes build through the existing governed Azure pipeline",
-          "rationale": "The proof should include existing network and governance requirements. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "Alter the test threshold solely to manufacture a diff",
+          "rationale": "Changing policy for retry convenience violates the reviewed quality gate contract."
         },
         {
           "key": "C",
-          "text": "A test pull request produces the expected validation status",
-          "rationale": "The behavior must be checked against the actual provider. This directly addresses the constraint stated in this case."
+          "text": "Push to another existing project to force execution",
+          "rationale": "A different project is outside the authorized disposable source boundary."
+        },
+        {
+          "key": "D",
+          "text": "Inspect staged differences before running git commit",
+          "rationale": "A no-change retry should reuse the verified source revision rather than require another commit."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The behavior must be checked against the actual provider. The selected answer is a test pull request produces the expected validation status.",
+      "explanation": "A no-change retry should reuse the verified source revision rather than require another commit. That discards existing intended source without creating any necessary difference. Changing policy for retry convenience violates the reviewed quality gate contract. A different project is outside the authorized disposable source boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q039",
-      "checkpointId": "CP4",
-      "caseId": "L10-C08",
-      "task": "safeguard",
-      "caseContext": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "TRX reports show three failed tests despite a successful package upload. What is the correct release-quality conclusion from these observations?",
       "options": [
         {
           "key": "A",
-          "text": "Pass secrets only to the task that needs them",
-          "rationale": "Broad environment exposure increases accidental disclosure risk. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "A successful upload overrides the failed application assertions",
+          "rationale": "Storage success and test correctness are separate required release properties."
         },
         {
           "key": "B",
-          "text": "Assess integration identity and permissions during the trial",
-          "rationale": "Cross-platform access adds a trust relationship. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "The tests must have passed because the archive is nonempty",
+          "rationale": "A nonempty package can contain code whose required tests actually failed."
         },
         {
           "key": "C",
-          "text": "Protect the target branch with the appropriate required validation",
-          "rationale": "A triggered run must also participate in merge governance. This directly addresses the constraint stated in this case."
+          "text": "The report should be deleted before final validation",
+          "rationale": "Removing evidence does not correct the measured application test outcome."
+        },
+        {
+          "key": "D",
+          "text": "Artifact availability does not establish a passing test gate",
+          "rationale": "Publication can succeed while its application behavioral validation still contains required failures."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A triggered run must also participate in merge governance. The selected answer is protect the target branch with the appropriate required validation.",
+      "explanation": "Publication can succeed while its application behavioral validation still contains required failures. Storage success and test correctness are separate required release properties. A nonempty package can contain code whose required tests actually failed. Removing evidence does not correct the measured application test outcome.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L10-Q040",
-      "checkpointId": "CP4",
-      "caseId": "L10-C08",
-      "task": "tradeoff",
-      "caseContext": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.4"
+        "D3.1.4"
       ],
-      "difficulty": "advanced",
-      "question": "Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. The team selects this remedy: \"Configure validation for the actual repository provider.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A digest matches but the artifact belongs to a different successful source revision. Which assessment preserves the approved-candidate requirement?",
       "options": [
         {
           "key": "A",
-          "text": "Provider portability may require policy changes as well as YAML",
-          "rationale": "Identical build steps do not guarantee identical governance. This directly addresses the constraint stated in this case."
+          "text": "Reject the source mismatch while recording passed content integrity",
+          "rationale": "A digest verifies bytes without authorizing an otherwise unapproved source candidate."
         },
         {
           "key": "B",
-          "text": "Masking has limits for transformed or partial values",
-          "rationale": "Design logs so secret-dependent content is not emitted. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "Accept because any successful source may replace an approved source",
+          "rationale": "A successful build does not automatically expand the release source approval boundary."
         },
         {
           "key": "C",
-          "text": "Keeping two platforms increases integration administration",
-          "rationale": "Migration may reduce tools but can lose established capabilities. That addresses a different requirement: Wrong pipeline platform. It does not directly resolve this case's stated constraint."
+          "text": "Rename the artifact to contain the approved SHA",
+          "rationale": "Changing a name cannot alter the producing source or content provenance."
+        },
+        {
+          "key": "D",
+          "text": "Move the approved tag silently to the downloaded source",
+          "rationale": "Changing approval evidence conceals the discrepancy instead of validating the intended candidate."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Identical build steps do not guarantee identical governance. The selected answer is provider portability may require policy changes as well as YAML.",
+      "explanation": "A digest verifies bytes without authorizing an otherwise unapproved source candidate. A successful build does not automatically expand the release source approval boundary. Changing a name cannot alter the producing source or content provenance. Changing approval evidence conceals the discrepancy instead of validating the intended candidate.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L10-Q041",
-      "checkpointId": "CP3",
-      "caseId": "L10-C09",
-      "task": "remedy",
-      "caseContext": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.2.3"
       ],
-      "difficulty": "foundational",
-      "question": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "Main advances after a build is queued. The selected run succeeds for an earlier sourceVersion. How can the release avoid a branch-race mistake?",
       "options": [
         {
           "key": "A",
-          "text": "Use a unique run identity and record source revision metadata",
-          "rationale": "Operational labels should support unambiguous build traceability. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "Compare only the run requester and pipeline friendly name",
+          "rationale": "Those labels do not identify the actual source candidate built by the run."
         },
         {
           "key": "B",
-          "text": "Configure validation for the actual repository provider",
-          "rationale": "Trigger capabilities depend on the repository integration. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Bind promotion to an explicitly reviewed run and exact commit",
+          "rationale": "Moving branch names require a stable candidate identity and matching execution evidence."
         },
         {
           "key": "C",
-          "text": "Stop printing sensitive command lines and use supported secret handling",
-          "rationale": "Diagnostics must not expose the secret-bearing execution input. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Diagnostics must not expose the secret-bearing execution input. The selected answer is stop printing sensitive command lines and use supported secret handling.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q042",
-      "checkpointId": "CP3",
-      "caseId": "L10-C09",
-      "task": "diagnosis",
-      "caseContext": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics.",
-      "objectiveIds": [
-        "D3.3.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Repository providers do not share identical PR validation configuration",
-          "rationale": "A copied rule may not apply in the new source context. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Always choose the latest branch tip regardless of tested revision",
+          "rationale": "That can promote source which was not used by the successful selected execution."
         },
         {
-          "key": "B",
-          "text": "A secret variable is not safe if the script deliberately emits it",
-          "rationale": "Masking is not a substitute for controlled output. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "A repeated friendly label is not a unique build identifier",
-          "rationale": "Different outputs can appear to be the same build. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Assume queue time permanently freezes the remote main reference",
+          "rationale": "Other changes can legitimately update the branch after this build is queued."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Masking is not a substitute for controlled output. The selected answer is a secret variable is not safe if the script deliberately emits it.",
+      "explanation": "Moving branch names require a stable candidate identity and matching execution evidence. That can promote source which was not used by the successful selected execution. Other changes can legitimately update the branch after this build is queued. Those labels do not identify the actual source candidate built by the run.",
+      "sourceIds": [
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Queued candidate: A\nMain after queue: B\nCompleted build sourceVersion: A"
+      }
+    },
+    {
+      "id": "L10-Q042",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Azure Repos main requires pull-request validation plus push CI. A YAML pr block is present but no branch build policy exists. What complete design satisfies both requirements?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep main push triggers and add required branch build validation",
+          "rationale": "Push CI and Azure Repos pull-request policies are separate configuration mechanisms."
+        },
+        {
+          "key": "B",
+          "text": "Give every contributor permission to bypass all branch policies",
+          "rationale": "Bypass authority defeats rather than implements the required reviewed validation boundary."
+        },
+        {
+          "key": "C",
+          "text": "Add a pipeline variable named RequiredPullRequestChecks",
+          "rationale": "An arbitrary variable does not establish a repository branch build validation policy."
+        },
+        {
+          "key": "D",
+          "text": "Remove push CI and rely on the unsupported YAML PR block",
+          "rationale": "That removes actual push validation without configuring the required provider pull-request gate."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Push CI and Azure Repos pull-request policies are separate configuration mechanisms. That removes actual push validation without configuring the required provider pull-request gate. An arbitrary variable does not establish a repository branch build validation policy. Bypass authority defeats rather than implements the required reviewed validation boundary.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L10-Q043",
-      "checkpointId": "CP3",
-      "caseId": "L10-C09",
-      "task": "verification",
-      "caseContext": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "advanced",
+      "question": "An output is created in stage Build but needed in stage Deploy. Which design must the author inspect when it is empty?",
       "options": [
         {
           "key": "A",
-          "text": "A test pull request produces the expected validation status",
-          "rationale": "The behavior must be checked against the actual provider. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the output variable exists in the producing task local shell",
+          "rationale": "A local value does not establish the required cross-stage output exposure and dependency mapping."
         },
         {
           "key": "B",
-          "text": "The task works while logs contain no sensitive value",
-          "rationale": "Both functionality and output hygiene require verification. This directly addresses the constraint stated in this case."
+          "text": "Only whether the deployment timeout exceeds build duration",
+          "rationale": "Execution duration does not establish the required output value propagation contract."
         },
         {
           "key": "C",
-          "text": "The artifact resolves to one run and exact commit",
-          "rationale": "The lookup must establish a single provenance chain. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Both functionality and output hygiene require verification. The selected answer is the task works while logs contain no sensitive value.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q044",
-      "checkpointId": "CP3",
-      "caseId": "L10-C09",
-      "task": "safeguard",
-      "caseContext": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics.",
-      "objectiveIds": [
-        "D3.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Do not treat a display number as the only content identifier",
-          "rationale": "Human labels can be configured independently of artifact bytes. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "Named output exposure, stage dependency and stageDependencies mapping",
+          "rationale": "Cross-stage values need the correct producer identity and declared data dependency path."
         },
         {
-          "key": "B",
-          "text": "Protect the target branch with the appropriate required validation",
-          "rationale": "A triggered run must also participate in merge governance. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Pass secrets only to the task that needs them",
-          "rationale": "Broad environment exposure increases accidental disclosure risk. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Only whether both stages share the same display name",
+          "rationale": "Display labels do not expose output variables across separate stage contexts."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Broad environment exposure increases accidental disclosure risk. The selected answer is pass secrets only to the task that needs them.",
+      "explanation": "A local value does not establish the required cross-stage output exposure and dependency mapping. Cross-stage values need the correct producer identity and declared data dependency path. Display labels do not expose output variables across separate stage contexts. Execution duration does not establish the required output value propagation contract.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "stage: Deploy\n# Needs Build.Pack output named revision\n# stageDependencies must address the actual producer"
+      }
     },
     {
-      "id": "L10-Q045",
-      "checkpointId": "CP3",
-      "caseId": "L10-C09",
-      "task": "tradeoff",
-      "caseContext": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics.",
+      "id": "L10-Q044",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.1.4"
       ],
       "difficulty": "advanced",
-      "question": "Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. The team selects this remedy: \"Stop printing sensitive command lines and use supported secret handling.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A release in one project needs artifacts from another restricted project. Which authorization design preserves both provenance and least privilege?",
       "options": [
         {
           "key": "A",
-          "text": "Provider portability may require policy changes as well as YAML",
-          "rationale": "Identical build steps do not guarantee identical governance. That addresses a different requirement: Pull-request trigger mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Disable every producing project security boundary",
+          "rationale": "Removing all resource restrictions is unnecessary for a narrowly authorized artifact reader."
         },
         {
           "key": "B",
-          "text": "Masking has limits for transformed or partial values",
-          "rationale": "Design logs so secret-dependent content is not emitted. This directly addresses the constraint stated in this case."
+          "text": "Grant the intended job identity only required source-build artifact reads",
+          "rationale": "Cross-project consumption requires deliberate narrow authorization rather than bypassing run provenance checks."
         },
         {
           "key": "C",
-          "text": "Readable version labels and immutable identity serve different needs",
-          "rationale": "Keep both when users need chronology and exact provenance. That addresses a different requirement: Untraceable run number. It does not directly resolve this case's stated constraint."
+          "text": "Use a collection administrator personal token for every task",
+          "rationale": "Broad personal authority exceeds the necessary artifact-read operation and complicates credential ownership."
+        },
+        {
+          "key": "D",
+          "text": "Copy an arbitrary archive and invent the expected build ID",
+          "rationale": "Unverified transfer and false identity cannot establish the approved source-to-artifact chain."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Design logs so secret-dependent content is not emitted. The selected answer is masking has limits for transformed or partial values.",
+      "explanation": "Cross-project consumption requires deliberate narrow authorization rather than bypassing run provenance checks. Broad personal authority exceeds the necessary artifact-read operation and complicates credential ownership. Unverified transfer and false identity cannot establish the approved source-to-artifact chain. Removing all resource restrictions is unnecessary for a narrowly authorized artifact reader.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S4",
+        "S5"
+      ]
+    },
+    {
+      "id": "L10-Q045",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "A reusable template accepts Debug and Release, but a caller supplies Production as its configuration. Which response preserves its typed interface?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Put Production in a shell variable after compilation",
+          "rationale": "A later runtime value does not satisfy the earlier template parameter contract."
+        },
+        {
+          "key": "B",
+          "text": "Treat Production as Release without recording the substitution",
+          "rationale": "Undocumented coercion conceals an interface mismatch and can mislead release review."
+        },
+        {
+          "key": "C",
+          "text": "Reject the unsupported value before scheduling its build behavior",
+          "rationale": "The caller must satisfy the declared parameter contract rather than silently change semantics."
+        },
+        {
+          "key": "D",
+          "text": "Give the template broader service-connection authority",
+          "rationale": "Additional privileges cannot make an unsupported configuration value part of its interface."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The caller must satisfy the declared parameter contract rather than silently change semantics. Undocumented coercion conceals an interface mismatch and can mislead release review. A later runtime value does not satisfy the earlier template parameter contract. Additional privileges cannot make an unsupported configuration value part of its interface.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L10-Q046",
-      "checkpointId": "CP3",
-      "caseId": "L10-C10",
-      "task": "remedy",
-      "caseContext": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.1.4",
-        "D3.3.5"
+        "D3.3.1"
       ],
-      "difficulty": "foundational",
-      "question": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "A timed-out registration is retried; one matching name exists but points to another repository. What should the recovery logic do?",
       "options": [
         {
           "key": "A",
-          "text": "Restore scoped GitHub app authorization for that repository",
-          "rationale": "The pipeline needs an authorized repository connection. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "Delete every pipeline with a similar name across the organization",
+          "rationale": "Recovery is limited to the exact disposable boundary rather than broad destructive matching."
         },
         {
           "key": "B",
-          "text": "Stop printing sensitive command lines and use supported secret handling",
-          "rationale": "Diagnostics must not expose the secret-bearing execution input. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "Refuse adoption and reconcile the exact definition identity",
+          "rationale": "Lost-response recovery must verify repository and YAML ownership before reusing existing state."
         },
         {
           "key": "C",
-          "text": "Use a unique run identity and record source revision metadata",
-          "rationale": "Operational labels should support unambiguous build traceability. This directly addresses the constraint stated in this case."
+          "text": "Queue it once and trust any successful result",
+          "rationale": "Successful execution cannot authorize adopting another source repository definition."
+        },
+        {
+          "key": "D",
+          "text": "Adopt it because exactly one friendly name was returned",
+          "rationale": "Uniqueness of a name does not prove the executable source is the authorized one."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Operational labels should support unambiguous build traceability. The selected answer is use a unique run identity and record source revision metadata.",
+      "explanation": "Lost-response recovery must verify repository and YAML ownership before reusing existing state. Uniqueness of a name does not prove the executable source is the authorized one. Recovery is limited to the exact disposable boundary rather than broad destructive matching. Successful execution cannot authorize adopting another source repository definition.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L10-Q047",
-      "checkpointId": "CP3",
-      "caseId": "L10-C10",
-      "task": "diagnosis",
-      "caseContext": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.1.4",
-        "D3.3.5"
+        "D3.2.3"
       ],
-      "difficulty": "applied",
-      "question": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "advanced",
+      "question": "Quality CI must prove tests passed and publish an immutable candidate, but optional diagnostics can fail. What policy distinguishes these outcomes correctly?",
       "options": [
         {
           "key": "A",
-          "text": "A repeated friendly label is not a unique build identifier",
-          "rationale": "Different outputs can appear to be the same build. This directly addresses the constraint stated in this case."
+          "text": "Treat artifact existence as the only required result",
+          "rationale": "An output can exist despite missing required tests or invalid source provenance."
         },
         {
           "key": "B",
-          "text": "The source integration no longer has repository access",
-          "rationale": "YAML correctness cannot overcome denied source authorization. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "Treat a diagnostic timeout as proof application tests failed",
+          "rationale": "An optional reporting failure does not itself establish an application assertion failure."
         },
         {
           "key": "C",
-          "text": "A secret variable is not safe if the script deliberately emits it",
-          "rationale": "Masking is not a substitute for controlled output. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "Mark every task continueOnError so the run always finishes",
+          "rationale": "Suppressing all failures removes the mandatory quality distinction the release requires."
+        },
+        {
+          "key": "D",
+          "text": "Make required tests/package gates blocking and label diagnostics separately",
+          "rationale": "The release decision must distinguish mandatory candidate validation from optional reporting work."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Different outputs can appear to be the same build. The selected answer is a repeated friendly label is not a unique build identifier.",
+      "explanation": "The release decision must distinguish mandatory candidate validation from optional reporting work. Suppressing all failures removes the mandatory quality distinction the release requires. An optional reporting failure does not itself establish an application assertion failure. An output can exist despite missing required tests or invalid source provenance.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4",
+        "S6"
       ]
     },
     {
       "id": "L10-Q048",
-      "checkpointId": "CP3",
-      "caseId": "L10-C10",
-      "task": "verification",
-      "caseContext": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.1.4",
-        "D3.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The artifact resolves to one run and exact commit",
-          "rationale": "The lookup must establish a single provenance chain. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "A pipeline run checks out the intended private commit",
-          "rationale": "The test must verify the authenticated source path. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "The task works while logs contain no sensitive value",
-          "rationale": "Both functionality and output hygiene require verification. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The lookup must establish a single provenance chain. The selected answer is the artifact resolves to one run and exact commit.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q049",
-      "checkpointId": "CP3",
-      "caseId": "L10-C10",
-      "task": "safeguard",
-      "caseContext": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact.",
-      "objectiveIds": [
-        "D3.1.4",
-        "D3.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Do not treat a display number as the only content identifier",
-          "rationale": "Human labels can be configured independently of artifact bytes. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Authorize only the participating repository rather than the whole account",
-          "rationale": "Repository selection limits the connector's trust scope. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Pass secrets only to the task that needs them",
-          "rationale": "Broad environment exposure increases accidental disclosure risk. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Human labels can be configured independently of artifact bytes. The selected answer is do not treat a display number as the only content identifier.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L10-Q050",
-      "checkpointId": "CP3",
-      "caseId": "L10-C10",
-      "task": "tradeoff",
-      "caseContext": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact.",
-      "objectiveIds": [
-        "D3.1.4",
-        "D3.3.5"
+        "D3.3.4"
       ],
       "difficulty": "advanced",
-      "question": "Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. The team selects this remedy: \"Use a unique run identity and record source revision metadata.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Three rapid main pushes arrive while CI is active. With batching enabled, what source and result should final verification inspect?",
       "options": [
         {
           "key": "A",
-          "text": "External integration depends on installation ownership and lifecycle",
-          "rationale": "Account and repository changes may require reauthorization. That addresses a different requirement: GitHub connection failure. It does not directly resolve this case's stated constraint."
+          "text": "Only the count of push events received",
+          "rationale": "Event counts do not identify which combined candidate was actually tested."
         },
         {
           "key": "B",
-          "text": "Masking has limits for transformed or partial values",
-          "rationale": "Design logs so secret-dependent content is not emitted. That addresses a different requirement: Secret printed by script. It does not directly resolve this case's stated constraint."
+          "text": "Only the newest package friendly name",
+          "rationale": "A reused artifact label does not prove the batched producing source or results."
         },
         {
           "key": "C",
-          "text": "Readable version labels and immutable identity serve different needs",
-          "rationale": "Keep both when users need chronology and exact provenance. This directly addresses the constraint stated in this case."
+          "text": "The actual batched run sourceVersion and final required results",
+          "rationale": "Batch scheduling still needs exact source identity and observed completed quality evidence."
+        },
+        {
+          "key": "D",
+          "text": "Only the first pushed commit and its queued timestamp",
+          "rationale": "The subsequent batched run can contain later accumulated source changes."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Keep both when users need chronology and exact provenance. The selected answer is readable version labels and immutable identity serve different needs.",
+      "explanation": "Batch scheduling still needs exact source identity and observed completed quality evidence. The subsequent batched run can contain later accumulated source changes. Event counts do not identify which combined candidate was actually tested. A reused artifact label does not prove the batched producing source or results.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
+      ]
+    },
+    {
+      "id": "L10-Q049",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "An archive is retained but its lockfile inputs differ from the reviewed build record. What release investigation is warranted before promotion?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reconcile actual dependency inputs and trusted producing artifact identity",
+          "rationale": "Source labels alone cannot explain a changed dependency graph in approved output provenance."
+        },
+        {
+          "key": "B",
+          "text": "Change the reviewed lockfile record to whichever archive arrived",
+          "rationale": "That moves the expected evidence rather than validates the selected candidate."
+        },
+        {
+          "key": "C",
+          "text": "Assume identical artifact names guarantee the same dependency graph",
+          "rationale": "Friendly names do not bind exact direct and transitive dependency resolution content."
+        },
+        {
+          "key": "D",
+          "text": "Skip provenance checks because the archive downloads successfully",
+          "rationale": "Transport success does not establish the approved dependencies or producing execution identity."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Source labels alone cannot explain a changed dependency graph in approved output provenance. Friendly names do not bind exact direct and transitive dependency resolution content. That moves the expected evidence rather than validates the selected candidate. Transport success does not establish the approved dependencies or producing execution identity.",
+      "sourceIds": [
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Approved lock graph: dependency X 1.2\nSelected archive metadata: dependency X 1.3"
+      }
+    },
+    {
+      "id": "L10-Q050",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "An untrusted contribution can edit YAML and requests a powerful service connection during tests. Which resource control should remain outside that editable YAML?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A branch name chosen by the contributor",
+          "rationale": "Caller-controlled naming is not a trusted resource authorization or approval decision."
+        },
+        {
+          "key": "B",
+          "text": "A comment asking contributors not to use the connection",
+          "rationale": "Documentation does not enforce the authority boundary against editable malicious workflow content."
+        },
+        {
+          "key": "C",
+          "text": "A secret masking rule as the only protection",
+          "rationale": "Masking logs does not prevent authorized code from using an exposed credential."
+        },
+        {
+          "key": "D",
+          "text": "Explicit pipeline resource authorization and protected connection checks",
+          "rationale": "The code being evaluated must not authorize its own access to privileged resources."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The code being evaluated must not authorize its own access to privileged resources. Documentation does not enforce the authority boundary against editable malicious workflow content. Masking logs does not prevent authorized code from using an exposed credential. Caller-controlled naming is not a trusted resource authorization or approval decision.",
+      "sourceIds": [
+        "S5"
       ]
     }
   ]

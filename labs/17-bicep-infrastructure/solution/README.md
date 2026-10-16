@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Compare every output ID with the expected resource-group prefix. The named fault changes a real run tag and must be detected by a fresh service read.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. All five checkpoint commands, final validators and named fault/repair passed in CourseReleaseSequences.Tests.ps1. Local .NET publishing/tests, EF SQL generation and Bicep compilation are real; GitHub, Azure and readiness HTTP responses are explicit fail-closed doubles. Live release, SQL authentication and traffic routing have not run.
 
 ## CP1 — Compile the independent core infrastructure
 

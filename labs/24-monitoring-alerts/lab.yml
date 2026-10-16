@@ -82,13 +82,13 @@
     },
     {
       "id": "CP5",
-      "title": "Map pipeline and platform telemetry to owned response actions",
-      "commands": "$map=[ordered]@{application='request duration/error rate';infrastructure=@('CPU','memory','disk','network');github='workflow_run completion and repository insights';azurePipelines='build/release result';notificationMode='reviewed owner only';externalMessagesSent=0;liveTrafficVerified=$false}\n $map|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'telemetry-response-map.json')\n",
-      "expected": "Application, infrastructure, and delivery signals have distinct response paths.",
-      "positive": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n",
-      "negative": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n",
-      "validate": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n",
-      "evidence": "Signal-to-owner/action matrix and unverified integration gates.",
+      "title": "Evaluate owned telemetry response decisions",
+      "commands": "$map=[ordered]@{application='request duration/error rate';infrastructure=@('CPU','memory','disk','network');github='workflow_run completion and repository insights';azurePipelines='build/release result';notificationMode='reviewed owner only';externalMessagesSent=0;liveTrafficVerified=$false}\n $map|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'telemetry-response-map.json')\n$events=@(@{id='owned-slow';resourceGroup=$ResourceGroup;requests=12;averageMs=1200},@{id='owned-fast';resourceGroup=$ResourceGroup;requests=20;averageMs=200},@{id='foreign-slow';resourceGroup='another-group';requests=100;averageMs=2000})\n$decisions=@($events|ForEach-Object {@{id=$_.id;action=$(if($_.resourceGroup -ne $ResourceGroup){'exclude-unowned'}elseif($_.requests -gt 0 -and $_.averageMs -gt 1000){'investigate-latency'}else{'observe'});sent=$false}})\n$decisions|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'response-decisions.json')\n",
+      "expected": "Three synthetic observations yield investigate-latency, observe, and exclude-unowned decisions. No notification is sent; external alert delivery remains unverified.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n\n$d=@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json)\nif(@($d|Where-Object action -eq 'investigate-latency').Count -ne 1 -or @($d|Where-Object action -eq 'exclude-unowned').Count -ne 1){throw 'Owned response routing did not distinguish slow, healthy and unowned events.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n\nif(@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json|Where-Object sent).Count){throw 'Offline routing must not send notifications.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}\n\n$d=@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json)\nif(@($d|Where-Object action -eq 'investigate-latency').Count -ne 1 -or @($d|Where-Object action -eq 'exclude-unowned').Count -ne 1){throw 'Owned response routing did not distinguish slow, healthy and unowned events.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json\n if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}\n\nif(@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json|Where-Object sent).Count){throw 'Offline routing must not send notifications.'}\n",
+      "evidence": "Response map and computed response-decisions.json for slow, healthy and foreign resource observations.",
       "fix": "Configure VM/Container/Storage/Network Insights only for approved owned resources; avoid collecting credentials or personal request bodies.",
       "coverage": [
         {
@@ -207,8 +207,8 @@
     "Microsoft.Insights"
   ],
   "verification": {
-    "status": "not-run",
-    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named fault/repair passed in CourseScanMonitorSequences.Tests.ps1. Local .NET package inventory/advisory queries and Gitleaks scans are real. GitHub/Azure APIs and Docker/Trivy reports are explicit fixtures; live security integration and alert delivery have not run. Repository CI separately runs the actual application container."
   },
   "solutionNotes": "The alert drift assertion reads the actual provider rule. A configured rule without incoming data remains configuration evidence and must not be presented as a delivered notification."
 }

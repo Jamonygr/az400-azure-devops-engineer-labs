@@ -121,9 +121,10 @@ jobs:
           SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
           LAB_RUN_ID: ${{ vars.LAB_RUN_ID }}
+          OWNERSHIP_MARKER: ${{ vars.LAB_OWNERSHIP_MARKER }}
           APP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
           WORKSPACE_ID: ${{ vars.LOG_ANALYTICS_WORKSPACE_ID }}
-        run: ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
+        run: ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -OwnerToken $env:OWNERSHIP_MARKER -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
       - uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383 # v3
         with:
           app-name: ${{ vars.AZURE_WEBAPP_NAME }}

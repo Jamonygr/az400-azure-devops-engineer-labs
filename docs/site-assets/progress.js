@@ -90,6 +90,7 @@
     actions.append(button("Export JSON", () => { try { download(read(window.localStorage, true).record, "az400-progress.json"); message.textContent = "Progress exported without account or resource identifiers."; } catch (error) { message.textContent = error.message; } }));
     const label = el("label", "Preview an import ", "az400-file-button"), file = el("input"); file.type = "file"; file.accept = ".json,application/json"; file.setAttribute("aria-label", "Import AZ-400 progress JSON"); label.append(file); actions.append(label);
     file.addEventListener("change", async () => {
+      preview.replaceChildren();
       try {
         const selected = file.files[0]; if (!selected) return; if (selected.size > maximumImportBytes) throw new Error("Progress imports must be 256 KiB or smaller.");
         const imported = validateRecord(JSON.parse(await selected.text())); preview.replaceChildren();

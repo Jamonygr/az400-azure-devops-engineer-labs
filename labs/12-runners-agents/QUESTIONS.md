@@ -8,500 +8,588 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 ## L12-Q001
 
-Foundational · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which next change most directly satisfies the stated requirement?
+A worker has Git but no .NET 10 SDK required by global.json. Which prerequisite should its capability check report?
 
-- **A.** Use an appropriately connected agent with restricted network access
-- **B.** Check parallel-job entitlement and available execution slots
-- **C.** Identify required endpoints and allow the minimum supported connectivity
+- **A.** The repository needs a different issue tracker
+- **B.** The application source must automatically be considered invalid
+- **C.** The worker requires more concurrent job slots
+- **D.** The required build toolchain is missing
 
 ## L12-Q002
 
-Foundational · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which explanation best accounts for the behavior or constraint described?
+GitHub runner inventory returns total_count zero for a new sandbox. What can the learner conclude from that read?
 
-- **A.** Scheduling is constrained by organization execution limits
-- **B.** A narrow download failure was generalized into unlimited access
-- **C.** The hosted worker lacks the required private connectivity
+- **A.** No GitHub-hosted runner can ever execute repository jobs
+- **B.** The application test suite has already failed
+- **C.** No repository self-hosted runners are registered in this inventory
+- **D.** Organization billing has automatically been upgraded
 
 ## L12-Q003
 
-Applied · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which observation provides the strongest evidence that the requested result was achieved?
+Azure DevOps lists two agent pools, but a queued build waits for capacity. Which distinction explains the observation?
 
-- **A.** Required job operations work while unrelated destinations remain restricted
-- **B.** The agent reaches only the intended private test endpoint
-- **C.** Queued jobs start when an authorized slot becomes available
+```text
+Readable pools: 2
+Matching idle agents: 0
+Permitted parallel jobs: 1
+```
+
+- **A.** The build must have completed before it was queued
+- **B.** Every visible pool guarantees unlimited simultaneous jobs
+- **C.** Changing artifact names allocates more parallel workers
+- **D.** Pool inventory differs from available authorized parallel execution capacity
 
 ## L12-Q004
 
-Applied · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which execution safeguard most directly addresses the risk in this case?
+A runner receives HTTPS responses from api.github.com and dev.azure.com. Which additional claim remains unproven by that check?
 
-- **A.** Measure demand before purchasing additional capacity
-- **B.** Maintain documented endpoint requirements and update procedures
-- **C.** Avoid exposing the private service publicly as a shortcut
+- **A.** It can reach the private SQL endpoint
+- **B.** It connected to the two tested HTTPS endpoints
+- **C.** The response arrived before the configured timeout
+- **D.** The requests used the configured HTTPS service port
 
 ## L12-Q005
 
-Advanced · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. The team selects this remedy: "Use an appropriately connected agent with restricted network access." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The local worker fixture removes its temporary directory after one successful job. What does that observation demonstrate?
 
-- **A.** More parallel entitlement can increase cost
-- **B.** Tighter egress increases configuration maintenance
-- **C.** Self-managed connectivity adds infrastructure operations
+- **A.** Every previous credential has been revoked remotely
+- **B.** Hostile code could never access the underlying operating system
+- **C.** The worker is registered ephemerally with GitHub
+- **D.** The fixture implemented its one-job workspace cleanup behavior
 
 ## L12-Q006
 
-Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which next change most directly satisfies the stated requirement?
+The worker fixture deliberately fails its job. Which final property must still hold for the cleanup requirement?
 
-- **A.** Separate untrusted execution and use isolated ephemeral workers
-- **B.** Use an appropriately connected agent with restricted network access
-- **C.** Check parallel-job entitlement and available execution slots
+- **A.** The failure must be hidden from the outer process
+- **B.** Its temporary job workspace is removed despite failure
+- **C.** Its evidence must claim the job succeeded
+- **D.** The failed workspace should become the next job workspace
 
 ## L12-Q007
 
-Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which explanation best accounts for the behavior or constraint described?
+A single-job design still passes deployment credentials into untrusted contribution code. Which boundary is violated despite using an ephemeral workspace?
 
-- **A.** The runner can retain malicious changes after the job
-- **B.** The hosted worker lacks the required private connectivity
-- **C.** Scheduling is constrained by organization execution limits
+- **A.** The workspace cleanup needs to run sooner after completion
+- **B.** The generated artifact should use a different digest algorithm
+- **C.** The worker needs a different operating-system routing label
+- **D.** The untrusted job received authority it should never possess
 
 ## L12-Q008
 
-Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which observation provides the strongest evidence that the requested result was achieved?
+A Linux x64 application bundle is scheduled on a Windows ARM worker without a compatible toolchain. What selection should be corrected?
 
-- **A.** Untrusted jobs cannot affect the privileged runner pool
-- **B.** The agent reaches only the intended private test endpoint
-- **C.** Queued jobs start when an authorized slot becomes available
+- **A.** Runner operating system and architecture compatibility
+- **B.** Only the pipeline display number
+- **C.** Only the work-item state
+- **D.** Only the worker parallel-job entitlement
 
 ## L12-Q009
 
-Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which execution safeguard most directly addresses the risk in this case?
+A self-hosted runner appears offline in inventory. What is the appropriate interpretation before queueing work to its labels?
 
-- **A.** Avoid exposing the private service publicly as a shortcut
-- **B.** Measure demand before purchasing additional capacity
-- **C.** Do not assign deployment credentials to untrusted worker contexts
+- **A.** Registration exists but current execution availability is absent
+- **B.** Its label grants cloud resource Owner automatically
+- **C.** Its last successful artifact proves it is currently connected
+- **D.** The repository source must have a compilation error
 
 ## L12-Q010
 
-Advanced · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. The team selects this remedy: "Check parallel-job entitlement and available execution slots." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A pipeline names an agent pool that exists but is not authorized for that pipeline. What prerequisite is missing?
 
-- **A.** Ephemeral execution adds provisioning overhead
-- **B.** Self-managed connectivity adds infrastructure operations
-- **C.** More parallel entitlement can increase cost
+- **A.** A different application test assertion
+- **B.** Explicit resource access for the intended consuming pipeline
+- **C.** A shorter YAML filename
+- **D.** A larger artifact compression buffer
 
 ## L12-Q011
 
-Foundational · [CP2](README.md#task-2) · [D3.3.7](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which next change most directly satisfies the stated requirement?
+The fixture reports credentialEnvironmentPresent false after filtering environment names. Which conclusion is justified from that result alone?
 
-- **A.** Check parallel-job entitlement and available execution slots
-- **B.** Separate untrusted execution and use isolated ephemeral workers
-- **C.** Use appropriate pool selection and agent demands or labels
+- **A.** The operating system enforces perfect tenant isolation
+- **B.** The host has no secrets anywhere
+- **C.** Those checked credential-like variables were not forwarded by this fixture
+- **D.** The cloud provider revoked all previous credentials
 
 ## L12-Q012
 
-Foundational · [CP2](README.md#task-2) · [D3.3.7](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which explanation best accounts for the behavior or constraint described?
+The private worker can resolve SQL DNS but cannot establish the required TCP connection. What does DNS success prove?
 
-- **A.** Scheduling is constrained by organization execution limits
-- **B.** The runner can retain malicious changes after the job
-- **C.** The job's requirements are not represented in selection rules
+- **A.** The public hosted worker has the same private reachability
+- **B.** All database users have correct roles
+- **C.** Name resolution only; network access still needs validation
+- **D.** The full database migration path has passed
 
 ## L12-Q013
 
-Applied · [CP2](README.md#task-2) · [D3.3.7](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which observation provides the strongest evidence that the requested result was achieved?
+The worker fixture records a SHA256 of its produced artifact. Why is this useful lifecycle evidence?
 
-- **A.** Queued jobs start when an authorized slot becomes available
-- **B.** Untrusted jobs cannot affect the privileged runner pool
-- **C.** The selected worker reports the required compiler version
+```json
+{"jobExitCode":0,"workspaceRemoved":true,"outputSha256":"64-hex-character-digest"}
+```
+
+- **A.** It identifies the output content created during that job
+- **B.** It registers the worker with both providers
+- **C.** It proves every application test passed
+- **D.** It grants the next job deployment permission
 
 ## L12-Q014
 
-Applied · [CP2](README.md#task-2) · [D3.3.7](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which execution safeguard most directly addresses the risk in this case?
+A pool contains five agents but the organization allows one parallel job. How many jobs can its entitlement permit at once?
 
-- **A.** Measure demand before purchasing additional capacity
-- **B.** Do not assign deployment credentials to untrusted worker contexts
-- **C.** Maintain capabilities and installation state deliberately
+- **A.** One permitted parallel job
+- **B.** Zero permanently because more agents than slots is invalid
+- **C.** Unlimited jobs if each has a unique name
+- **D.** Five jobs because all agents are registered
 
 ## L12-Q015
 
-Advanced · [CP2](README.md#task-2) · [D3.3.7](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. The team selects this remedy: "Separate untrusted execution and use isolated ephemeral workers." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A learner runs the local ephemeral fixture but never invokes GitHub registration APIs. How should the result be described?
 
-- **A.** Ephemeral execution adds provisioning overhead
-- **B.** Specialized agents reduce scheduling flexibility
-- **C.** More parallel entitlement can increase cost
+- **A.** A proof of private SQL network readiness
+- **B.** Local lifecycle practice with provider registration unverified
+- **C.** An Azure DevOps hosted agent deployment
+- **D.** A fully registered production GitHub runner
 
 ## L12-Q016
 
-Foundational · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which next change most directly satisfies the stated requirement?
+An ephemeral runner handles one job but leaves its VM running with cached credentials. What further lifecycle boundary needs repair?
 
-- **A.** Use appropriate pool selection and agent demands or labels
-- **B.** Clean or recreate the workspace and declare all inputs
-- **C.** Separate untrusted execution and use isolated ephemeral workers
+- **A.** Only increase job retry count
+- **B.** Destroy or sanitize the underlying worker and revoke residual access
+- **C.** Only remove a task comment from YAML
+- **D.** Only shorten the friendly runner display name
 
 ## L12-Q017
 
-Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which explanation best accounts for the behavior or constraint described?
+A hosted build succeeds publicly but a SQL migration needs private DNS and routing. Which execution design fits the migration stage?
 
-- **A.** The runner can retain malicious changes after the job
-- **B.** The job's requirements are not represented in selection rules
-- **C.** Persistent workspace state masks an undeclared dependency
+- **A.** Any public worker with the same artifact filename
+- **B.** An approved isolated private-network worker with restricted job access
+- **C.** A longer SQL connection timeout on an unreachable public route
+- **D.** A GitHub issue documenting the intended subnet
 
 ## L12-Q018
 
-Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which observation provides the strongest evidence that the requested result was achieved?
+A GitHub workflow requests labels that no connected runner satisfies. Why does the job remain queued?
 
-- **A.** A fresh isolated worker builds the same source successfully
-- **B.** Untrusted jobs cannot affect the privileged runner pool
-- **C.** The selected worker reports the required compiler version
+- **A.** The application must have failed its tests already
+- **B.** No available eligible worker matches the requested routing labels
+- **C.** The branch name always overrides the runs-on labels
+- **D.** The selected runner has an incompatible version label but still matches all requested routing constraints
 
 ## L12-Q019
 
-Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which execution safeguard most directly addresses the risk in this case?
+An Azure job demands a capability absent from every authorized agent. What is the safest capacity repair?
 
-- **A.** Do not assign deployment credentials to untrusted worker contexts
-- **B.** Maintain capabilities and installation state deliberately
-- **C.** Keep caches separate from correctness-critical build outputs
+- **A.** Skip the test job and claim capacity passed
+- **B.** Advertise the capability without installing the required tool
+- **C.** Provide an approved matching agent or correct an unjustified demand
+- **D.** Grant all agents subscription Owner
 
 ## L12-Q020
 
-Advanced · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. The team selects this remedy: "Use appropriate pool selection and agent demands or labels." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A temporary worker launches a child process, then deletes only the parent script. What cleanup gap remains?
 
-- **A.** Cleaning can increase build duration
-- **B.** Ephemeral execution adds provisioning overhead
-- **C.** Specialized agents reduce scheduling flexibility
+- **A.** The output hash automatically changes to zero
+- **B.** All remote runner registrations necessarily disappear
+- **C.** The organization parallelism becomes unlimited
+- **D.** The child process and its retained state may survive
 
 ## L12-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which next change most directly satisfies the stated requirement?
+A new hosted image removes a tool that the pipeline relied on implicitly. Which preparation reduces this hidden dependency?
 
-- **A.** Clean or recreate the workspace and declare all inputs
-- **B.** Run the agent under the least-privileged suitable identity
-- **C.** Use appropriate pool selection and agent demands or labels
+- **A.** Only add more required code reviewers
+- **B.** Only retain older test reports for longer
+- **C.** Record and install the required pinned toolchain explicitly
+- **D.** Only rename the selected hosted image label locally
 
 ## L12-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which explanation best accounts for the behavior or constraint described?
+A corporate proxy permits repository HTTPS but blocks artifact storage endpoints. Which result should the team expect?
 
-- **A.** The operating-system identity exceeds the task's needs
-- **B.** The job's requirements are not represented in selection rules
-- **C.** Persistent workspace state masks an undeclared dependency
+```text
+api.github.com: HTTPS allowed
+repository checkout: passed
+artifact storage endpoint: proxy denied
+```
+
+- **A.** Checkout can pass while artifact transfer still fails
+- **B.** A larger worker disk creates the missing outbound route
+- **C.** Artifact naming automatically bypasses proxy enforcement
+- **D.** Checkout success proves every provider endpoint is reachable
 
 ## L12-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which observation provides the strongest evidence that the requested result was achieved?
+A healthy worker cleanup passes, but the failed-job fixture leaves its workspace. Which acceptance condition is unmet?
 
-- **A.** A fresh isolated worker builds the same source successfully
-- **B.** The build succeeds while prohibited administrative actions fail
-- **C.** The selected worker reports the required compiler version
+- **A.** The output artifact should be renamed before deletion
+- **B.** Failure automatically revokes every host credential
+- **C.** Cleanup must execute for both success and failure
+- **D.** Only successful jobs need isolation or cleanup
 
 ## L12-Q024
 
-Applied · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which execution safeguard most directly addresses the risk in this case?
+Two agents execute from one shared writable workspace and their tests interfere. What boundary should be changed?
 
-- **A.** Inventory tool and filesystem access before changing the account
-- **B.** Maintain capabilities and installation state deliberately
-- **C.** Keep caches separate from correctness-critical build outputs
+- **A.** Raise every test timeout indefinitely
+- **B.** Give concurrent jobs separate owned workspaces or isolated workers
+- **C.** Share one deployment credential to keep their state consistent
+- **D.** Assign identical job display names to both agents
 
 ## L12-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. The team selects this remedy: "Clean or recreate the workspace and declare all inputs." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A repository administrator wants runners restricted to approved repositories rather than any repository in the organization. Which provider control fits?
 
-- **A.** Cleaning can increase build duration
-- **B.** Some installations need a separate privileged preparation step
-- **C.** Specialized agents reduce scheduling flexibility
+- **A.** Use routing labels alone to identify approved repositories
+- **B.** Rely only on one-job workspace deletion
+- **C.** Give all organization members the registration token
+- **D.** Use runner group access restrictions for intended consumers
 
 ## L12-Q026
 
-Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which next change most directly satisfies the stated requirement?
+A worker filters token-like environment names but mounts a shared host directory containing credentials. What does this reveal?
 
-- **A.** Run the agent under the least-privileged suitable identity
-- **B.** Declare toolchain setup and select a supported image intentionally
-- **C.** Clean or recreate the workspace and declare all inputs
+- **A.** A false environment flag guarantees no possible secret access
+- **B.** Environment filtering does not cover other credential sources
+- **C.** A SHA256 output digest revokes the mounted credentials
+- **D.** The directory becomes safe when the job is ephemeral
 
 ## L12-Q027
 
-Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which explanation best accounts for the behavior or constraint described?
+A private agent reaches the database IP but TLS hostname validation fails. Which prerequisite should be examined?
 
-- **A.** The operating-system identity exceeds the task's needs
-- **B.** The workflow assumed an unchanging preinstalled tool inventory
-- **C.** Persistent workspace state masks an undeclared dependency
+- **A.** Only the number of agent capability labels
+- **B.** The intended DNS name and valid service certificate chain
+- **C.** Only the artifact archive compression format
+- **D.** Only the work item acceptance text
 
 ## L12-Q028
 
-Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which observation provides the strongest evidence that the requested result was achieved?
+The runner advertises .NET 10 but global.json requests a missing exact feature band. What should the capability check use?
 
-- **A.** A clean selected image installs and reports required tools
-- **B.** A fresh isolated worker builds the same source successfully
-- **C.** The build succeeds while prohibited administrative actions fail
+- **A.** The actual SDK resolution under the repository contract
+- **B.** Only the application friendly display name
+- **C.** Only a static label written months earlier
+- **D.** Only the presence of a dotnet-named directory
 
 ## L12-Q029
 
 Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which execution safeguard most directly addresses the risk in this case?
+A worker downloads a release artifact before receiving approval and exposes its privileged deployment credential to every step. Which improvement is most direct?
 
-- **A.** Keep caches separate from correctness-critical build outputs
-- **B.** Inventory tool and filesystem access before changing the account
-- **C.** Review image deprecation notices and test updates
+- **A.** Retain all credentials after the job for faster retries
+- **B.** Mask all step names while retaining broad credential availability
+- **C.** Limit credential exposure to the authorized consuming execution boundary
+- **D.** Rename the runner to protected-production
 
 ## L12-Q030
 
-Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. The team selects this remedy: "Run the agent under the least-privileged suitable identity." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An agent is online but already executing another job. How should capacity planning interpret its availability for a new request?
 
-- **A.** Cleaning can increase build duration
-- **B.** Some installations need a separate privileged preparation step
-- **C.** Image control is less granular on hosted workers
+```text
+Agent: online
+Current job: active
+Free worker slot: false
+```
+
+- **A.** A different artifact name makes the busy agent idle
+- **B.** Queueing guarantees the new job has already passed tests
+- **C.** Assume online always means unlimited concurrent execution
+- **D.** Consider its current busy state and permitted parallel capacity
 
 ## L12-Q031
 
-Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which next change most directly satisfies the stated requirement?
+The fixture reports jobExitCode seven but the outer script returns zero. What required lifecycle signal has been lost?
 
-- **A.** Use host isolation and restricted trust-specific pools
-- **B.** Run the agent under the least-privileged suitable identity
-- **C.** Declare toolchain setup and select a supported image intentionally
+- **A.** The actual source commit SHA automatically changes
+- **B.** Failure propagation from job to invoking operation
+- **C.** Provider billing information for the organization
+- **D.** The output hash must now identify another algorithm
 
 ## L12-Q032
 
-Foundational · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which explanation best accounts for the behavior or constraint described?
+A self-hosted runner executes public fork code because workflow labels match. What additional boundary is needed beyond labels?
 
-- **A.** The workflow assumed an unchanging preinstalled tool inventory
-- **B.** Containerization was mistaken for a complete trust boundary
-- **C.** The operating-system identity exceeds the task's needs
+- **A.** Add only an artifact retention rule
+- **B.** Restrict which trusted workloads may use the privileged runner
+- **C.** Make the runner label longer and harder to spell
+- **D.** Allow secrets only after checkout has executed attacker code
 
 ## L12-Q033
 
-Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which observation provides the strongest evidence that the requested result was achieved?
+An ephemeral worker is disposed, but its provider registration remains online and points to a stale machine. What separate lifecycle action is needed?
 
-- **A.** Contributor execution cannot access privileged host resources
-- **B.** The build succeeds while prohibited administrative actions fail
-- **C.** A clean selected image installs and reports required tools
+- **A.** Only delete the disposed machine local registration configuration
+- **B.** Only increase the provider job timeout
+- **C.** Only change the application version label
+- **D.** Verify deregistration and reconcile the provider worker record
 
 ## L12-Q034
 
-Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which execution safeguard most directly addresses the risk in this case?
+An approved worker must download packages, contact the provider and reach private SQL. How should connectivity evidence be scoped?
 
-- **A.** Avoid mounting sensitive host paths or privileged sockets
-- **B.** Inventory tool and filesystem access before changing the account
-- **C.** Review image deprecation notices and test updates
+- **A.** Use a successful browser session from the developer laptop
+- **B.** Use the number of registered workers as a network metric
+- **C.** Test each required endpoint and protocol from that worker
+- **D.** Test only DNS then infer every service is authorized
 
 ## L12-Q035
 
-Advanced · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. The team selects this remedy: "Declare toolchain setup and select a supported image intentionally." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A container job requires Docker access, but the selected agent lacks a functioning container runtime. What should preflight establish?
 
-- **A.** Image control is less granular on hosted workers
-- **B.** Stronger isolation may require separate workers or virtual machines
-- **C.** Some installations need a separate privileged preparation step
+- **A.** The actual required runtime and its executable capability
+- **B.** Only the operating-system marketing name
+- **C.** Only the repository branch review status
+- **D.** Only the total artifact size from earlier builds
 
 ## L12-Q036
 
-Foundational · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which next change most directly satisfies the stated requirement?
+A worker stores a package cache across jobs. What should the design distinguish from its disposable job workspace?
 
-- **A.** Use host isolation and restricted trust-specific pools
-- **B.** Evaluate on-demand workers or a scheduled safe lifecycle
-- **C.** Declare toolchain setup and select a supported image intentionally
+- **A.** Every cached package is an approved production artifact
+- **B.** Deleting one workspace necessarily deletes every shared cache
+- **C.** Reusable cache trust from single-job workspace cleanup
+- **D.** A cache key grants deployment authorization
 
 ## L12-Q037
 
-Applied · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which explanation best accounts for the behavior or constraint described?
+An agent pool appears in an organization inventory but its network is unknown. What evidence is still needed before using it for migrations?
 
-- **A.** The workflow assumed an unchanging preinstalled tool inventory
-- **B.** Containerization was mistaken for a complete trust boundary
-- **C.** Always-on provisioning wastes idle compute capacity
+- **A.** Only evidence that the agent has the required SDK installed
+- **B.** Only an online status for the first listed agent
+- **C.** Authorized job access and observed private database connectivity
+- **D.** Only a successful compilation from the same agent pool
 
 ## L12-Q038
 
-Applied · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which observation provides the strongest evidence that the requested result was achieved?
+A failed cleanup reports workspaceRemoved false but the job produced the expected artifact hash. What should lifecycle validation conclude?
 
-- **A.** Contributor execution cannot access privileged host resources
-- **B.** Builds still start within the agreed time with less idle runtime
-- **C.** A clean selected image installs and reports required tools
+```json
+{"jobExitCode":0,"workspaceRemoved":false,"outputSha256":"expected"}
+```
+
+- **A.** Ignore cleanup whenever a job has a nonempty output
+- **B.** Replace false with true in the evidence file
+- **C.** Artifact production passed while disposable cleanup failed
+- **D.** Pass everything because output content was correct
 
 ## L12-Q039
 
-Applied · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which execution safeguard most directly addresses the risk in this case?
+A control-plane endpoint returns HTTP 403 promptly. What has the connectivity observation established without proving job authorization?
 
-- **A.** Avoid mounting sensitive host paths or privileged sockets
-- **B.** Drain active jobs before shutting down workers
-- **C.** Review image deprecation notices and test updates
+- **A.** The workload has permission to perform every provider mutation
+- **B.** The private SQL identity has the right database role
+- **C.** The network route is necessarily unavailable
+- **D.** HTTPS reached a responding service but access was denied
 
 ## L12-Q040
 
-Advanced · [CP5](README.md#task-5) · [D3.3.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. The team selects this remedy: "Use host isolation and restricted trust-specific pools." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A local process fixture passes both lifecycle paths, but no adversarial code or hypervisor boundary was tested. Which claim is appropriate?
 
-- **A.** Image control is less granular on hosted workers
-- **B.** Stronger isolation may require separate workers or virtual machines
-- **C.** On-demand capacity increases startup latency
+- **A.** Every host secret is guaranteed inaccessible forever
+- **B.** Observed lifecycle behavior passed; hostile-code containment remains unproven
+- **C.** The fixture proves perfect multitenant operating-system isolation
+- **D.** Provider registration and production approvals also passed
 
 ## L12-Q041
 
-Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which next change most directly satisfies the stated requirement?
+Untrusted PR and SQL migration jobs share a persistent worker, caches and network route. Which redesign best preserves the migration trust boundary?
 
-- **A.** Evaluate on-demand workers or a scheduled safe lifecycle
-- **B.** Identify required endpoints and allow the minimum supported connectivity
-- **C.** Use host isolation and restricted trust-specific pools
+- **A.** Mask SQL strings while letting every job retain the host
+- **B.** Separate disposable trusted private workers from untrusted contribution execution
+- **C.** Rely only on a successful contribution test result
+- **D.** Keep the shared machine but rename migration labels
 
 ## L12-Q042
 
-Foundational · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which explanation best accounts for the behavior or constraint described?
+A pool has six online agents, two allowed parallel jobs and three jobs waiting on an unavailable capability. Which intervention targets the real bottleneck?
 
-- **A.** Always-on provisioning wastes idle compute capacity
-- **B.** A narrow download failure was generalized into unlimited access
-- **C.** Containerization was mistaken for a complete trust boundary
+```text
+Online agents: 6
+Parallel entitlement: 2
+Required capability: absent
+Queued jobs: 3
+```
+
+- **A.** Register ten more agents with the same missing capability
+- **B.** Assume all queued jobs can run because six exceeds three
+- **C.** Reduce test execution duration without supplying the missing capability
+- **D.** Supply eligible authorized capability within the permitted execution slots
 
 ## L12-Q043
 
-Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which observation provides the strongest evidence that the requested result was achieved?
+A one-job runner is removed after failure, but an external deployment token issued to it is still valid. What must recovery consider?
 
-- **A.** Required job operations work while unrelated destinations remain restricted
-- **B.** Contributor execution cannot access privileged host resources
-- **C.** Builds still start within the agreed time with less idle runtime
+- **A.** Credential revocation or expiry independently from machine cleanup
+- **B.** A new runner name automatically invalidates all old tokens
+- **C.** Deleting test reports proves the old token cannot be reused
+- **D.** A SHA256 of the output automatically expires credentials
 
 ## L12-Q044
 
-Applied · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.7](../../docs/objective-map.md)
 
-Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which execution safeguard most directly addresses the risk in this case?
+Private SQL migration fails only on hosted workers; private agents pass, and the artifact is identical. What should diagnosis examine first?
 
-- **A.** Maintain documented endpoint requirements and update procedures
-- **B.** Avoid mounting sensitive host paths or privileged sockets
-- **C.** Drain active jobs before shutting down workers
+- **A.** The execution network, DNS, firewall and identity differences
+- **B.** Only the organization permitted parallel job count
+- **C.** Only whether both workers use the same pipeline display name
+- **D.** Only the source and artifact checksums shared by both workers
 
 ## L12-Q045
 
 Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. The team selects this remedy: "Evaluate on-demand workers or a scheduled safe lifecycle." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A fixture must retain evidence while deleting its job workspace even when execution throws. Which implementation pattern fits both requirements?
 
-- **A.** Tighter egress increases configuration maintenance
-- **B.** Stronger isolation may require separate workers or virtual machines
-- **C.** On-demand capacity increases startup latency
+- **A.** Return success immediately whenever the child throws
+- **B.** Delete evidence before running the job to avoid failure records
+- **C.** Run cleanup only after a successful child exit
+- **D.** Write bounded evidence and clean resources in finally paths
 
 ## L12-Q046
 
-Foundational · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md), [D3.3.7](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.2](../../docs/objective-map.md)
 
-Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which next change most directly satisfies the stated requirement?
+A repository has restricted runner groups, but a trusted workflow checks out untrusted PR code on the privileged group. What remains unsafe?
 
-- **A.** Identify required endpoints and allow the minimum supported connectivity
-- **B.** Use an appropriately connected agent with restricted network access
-- **C.** Evaluate on-demand workers or a scheduled safe lifecycle
+- **A.** Workload code trust still crosses the privileged execution boundary
+- **B.** A successful checkout proves independent production approval
+- **C.** The group restriction automatically sanitizes all source code
+- **D.** The runner label prevents code from opening network connections
 
 ## L12-Q047
 
-Applied · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md), [D3.3.7](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.3.2](../../docs/objective-map.md)
 
-Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which explanation best accounts for the behavior or constraint described?
+An agent image update changes tool versions while a mutable capability label stays constant. How should repeatability be assessed?
 
-- **A.** A narrow download failure was generalized into unlimited access
-- **B.** The hosted worker lacks the required private connectivity
-- **C.** Always-on provisioning wastes idle compute capacity
+- **A.** Trust the label and delete previous version evidence
+- **B.** Use artifact file size as the only environment fingerprint
+- **C.** Assume hosted worker updates cannot affect builds
+- **D.** Record actual versions and validate against pinned repository requirements
 
 ## L12-Q048
 
-Applied · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md), [D3.3.7](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which observation provides the strongest evidence that the requested result was achieved?
+The worker fixture claims no credential variables leaked, but its test never seeds a credential-like variable. What evidence improvement is needed?
 
-- **A.** Builds still start within the agreed time with less idle runtime
-- **B.** Required job operations work while unrelated destinations remain restricted
-- **C.** The agent reaches only the intended private test endpoint
+```text
+Filter test environment: no token-like names present
+Observed result: credentialEnvironmentPresent=false
+```
+
+- **A.** Seed a nonsecret credential-shaped sentinel and assert it is absent
+- **B.** Use a real production token as the sentinel
+- **C.** Remove the filtering assertion because the healthy job passed
+- **D.** Infer filtering from workspaceRemoved true
 
 ## L12-Q049
 
-Applied · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md), [D3.3.7](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.3.2](../../docs/objective-map.md)
 
-Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which execution safeguard most directly addresses the risk in this case?
+A team autoscaling private agents can reach zero idle workers, but provisioning takes minutes. What tradeoff should capacity planning include?
 
-- **A.** Maintain documented endpoint requirements and update procedures
-- **B.** Avoid exposing the private service publicly as a shortcut
-- **C.** Drain active jobs before shutting down workers
+- **A.** Idle cost savings versus cold-start delay and bounded queue objectives
+- **B.** Autoscaling automatically grants unlimited licensed parallelism
+- **C.** Zero idle workers guarantees instantaneous execution
+- **D.** Larger workspace cleanup intervals remove provisioning latency
 
 ## L12-Q050
 
-Advanced · [CP4](README.md#task-4) · [D3.3.2](../../docs/objective-map.md), [D3.3.7](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.3.2](../../docs/objective-map.md)
 
-Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. The team selects this remedy: "Identify required endpoints and allow the minimum supported connectivity." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The failed fixture removes its workspace but leaves an executable child alive with inherited credentials. Which final assertions are incomplete?
 
-- **A.** On-demand capacity increases startup latency
-- **B.** Tighter egress increases configuration maintenance
-- **C.** Self-managed connectivity adds infrastructure operations
+- **A.** A successful parent exit proves all children terminated
+- **B.** A shorter workspace pathname would have prevented execution
+- **C.** Process termination and credential lifetime need separate verification
+- **D.** The artifact digest is the only required cleanup proof

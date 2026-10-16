@@ -8,500 +8,589 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 ## L15-Q001
 
-Foundational · [CP1](README.md#task-1) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.4.7](../../docs/objective-map.md)
 
-Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which next change most directly satisfies the stated requirement?
+The standalone slot exercise needs staging and production on one App Service plan. What must the selected pricing tier support?
 
-- **A.** Use a blue-green traffic-switch strategy
-- **B.** Halt expansion and restore the cohort to the healthy baseline
-- **C.** Rehearse rollback with explicit health and completion criteria
+- **A.** Only an application artifact named staging
+- **B.** Only the local development launch profile
+- **C.** Only a storage account with the same prefix
+- **D.** Deployment slots for the intended App Service configuration
 
 ## L15-Q002
 
-Foundational · [CP1](README.md#task-1) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.4.7](../../docs/objective-map.md)
 
-Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which explanation best accounts for the behavior or constraint described?
+Production and staging should run the same reviewed candidate. Which packaging practice preserves this requirement?
 
-- **A.** The design maintains two release environments
-- **B.** The candidate fails the defined comparative health criteria
-- **C.** Retaining old capacity is not proof of recoverability
+- **A.** Rename two unrelated packages to the same version
+- **B.** Package only source comments for the second environment
+- **C.** Build once and deploy the same identified archive
+- **D.** Build staging from one branch and production from latest main
 
 ## L15-Q003
 
-Applied · [CP1](README.md#task-1) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which observation provides the strongest evidence that the requested result was achieved?
+A candidate should warm up before it serves ordinary production traffic. What deployment boundary supports that preparation?
 
-- **A.** Exposure stops and cohort errors return to acceptable levels
-- **B.** A failed candidate is replaced by the healthy baseline within target time
-- **C.** Traffic moves to the validated environment and the old one remains recoverable
+- **A.** Only retain yesterday's build logs
+- **B.** Deploy and probe a staging slot separately
+- **C.** Overwrite production before inspecting readiness
+- **D.** Only change the production app display name
 
 ## L15-Q004
 
-Applied · [CP1](README.md#task-1) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. Which execution safeguard most directly addresses the risk in this case?
+The candidate archive uploaded successfully, but /health/ready returns HTTP 503. What should happen before exposure increases?
 
-- **A.** Validate shared dependencies before switching traffic
-- **B.** Define thresholds and observation time before rollout
-- **C.** Confirm data and schema compatibility before rollback
+- **A.** Stop promotion and diagnose readiness
+- **B.** Promote immediately because upload is the only required gate
+- **C.** Rename the slot to healthy
+- **D.** Delete the failed response from evidence
 
 ## L15-Q005
 
-Advanced · [CP1](README.md#task-1) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Blue-green candidate: The team provisions a separate complete environment and wants a rapid traffic switch after validation. The team selects this remedy: "Use a blue-green traffic-switch strategy." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The exercise sets staging traffic to ten percent. What should a fresh provider read establish afterward?
 
-- **A.** Small cohorts may produce statistically weak signals
-- **B.** Rollback can be constrained by irreversible changes
-- **C.** Parallel environments increase resource cost
+```json
+{"staging":10}
+```
+
+- **A.** Every single sequence of ten requests includes exactly one candidate hit
+- **B.** The actual staging distribution equals the intended percentage
+- **C.** The application passed every possible operational test
+- **D.** The database automatically rolled back its schema
 
 ## L15-Q006
 
 Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which next change most directly satisfies the stated requirement?
+A team exposes a candidate to a small cohort and expands only while monitored gates pass. What deployment strategy does this describe?
 
-- **A.** Use ordered deployment rings with validation between rings
-- **B.** Use a blue-green traffic-switch strategy
-- **C.** Halt expansion and restore the cohort to the healthy baseline
+- **A.** An artifact retention-only strategy
+- **B.** A canary or progressive exposure strategy
+- **C.** A compulsory database Down migration strategy
+- **D.** A source history cleanup strategy
 
 ## L15-Q007
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which explanation best accounts for the behavior or constraint described?
+A product experiment compares two user experiences to measure conversion, rather than mainly limiting release risk. What distinction matters?
 
-- **A.** Different risk cohorts require controlled promotion order
-- **B.** The design maintains two release environments
-- **C.** The candidate fails the defined comparative health criteria
+- **A.** A/B proves every user receives both versions in order
+- **B.** A/B and rollback are the same observed operation
+- **C.** A/B experimentation has an outcome-measurement objective
+- **D.** A/B always requires dropping the current database
 
 ## L15-Q008
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.4.7](../../docs/objective-map.md)
 
-Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which observation provides the strongest evidence that the requested result was achieved?
+The lab configures Development with SQLite under /tmp for an independent synthetic slot exercise. What limitation must learners retain?
 
-- **A.** Exposure stops and cohort errors return to acceptable levels
-- **B.** Each ring advances only after its acceptance evidence passes
-- **C.** Traffic moves to the validated environment and the old one remains recoverable
+- **A.** It proves workload federation and SQL authorization passed
+- **B.** It proves every slot shares one transactional database automatically
+- **C.** It provides a production backup and restore guarantee
+- **D.** It is disposable training state rather than durable production SQL design
 
 ## L15-Q009
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.4.7](../../docs/objective-map.md)
 
-Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. Which execution safeguard most directly addresses the risk in this case?
+Readiness returns HTTP 200, but the version endpoint reports an older revision than expected. Which acceptance condition is still unmet?
 
-- **A.** Validate shared dependencies before switching traffic
-- **B.** Define thresholds and observation time before rollout
-- **C.** Keep cohort definitions and emergency stop controls explicit
+```text
+Expected candidate revision: B
+Staging /health/ready: 200
+Staging /version: A
+```
+
+- **A.** The intended candidate bytes are not observed serving
+- **B.** The artifact name automatically resolves the mismatch
+- **C.** The source repository must have no default branch
+- **D.** The slot must be deleted because every healthy response is invalid
 
 ## L15-Q010
 
-Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Canary regression: A candidate is routed to a small production cohort and shows a higher error rate than the baseline. The team selects this remedy: "Halt expansion and restore the cohort to the healthy baseline." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A new slot has a different runtime identity from production. What prerequisite must be reviewed before it reaches protected dependencies?
 
-- **A.** Parallel environments increase resource cost
-- **B.** Small cohorts may produce statistically weak signals
-- **C.** Ring management adds operational complexity
+- **A.** Only whether the staging slot uses the same deployment package
+- **B.** Review scoped grants required by the staging identity
+- **C.** Only the number of successful local tests
+- **D.** Only the archive filename matching production
 
 ## L15-Q011
 
-Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which next change most directly satisfies the stated requirement?
+A hotfix must preserve tested provenance while returning the corrected binary to the supported release line. What process fits?
 
-- **A.** Run an A-B experiment with stable assignment and business metrics
-- **B.** Halt expansion and restore the cohort to the healthy baseline
-- **C.** Use ordered deployment rings with validation between rings
+- **A.** Skip all tests because a hotfix is small
+- **B.** Edit production files directly and omit the source change
+- **C.** Reuse an unrelated successful artifact with a matching name
+- **D.** Review, test and identify the hotfix artifact and reconcile branches
 
 ## L15-Q012
 
-Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which explanation best accounts for the behavior or constraint described?
+The staging probe is healthy before traffic routing changes. What does that observation establish at this point?
 
-- **A.** Different risk cohorts require controlled promotion order
-- **B.** This is an experimentation question rather than only rollout safety
-- **C.** The candidate fails the defined comparative health criteria
+- **A.** The production slot has been swapped automatically
+- **B.** All real users already received the new version successfully
+- **C.** The tested staging endpoint met that probe condition
+- **D.** Every database migration is guaranteed backward-compatible
 
 ## L15-Q013
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which observation provides the strongest evidence that the requested result was achieved?
+The routing command completes, but a final query shows zero staging traffic. How should the ten-percent checkpoint respond?
 
-- **A.** Comparable cohorts produce the specified conversion measurements
-- **B.** Exposure stops and cohort errors return to acceptable levels
-- **C.** Each ring advances only after its acceptance evidence passes
+- **A.** Delete the production app to remove the discrepancy
+- **B.** Pass after changing the expected percentage in evidence
+- **C.** Reject the actual routing mismatch
+- **D.** Pass because no application tests failed locally
 
 ## L15-Q014
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.4.7](../../docs/objective-map.md)
 
-Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. Which execution safeguard most directly addresses the risk in this case?
+The package hash differs between staging and production uploads despite a shared version label. Which requirement failed?
 
-- **A.** Keep cohort definitions and emergency stop controls explicit
-- **B.** Avoid changing assignment mid-session or mixing incompatible data
-- **C.** Define thresholds and observation time before rollout
+- **A.** Both deployments must consume the same validated bytes
+- **B.** The stage and production jobs must use identical runner names
+- **C.** The two archive download timestamps must be identical
+- **D.** Every new release must contain no database model
 
 ## L15-Q015
 
-Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Ring rollout: Internal users should receive a release before pilot customers and the remaining production population. The team selects this remedy: "Use ordered deployment rings with validation between rings." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The candidate canary fails its required service gate. What should progressive release do before increasing exposure further?
 
-- **A.** Small cohorts may produce statistically weak signals
-- **B.** Ring management adds operational complexity
-- **C.** Experiments need sufficient sample size and bias control
+- **A.** Expand rapidly so more users can confirm the fault
+- **B.** Mark the gate optional without reviewing that policy change
+- **C.** Delete the measurements and rely only on package existence
+- **D.** Halt expansion and use the reviewed recovery decision
 
 ## L15-Q016
 
-Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.7](../../docs/objective-map.md)
 
-A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which next change most directly satisfies the stated requirement?
+A script targets an app outside the journal-owned resource group. Which check should refuse the lab operation?
 
-- **A.** Warm and validate the staging slot before cutover
-- **B.** Use ordered deployment rings with validation between rings
-- **C.** Run an A-B experiment with stable assignment and business metrics
+```text
+Owned group: rg-az400-15-run42
+Actual app ID: /subscriptions/.../resourceGroups/shared-prod/providers/Microsoft.Web/sites/app
+```
+
+- **A.** Check only whether the app name contains training
+- **B.** Compare the exact ARM ID with the owned scope
+- **C.** Check only whether a prior deployment succeeded
+- **D.** Check only whether the learner can authenticate
 
 ## L15-Q017
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which explanation best accounts for the behavior or constraint described?
+The new slot starts but cannot access its external configuration store while production works. What should diagnosis compare?
 
-- **A.** Different risk cohorts require controlled promotion order
-- **B.** This is an experimentation question rather than only rollout safety
-- **C.** Startup readiness was not established before routing traffic
+- **A.** Only the archive display name
+- **B.** Slot-specific settings, identities and dependency access
+- **C.** Only whether the deployment operation reported success
+- **D.** Only the production historical artifact count
 
 ## L15-Q018
 
 Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which observation provides the strongest evidence that the requested result was achieved?
+A learner tests only a few requests after configuring ten-percent routing and sees none reach staging. What interpretation is appropriate?
 
-- **A.** The candidate passes readiness checks before traffic moves
-- **B.** Each ring advances only after its acceptance evidence passes
-- **C.** Comparable cohorts produce the specified conversion measurements
+- **A.** Small samples and session routing can obscure the configured distribution
+- **B.** The staged application must contain no files
+- **C.** The provider configuration must always be zero percent
+- **D.** Every configured percentage guarantees exact counts per ten requests
 
 ## L15-Q019
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. Which execution safeguard most directly addresses the risk in this case?
+Readiness passes quickly, but error rate under real candidate traffic is high. Which release gate should control promotion?
 
-- **A.** Use health checks representative of critical dependencies
-- **B.** Keep cohort definitions and emergency stop controls explicit
-- **C.** Avoid changing assignment mid-session or mixing incompatible data
+- **A.** Only the earlier readiness response
+- **B.** Only the archive upload status
+- **C.** Observed candidate behavior under the required traffic acceptance window
+- **D.** Only the local package directory creation timestamp
 
 ## L15-Q020
 
-Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-A-B experiment: Product owners need to compare conversion between two variants while controlling for user assignment. The team selects this remedy: "Run an A-B experiment with stable assignment and business metrics." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The team patches the supported production branch but never merges the correction back into normal development. What risk remains?
 
-- **A.** Ring management adds operational complexity
-- **B.** Experiments need sufficient sample size and bias control
-- **C.** Warmup increases release time and resource use
+- **A.** A future normal release can reintroduce the original defect
+- **B.** The current hotfix artifact necessarily changes its bytes afterward
+- **C.** The staging slot automatically receives every fix
+- **D.** The database schema automatically contracts
 
 ## L15-Q021
 
-Foundational · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.7](../../docs/objective-map.md)
 
-Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which next change most directly satisfies the stated requirement?
+The readiness endpoint checks only process liveness while release acceptance requires database readiness. What must the probe contract address?
 
-- **A.** Run an A-B experiment with stable assignment and business metrics
-- **B.** Warm and validate the staging slot before cutover
-- **C.** Review slot-specific settings and swap behavior
+- **A.** Only whether the source repository has a release tag
+- **B.** The actual dependency readiness required to serve the workload
+- **C.** Only the number of archive files
+- **D.** Only the application display title in its HTML
 
 ## L15-Q022
 
-Foundational · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which explanation best accounts for the behavior or constraint described?
+A swap changes serving roles, but the team assumes each slot identity also transfers its grants. What must be verified independently?
 
-- **A.** This is an experimentation question rather than only rollout safety
-- **B.** Startup readiness was not established before routing traffic
-- **C.** Not every setting has the desired stickiness behavior
+- **A.** Only whether the application archive source SHA remains unchanged
+- **B.** Only whether both slot names are short
+- **C.** The identities and sticky configuration associated with actual slots
+- **D.** Only the local project build configuration
 
 ## L15-Q023
 
-Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.4.7](../../docs/objective-map.md)
 
-Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which observation provides the strongest evidence that the requested result was achieved?
+The application archive includes untracked test results and local evidence alongside binaries. What packaging input boundary needs improvement?
 
-- **A.** Comparable cohorts produce the specified conversion measurements
-- **B.** The candidate passes readiness checks before traffic moves
-- **C.** After a rehearsal each slot retains its intended backend configuration
+- **A.** Reduce the number of environment reviewers
+- **B.** Use an explicit intended output or tracked-source allowlist
+- **C.** Grant deployment identity more permissions
+- **D.** Rename the archive to include clean
 
 ## L15-Q024
 
-Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. Which execution safeguard most directly addresses the risk in this case?
+A preview helper proposes a staging swap but does not use Apply. Which claim is accurate afterward?
 
-- **A.** Use nonproduction validation targets during the rehearsal
-- **B.** Avoid changing assignment mid-session or mixing incompatible data
-- **C.** Use health checks representative of critical dependencies
+```powershell
+./deploy-canary.ps1 -ResourceGroup $ResourceGroup -AppName $AppName
+# No -Apply switch
+```
+
+- **A.** The baseline now necessarily serves all production traffic
+- **B.** Both provider identity and environment approval were proved
+- **C.** The database has completed schema recovery
+- **D.** The plan was inspected; no swap is established
 
 ## L15-Q025
 
-Advanced · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Cold slot: A staged App Service version receives traffic immediately after swap and shows startup failures. The team selects this remedy: "Warm and validate the staging slot before cutover." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A warmup request succeeds before the new application finishes a required asynchronous initialization task. What acceptance issue should be reviewed?
 
-- **A.** Warmup increases release time and resource use
-- **B.** Slot swap is not equivalent to full environment isolation
-- **C.** Experiments need sufficient sample size and bias control
+- **A.** Only whether the deployed version endpoint matches the expected SHA
+- **B.** Only whether the archive name contains warmup
+- **C.** Whether the readiness signal truly represents required serving readiness
+- **D.** Only whether the provider upload operation completed
 
 ## L15-Q026
 
-Foundational · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which next change most directly satisfies the stated requirement?
+A canary runs at ten percent indefinitely with no owner, time bound or promotion criteria. What operational contract is missing?
 
-- **A.** Use the documented supported-release hotfix path
-- **B.** Warm and validate the staging slot before cutover
-- **C.** Review slot-specific settings and swap behavior
+- **A.** Only a successful archive upload
+- **B.** Only an additional source-control branch
+- **C.** Explicit ownership, observation gates and progression or rollback decisions
+- **D.** Only a more attractive version label
 
 ## L15-Q027
 
-Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.7](../../docs/objective-map.md)
 
-Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which explanation best accounts for the behavior or constraint described?
+The training SQLite store is created under /tmp in each slot. What should data verification avoid assuming?
 
-- **A.** Startup readiness was not established before routing traffic
-- **B.** Not every setting has the desired stickiness behavior
-- **C.** The default branch does not represent the deployed baseline
+- **A.** Durable shared data across slot lifecycle and traffic transitions
+- **B.** The protected SQL integration has separate prerequisites
+- **C.** The configuration requires explicit training-only interpretation
+- **D.** The app can still execute local synthetic behavior
 
 ## L15-Q028
 
-Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which observation provides the strongest evidence that the requested result was achieved?
+A hotfix uses a narrow supported branch, but publication replaces an existing artifact version with changed bytes. Which release property is broken?
 
-- **A.** The candidate passes readiness checks before traffic moves
-- **B.** After a rehearsal each slot retains its intended backend configuration
-- **C.** The patch fixes production and is reconciled into future development
+- **A.** The app must remove every readiness check
+- **B.** Stable immutable identity of the previously published candidate
+- **C.** The current source branch can never contain a correction
+- **D.** The deployment must use a different cloud provider
 
 ## L15-Q029
 
 Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. Which execution safeguard most directly addresses the risk in this case?
+A staging slot uses a different connection setting and points at production data. What must the release review assess before warming or testing it?
 
-- **A.** Use nonproduction validation targets during the rehearsal
-- **B.** Retain required review and targeted regression tests
-- **C.** Use health checks representative of critical dependencies
+- **A.** Only whether production had passed tests last week
+- **B.** Only whether the app plan supports slots
+- **C.** Only whether staging has a unique URL
+- **D.** The actual dependency target and permitted test data impact
 
 ## L15-Q030
 
-Advanced · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.7](../../docs/objective-map.md)
 
-Wrong configuration: A slot swap moves environment-specific connection information unexpectedly and the candidate contacts the wrong backend. The team selects this remedy: "Review slot-specific settings and swap behavior." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The provider reports success but the app returns errors because a dependency role is absent. What evidence should determine acceptance?
 
-- **A.** Parallel hotfix branches increase reconciliation work
-- **B.** Warmup increases release time and resource use
-- **C.** Slot swap is not equivalent to full environment isolation
+- **A.** The actual application behavior and required dependency checks
+- **B.** Only the current archive filename
+- **C.** Only the successful provider request status
+- **D.** Only the existence of a production environment
 
 ## L15-Q031
 
-Foundational · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which next change most directly satisfies the stated requirement?
+A team increases candidate exposure without comparing candidate-specific metrics to its stop conditions. What makes this progression incomplete?
 
-- **A.** Review slot-specific settings and swap behavior
-- **B.** Use the documented supported-release hotfix path
-- **C.** Use a controlled rolling deployment with readiness checks
+- **A.** A new display name has not been chosen
+- **B.** The package includes a content hash
+- **C.** The source repository has only one default branch
+- **D.** The measured gate for the candidate was not evaluated
 
 ## L15-Q032
 
-Foundational · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.4.7](../../docs/objective-map.md)
 
-Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which explanation best accounts for the behavior or constraint described?
+The exact same archive was deployed twice, but its configuration changed between deployments. What should provenance reporting include?
 
-- **A.** The default branch does not represent the deployed baseline
-- **B.** The rollout removes all serving capacity at once
-- **C.** Not every setting has the desired stickiness behavior
+- **A.** Both artifact identity and the effective deployment configuration
+- **B.** Only the binary hash because configuration cannot affect behavior
+- **C.** Only the friendly slot names
+- **D.** Only the earlier successful build log
 
 ## L15-Q033
 
-Applied · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which observation provides the strongest evidence that the requested result was achieved?
+The candidate is healthy at low traffic but a required latency limit is exceeded when exposure rises. Which action follows the reviewed gate?
 
-- **A.** After a rehearsal each slot retains its intended backend configuration
-- **B.** The patch fixes production and is reconciled into future development
-- **C.** Some healthy instances serve traffic throughout the update
+- **A.** Delete the higher-load measurements as outliers without analysis
+- **B.** Stop further expansion and execute the defined recovery decision
+- **C.** Increase the gate silently after each failure
+- **D.** Continue because the earlier smaller cohort passed
 
 ## L15-Q034
 
-Applied · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. Which execution safeguard most directly addresses the risk in this case?
+The health probe targets production while the learner believes they are testing staging. What verification catches this acceptance mistake?
 
-- **A.** Set capacity and failure thresholds for the actual workload
-- **B.** Use nonproduction validation targets during the rehearsal
-- **C.** Retain required review and targeted regression tests
+- **A.** Check only whether the request returned any success code
+- **B.** Check the exact URL and observed candidate revision
+- **C.** Check only whether both slots use the same app plan
+- **D.** Check only whether the source package exists locally
 
 ## L15-Q035
 
-Advanced · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Emergency patch: Main contains unfinished next-release work, but a production defect needs a narrow tested correction today. The team selects this remedy: "Use the documented supported-release hotfix path." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An urgent patch passes targeted tests but bypasses required independent release approval. What should the completion report state?
 
-- **A.** Parallel hotfix branches increase reconciliation work
-- **B.** Rolling updates temporarily run mixed application versions
-- **C.** Slot swap is not equivalent to full environment isolation
+- **A.** The authorization gate remains unmet despite passing quality
+- **B.** The release passed every requirement because the defect was urgent
+- **C.** The omitted gate can be recorded as passed retrospectively
+- **D.** The successful package hash proves a human approved deployment
 
 ## L15-Q036
 
-Foundational · [CP3](README.md#task-3) · [D3.4.7](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which next change most directly satisfies the stated requirement?
+A candidate initializes in staging using a slot-specific setting that will differ after swap. Which review should precede promotion?
 
-- **A.** Externalize or deliberately handle session state across the cutover
-- **B.** Use the documented supported-release hotfix path
-- **C.** Use a controlled rolling deployment with readiness checks
+- **A.** Only compare the source author identity
+- **B.** Only count source files in the package
+- **C.** Assume every setting always swaps identically without checking
+- **D.** Validate post-transition settings and dependencies for the serving role
 
 ## L15-Q037
 
-Applied · [CP3](README.md#task-3) · [D3.4.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which explanation best accounts for the behavior or constraint described?
+A release operator claims traffic routing passed because the CLI command returned zero. What independent evidence strengthens that claim?
 
-- **A.** Session data is tied to the old instances
-- **B.** The default branch does not represent the deployed baseline
-- **C.** The rollout removes all serving capacity at once
+- **A.** The application has many passing unit tests
+- **B.** A local variable assigned ten
+- **C.** The command copied into a Markdown file
+- **D.** A fresh provider read of the intended slot percentage
 
 ## L15-Q038
 
-Applied · [CP3](README.md#task-3) · [D3.4.7](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.4.7](../../docs/objective-map.md)
 
-Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which observation provides the strongest evidence that the requested result was achieved?
+The advanced production-style lane needs external SQL and identity setup absent from the standalone exercise. How should the difference be reported?
 
-- **A.** A representative user session remains valid through cutover
-- **B.** The patch fixes production and is reconciled into future development
-- **C.** Some healthy instances serve traffic throughout the update
+- **A.** Describe the temporary store as production SQL verification
+- **B.** Automatically adopt any reachable shared database
+- **C.** Keep the synthetic core and protected integration prerequisites explicit
+- **D.** Mark all advanced requirements passed because the app compiles
 
 ## L15-Q039
 
-Applied · [CP3](README.md#task-3) · [D3.4.7](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. Which execution safeguard most directly addresses the risk in this case?
+A version endpoint matches the candidate, but required operations fail intermittently during the observation window. What is the right acceptance interpretation?
 
-- **A.** Retain required review and targeted regression tests
-- **B.** Set capacity and failure thresholds for the actual workload
-- **C.** Assess security and expiry rules for shared session storage
+- **A.** Revision identity passed while operational behavior failed
+- **B.** The version evidence should be renamed to baseline
+- **C.** The telemetry must be ignored because startup was healthy
+- **D.** Exact version identity proves every request must succeed
 
 ## L15-Q040
 
-Advanced · [CP3](README.md#task-3) · [D3.4.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Rolling update failure: Replacing every instance simultaneously produces downtime even though the service normally has spare capacity. The team selects this remedy: "Use a controlled rolling deployment with readiness checks." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A product A/B experiment needs persistent cohorts, while random canary routing changes user assignment. Which design question must be resolved?
 
-- **A.** Parallel hotfix branches increase reconciliation work
-- **B.** Rolling updates temporarily run mixed application versions
-- **C.** Shared state introduces another dependency
+- **A.** Only whether both versions use the same build pipeline
+- **B.** Only whether both variants have equal traffic percentages
+- **C.** Only the local archive compression setting
+- **D.** How users remain assigned to intended experiment cohorts
 
 ## L15-Q041
 
-Foundational · [CP4](README.md#task-4) · [D3.4.1](../../docs/objective-map.md), [D3.4.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which next change most directly satisfies the stated requirement?
+Overall errors are 0.2%, but the ten-percent candidate cohort has 2% errors against its 1% limit. What should progression use?
 
-- **A.** Externalize or deliberately handle session state across the cutover
-- **B.** Rehearse rollback with explicit health and completion criteria
-- **C.** Use a controlled rolling deployment with readiness checks
+```text
+Candidate traffic: 10%
+Aggregate errors: 0.2%
+Candidate errors: 2%
+Candidate limit: 1%
+```
+
+- **A.** The archive upload timestamp as an error proxy
+- **B.** The candidate-specific failed gate rather than diluted aggregate success
+- **C.** The source branch name because main implies release-ready
+- **D.** The overall number alone because most traffic is baseline
 
 ## L15-Q042
 
-Foundational · [CP4](README.md#task-4) · [D3.4.1](../../docs/objective-map.md), [D3.4.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which explanation best accounts for the behavior or constraint described?
+Candidate and baseline share a database, and candidate migration removes a baseline-required field before the canary. What safety assumption failed?
 
-- **A.** The rollout removes all serving capacity at once
-- **B.** Session data is tied to the old instances
-- **C.** Retaining old capacity is not proof of recoverability
+- **A.** Baseline compatibility during mixed-version progressive exposure
+- **B.** More traffic should be sent to baseline immediately without checking compatibility
+- **C.** The staging URL should become identical to production
+- **D.** The artifact filename must be different for every request
 
 ## L15-Q043
 
-Applied · [CP4](README.md#task-4) · [D3.4.1](../../docs/objective-map.md), [D3.4.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which observation provides the strongest evidence that the requested result was achieved?
+A baseline upload reports success after rollback, but live version and telemetry still show the failed current revision. What should recovery report?
 
-- **A.** Some healthy instances serve traffic throughout the update
-- **B.** A representative user session remains valid through cutover
-- **C.** A failed candidate is replaced by the healthy baseline within target time
+- **A.** The application database must always be dropped next
+- **B.** Rollback passed because any upload operation succeeded
+- **C.** Rollback remains unverified until the intended baseline behavior is observed
+- **D.** The expected baseline SHA should be replaced silently
 
 ## L15-Q044
 
-Applied · [CP4](README.md#task-4) · [D3.4.1](../../docs/objective-map.md), [D3.4.3](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.4.7](../../docs/objective-map.md)
 
-Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. Which execution safeguard most directly addresses the risk in this case?
+Two packages share the approved source SHA but were rebuilt with different floating dependencies. Which identity is necessary for exact promotion?
 
-- **A.** Confirm data and schema compatibility before rollback
-- **B.** Set capacity and failure thresholds for the actual workload
-- **C.** Assess security and expiry rules for shared session storage
+- **A.** Only the same archive filename
+- **B.** Only the original code reviewer name
+- **C.** Trusted content hashes and producing run for the selected artifact
+- **D.** Only the shared moving branch name
 
 ## L15-Q045
 
-Advanced · [CP4](README.md#task-4) · [D3.4.1](../../docs/objective-map.md), [D3.4.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Session disruption: Switching to the new environment loses in-memory sessions and users must restart important workflows. The team selects this remedy: "Externalize or deliberately handle session state across the cutover." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A canary has only three observed candidate requests and zero errors, while the gate requires meaningful minimum traffic. What decision is defensible?
 
-- **A.** Rolling updates temporarily run mixed application versions
-- **B.** Shared state introduces another dependency
-- **C.** Rollback can be constrained by irreversible changes
+```text
+Minimum candidate requests: 10
+Observed candidate requests: 3
+Observed candidate failures: 0
+```
+
+- **A.** Wait for the required bounded evidence before increasing exposure
+- **B.** Replace the actual request count with the expected percentage
+- **C.** Treat zero observed errors as proof of zero possible risk
+- **D.** Promote fully to avoid waiting for telemetry
 
 ## L15-Q046
 
-Foundational · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md), [D3.4.4](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.4.3](../../docs/objective-map.md)
 
-Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which next change most directly satisfies the stated requirement?
+Production and staging use separate runtime identities; a swap succeeds but the serving slot cannot read configuration. What must diagnosis examine?
 
-- **A.** Externalize or deliberately handle session state across the cutover
-- **B.** Rehearse rollback with explicit health and completion criteria
-- **C.** Use a blue-green traffic-switch strategy
+- **A.** Only the ZIP archive filename
+- **B.** Only code coverage percentage from an earlier build
+- **C.** Only whether the source has an annotated release tag
+- **D.** Effective serving identity, sticky settings and its actual dependency grants
 
 ## L15-Q047
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md), [D3.4.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which explanation best accounts for the behavior or constraint described?
+An emergency patch is applied directly to production and later normal CI deploys the unchanged branch. What failure mode is likely?
 
-- **A.** Session data is tied to the old instances
-- **B.** Retaining old capacity is not proof of recoverability
-- **C.** The design maintains two release environments
+- **A.** The immutable old package changes its bytes automatically
+- **B.** The untracked correction is overwritten and the original defect returns
+- **C.** The database owner automatically approves all subsequent releases
+- **D.** All source branches synchronize themselves after deployment
 
 ## L15-Q048
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md), [D3.4.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.4.3](../../docs/objective-map.md)
 
-Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which observation provides the strongest evidence that the requested result was achieved?
+Readiness and revision pass but customer writes use a production dependency never exercised by synthetic reads. What acceptance gap remains?
 
-- **A.** A failed candidate is replaced by the healthy baseline within target time
-- **B.** Traffic moves to the validated environment and the old one remains recoverable
-- **C.** A representative user session remains valid through cutover
+- **A.** The gate does not cover a required representative workload path
+- **B.** Only whether the readiness URL returns a successful read response
+- **C.** The artifact should be renamed to representative
+- **D.** A successful read proves every write authorization is correct
 
 ## L15-Q049
 
-Applied · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md), [D3.4.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md)
 
-Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. Which execution safeguard most directly addresses the risk in this case?
+A canary shares one dependency pool and overloads it, degrading baseline users too. What should risk analysis account for?
 
-- **A.** Validate shared dependencies before switching traffic
-- **B.** Assess security and expiry rules for shared session storage
-- **C.** Confirm data and schema compatibility before rollback
+```text
+Canary traffic: 10%
+Both versions share one downstream connection pool
+Candidate exhausts pool
+```
+
+- **A.** The configured ten percent guarantees a ten-percent total impact ceiling
+- **B.** Only candidate request count can ever affect baseline performance
+- **C.** Shared dependencies can extend blast radius beyond routed candidate traffic
+- **D.** A healthy baseline binary prevents all dependency overload
 
 ## L15-Q050
 
-Advanced · [CP5](README.md#task-5) · [D3.4.1](../../docs/objective-map.md), [D3.4.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.4.4](../../docs/objective-map.md)
 
-Rollback confidence: The team keeps the old application environment but has never tested routing traffic back after a failed release. The team selects this remedy: "Rehearse rollback with explicit health and completion criteria." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Rollback requires compatible retained bytes, but the baseline expired and the only old package needs removed schema. What response respects release and data ownership?
 
-- **A.** Parallel environments increase resource cost
-- **B.** Shared state introduces another dependency
-- **C.** Rollback can be constrained by irreversible changes
+- **A.** Rebuild an old branch and claim it is the expired tested artifact
+- **B.** Drop production schema to fit the available old package automatically
+- **C.** Deploy the oldest available archive because age implies compatibility
+- **D.** Stop automatic rollback and use the reviewed owner-led recovery plan

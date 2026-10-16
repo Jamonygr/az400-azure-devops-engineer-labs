@@ -56,16 +56,16 @@ Retain and inspect: Wiki ID/path and content digest.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Use the fresh project wiki; do not replace an organization knowledge base.
 
-## CP5 — Review Teams and Boards integration before authorization
+## CP5 — Evaluate notification filtering and sanitized handoffs locally
 
-An explicit integration contract identifies authorization and filters; no Teams message is sent.
+Three synthetic events exercise repository and event filters; only the owned failed release produces a sanitized preview. No external message is sent.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
 | `D1.3.5` | explained | Review a Boards notification contract; configuring the account-level integration remains a bootstrap task. |
 | `D1.3.6` | explained | Review a Teams notification payload and connection prerequisites; no external message is sent. |
 
-Retain and inspect: integration-review.json plus the bootstrap authorization checklist.
+Retain and inspect: Input count, selected event identity, sanitized preview and separate account-level authorization requirements.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Authorize external applications only through the separate account-bootstrap procedure, then test with approved recipients.
 

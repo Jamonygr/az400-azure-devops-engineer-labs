@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "11",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -19,1911 +19,1926 @@
   "questions": [
     {
       "id": "L11-Q001",
-      "checkpointId": "CP2",
-      "caseId": "L11-C01",
-      "task": "remedy",
-      "caseContext": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.8"
       ],
       "difficulty": "foundational",
-      "question": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which next change most directly satisfies the stated requirement?",
+      "question": "A caller wants to reuse an entire GitHub workflow rather than one action step. Where should the uses reference appear?",
       "options": [
         {
           "key": "A",
-          "text": "Extract a governed reusable template",
-          "rationale": "Shared implementation reduces unmanaged copy divergence. This directly addresses the constraint stated in this case."
+          "text": "Only in a repository Markdown link",
+          "rationale": "Documentation references do not create executable reusable workflow calls or dependencies."
         },
         {
           "key": "B",
-          "text": "Replace free-form executable input with constrained parameters",
-          "rationale": "The interface should restrict executable choices. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "At the calling job level",
+          "rationale": "Reusable workflows are invoked as jobs rather than embedded ordinary action steps."
         },
         {
           "key": "C",
-          "text": "Remove unnecessary dependencies while retaining required data ordering",
-          "rationale": "The graph should express actual prerequisites. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Inside a composite action run step without a calling job",
+          "rationale": "Reusable workflows use the job-call contract rather than an ordinary composite action step interface."
+        },
+        {
+          "key": "D",
+          "text": "Inside an arbitrary shell command string",
+          "rationale": "A shell command does not establish a reusable workflow job invocation."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Shared implementation reduces unmanaged copy divergence. The selected answer is extract a governed reusable template.",
+      "explanation": "Reusable workflows are invoked as jobs rather than embedded ordinary action steps. A shell command does not establish a reusable workflow job invocation. Reusable workflows use the job-call contract rather than an ordinary composite action step interface. Documentation references do not create executable reusable workflow calls or dependencies.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q002",
       "checkpointId": "CP2",
-      "caseId": "L11-C01",
-      "task": "diagnosis",
-      "caseContext": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed.",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "foundational",
-      "question": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A template accepts configuration values Debug and Release. A caller supplies Production. What should parameter validation do?",
       "options": [
         {
           "key": "A",
-          "text": "The template delegates privileged code execution",
-          "rationale": "Untrusted strings become powerful build instructions. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Ignore every parameter and use machine defaults",
+          "rationale": "Machine defaults discard the explicit consumer configuration and undermine repeatable execution."
         },
         {
           "key": "B",
-          "text": "Artificial edges prevent eligible parallel execution",
-          "rationale": "Agent capacity alone cannot override dependency ordering. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Reject the unsupported configuration value",
+          "rationale": "A typed allowed-values contract should reject values outside its declared choices."
         },
         {
           "key": "C",
-          "text": "Copies have independent maintenance lifecycles",
-          "rationale": "Editing one copy cannot update others. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Editing one copy cannot update others. The selected answer is copies have independent maintenance lifecycles.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q003",
-      "checkpointId": "CP2",
-      "caseId": "L11-C01",
-      "task": "verification",
-      "caseContext": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "applied",
-      "question": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Unsupported parameter values are rejected before deployment",
-          "rationale": "Negative validation proves the interface boundary. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Treat it as Release without reporting substitution",
+          "rationale": "Silent coercion conceals a caller mismatch against the reviewed interface contract."
         },
         {
-          "key": "B",
-          "text": "Independent tests overlap without missing required outputs",
-          "rationale": "The result should improve runtime and preserve correctness. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Consumers execute the approved template revision",
-          "rationale": "The resolved reference proves adoption. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The resolved reference proves adoption. The selected answer is consumers execute the approved template revision.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q004",
-      "checkpointId": "CP2",
-      "caseId": "L11-C01",
-      "task": "safeguard",
-      "caseContext": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "applied",
-      "question": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Keep publication and deployment dependent on required test results",
-          "rationale": "Parallelism must not bypass validation gates. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Review central changes with representative consumers",
-          "rationale": "A shared defect affects many pipelines. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Separate trusted implementation from caller-controlled values",
-          "rationale": "Parameterization should not become code injection. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Broaden the service connection permission set",
+          "rationale": "Authorization changes cannot make an unsupported value satisfy the template contract."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A shared defect affects many pipelines. The selected answer is review central changes with representative consumers.",
+      "explanation": "A typed allowed-values contract should reject values outside its declared choices. Silent coercion conceals a caller mismatch against the reviewed interface contract. Machine defaults discard the explicit consumer configuration and undermine repeatable execution. Authorization changes cannot make an unsupported value satisfy the template contract.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "parameters:\n- name: configuration\n  type: string\n  values: [Debug, Release]\n# caller: Production"
+      }
+    },
+    {
+      "id": "L11-Q003",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "A pipeline needs a Boolean parameter to include an optional job before execution. Which input type fits this structural decision?",
+      "options": [
+        {
+          "key": "A",
+          "text": "An artifact filename chosen after packaging",
+          "rationale": "A post-build label cannot determine initial job graph template expansion."
+        },
+        {
+          "key": "B",
+          "text": "A shell variable from the final job",
+          "rationale": "A value produced last cannot shape the already compiled execution structure."
+        },
+        {
+          "key": "C",
+          "text": "A text message in the test report",
+          "rationale": "Test output is runtime evidence rather than an initial template input."
+        },
+        {
+          "key": "D",
+          "text": "A typed compile-time Boolean parameter",
+          "rationale": "Template parameters can shape the expanded job graph before execution begins."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Template parameters can shape the expanded job graph before execution begins. A value produced last cannot shape the already compiled execution structure. Test output is runtime evidence rather than an initial template input. A post-build label cannot determine initial job graph template expansion.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q004",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "BuildConfiguration is explicitly nonsecret shared build data. Which Azure DevOps resource can expose it to approved consuming pipelines?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A local-only shell variable on the author workstation",
+          "rationale": "That process state is not shared with independently executing hosted pipelines."
+        },
+        {
+          "key": "B",
+          "text": "A narrowly authorized variable group",
+          "rationale": "A variable group shares configuration while its authorization limits which pipelines consume it."
+        },
+        {
+          "key": "C",
+          "text": "A production database password field",
+          "rationale": "Unrelated secret storage does not express this nonsecret configuration sharing requirement."
+        },
+        {
+          "key": "D",
+          "text": "An organization administrator personal token",
+          "rationale": "A privileged credential is not an appropriate container for ordinary shared build options."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A variable group shares configuration while its authorization limits which pipelines consume it. A privileged credential is not an appropriate container for ordinary shared build options. Unrelated secret storage does not express this nonsecret configuration sharing requirement. That process state is not shared with independently executing hosted pipelines.",
+      "sourceIds": [
+        "S2"
       ]
     },
     {
       "id": "L11-Q005",
-      "checkpointId": "CP2",
-      "caseId": "L11-C01",
-      "task": "tradeoff",
-      "caseContext": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.6"
       ],
-      "difficulty": "advanced",
-      "question": "Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. The team selects this remedy: \"Extract a governed reusable template.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "The package job depends on test, which depends on build. Which valid execution order respects those prerequisite relationships?",
       "options": [
         {
           "key": "A",
-          "text": "Shared templates create coordinated upgrade work",
-          "rationale": "Consumers need compatible change management. This directly addresses the constraint stated in this case."
+          "text": "Any order because YAML is declarative",
+          "rationale": "Declarative configuration still enforces explicitly declared execution dependency relationships."
         },
         {
           "key": "B",
-          "text": "Constrained interfaces reduce caller flexibility",
-          "rationale": "Additional capabilities require deliberate template evolution. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Test then package then build",
+          "rationale": "Testing cannot satisfy its build dependency when the build has not executed."
         },
         {
           "key": "C",
-          "text": "More parallel jobs consume more execution capacity",
-          "rationale": "Runtime improvement may increase peak resource use. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Package then test then build",
+          "rationale": "This order attempts to package before its required build and test dependencies."
+        },
+        {
+          "key": "D",
+          "text": "Build then test then package",
+          "rationale": "Each prerequisite must be satisfied before its dependent job executes."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Each prerequisite must be satisfied before its dependent job executes. This order attempts to package before its required build and test dependencies. Testing cannot satisfy its build dependency when the build has not executed. Declarative configuration still enforces explicitly declared execution dependency relationships.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q006",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.8"
+      ],
+      "difficulty": "foundational",
+      "question": "A reusable workflow declares workflow_call inputs but the consumer passes a misspelled input name. What is the appropriate fix?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Correct the consumer to the declared interface",
+          "rationale": "The caller must use the input name actually accepted by the reusable contract."
+        },
+        {
+          "key": "B",
+          "text": "Add repository write permission for every job",
+          "rationale": "Broader authority does not correct a mismatched reusable workflow input name."
+        },
+        {
+          "key": "C",
+          "text": "Disable all test assertions in the callee",
+          "rationale": "Removing tests does not resolve the invalid caller-to-template input binding."
+        },
+        {
+          "key": "D",
+          "text": "Rename the artifact to the misspelled input",
+          "rationale": "Artifact naming does not change the accepted reusable workflow parameter interface."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Consumers need compatible change management. The selected answer is shared templates create coordinated upgrade work.",
+      "explanation": "The caller must use the input name actually accepted by the reusable contract. Broader authority does not correct a mismatched reusable workflow input name. Artifact naming does not change the accepted reusable workflow parameter interface. Removing tests does not resolve the invalid caller-to-template input binding.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q006",
-      "checkpointId": "CP2",
-      "caseId": "L11-C02",
-      "task": "remedy",
-      "caseContext": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "foundational",
-      "question": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Extract a governed reusable template",
-          "rationale": "Shared implementation reduces unmanaged copy divergence. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Replace free-form executable input with constrained parameters",
-          "rationale": "The interface should restrict executable choices. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Use the appropriate template parameter and expression phase",
-          "rationale": "Structural expansion happens before runtime execution. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The interface should restrict executable choices. The selected answer is replace free-form executable input with constrained parameters.",
-      "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q007",
       "checkpointId": "CP2",
-      "caseId": "L11-C02",
-      "task": "diagnosis",
-      "caseContext": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "applied",
-      "question": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The template delegates privileged code execution",
-          "rationale": "Untrusted strings become powerful build instructions. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "The value is unavailable during template expansion",
-          "rationale": "Runtime state cannot retroactively create compiled structure. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Copies have independent maintenance lifecycles",
-          "rationale": "Editing one copy cannot update others. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Untrusted strings become powerful build instructions. The selected answer is the template delegates privileged code execution.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q008",
-      "checkpointId": "CP2",
-      "caseId": "L11-C02",
-      "task": "verification",
-      "caseContext": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "applied",
-      "question": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Consumers execute the approved template revision",
-          "rationale": "The resolved reference proves adoption. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Unsupported parameter values are rejected before deployment",
-          "rationale": "Negative validation proves the interface boundary. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "The expanded pipeline contains the intended stage graph",
-          "rationale": "Rendered structure verifies compile-time behavior. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Negative validation proves the interface boundary. The selected answer is unsupported parameter values are rejected before deployment.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q009",
-      "checkpointId": "CP2",
-      "caseId": "L11-C02",
-      "task": "safeguard",
-      "caseContext": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "applied",
-      "question": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Review central changes with representative consumers",
-          "rationale": "A shared defect affects many pipelines. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Separate trusted implementation from caller-controlled values",
-          "rationale": "Parameterization should not become code injection. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Keep secrets out of compile-time parameter values",
-          "rationale": "Expanded structures can expose supplied configuration. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Parameterization should not become code injection. The selected answer is separate trusted implementation from caller-controlled values.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q010",
-      "checkpointId": "CP2",
-      "caseId": "L11-C02",
-      "task": "tradeoff",
-      "caseContext": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "advanced",
-      "question": "Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. The team selects this remedy: \"Replace free-form executable input with constrained parameters.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Constrained interfaces reduce caller flexibility",
-          "rationale": "Additional capabilities require deliberate template evolution. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Compile-time choices cannot use later job results",
-          "rationale": "Dynamic execution may need runtime conditions instead. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Shared templates create coordinated upgrade work",
-          "rationale": "Consumers need compatible change management. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Additional capabilities require deliberate template evolution. The selected answer is constrained interfaces reduce caller flexibility.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q011",
-      "checkpointId": "CP2",
-      "caseId": "L11-C03",
-      "task": "remedy",
-      "caseContext": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage.",
       "objectiveIds": [
         "D3.3.5"
       ],
       "difficulty": "foundational",
-      "question": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which next change most directly satisfies the stated requirement?",
+      "question": "A caller must choose a build configuration before YAML expansion. How does a parameter differ from an ordinary runtime variable?",
       "options": [
         {
           "key": "A",
-          "text": "Replace free-form executable input with constrained parameters",
-          "rationale": "The interface should restrict executable choices. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Every parameter is automatically encrypted secret material",
+          "rationale": "Type and timing do not make parameters appropriate encrypted secret storage."
         },
         {
           "key": "B",
-          "text": "Use the appropriate template parameter and expression phase",
-          "rationale": "Structural expansion happens before runtime execution. This directly addresses the constraint stated in this case."
+          "text": "The parameter is produced only after its job completes",
+          "rationale": "That would be runtime output rather than an initial template expansion input."
         },
         {
           "key": "C",
-          "text": "Declare and reference a supported cross-job output",
-          "rationale": "Job boundaries need explicit data transfer. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "A parameter grants permissions to the source repository",
+          "rationale": "Configuration values do not inherently authorize access to repository resources."
+        },
+        {
+          "key": "D",
+          "text": "The parameter participates in compile-time template expansion",
+          "rationale": "Its value can determine structure before runtime tasks and variables are evaluated."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Structural expansion happens before runtime execution. The selected answer is use the appropriate template parameter and expression phase.",
+      "explanation": "Its value can determine structure before runtime tasks and variables are evaluated. Type and timing do not make parameters appropriate encrypted secret storage. That would be runtime output rather than an initial template expansion input. Configuration values do not inherently authorize access to repository resources.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q008",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "foundational",
+      "question": "The graph contains build depending on package and package depending on build. Why must scheduling reject it?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No job can satisfy the cyclic prerequisites",
+          "rationale": "The cycle leaves no ready starting node for valid topological execution."
+        },
+        {
+          "key": "B",
+          "text": "The job names use unsupported lowercase letters",
+          "rationale": "Lowercase names do not explain the mutual unsatisfied dependency relationship."
+        },
+        {
+          "key": "C",
+          "text": "The package needs more artifact storage",
+          "rationale": "Additional storage cannot resolve a cycle in required execution ordering."
+        },
+        {
+          "key": "D",
+          "text": "A longer task timeout will eventually break the cycle",
+          "rationale": "Time passage does not satisfy a prerequisite that itself depends on the blocked job."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The cycle leaves no ready starting node for valid topological execution. Lowercase names do not explain the mutual unsatisfied dependency relationship. Additional storage cannot resolve a cycle in required execution ordering. Time passage does not satisfy a prerequisite that itself depends on the blocked job.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q009",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "The lab creates a variable group with authorize false. What provider property should validation inspect afterward?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It is not authorized for every pipeline",
+          "rationale": "The read-back must confirm the intended limited consumer authorization boundary."
+        },
+        {
+          "key": "B",
+          "text": "Its creation command returned any nonempty output",
+          "rationale": "Response existence alone does not prove the desired authorization state persisted."
+        },
+        {
+          "key": "C",
+          "text": "Its friendly name contains the word build",
+          "rationale": "A label does not prove the group has the required resource access restrictions."
+        },
+        {
+          "key": "D",
+          "text": "Its numeric ID contains the current date",
+          "rationale": "The identifier shape does not establish consumption permissions or configuration values."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The read-back must confirm the intended limited consumer authorization boundary. A label does not prove the group has the required resource access restrictions. The identifier shape does not establish consumption permissions or configuration values. Response existence alone does not prove the desired authorization state persisted.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L11-Q010",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.8"
+      ],
+      "difficulty": "foundational",
+      "question": "The shared template changes after a reviewed digest is recorded. What should the independent local drift check report?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The content hash differs from the reviewed template",
+          "rationale": "A digest comparison detects byte changes to the intended reusable executable input."
+        },
+        {
+          "key": "B",
+          "text": "No change because the filename stayed the same",
+          "rationale": "An unchanged friendly path can point to different executable template content."
+        },
+        {
+          "key": "C",
+          "text": "Automatic compatibility because every YAML file is equivalent",
+          "rationale": "YAML documents can encode materially different steps, permissions and dependencies."
+        },
+        {
+          "key": "D",
+          "text": "A successful hosted template expansion without running the provider",
+          "rationale": "Local hashing cannot establish that a remote provider expanded or executed anything."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A digest comparison detects byte changes to the intended reusable executable input. An unchanged friendly path can point to different executable template content. YAML documents can encode materially different steps, permissions and dependencies. Local hashing cannot establish that a remote provider expanded or executed anything.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q011",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.8"
+      ],
+      "difficulty": "foundational",
+      "question": "A consumer calls a reusable workflow but also wants its own independent job after it. Which design expresses that relationship?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Append ordinary steps to the reusable calling job",
+          "rationale": "A reusable workflow call does not accept arbitrary ordinary caller job steps."
+        },
+        {
+          "key": "B",
+          "text": "Put the downstream commands in the workflow filename",
+          "rationale": "A path label is not an executable job or dependency declaration."
+        },
+        {
+          "key": "C",
+          "text": "Use only a prose note describing expected order",
+          "rationale": "Documentation cannot enforce the required executable scheduling dependency relationship."
+        },
+        {
+          "key": "D",
+          "text": "Add a separate dependent job using needs",
+          "rationale": "The reusable call is a job and downstream work uses normal job dependencies."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The reusable call is a job and downstream work uses normal job dependencies. A reusable workflow call does not accept arbitrary ordinary caller job steps. A path label is not an executable job or dependency declaration. Documentation cannot enforce the required executable scheduling dependency relationship.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L11-Q012",
       "checkpointId": "CP2",
-      "caseId": "L11-C03",
-      "task": "diagnosis",
-      "caseContext": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage.",
       "objectiveIds": [
         "D3.3.5"
       ],
       "difficulty": "foundational",
-      "question": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The local exercise accepts Release and executes dotnet tests with that configuration. What does this observation actually prove?",
       "options": [
         {
           "key": "A",
-          "text": "The template delegates privileged code execution",
-          "rationale": "Untrusted strings become powerful build instructions. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "The selected local parameter behavior and tests ran",
+          "rationale": "Local contract execution establishes that behavior without claiming hosted provider template expansion."
         },
         {
           "key": "B",
-          "text": "The value is unavailable during template expansion",
-          "rationale": "Runtime state cannot retroactively create compiled structure. This directly addresses the constraint stated in this case."
+          "text": "Every Azure hosted agent expanded the template successfully",
+          "rationale": "One local execution does not demonstrate provider compilation on all remote workers."
         },
         {
           "key": "C",
-          "text": "A process environment does not span independent jobs",
-          "rationale": "Worker isolation prevents implicit variable inheritance. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "The variable group is available to all organizations",
+          "rationale": "A local configuration selection does not grant cross-organization resource access."
+        },
+        {
+          "key": "D",
+          "text": "The production environment approved the same release",
+          "rationale": "A local test cannot establish independent provider environment authorization or promotion."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Runtime state cannot retroactively create compiled structure. The selected answer is the value is unavailable during template expansion.",
+      "explanation": "Local contract execution establishes that behavior without claiming hosted provider template expansion. One local execution does not demonstrate provider compilation on all remote workers. A local test cannot establish independent provider environment authorization or promotion. A local configuration selection does not grant cross-organization resource access.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q013",
-      "checkpointId": "CP2",
-      "caseId": "L11-C03",
-      "task": "verification",
-      "caseContext": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.3.6"
       ],
-      "difficulty": "applied",
-      "question": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "A dependency graph references a job named analyse, but no such job exists. What should its validator do?",
       "options": [
         {
           "key": "A",
-          "text": "The dependent job receives the expected output value",
-          "rationale": "The value must cross the actual execution boundary. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "Use the artifact archive name instead of the job ID",
+          "rationale": "Output labels do not identify an executable graph node automatically."
         },
         {
           "key": "B",
-          "text": "Unsupported parameter values are rejected before deployment",
-          "rationale": "Negative validation proves the interface boundary. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Invent the missing job as automatically successful",
+          "rationale": "Fabricating success hides a malformed executable prerequisite rather than validating it."
         },
         {
           "key": "C",
-          "text": "The expanded pipeline contains the intended stage graph",
-          "rationale": "Rendered structure verifies compile-time behavior. This directly addresses the constraint stated in this case."
+          "text": "Reject the unknown dependency before execution",
+          "rationale": "Every required edge must refer to an actual node in the authored graph."
+        },
+        {
+          "key": "D",
+          "text": "Ignore the edge because other jobs are valid",
+          "rationale": "Ignoring an intended dependency changes the required execution ordering contract."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Rendered structure verifies compile-time behavior. The selected answer is the expanded pipeline contains the intended stage graph.",
+      "explanation": "Every required edge must refer to an actual node in the authored graph. Fabricating success hides a malformed executable prerequisite rather than validating it. Ignoring an intended dependency changes the required execution ordering contract. Output labels do not identify an executable graph node automatically.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q014",
-      "checkpointId": "CP2",
-      "caseId": "L11-C03",
-      "task": "safeguard",
-      "caseContext": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A nonsecret variable group returns BuildConfiguration Debug, while the agreed lab contract requires Release. What result is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Separate trusted implementation from caller-controlled values",
-          "rationale": "Parameterization should not become code injection. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Pass after renaming the group to Release",
+          "rationale": "A friendly name does not change the actual variable value being consumed."
         },
         {
           "key": "B",
-          "text": "Keep secrets out of compile-time parameter values",
-          "rationale": "Expanded structures can expose supplied configuration. This directly addresses the constraint stated in this case."
+          "text": "Pass because the variable group has an ID",
+          "rationale": "An identifier proves existence rather than correctness of its returned configuration."
         },
         {
           "key": "C",
-          "text": "Declare the dependency and avoid transferring secrets casually",
-          "rationale": "Data flow should follow the intended trust graph. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "Reject the actual configuration mismatch",
+          "rationale": "Provider read-back must match the intended consumed configuration rather than only resource existence."
+        },
+        {
+          "key": "D",
+          "text": "Pass because nonsecret values never affect behavior",
+          "rationale": "Build options can materially change compilation despite not being confidential credentials."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Expanded structures can expose supplied configuration. The selected answer is keep secrets out of compile-time parameter values.",
+      "explanation": "Provider read-back must match the intended consumed configuration rather than only resource existence. Build options can materially change compilation despite not being confidential credentials. An identifier proves existence rather than correctness of its returned configuration. A friendly name does not change the actual variable value being consumed.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q015",
-      "checkpointId": "CP2",
-      "caseId": "L11-C03",
-      "task": "tradeoff",
-      "caseContext": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.3.5"
+        "D3.3.8"
       ],
-      "difficulty": "advanced",
-      "question": "Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. The team selects this remedy: \"Use the appropriate template parameter and expression phase.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A reusable workflow needs contents read but a caller requests broad inherited secrets unnecessarily. What is the better interface default?",
       "options": [
         {
           "key": "A",
-          "text": "Constrained interfaces reduce caller flexibility",
-          "rationale": "Additional capabilities require deliberate template evolution. That addresses a different requirement: Unsafe template input. It does not directly resolve this case's stated constraint."
+          "text": "Grant repository administration whenever reuse is enabled",
+          "rationale": "Code reuse does not establish a need for repository administrative authority."
         },
         {
           "key": "B",
-          "text": "Compile-time choices cannot use later job results",
-          "rationale": "Dynamic execution may need runtime conditions instead. This directly addresses the constraint stated in this case."
+          "text": "Declare only specific required secrets and minimum permissions",
+          "rationale": "A narrow explicit contract avoids exposing unrelated authority to reused executable code."
         },
         {
           "key": "C",
-          "text": "Outputs are metadata rather than bulk artifact transport",
-          "rationale": "Large deliverables belong in artifact storage. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "Always inherit every caller secret for convenience",
+          "rationale": "Broad inheritance exceeds the requirements and enlarges the reusable code trust boundary."
+        },
+        {
+          "key": "D",
+          "text": "Store secrets as plain typed workflow inputs",
+          "rationale": "Ordinary input fields are not a substitute for appropriate secret handling channels."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Dynamic execution may need runtime conditions instead. The selected answer is compile-time choices cannot use later job results.",
+      "explanation": "A narrow explicit contract avoids exposing unrelated authority to reused executable code. Broad inheritance exceeds the requirements and enlarges the reusable code trust boundary. Ordinary input fields are not a substitute for appropriate secret handling channels. Code reuse does not establish a need for repository administrative authority.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q016",
       "checkpointId": "CP4",
-      "caseId": "L11-C04",
-      "task": "remedy",
-      "caseContext": "Missing output: A downstream job reads a value created in another job as though both shared one process environment.",
       "objectiveIds": [
         "D3.3.6"
       ],
-      "difficulty": "foundational",
-      "question": "Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "The graph includes build→test→package→build with no direct self-edge. Why does a self-reference-only validator miss the fault?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize that pipeline to use the group",
-          "rationale": "Resource existence does not imply pipeline authorization. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "Only direct self-edges affect job execution order",
+          "rationale": "Multi-node dependency cycles can block scheduling even without any self-reference."
         },
         {
           "key": "B",
-          "text": "Use the appropriate template parameter and expression phase",
-          "rationale": "Structural expansion happens before runtime execution. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
+          "text": "A repeated artifact label creates the cycle",
+          "rationale": "This cycle is encoded by job prerequisites rather than artifact naming metadata."
         },
         {
           "key": "C",
-          "text": "Declare and reference a supported cross-job output",
-          "rationale": "Job boundaries need explicit data transfer. This directly addresses the constraint stated in this case."
+          "text": "An indirect cycle still prevents a complete topological ordering",
+          "rationale": "Cycle detection must consider transitive dependency relationships rather than only identical endpoints."
+        },
+        {
+          "key": "D",
+          "text": "The graph is valid whenever every job name is unique",
+          "rationale": "Unique nodes do not guarantee that their prerequisite edges form an acyclic graph."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Job boundaries need explicit data transfer. The selected answer is declare and reference a supported cross-job output.",
+      "explanation": "Cycle detection must consider transitive dependency relationships rather than only identical endpoints. Multi-node dependency cycles can block scheduling even without any self-reference. Unique nodes do not guarantee that their prerequisite edges form an acyclic graph. This cycle is encoded by job prerequisites rather than artifact naming metadata.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "[{\"job\":\"build\",\"needs\":[\"package\"]},{\"job\":\"test\",\"needs\":[\"build\"]},{\"job\":\"package\",\"needs\":[\"test\"]}]"
+      }
     },
     {
       "id": "L11-Q017",
       "checkpointId": "CP4",
-      "caseId": "L11-C04",
-      "task": "diagnosis",
-      "caseContext": "Missing output: A downstream job reads a value created in another job as though both shared one process environment.",
       "objectiveIds": [
         "D3.3.6"
       ],
       "difficulty": "applied",
-      "question": "Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Build completes, then independent lint and test jobs may run together before packaging. What should package require?",
       "options": [
         {
           "key": "A",
-          "text": "The shared configuration resource is protected separately",
-          "rationale": "Referencing its name does not grant access. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "Only the build job because source already compiled",
+          "rationale": "Compilation does not replace explicitly required lint and behavioral test outcomes."
         },
         {
           "key": "B",
-          "text": "The value is unavailable during template expansion",
-          "rationale": "Runtime state cannot retroactively create compiled structure. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
+          "text": "Both lint and test job completion",
+          "rationale": "Packaging must wait for every mandatory branch of its validation dependency graph."
         },
         {
           "key": "C",
-          "text": "A process environment does not span independent jobs",
-          "rationale": "Worker isolation prevents implicit variable inheritance. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Worker isolation prevents implicit variable inheritance. The selected answer is a process environment does not span independent jobs.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q018",
-      "checkpointId": "CP4",
-      "caseId": "L11-C04",
-      "task": "verification",
-      "caseContext": "Missing output: A downstream job reads a value created in another job as though both shared one process environment.",
-      "objectiveIds": [
-        "D3.3.6"
-      ],
-      "difficulty": "applied",
-      "question": "Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The expanded pipeline contains the intended stage graph",
-          "rationale": "Rendered structure verifies compile-time behavior. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
+          "text": "Only whichever validation job finishes first",
+          "rationale": "First completion does not establish that the other required validation succeeded."
         },
         {
-          "key": "B",
-          "text": "The dependent job receives the expected output value",
-          "rationale": "The value must cross the actual execution boundary. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "The authorized pipeline reads the required values",
-          "rationale": "The test should verify controlled resource consumption. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "No dependencies because the document lists package last",
+          "rationale": "Textual position does not establish the required independent prerequisite relationships."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The value must cross the actual execution boundary. The selected answer is the dependent job receives the expected output value.",
+      "explanation": "Packaging must wait for every mandatory branch of its validation dependency graph. First completion does not establish that the other required validation succeeded. Compilation does not replace explicitly required lint and behavioral test outcomes. Textual position does not establish the required independent prerequisite relationships.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q018",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.8"
+      ],
+      "difficulty": "applied",
+      "question": "A central reusable workflow is referenced by a moving main branch. What change supports review of an exact reusable implementation?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Pin only the calling application source while leaving the shared workflow on main",
+          "rationale": "A stable caller revision does not freeze an independently resolved moving shared workflow reference."
+        },
+        {
+          "key": "B",
+          "text": "Rename the caller job to stable-template",
+          "rationale": "A label cannot prevent the referenced branch from selecting changed executable content."
+        },
+        {
+          "key": "C",
+          "text": "Pin the reference to a reviewed commit SHA",
+          "rationale": "An immutable reference makes the selected shared executable implementation independently identifiable."
+        },
+        {
+          "key": "D",
+          "text": "Add a timestamp comment beside the moving reference",
+          "rationale": "Documentation time does not bind execution to a particular reviewed commit."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Documentation time does not bind execution to a particular reviewed commit. An immutable reference makes the selected shared executable implementation independently identifiable. A label cannot prevent the referenced branch from selecting changed executable content. A stable caller revision does not freeze an independently resolved moving shared workflow reference.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L11-Q019",
-      "checkpointId": "CP4",
-      "caseId": "L11-C04",
-      "task": "safeguard",
-      "caseContext": "Missing output: A downstream job reads a value created in another job as though both shared one process environment.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.6"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A template accepts a stepList so approved consumers can add build steps. What review is important before exposing that extension point?",
       "options": [
         {
           "key": "A",
-          "text": "Avoid enabling blanket access for all pipelines",
-          "rationale": "Shared secrets need deliberate consumer authorization. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "Assume typed lists cannot contain executable behavior",
+          "rationale": "The purpose of a stepList is to include executable pipeline step definitions."
         },
         {
           "key": "B",
-          "text": "Keep secrets out of compile-time parameter values",
-          "rationale": "Expanded structures can expose supplied configuration. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
+          "text": "Assess what authority the injected executable steps receive",
+          "rationale": "Consumer-supplied steps execute within the selected job identity and available resource boundary."
         },
         {
           "key": "C",
-          "text": "Declare the dependency and avoid transferring secrets casually",
-          "rationale": "Data flow should follow the intended trust graph. This directly addresses the constraint stated in this case."
+          "text": "Check only whether the injected steps parse successfully",
+          "rationale": "Syntactically valid caller steps can still misuse credentials and privileges available in the selected job."
+        },
+        {
+          "key": "D",
+          "text": "Grant more secrets whenever the list grows longer",
+          "rationale": "List size does not justify broader credential exposure to injected executable content."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Data flow should follow the intended trust graph. The selected answer is declare the dependency and avoid transferring secrets casually.",
+      "explanation": "The purpose of a stepList is to include executable pipeline step definitions. List size does not justify broader credential exposure to injected executable content. Consumer-supplied steps execute within the selected job identity and available resource boundary. Syntactically valid caller steps can still misuse credentials and privileges available in the selected job.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q020",
-      "checkpointId": "CP4",
-      "caseId": "L11-C04",
-      "task": "tradeoff",
-      "caseContext": "Missing output: A downstream job reads a value created in another job as though both shared one process environment.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.6"
+        "D3.3.5"
       ],
-      "difficulty": "advanced",
-      "question": "Missing output: A downstream job reads a value created in another job as though both shared one process environment. The team selects this remedy: \"Declare and reference a supported cross-job output.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A runtime variable is changed in one task, but a template condition already selected jobs earlier. Why does the graph remain unchanged?",
       "options": [
         {
           "key": "A",
-          "text": "Outputs are metadata rather than bulk artifact transport",
-          "rationale": "Large deliverables belong in artifact storage. This directly addresses the constraint stated in this case."
+          "text": "The changed variable requires a different task output name",
+          "rationale": "Naming a runtime output differently does not make it exist during earlier template expansion."
         },
         {
           "key": "B",
-          "text": "Central variables create shared operational dependencies",
-          "rationale": "Changes can affect multiple authorized consumers. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "The graph always updates dynamically after every shell assignment",
+          "rationale": "Pipeline template structure is not rebuilt automatically from arbitrary runtime shell state."
         },
         {
           "key": "C",
-          "text": "Compile-time choices cannot use later job results",
-          "rationale": "Dynamic execution may need runtime conditions instead. That addresses a different requirement: Compile-time surprise. It does not directly resolve this case's stated constraint."
+          "text": "The template engine must reread every shell assignment as a parameter",
+          "rationale": "Template parameters are not reconstructed automatically from arbitrary assignments after the graph was expanded."
+        },
+        {
+          "key": "D",
+          "text": "Runtime mutation cannot retroactively change compiled template structure",
+          "rationale": "The graph was expanded before the task produced its updated variable value."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Large deliverables belong in artifact storage. The selected answer is outputs are metadata rather than bulk artifact transport.",
+      "explanation": "Pipeline template structure is not rebuilt automatically from arbitrary runtime shell state. The graph was expanded before the task produced its updated variable value. Naming a runtime output differently does not make it exist during earlier template expansion. Template parameters are not reconstructed automatically from arbitrary assignments after the graph was expanded.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q021",
-      "checkpointId": "CP3",
-      "caseId": "L11-C05",
-      "task": "remedy",
-      "caseContext": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.8"
       ],
-      "difficulty": "foundational",
-      "question": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A local build passes after a reusable template is parsed. What additional evidence is needed to claim hosted template execution?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize that pipeline to use the group",
-          "rationale": "Resource existence does not imply pipeline authorization. This directly addresses the constraint stated in this case."
+          "text": "Only the consumer and template passing a YAML syntax parser",
+          "rationale": "Syntax validation does not establish that a hosted service compiled and executed the selected call."
         },
         {
           "key": "B",
-          "text": "Pin the shared template to a reviewed immutable revision",
-          "rationale": "Stable references make executable dependencies predictable. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Only a correct new template content digest",
+          "rationale": "Integrity of source content does not establish that a provider ran that exact consumer and template."
         },
         {
           "key": "C",
-          "text": "Declare and reference a supported cross-job output",
-          "rationale": "Job boundaries need explicit data transfer. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Resource existence does not imply pipeline authorization. The selected answer is authorize that pipeline to use the group.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q022",
-      "checkpointId": "CP3",
-      "caseId": "L11-C05",
-      "task": "diagnosis",
-      "caseContext": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "foundational",
-      "question": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The dependency changed independently of consumer code",
-          "rationale": "A moving branch allows unreviewed downstream behavior changes. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "A provider run using the actual consumer and selected template",
+          "rationale": "Local parsing and commands do not establish provider compilation or remote execution behavior."
         },
         {
-          "key": "B",
-          "text": "A process environment does not span independent jobs",
-          "rationale": "Worker isolation prevents implicit variable inheritance. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "The shared configuration resource is protected separately",
-          "rationale": "Referencing its name does not grant access. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Only a successful run of the template author local script",
+          "rationale": "Another local execution still does not demonstrate provider expansion of the actual consumer contract."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Referencing its name does not grant access. The selected answer is the shared configuration resource is protected separately.",
+      "explanation": "Another local execution still does not demonstrate provider expansion of the actual consumer contract. Local parsing and commands do not establish provider compilation or remote execution behavior. Syntax validation does not establish that a hosted service compiled and executed the selected call. Integrity of source content does not establish that a provider ran that exact consumer and template.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q022",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "A caller supplies the string false where a Boolean template input is required. Why should the interface avoid casual string substitution?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Typed values and strings can have different evaluation semantics",
+          "rationale": "The interface should preserve its declared type rather than depend on implicit conversions."
+        },
+        {
+          "key": "B",
+          "text": "Every nonempty string is an encrypted pipeline secret",
+          "rationale": "String representation does not establish confidentiality or appropriate secret storage handling."
+        },
+        {
+          "key": "C",
+          "text": "A Boolean input automatically grants resource permissions",
+          "rationale": "Configuration typing does not authorize the identity executing the resulting jobs."
+        },
+        {
+          "key": "D",
+          "text": "The caller can correct typing through an artifact display name",
+          "rationale": "Post-execution output labels do not repair a compile-time input type mismatch."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The interface should preserve its declared type rather than depend on implicit conversions. String representation does not establish confidentiality or appropriate secret storage handling. Configuration typing does not authorize the identity executing the resulting jobs. Post-execution output labels do not repair a compile-time input type mismatch.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L11-Q023",
       "checkpointId": "CP3",
-      "caseId": "L11-C05",
-      "task": "verification",
-      "caseContext": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts.",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A build variable stores Release but the script hardcodes Debug. Which execution contract should the reviewer flag?",
       "options": [
         {
           "key": "A",
-          "text": "The dependent job receives the expected output value",
-          "rationale": "The value must cross the actual execution boundary. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "The template must restrict configuration to a single allowed value",
+          "rationale": "Restricting inputs does not connect the declared value to a script that still hardcodes another configuration."
         },
         {
           "key": "B",
-          "text": "The authorized pipeline reads the required values",
-          "rationale": "The test should verify controlled resource consumption. This directly addresses the constraint stated in this case."
+          "text": "The variable group should be deleted because nonsecrets are forbidden",
+          "rationale": "Ordinary shared build configuration is a legitimate variable group use case."
         },
         {
           "key": "C",
-          "text": "The run resolves the documented template commit",
-          "rationale": "Resolution evidence identifies the executed implementation. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "The script must become a production deployment",
+          "rationale": "Connecting configuration to build behavior does not require introducing cloud deployment authority."
+        },
+        {
+          "key": "D",
+          "text": "The configured input is not connected to actual build behavior",
+          "rationale": "A declared value proves little when the executed command ignores its intended setting."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The test should verify controlled resource consumption. The selected answer is the authorized pipeline reads the required values.",
+      "explanation": "Connecting configuration to build behavior does not require introducing cloud deployment authority. Restricting inputs does not connect the declared value to a script that still hardcodes another configuration. A declared value proves little when the executed command ignores its intended setting. Ordinary shared build configuration is a legitimate variable group use case.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q024",
-      "checkpointId": "CP3",
-      "caseId": "L11-C05",
-      "task": "safeguard",
-      "caseContext": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.8"
       ],
       "difficulty": "applied",
-      "question": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The callee adds a new required input without a default. Existing callers do not send it. What compatibility issue follows?",
       "options": [
         {
           "key": "A",
-          "text": "Declare the dependency and avoid transferring secrets casually",
-          "rationale": "Data flow should follow the intended trust graph. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "Every caller automatically receives a correct inferred value",
+          "rationale": "The provider cannot infer arbitrary new required consumer intent without a default."
         },
         {
           "key": "B",
-          "text": "Avoid enabling blanket access for all pipelines",
-          "rationale": "Shared secrets need deliberate consumer authorization. This directly addresses the constraint stated in this case."
+          "text": "Artifact hashing silently supplies any missing required input",
+          "rationale": "Content digests identify bytes rather than provide missing parameter values."
         },
         {
           "key": "C",
-          "text": "Advance pins through tested reviewed updates",
-          "rationale": "Permanent pins can miss security fixes. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Existing consumers can fail the changed interface contract",
+          "rationale": "A new mandatory argument changes what every existing caller must provide."
+        },
+        {
+          "key": "D",
+          "text": "No change matters unless the template filename changes",
+          "rationale": "Interface behavior can change even when its source path remains identical."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Shared secrets need deliberate consumer authorization. The selected answer is avoid enabling blanket access for all pipelines.",
+      "explanation": "A new mandatory argument changes what every existing caller must provide. The provider cannot infer arbitrary new required consumer intent without a default. Interface behavior can change even when its source path remains identical. Content digests identify bytes rather than provide missing parameter values.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q025",
-      "checkpointId": "CP3",
-      "caseId": "L11-C05",
-      "task": "tradeoff",
-      "caseContext": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.6"
       ],
-      "difficulty": "advanced",
-      "question": "Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. The team selects this remedy: \"Authorize that pipeline to use the group.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A graph validator finishes after processing only two of three declared jobs and reports success. What invariant is missing?",
       "options": [
         {
           "key": "A",
-          "text": "Outputs are metadata rather than bulk artifact transport",
-          "rationale": "Large deliverables belong in artifact storage. That addresses a different requirement: Missing output. It does not directly resolve this case's stated constraint."
+          "text": "Every node must run on the same hosted image",
+          "rationale": "Runner selection does not establish whether all prerequisites can be resolved."
         },
         {
           "key": "B",
-          "text": "Central variables create shared operational dependencies",
-          "rationale": "Changes can affect multiple authorized consumers. This directly addresses the constraint stated in this case."
+          "text": "All declared nodes must be included in the topological result",
+          "rationale": "Unprocessed nodes can reveal a cycle or unresolved prerequisite in the graph."
         },
         {
           "key": "C",
-          "text": "Pinning shifts freshness to a maintenance workflow",
-          "rationale": "Reproducibility requires intentional upgrade discipline. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Every task must upload the same artifact filename",
+          "rationale": "Output naming does not validate complete traversal of the dependency graph."
+        },
+        {
+          "key": "D",
+          "text": "Only the first job must have a readable name",
+          "rationale": "Friendly naming does not prove complete ordering of every declared graph node."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Changes can affect multiple authorized consumers. The selected answer is central variables create shared operational dependencies.",
+      "explanation": "Unprocessed nodes can reveal a cycle or unresolved prerequisite in the graph. Friendly naming does not prove complete ordering of every declared graph node. Runner selection does not establish whether all prerequisites can be resolved. Output naming does not validate complete traversal of the dependency graph.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Declared jobs: build, test, package\nVisited jobs: build, test\nValidator result: passed"
+      }
     },
     {
       "id": "L11-Q026",
       "checkpointId": "CP2",
-      "caseId": "L11-C06",
-      "task": "remedy",
-      "caseContext": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer.",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "foundational",
-      "question": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "The template accepts Release, but its local wrapper always tests Debug. Which verification would catch this broken consumer contract?",
       "options": [
         {
           "key": "A",
-          "text": "Pin the shared template to a reviewed immutable revision",
-          "rationale": "Stable references make executable dependencies predictable. This directly addresses the constraint stated in this case."
+          "text": "Check only that the template is syntactically valid YAML",
+          "rationale": "Parsing cannot prove that a wrapper uses the selected parameter at execution."
         },
         {
           "key": "B",
-          "text": "Expose a reusable workflow with an explicit caller contract",
-          "rationale": "Workflow reuse supports a governed multi-job interface. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "Compare selected input with the actual executed command configuration",
+          "rationale": "The exercise must show that the accepted parameter controls concrete build behavior."
         },
         {
           "key": "C",
-          "text": "Authorize that pipeline to use the group",
-          "rationale": "Resource existence does not imply pipeline authorization. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "Check only that a TRX file exists somewhere",
+          "rationale": "A report can belong to an unintended configuration or earlier execution."
+        },
+        {
+          "key": "D",
+          "text": "Check only that Production is rejected",
+          "rationale": "Negative input rejection does not establish correct behavior for accepted inputs."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Stable references make executable dependencies predictable. The selected answer is pin the shared template to a reviewed immutable revision.",
+      "explanation": "The exercise must show that the accepted parameter controls concrete build behavior. Parsing cannot prove that a wrapper uses the selected parameter at execution. A report can belong to an unintended configuration or earlier execution. Negative input rejection does not establish correct behavior for accepted inputs.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q027",
-      "checkpointId": "CP2",
-      "caseId": "L11-C06",
-      "task": "diagnosis",
-      "caseContext": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A variable group should be shared with one approved pipeline while other project pipelines remain denied. What proves that boundary?",
       "options": [
         {
           "key": "A",
-          "text": "Copying workflow files loses shared implementation ownership",
-          "rationale": "Consumers would maintain separate definitions. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "A group friendly name containing private",
+          "rationale": "Labels do not enforce resource authorization for consuming pipeline identities."
         },
         {
           "key": "B",
-          "text": "The shared configuration resource is protected separately",
-          "rationale": "Referencing its name does not grant access. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "A project-wide unrestricted connection for convenience",
+          "rationale": "Blanket access conflicts with the explicitly limited intended consumer boundary."
         },
         {
           "key": "C",
-          "text": "The dependency changed independently of consumer code",
-          "rationale": "A moving branch allows unreviewed downstream behavior changes. This directly addresses the constraint stated in this case."
+          "text": "Specific pipeline authorization plus absence of blanket authorization",
+          "rationale": "The required consumer access must coexist with restrictions on unrelated workloads."
+        },
+        {
+          "key": "D",
+          "text": "A successful local echo of the desired configuration",
+          "rationale": "Local output does not show provider resource consumption rights or denial behavior."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A moving branch allows unreviewed downstream behavior changes. The selected answer is the dependency changed independently of consumer code.",
+      "explanation": "The required consumer access must coexist with restrictions on unrelated workloads. Labels do not enforce resource authorization for consuming pipeline identities. Local output does not show provider resource consumption rights or denial behavior. Blanket access conflicts with the explicitly limited intended consumer boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q028",
-      "checkpointId": "CP2",
-      "caseId": "L11-C06",
-      "task": "verification",
-      "caseContext": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.8"
       ],
       "difficulty": "applied",
-      "question": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A nested reusable workflow needs a secret that only its direct caller received. What must the calling chain provide?",
       "options": [
         {
           "key": "A",
-          "text": "The run resolves the documented template commit",
-          "rationale": "Resolution evidence identifies the executed implementation. This directly addresses the constraint stated in this case."
+          "text": "Explicit secret forwarding at each required reuse boundary",
+          "rationale": "Secrets do not automatically transit every nested call without the appropriate forwarding contract."
         },
         {
           "key": "B",
-          "text": "A caller invokes the shared workflow with validated inputs",
-          "rationale": "The call demonstrates the intended reuse boundary. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "Only the outermost caller repository write permission",
+          "rationale": "Source mutation authority does not forward an absent secret to a nested callee."
         },
         {
           "key": "C",
-          "text": "The authorized pipeline reads the required values",
-          "rationale": "The test should verify controlled resource consumption. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "A matching display name across all nested jobs",
+          "rationale": "Labels cannot propagate credential values through separate reusable execution interfaces."
+        },
+        {
+          "key": "D",
+          "text": "An artifact whose filename equals the secret name",
+          "rationale": "Artifact naming is not a supported credential propagation channel."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Resolution evidence identifies the executed implementation. The selected answer is the run resolves the documented template commit.",
+      "explanation": "Secrets do not automatically transit every nested call without the appropriate forwarding contract. Labels cannot propagate credential values through separate reusable execution interfaces. Source mutation authority does not forward an absent secret to a nested callee. Artifact naming is not a supported credential propagation channel.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q029",
-      "checkpointId": "CP2",
-      "caseId": "L11-C06",
-      "task": "safeguard",
-      "caseContext": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.8"
       ],
       "difficulty": "applied",
-      "question": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The template digest matches, but tests fail because the sample behavior changed. How should the result be interpreted?",
       "options": [
         {
           "key": "A",
-          "text": "Advance pins through tested reviewed updates",
-          "rationale": "Permanent pins can miss security fixes. This directly addresses the constraint stated in this case."
+          "text": "The test report should be replaced with the earlier success",
+          "rationale": "Using unrelated evidence conceals the current actual failing candidate result."
         },
         {
           "key": "B",
-          "text": "Declare only required secret and permission access",
-          "rationale": "Reusable code should not receive unnecessary authority. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "The digest proves tests must have passed",
+          "rationale": "A content hash does not encode the outcome of later application behavioral tests."
         },
         {
           "key": "C",
-          "text": "Avoid enabling blanket access for all pipelines",
-          "rationale": "Shared secrets need deliberate consumer authorization. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "The template reference should be renamed to make tests valid",
+          "rationale": "Changing a label cannot correct the measured application assertion failure."
+        },
+        {
+          "key": "D",
+          "text": "Template integrity passed while application behavior failed",
+          "rationale": "A stable template identity does not guarantee every changed application will satisfy its assertions."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Permanent pins can miss security fixes. The selected answer is advance pins through tested reviewed updates.",
+      "explanation": "A stable template identity does not guarantee every changed application will satisfy its assertions. A content hash does not encode the outcome of later application behavioral tests. Using unrelated evidence conceals the current actual failing candidate result. Changing a label cannot correct the measured application assertion failure.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q030",
       "checkpointId": "CP2",
-      "caseId": "L11-C06",
-      "task": "tradeoff",
-      "caseContext": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer.",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "advanced",
-      "question": "Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. The team selects this remedy: \"Pin the shared template to a reviewed immutable revision.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "The consumer supplies configuration Release and the template allows it, but references a nonexistent solution path. What should validation distinguish?",
       "options": [
         {
           "key": "A",
-          "text": "Reusable workflows have documented nesting and permission constraints",
-          "rationale": "The interface must fit supported platform behavior. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "Valid parameter binding from invalid executable file references",
+          "rationale": "An accepted input does not prove every downstream command references an existing source file."
         },
         {
           "key": "B",
-          "text": "Central variables create shared operational dependencies",
-          "rationale": "Changes can affect multiple authorized consumers. That addresses a different requirement: Variable group access. It does not directly resolve this case's stated constraint."
+          "text": "A nonexistent path is harmless if the artifact name is correct",
+          "rationale": "Output naming cannot supply source inputs required for actual compilation."
         },
         {
           "key": "C",
-          "text": "Pinning shifts freshness to a maintenance workflow",
-          "rationale": "Reproducibility requires intentional upgrade discipline. This directly addresses the constraint stated in this case."
+          "text": "Every accepted input guarantees all generated paths exist",
+          "rationale": "Template interfaces cannot automatically establish the repository content referenced by arbitrary commands."
+        },
+        {
+          "key": "D",
+          "text": "Only a production environment can validate source file existence",
+          "rationale": "Local source path inspection does not require deployment environment authorization."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "An accepted input does not prove every downstream command references an existing source file. Template interfaces cannot automatically establish the repository content referenced by arbitrary commands. Local source path inspection does not require deployment environment authorization. Output naming cannot supply source inputs required for actual compilation.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q031",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.3.6"
+      ],
+      "difficulty": "applied",
+      "question": "The local fault adds package as a build prerequisite while package already depends on test→build. What evidence should establish successful detection?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Any exception from an unavailable provider CLI",
+          "rationale": "An unrelated tooling failure does not prove the graph validator detected the injected cycle."
+        },
+        {
+          "key": "B",
+          "text": "A pass recorded before the fault was introduced",
+          "rationale": "Earlier healthy evidence does not demonstrate rejection of the new invalid state."
+        },
+        {
+          "key": "C",
+          "text": "Only the JSON file modification timestamp",
+          "rationale": "A changed timestamp does not demonstrate that the invalid graph was rejected."
+        },
+        {
+          "key": "D",
+          "text": "The named assertion fails because no complete ordering exists",
+          "rationale": "The failure must correspond to the actual indirect dependency cycle introduced by the trigger."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "The failure must correspond to the actual indirect dependency cycle introduced by the trigger. An unrelated tooling failure does not prove the graph validator detected the injected cycle. A changed timestamp does not demonstrate that the invalid graph was rejected. Earlier healthy evidence does not demonstrate rejection of the new invalid state.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Before: build -> test -> package\nFault adds: package -> build"
+      }
+    },
+    {
+      "id": "L11-Q032",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.8"
+      ],
+      "difficulty": "applied",
+      "question": "The caller grants contents read and the callee requests contents write. What limitation must the shared workflow author honor?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The callee filename determines its token role",
+          "rationale": "Source naming does not establish the authority of the workflow token."
+        },
+        {
+          "key": "B",
+          "text": "Every called workflow automatically receives write permission",
+          "rationale": "Reuse does not provide an automatic repository mutation capability grant."
+        },
+        {
+          "key": "C",
+          "text": "The callee cannot elevate the caller permission boundary",
+          "rationale": "Reusable calls can preserve or reduce authority rather than unilaterally expand it."
+        },
+        {
+          "key": "D",
+          "text": "The author personal GitHub role overrides workflow token restrictions",
+          "rationale": "Personal account authority is not automatically inherited by the job token."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Reproducibility requires intentional upgrade discipline. The selected answer is pinning shifts freshness to a maintenance workflow.",
+      "explanation": "Reusable calls can preserve or reduce authority rather than unilaterally expand it. Reuse does not provide an automatic repository mutation capability grant. Source naming does not establish the authority of the workflow token. Personal account authority is not automatically inherited by the job token.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q031",
-      "checkpointId": "CP1",
-      "caseId": "L11-C07",
-      "task": "remedy",
-      "caseContext": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "foundational",
-      "question": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Pin the shared template to a reviewed immutable revision",
-          "rationale": "Stable references make executable dependencies predictable. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Expose a reusable workflow with an explicit caller contract",
-          "rationale": "Workflow reuse supports a governed multi-job interface. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Inspect scope precedence and remove ambiguous duplicate definitions",
-          "rationale": "Effective values depend on where variables are defined. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Workflow reuse supports a governed multi-job interface. The selected answer is expose a reusable workflow with an explicit caller contract.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q032",
-      "checkpointId": "CP1",
-      "caseId": "L11-C07",
-      "task": "diagnosis",
-      "caseContext": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs.",
-      "objectiveIds": [
-        "D3.3.8"
-      ],
-      "difficulty": "foundational",
-      "question": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The dependency changed independently of consumer code",
-          "rationale": "A moving branch allows unreviewed downstream behavior changes. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Copying workflow files loses shared implementation ownership",
-          "rationale": "Consumers would maintain separate definitions. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "A narrower definition overrides the expected broader value",
-          "rationale": "The visible top-level setting may not be effective. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Consumers would maintain separate definitions. The selected answer is copying workflow files loses shared implementation ownership.",
-      "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q033",
-      "checkpointId": "CP1",
-      "caseId": "L11-C07",
-      "task": "verification",
-      "caseContext": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A reusable build accepts configuration but hardcodes the artifact output path required by consumers. What interface change is breaking?",
       "options": [
         {
           "key": "A",
-          "text": "The resolved nonsecret target matches the reviewed configuration",
-          "rationale": "The test must inspect the effective runtime value. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "Retaining the same paths and permitted configuration values",
+          "rationale": "Preserving consumed behavior avoids the specific output contract change described."
         },
         {
           "key": "B",
-          "text": "The run resolves the documented template commit",
-          "rationale": "Resolution evidence identifies the executed implementation. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Adding explanatory comments without executable changes",
+          "rationale": "Documentation additions alone do not change the consumed output behavior or location."
         },
         {
           "key": "C",
-          "text": "A caller invokes the shared workflow with validated inputs",
-          "rationale": "The call demonstrates the intended reuse boundary. This directly addresses the constraint stated in this case."
+          "text": "Changing that required output location without consumer migration",
+          "rationale": "Consumers depend on output contracts as well as accepted input parameter names."
+        },
+        {
+          "key": "D",
+          "text": "Improving local assertion messages while retaining behavior",
+          "rationale": "Clearer diagnosis does not inherently break the consumer input or output contract."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The call demonstrates the intended reuse boundary. The selected answer is a caller invokes the shared workflow with validated inputs.",
+      "explanation": "Consumers depend on output contracts as well as accepted input parameter names. Documentation additions alone do not change the consumed output behavior or location. Clearer diagnosis does not inherently break the consumer input or output contract. Preserving consumed behavior avoids the specific output contract change described.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q034",
-      "checkpointId": "CP1",
-      "caseId": "L11-C07",
-      "task": "safeguard",
-      "caseContext": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A task writes a variable using task.setvariable. Why should a later separate job not assume ordinary variable access automatically works?",
       "options": [
         {
           "key": "A",
-          "text": "Advance pins through tested reviewed updates",
-          "rationale": "Permanent pins can miss security fixes. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Cross-job values need explicit output and dependency mapping",
+          "rationale": "Job boundaries require a supported data propagation contract rather than process-local assumptions."
         },
         {
           "key": "B",
-          "text": "Declare only required secret and permission access",
-          "rationale": "Reusable code should not receive unnecessary authority. This directly addresses the constraint stated in this case."
+          "text": "The project must grant organization-wide administrative authority first",
+          "rationale": "Broad privileges do not create the missing output variable data relationship."
         },
         {
           "key": "C",
-          "text": "Use distinct names and explicit environment configuration",
-          "rationale": "Ambiguous reuse increases wrong-target deployment risk. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "All pipeline variables are immutable encrypted secrets",
+          "rationale": "Variables differ in purpose and timing rather than all being secret immutable values."
+        },
+        {
+          "key": "D",
+          "text": "Changing the variable group friendly name forwards the value",
+          "rationale": "Resource naming does not establish a cross-job runtime output mapping."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Reusable code should not receive unnecessary authority. The selected answer is declare only required secret and permission access.",
+      "explanation": "Job boundaries require a supported data propagation contract rather than process-local assumptions. Variables differ in purpose and timing rather than all being secret immutable values. Broad privileges do not create the missing output variable data relationship. Resource naming does not establish a cross-job runtime output mapping.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q035",
-      "checkpointId": "CP1",
-      "caseId": "L11-C07",
-      "task": "tradeoff",
-      "caseContext": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.8"
       ],
-      "difficulty": "advanced",
-      "question": "GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. The team selects this remedy: \"Expose a reusable workflow with an explicit caller contract.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A reviewer sees a passing local build and unchanged template SHA but no hosted consumer run. Which statement is supportable?",
       "options": [
         {
           "key": "A",
-          "text": "Centralization does not eliminate precedence rules",
-          "rationale": "Template consumers still need a clear configuration contract. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "The template is automatically safe for all possible callers",
+          "rationale": "One exercised input cannot prove correctness for arbitrary future consumer configurations."
         },
         {
           "key": "B",
-          "text": "Pinning shifts freshness to a maintenance workflow",
-          "rationale": "Reproducibility requires intentional upgrade discipline. That addresses a different requirement: Moving shared reference. It does not directly resolve this case's stated constraint."
+          "text": "Local behavior and template integrity passed; hosted expansion remains unverified",
+          "rationale": "The evidence supports the exercised local boundaries without claiming an unexecuted provider operation."
         },
         {
           "key": "C",
-          "text": "Reusable workflows have documented nesting and permission constraints",
-          "rationale": "The interface must fit supported platform behavior. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The interface must fit supported platform behavior. The selected answer is reusable workflows have documented nesting and permission constraints.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L11-Q036",
-      "checkpointId": "CP3",
-      "caseId": "L11-C08",
-      "task": "remedy",
-      "caseContext": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment.",
-      "objectiveIds": [
-        "D3.3.5",
-        "D3.3.8"
-      ],
-      "difficulty": "foundational",
-      "question": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Expose a reusable workflow with an explicit caller contract",
-          "rationale": "Workflow reuse supports a governed multi-job interface. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "Every hosted service validated the exact template successfully",
+          "rationale": "A local result cannot demonstrate execution by providers that were never invoked."
         },
         {
-          "key": "B",
-          "text": "Inspect scope precedence and remove ambiguous duplicate definitions",
-          "rationale": "Effective values depend on where variables are defined. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Translate repeated tasks into supported YAML templates",
-          "rationale": "Classic task groups and YAML templates differ. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "All remote deployment environments have approved the template",
+          "rationale": "Build execution does not establish independent environment authorization or release approval."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Effective values depend on where variables are defined. The selected answer is inspect scope precedence and remove ambiguous duplicate definitions.",
+      "explanation": "The evidence supports the exercised local boundaries without claiming an unexecuted provider operation. A local result cannot demonstrate execution by providers that were never invoked. One exercised input cannot prove correctness for arbitrary future consumer configurations. Build execution does not establish independent environment authorization or release approval.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
+      ]
+    },
+    {
+      "id": "L11-Q036",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.5"
+      ],
+      "difficulty": "applied",
+      "question": "The team wants central build consistency but permits arbitrary caller shell steps under a publishing credential. What design risk requires review?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only whether publishing credentials are masked in logs",
+          "rationale": "Masking does not prevent executable caller-supplied steps from using credentials exposed to their process."
+        },
+        {
+          "key": "B",
+          "text": "The extension point can execute untrusted code with privileged authority",
+          "rationale": "Reusable convenience must preserve the identity and credential boundary of injected executable content."
+        },
+        {
+          "key": "C",
+          "text": "Only whether injected scripts return successful exit codes",
+          "rationale": "Successful termination does not prove that privileged injected code respected the intended authority boundary."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the central template is pinned to a SHA",
+          "rationale": "A stable central implementation does not constrain separately injected caller code using its privileged job identity."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A stable central implementation does not constrain separately injected caller code using its privileged job identity. Reusable convenience must preserve the identity and credential boundary of injected executable content. Successful termination does not prove that privileged injected code respected the intended authority boundary. Masking does not prevent executable caller-supplied steps from using credentials exposed to their process.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L11-Q037",
-      "checkpointId": "CP3",
-      "caseId": "L11-C08",
-      "task": "diagnosis",
-      "caseContext": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.5",
-        "D3.3.8"
+        "D3.3.6"
       ],
       "difficulty": "applied",
-      "question": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Two graph nodes share the same job identifier. Why should validation reject them before topological sorting?",
       "options": [
         {
           "key": "A",
-          "text": "Classic UI definitions are not directly interchangeable with YAML",
-          "rationale": "The reuse mechanism depends on pipeline style. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Duplicate identities make dependency targets ambiguous",
+          "rationale": "The graph must distinguish every executable node before its edges can resolve reliably."
         },
         {
           "key": "B",
-          "text": "Copying workflow files loses shared implementation ownership",
-          "rationale": "Consumers would maintain separate definitions. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "The file size is necessarily above the provider limit",
+          "rationale": "Two repeated identifiers do not establish that any document size limit was exceeded."
         },
         {
           "key": "C",
-          "text": "A narrower definition overrides the expected broader value",
-          "rationale": "The visible top-level setting may not be effective. This directly addresses the constraint stated in this case."
+          "text": "Duplicate names always improve concurrent execution speed",
+          "rationale": "Ambiguous identity does not provide a valid or guaranteed scheduling optimization."
+        },
+        {
+          "key": "D",
+          "text": "Unique artifact names would repair duplicate job identities",
+          "rationale": "Artifact identity does not disambiguate the executable nodes referenced by dependency edges."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The visible top-level setting may not be effective. The selected answer is a narrower definition overrides the expected broader value.",
+      "explanation": "The graph must distinguish every executable node before its edges can resolve reliably. Ambiguous identity does not provide a valid or guaranteed scheduling optimization. Two repeated identifiers do not establish that any document size limit was exceeded. Artifact identity does not disambiguate the executable nodes referenced by dependency edges.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q038",
-      "checkpointId": "CP3",
-      "caseId": "L11-C08",
-      "task": "verification",
-      "caseContext": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.3.5",
         "D3.3.8"
       ],
       "difficulty": "applied",
-      "question": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The reusable workflow exists at a reviewed SHA, but a caller repository lacks access to its private source. What prerequisite is missing?",
       "options": [
         {
           "key": "A",
-          "text": "The YAML consumer expands and executes the shared steps",
-          "rationale": "The migrated reuse must work in its target engine. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Authorized access to the private reusable workflow source",
+          "rationale": "An exact reference identifies code but does not grant the caller permission to consume it."
         },
         {
           "key": "B",
-          "text": "A caller invokes the shared workflow with validated inputs",
-          "rationale": "The call demonstrates the intended reuse boundary. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "An additional .NET coverage collector",
+          "rationale": "Test instrumentation cannot grant access to another private repository resource."
         },
         {
           "key": "C",
-          "text": "The resolved nonsecret target matches the reviewed configuration",
-          "rationale": "The test must inspect the effective runtime value. This directly addresses the constraint stated in this case."
+          "text": "A locally valid input contract with no repository access grant",
+          "rationale": "Interface validity does not authorize the provider to read a private executable workflow source."
+        },
+        {
+          "key": "D",
+          "text": "A more descriptive local directory name",
+          "rationale": "Local naming does not establish provider authorization to the private template source."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The test must inspect the effective runtime value. The selected answer is the resolved nonsecret target matches the reviewed configuration.",
+      "explanation": "Interface validity does not authorize the provider to read a private executable workflow source. Test instrumentation cannot grant access to another private repository resource. Local naming does not establish provider authorization to the private template source. An exact reference identifies code but does not grant the caller permission to consume it.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q039",
-      "checkpointId": "CP3",
-      "caseId": "L11-C08",
-      "task": "safeguard",
-      "caseContext": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.5",
-        "D3.3.8"
+        "D3.3.5"
       ],
       "difficulty": "applied",
-      "question": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A parameter should accept only two configurations and reject arbitrary deployment targets. Which interface provides enforceable accepted choices?",
       "options": [
         {
           "key": "A",
-          "text": "Use distinct names and explicit environment configuration",
-          "rationale": "Ambiguous reuse increases wrong-target deployment risk. This directly addresses the constraint stated in this case."
+          "text": "An artifact name that contains both expected values",
+          "rationale": "Output naming does not restrict the earlier accepted consumer parameter space."
         },
         {
           "key": "B",
-          "text": "Preserve task inputs and security controls during translation",
-          "rationale": "Structural migration can silently weaken operational behavior. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "A typed string parameter with explicit allowed values",
+          "rationale": "The declaration restricts the caller to the reviewed supported configuration set."
         },
         {
           "key": "C",
-          "text": "Declare only required secret and permission access",
-          "rationale": "Reusable code should not receive unnecessary authority. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "A comment listing preferred spellings beside an unconstrained input",
+          "rationale": "Prose guidance does not enforce the allowed values against executable caller input."
+        },
+        {
+          "key": "D",
+          "text": "A runtime log stating all inputs are safe",
+          "rationale": "An assertion of trust does not validate the supplied value against the contract."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Ambiguous reuse increases wrong-target deployment risk. The selected answer is use distinct names and explicit environment configuration.",
+      "explanation": "The declaration restricts the caller to the reviewed supported configuration set. Prose guidance does not enforce the allowed values against executable caller input. An assertion of trust does not validate the supplied value against the contract. Output naming does not restrict the earlier accepted consumer parameter space.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q040",
-      "checkpointId": "CP3",
-      "caseId": "L11-C08",
-      "task": "tradeoff",
-      "caseContext": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.5",
-        "D3.3.8"
+        "D3.3.6"
       ],
-      "difficulty": "advanced",
-      "question": "Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. The team selects this remedy: \"Inspect scope precedence and remove ambiguous duplicate definitions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A repaired DAG passes its graph assertion but execution-order.txt still lists the old wrong sequence. What should final validation do?",
       "options": [
         {
           "key": "A",
-          "text": "Centralization does not eliminate precedence rules",
-          "rationale": "Template consumers still need a clear configuration contract. This directly addresses the constraint stated in this case."
+          "text": "Delete the order file and infer the intended order",
+          "rationale": "Removing evidence does not establish the actual retained execution relationship."
         },
         {
           "key": "B",
-          "text": "Migration may require redesign rather than text conversion",
-          "rationale": "Equivalent intent can use a different platform construct. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Pass because one of several assertions succeeded",
+          "rationale": "A partial success does not satisfy every required independent checkpoint invariant."
         },
         {
           "key": "C",
-          "text": "Reusable workflows have documented nesting and permission constraints",
-          "rationale": "The interface must fit supported platform behavior. That addresses a different requirement: GitHub workflow reuse. It does not directly resolve this case's stated constraint."
+          "text": "Rename the package job without updating dependencies",
+          "rationale": "Changing identity without coherent edges can introduce further graph validation problems."
+        },
+        {
+          "key": "D",
+          "text": "Reject the inconsistent retained execution evidence",
+          "rationale": "Healthy source structure and retained ordering evidence must agree about the required behavior."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Template consumers still need a clear configuration contract. The selected answer is centralization does not eliminate precedence rules.",
+      "explanation": "Healthy source structure and retained ordering evidence must agree about the required behavior. A partial success does not satisfy every required independent checkpoint invariant. Removing evidence does not establish the actual retained execution relationship. Changing identity without coherent edges can introduce further graph validation problems.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q041",
-      "checkpointId": "CP5",
-      "caseId": "L11-C09",
-      "task": "remedy",
-      "caseContext": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.8"
       ],
-      "difficulty": "foundational",
-      "question": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "A central workflow update removes a required artifact while preserving input names and test success. How should compatibility review assess it?",
       "options": [
         {
           "key": "A",
-          "text": "Translate repeated tasks into supported YAML templates",
-          "rationale": "Classic task groups and YAML templates differ. This directly addresses the constraint stated in this case."
+          "text": "Let every consumer silently rebuild different artifacts instead",
+          "rationale": "Undocumented rebuilds change downstream assumptions and can abandon immutable promotion requirements."
         },
         {
           "key": "B",
-          "text": "Remove unnecessary dependencies while retaining required data ordering",
-          "rationale": "The graph should express actual prerequisites. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Increase token permissions to recreate the missing interface",
+          "rationale": "Authority cannot restore an output that the shared implementation no longer produces."
         },
         {
           "key": "C",
-          "text": "Inspect scope precedence and remove ambiguous duplicate definitions",
-          "rationale": "Effective values depend on where variables are defined. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "Assume unchanged inputs guarantee full backwards compatibility",
+          "rationale": "A stable parameter list does not preserve removed files or output behavior."
+        },
+        {
+          "key": "D",
+          "text": "Treat the consumed output removal as a breaking contract change",
+          "rationale": "Consumer compatibility includes required outputs rather than only accepted input spellings."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Classic task groups and YAML templates differ. The selected answer is translate repeated tasks into supported YAML templates.",
+      "explanation": "Consumer compatibility includes required outputs rather than only accepted input spellings. A stable parameter list does not preserve removed files or output behavior. Undocumented rebuilds change downstream assumptions and can abandon immutable promotion requirements. Authority cannot restore an output that the shared implementation no longer produces.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q042",
-      "checkpointId": "CP5",
-      "caseId": "L11-C09",
-      "task": "diagnosis",
-      "caseContext": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "foundational",
-      "question": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "advanced",
+      "question": "A compile-time parameter selects a service connection name under caller control. The central template runs privileged tasks. What additional boundary must enforce authorization?",
       "options": [
         {
           "key": "A",
-          "text": "Classic UI definitions are not directly interchangeable with YAML",
-          "rationale": "The reuse mechanism depends on pipeline style. This directly addresses the constraint stated in this case."
+          "text": "Only a successful local template parse",
+          "rationale": "Syntax validation does not prove access authorization or independent protected resource approval."
         },
         {
           "key": "B",
-          "text": "Artificial edges prevent eligible parallel execution",
-          "rationale": "Agent capacity alone cannot override dependency ordering. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Only the caller chosen display name for the connection",
+          "rationale": "Caller-controlled naming does not establish trusted permission to consume the resource."
         },
         {
           "key": "C",
-          "text": "A narrower definition overrides the expected broader value",
-          "rationale": "The visible top-level setting may not be effective. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "Only a nonempty string check on the parameter",
+          "rationale": "Nonempty arbitrary input does not establish an approved authorized privileged resource choice."
+        },
+        {
+          "key": "D",
+          "text": "Provider resource permissions and checks outside caller-editable YAML",
+          "rationale": "Input validation cannot let evaluated code authorize itself to powerful external resources."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The reuse mechanism depends on pipeline style. The selected answer is classic UI definitions are not directly interchangeable with YAML.",
+      "explanation": "Input validation cannot let evaluated code authorize itself to powerful external resources. Caller-controlled naming does not establish trusted permission to consume the resource. Nonempty arbitrary input does not establish an approved authorized privileged resource choice. Syntax validation does not prove access authorization or independent protected resource approval.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q043",
-      "checkpointId": "CP5",
-      "caseId": "L11-C09",
-      "task": "verification",
-      "caseContext": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.6"
       ],
-      "difficulty": "applied",
-      "question": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "advanced",
+      "question": "Build feeds both lint and tests, while package requires both. Which computation determines the theoretical duration under sufficient agents?",
       "options": [
         {
           "key": "A",
-          "text": "Independent tests overlap without missing required outputs",
-          "rationale": "The result should improve runtime and preserve correctness. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "The sum of every duration regardless of parallel edges",
+          "rationale": "That models serial work even where declared independent jobs may execute concurrently."
         },
         {
           "key": "B",
-          "text": "The resolved nonsecret target matches the reviewed configuration",
-          "rationale": "The test must inspect the effective runtime value. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "Only the duration of the final package task",
+          "rationale": "The final node still waits for its complete required upstream dependency chain."
         },
         {
           "key": "C",
-          "text": "The YAML consumer expands and executes the shared steps",
-          "rationale": "The migrated reuse must work in its target engine. This directly addresses the constraint stated in this case."
+          "text": "The longest dependency path rather than all durations summed",
+          "rationale": "Independent branches can overlap while the critical prerequisite chain bounds completion time."
+        },
+        {
+          "key": "D",
+          "text": "The number of YAML lines multiplied by agent count",
+          "rationale": "Document length is not an execution-duration model for the authored dependency graph."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The migrated reuse must work in its target engine. The selected answer is the YAML consumer expands and executes the shared steps.",
+      "explanation": "Independent branches can overlap while the critical prerequisite chain bounds completion time. That models serial work even where declared independent jobs may execute concurrently. The final node still waits for its complete required upstream dependency chain. Document length is not an execution-duration model for the authored dependency graph.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "build=40s\nlint=20s after build\ntest=30s after build\npackage=10s after lint+test"
+      }
     },
     {
       "id": "L11-Q044",
-      "checkpointId": "CP5",
-      "caseId": "L11-C09",
-      "task": "safeguard",
-      "caseContext": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "advanced",
+      "question": "A template migration changes a runtime variable to a compile-time parameter. Existing callers compute it from test results. What must migration address?",
       "options": [
         {
           "key": "A",
-          "text": "Preserve task inputs and security controls during translation",
-          "rationale": "Structural migration can silently weaken operational behavior. This directly addresses the constraint stated in this case."
+          "text": "Only whether the template accepts the existing variable name",
+          "rationale": "A matching name cannot supply a test result before the test executes at runtime."
         },
         {
           "key": "B",
-          "text": "Keep publication and deployment dependent on required test results",
-          "rationale": "Parallelism must not bypass validation gates. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "Only whether every consumer explicitly declares the new parameter",
+          "rationale": "Declaring an input does not make a later runtime-generated value available for compile-time evaluation."
         },
         {
           "key": "C",
-          "text": "Use distinct names and explicit environment configuration",
-          "rationale": "Ambiguous reuse increases wrong-target deployment risk. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "The value is unavailable when the new parameter must be expanded",
+          "rationale": "A later runtime result cannot directly supply an earlier compile-time structural decision."
+        },
+        {
+          "key": "D",
+          "text": "Only whether both old and new declarations use string values",
+          "rationale": "Matching representation does not solve the fact that the value is produced after template expansion."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Structural migration can silently weaken operational behavior. The selected answer is preserve task inputs and security controls during translation.",
+      "explanation": "Matching representation does not solve the fact that the value is produced after template expansion. A matching name cannot supply a test result before the test executes at runtime. A later runtime result cannot directly supply an earlier compile-time structural decision. Declaring an input does not make a later runtime-generated value available for compile-time evaluation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q045",
-      "checkpointId": "CP5",
-      "caseId": "L11-C09",
-      "task": "tradeoff",
-      "caseContext": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.8"
       ],
       "difficulty": "advanced",
-      "question": "Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. The team selects this remedy: \"Translate repeated tasks into supported YAML templates.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A nested reusable chain retains a moving branch reference deep inside despite the top caller being pinned. What remains mutable?",
       "options": [
         {
           "key": "A",
-          "text": "Migration may require redesign rather than text conversion",
-          "rationale": "Equivalent intent can use a different platform construct. This directly addresses the constraint stated in this case."
+          "text": "The nested executable dependency selected by that moving reference",
+          "rationale": "Pinning the outer caller does not freeze independently resolved moving references inside it."
         },
         {
           "key": "B",
-          "text": "More parallel jobs consume more execution capacity",
-          "rationale": "Runtime improvement may increase peak resource use. That addresses a different requirement: Accidental serialization. It does not directly resolve this case's stated constraint."
+          "text": "The source SHA stored for earlier completed runs changes retroactively",
+          "rationale": "Past exact source identities do not change when a separate branch later advances."
         },
         {
           "key": "C",
-          "text": "Centralization does not eliminate precedence rules",
-          "rationale": "Template consumers still need a clear configuration contract. That addresses a different requirement: Shadowed configuration. It does not directly resolve this case's stated constraint."
+          "text": "The caller permission automatically expands to administrator",
+          "rationale": "Reference movement is supply-chain drift rather than an automatic token authority grant."
+        },
+        {
+          "key": "D",
+          "text": "Every previously produced immutable artifact automatically changes bytes",
+          "rationale": "A moving source reference does not rewrite already retained immutable artifact content."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Equivalent intent can use a different platform construct. The selected answer is migration may require redesign rather than text conversion.",
+      "explanation": "Pinning the outer caller does not freeze independently resolved moving references inside it. A moving source reference does not rewrite already retained immutable artifact content. Past exact source identities do not change when a separate branch later advances. Reference movement is supply-chain drift rather than an automatic token authority grant.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q046",
-      "checkpointId": "CP4",
-      "caseId": "L11-C10",
-      "task": "remedy",
-      "caseContext": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.6",
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "foundational",
-      "question": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "A centrally managed group holds a secret, while callers can execute arbitrary jobs. Which design reduces unnecessary secret exposure?",
       "options": [
         {
           "key": "A",
-          "text": "Remove unnecessary dependencies while retaining required data ordering",
-          "rationale": "The graph should express actual prerequisites. This directly addresses the constraint stated in this case."
+          "text": "Expose the group to every pipeline because masking is enabled",
+          "rationale": "Masking does not stop arbitrary authorized code from using an available secret."
         },
         {
           "key": "B",
-          "text": "Extract a governed reusable template",
-          "rationale": "Shared implementation reduces unmanaged copy divergence. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
+          "text": "Authorize only intended consumers and map secrets to the consuming task",
+          "rationale": "Resource access and process exposure should follow the specific credential requirement."
         },
         {
           "key": "C",
-          "text": "Translate repeated tasks into supported YAML templates",
-          "rationale": "Classic task groups and YAML templates differ. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Convert the secret into an ordinary compile-time parameter",
+          "rationale": "Template expansion is not an appropriate replacement for scoped confidential value handling."
+        },
+        {
+          "key": "D",
+          "text": "Copy the secret into the retained template digest file",
+          "rationale": "A content identity record must not become a container for credential material."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The graph should express actual prerequisites. The selected answer is remove unnecessary dependencies while retaining required data ordering.",
+      "explanation": "Resource access and process exposure should follow the specific credential requirement. Masking does not stop arbitrary authorized code from using an available secret. Template expansion is not an appropriate replacement for scoped confidential value handling. A content identity record must not become a container for credential material.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L11-Q047",
       "checkpointId": "CP4",
-      "caseId": "L11-C10",
-      "task": "diagnosis",
-      "caseContext": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents.",
       "objectiveIds": [
-        "D3.3.6",
-        "D3.3.8"
+        "D3.3.6"
       ],
-      "difficulty": "applied",
-      "question": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "advanced",
+      "question": "A validator accepts one valid component but ignores a disconnected cyclic component. Which complete invariant would catch this defect?",
       "options": [
         {
           "key": "A",
-          "text": "Artificial edges prevent eligible parallel execution",
-          "rationale": "Agent capacity alone cannot override dependency ordering. This directly addresses the constraint stated in this case."
+          "text": "Only the component containing the build label matters",
+          "rationale": "Other declared executable nodes remain part of the required graph validation contract."
         },
         {
           "key": "B",
-          "text": "Copies have independent maintenance lifecycles",
-          "rationale": "Editing one copy cannot update others. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
+          "text": "Only edges drawn left-to-right can represent real dependencies",
+          "rationale": "Graph layout direction does not determine executable prerequisite relationships or cycles."
         },
         {
           "key": "C",
-          "text": "Classic UI definitions are not directly interchangeable with YAML",
-          "rationale": "The reuse mechanism depends on pipeline style. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Only artifact-producing nodes need ordering validation",
+          "rationale": "Non-artifact jobs can still create cycles that prevent required execution from completing."
+        },
+        {
+          "key": "D",
+          "text": "Every declared node must be processed without unresolved dependencies",
+          "rationale": "A successful partial traversal cannot prove the entire authored graph is acyclic."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Agent capacity alone cannot override dependency ordering. The selected answer is artificial edges prevent eligible parallel execution.",
+      "explanation": "A successful partial traversal cannot prove the entire authored graph is acyclic. Other declared executable nodes remain part of the required graph validation contract. Graph layout direction does not determine executable prerequisite relationships or cycles. Non-artifact jobs can still create cycles that prevent required execution from completing.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Component A: build -> test\nComponent B: x -> y -> x\nVisited: build,test"
+      }
     },
     {
       "id": "L11-Q048",
-      "checkpointId": "CP4",
-      "caseId": "L11-C10",
-      "task": "verification",
-      "caseContext": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.6",
         "D3.3.8"
       ],
-      "difficulty": "applied",
-      "question": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "advanced",
+      "question": "A shared template is pinned and locally tested, but its caller can inject unrestricted privileged steps and production lacks checks. Which release claim is defensible?",
       "options": [
         {
           "key": "A",
-          "text": "Independent tests overlap without missing required outputs",
-          "rationale": "The result should improve runtime and preserve correctness. This directly addresses the constraint stated in this case."
+          "text": "Local test success proves independent production approval occurred",
+          "rationale": "Behavioral tests do not establish owner-controlled authorization on a remote environment."
         },
         {
           "key": "B",
-          "text": "Consumers execute the approved template revision",
-          "rationale": "The resolved reference proves adoption. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
+          "text": "The template hash automatically revokes every exposed credential",
+          "rationale": "Integrity checking does not perform credential lifecycle remediation or privilege revocation."
         },
         {
           "key": "C",
-          "text": "The YAML consumer expands and executes the shared steps",
-          "rationale": "The migrated reuse must work in its target engine. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Reuse is repeatable but its execution and approval boundaries remain unsafe",
+          "rationale": "Stable code identity does not compensate for privileged injection or absent protected approvals."
+        },
+        {
+          "key": "D",
+          "text": "Pinning alone proves any injected caller code is trusted",
+          "rationale": "An exact dependency reference does not authorize arbitrary separately supplied executable content."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "The result should improve runtime and preserve correctness. The selected answer is independent tests overlap without missing required outputs.",
+      "explanation": "Stable code identity does not compensate for privileged injection or absent protected approvals. An exact dependency reference does not authorize arbitrary separately supplied executable content. Behavioral tests do not establish owner-controlled authorization on a remote environment. Integrity checking does not perform credential lifecycle remediation or privilege revocation.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L11-Q049",
-      "checkpointId": "CP4",
-      "caseId": "L11-C10",
-      "task": "safeguard",
-      "caseContext": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.6",
-        "D3.3.8"
+        "D3.3.5"
       ],
-      "difficulty": "applied",
-      "question": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "advanced",
+      "question": "Release and Debug consumers both pass contract tests, but a new optional field changes the default for omitted inputs. What compatibility question matters?",
       "options": [
         {
           "key": "A",
-          "text": "Review central changes with representative consumers",
-          "rationale": "A shared defect affects many pipelines. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
+          "text": "Whether existing callers relying on omission retain their expected behavior",
+          "rationale": "A changed default can alter consumers even when their explicit arguments remain valid."
         },
         {
           "key": "B",
-          "text": "Preserve task inputs and security controls during translation",
-          "rationale": "Structural migration can silently weaken operational behavior. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Whether tests cover only callers that explicitly pass Release or Debug",
+          "rationale": "Explicit callers do not exercise the omitted-input default whose semantics changed in this update."
         },
         {
           "key": "C",
-          "text": "Keep publication and deployment dependent on required test results",
-          "rationale": "Parallelism must not bypass validation gates. This directly addresses the constraint stated in this case."
+          "text": "Whether the new YAML remains syntactically valid",
+          "rationale": "Parsing does not establish preserved behavior for consumers that rely on the changed default value."
+        },
+        {
+          "key": "D",
+          "text": "Whether a caller using only explicit arguments still succeeds",
+          "rationale": "That success leaves the affected omitted-input consumer path untested despite the default change."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Parallelism must not bypass validation gates. The selected answer is keep publication and deployment dependent on required test results.",
+      "explanation": "Explicit callers do not exercise the omitted-input default whose semantics changed in this update. That success leaves the affected omitted-input consumer path untested despite the default change. A changed default can alter consumers even when their explicit arguments remain valid. Parsing does not establish preserved behavior for consumers that rely on the changed default value.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L11-Q050",
-      "checkpointId": "CP4",
-      "caseId": "L11-C10",
-      "task": "tradeoff",
-      "caseContext": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.3.6",
         "D3.3.8"
       ],
       "difficulty": "advanced",
-      "question": "Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. The team selects this remedy: \"Remove unnecessary dependencies while retaining required data ordering.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A caller pins one shared workflow SHA and a consumer contract records its outputs. What evidence best supports a controlled shared upgrade?",
       "options": [
         {
           "key": "A",
-          "text": "Shared templates create coordinated upgrade work",
-          "rationale": "Consumers need compatible change management. That addresses a different requirement: Copied pipelines. It does not directly resolve this case's stated constraint."
+          "text": "Compare only the new template allowed input names",
+          "rationale": "An unchanged input list does not prove the required consumer outputs and executable behavior remain compatible."
         },
         {
           "key": "B",
-          "text": "Migration may require redesign rather than text conversion",
-          "rationale": "Equivalent intent can use a different platform construct. That addresses a different requirement: Classic migration. It does not directly resolve this case's stated constraint."
+          "text": "Review the new SHA diff and run representative input/output consumer tests",
+          "rationale": "Controlled upgrades should verify changed implementation and preserved consumed behavior before adoption."
         },
         {
           "key": "C",
-          "text": "More parallel jobs consume more execution capacity",
-          "rationale": "Runtime improvement may increase peak resource use. This directly addresses the constraint stated in this case."
+          "text": "Delete the earlier consumer contract after changing the reference",
+          "rationale": "Removing expectations prevents rather than establishes meaningful compatibility verification."
+        },
+        {
+          "key": "D",
+          "text": "Move every caller to latest without checking consumed output changes",
+          "rationale": "An unreviewed moving upgrade abandons the known executable and compatibility boundary."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Runtime improvement may increase peak resource use. The selected answer is more parallel jobs consume more execution capacity.",
+      "explanation": "Controlled upgrades should verify changed implementation and preserved consumed behavior before adoption. An unreviewed moving upgrade abandons the known executable and compatibility boundary. An unchanged input list does not prove the required consumer outputs and executable behavior remain compatible. Removing expectations prevents rather than establishes meaningful compatibility verification.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     }

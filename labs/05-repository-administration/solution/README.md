@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Check the attributes result on the fixture file and the annotated tag target independently. An access decision record is explained policy; it is not evidence that organization roles were changed.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Inspect repository capabilities and effective permissions
 

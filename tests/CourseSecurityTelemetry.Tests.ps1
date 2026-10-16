@@ -24,7 +24,7 @@ BeforeAll {
         if($line -match '^role assignment create '){
             $scope=$args[[Array]::IndexOf($args,'--scope')+1]
             if($scope -cne $global:SequenceState.scope -or $line -notmatch '--role Reader '){throw 'Assignment did not request the exact owned scope/Reader role.'}
-            $global:SequenceState.assignment=@{scope=$scope;roleDefinitionId='/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7'}
+            $global:SequenceState.assignment=@{scope=$scope;principalId=$args[[Array]::IndexOf($args,'--assignee-object-id')+1];roleDefinitionId='/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7'}
             return ($global:SequenceState.assignment|ConvertTo-Json)
         }
         if($line -match '^role assignment list '){return (ConvertTo-Json -InputObject @($global:SequenceState.assignment))}
@@ -52,6 +52,12 @@ Describe 'Complete offline sequence for lab <LabId>' -ForEach @(@{LabId='02'},@{
             { & ([scriptblock]::Create($checkpoint.validate)) }|Should -Not -Throw
         }
         foreach($checkpoint in $lab.checkpoints){ & ([scriptblock]::Create($checkpoint.validate)) }
+        if($LabId -eq '20'){
+            $reader=$global:SequenceState.assignment.roleDefinitionId
+            $global:SequenceState.assignment.roleDefinitionId='/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
+            { & ([scriptblock]::Create($lab.checkpoints[3].validate)) }|Should -Throw '*Exact scoped Reader assignment absent*'
+            $global:SequenceState.assignment.roleDefinitionId=$reader
+        }
         & ([scriptblock]::Create($lab.breakFix.assert))
         & ([scriptblock]::Create($lab.breakFix.trigger))
         { & ([scriptblock]::Create($lab.breakFix.assert)) }|Should -Throw "*$($lab.breakFix.expectedFailure)*"

@@ -121,7 +121,7 @@
   "challenge": "With approved real telemetry, find one slow request, follow its dependency span, relate infrastructure saturation, and write a hypothesis supported by exact query results.",
   "sources": [
     "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview",
-    "https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data",
+    "https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs",
     "https://learn.microsoft.com/en-us/kusto/query/join-leftouter"
   ],
   "primer": "Trace identity correlates a request with dependencies; timestamp proximity does not. Sampling and unmatched rows affect joins; units and observed windows matter when interpreting infrastructure signals.\n\nRequest and dependency spans correlate through a shared operation identity, not merely similar timestamps. A leftouter join retains a request with no dependency, while an inner join silently removes it. Sampling and missing telemetry should influence the interpretation rather than be hidden.\n\nThe KQL datatable tasks execute deterministic aggregates in an actual selected workspace; the local ActivityListener test proves span creation without proving export. A separate Python reference calculation reads raw CPU, memory, disk and network samples and must state that it is not a KQL engine. Compare units, windows and exact numeric expectations before accepting an operational hypothesis.",

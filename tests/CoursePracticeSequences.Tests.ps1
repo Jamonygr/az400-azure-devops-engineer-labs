@@ -40,15 +40,14 @@ BeforeAll {
         }
         throw "Unexpected Azure operation in offline sequence: $line"
     }
-    function global:Invoke-WebRequest {
-        param([string]$Uri, [string]$Method, [int]$TimeoutSec, [switch]$SkipHttpErrorCheck)
-        if ($Uri -notin @('https://api.github.com/', 'https://dev.azure.com/') -or $Method -ne 'Head' -or $TimeoutSec -ne 10) { throw 'Unexpected network operation in offline sequence.' }
-        return [pscustomobject]@{ StatusCode = 200 }
-    }
 }
 Describe 'Whole checkpoint sequence <LabId> with explicit provider doubles' -ForEach @(
     @{ LabId = '03' }, @{ LabId = '11' }, @{ LabId = '12' }, @{ LabId = '18' }, @{ LabId = '19' }
 ) {
+    BeforeEach {
+        Mock Invoke-WebRequest { throw 'Unexpected network operation in offline sequence.' }
+        Mock Invoke-WebRequest { [pscustomobject]@{StatusCode=200} } -ParameterFilter { $Uri -in @('https://api.github.com/','https://dev.azure.com/') -and $Method -eq 'Head' -and $TimeoutSec -eq 10 }
+    }
     It 'executes all five tasks, retains final invariants, rejects the named fault and validates the repair' {
         $RepoRoot = $script:CourseRoot
         $lab = $script:CourseLabs | Where-Object id -eq $LabId
@@ -75,6 +74,6 @@ Describe 'Whole checkpoint sequence <LabId> with explicit provider doubles' -For
     }
 }
 AfterAll {
-    Remove-Item Function:global:gh, Function:global:az, Function:global:Invoke-WebRequest -ErrorAction SilentlyContinue
+    Remove-Item Function:global:gh, Function:global:az -ErrorAction SilentlyContinue
     Remove-Variable Az400SequenceState -Scope Global -ErrorAction SilentlyContinue
 }

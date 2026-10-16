@@ -199,9 +199,15 @@ if($LASTEXITCODE -ne 0){throw 'Self-contained capstone packaging failed.'}
  git -C $p add .;$staged=@(git -C $p diff --cached --name-only)
 if($staged.Count -gt 0){git -C $p commit -m "[$RunId] Capstone CI and deployment review"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'};git -C $p branch -M main;git -C $p push -u origin main
  (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'capstone-sha.txt')
+
+$coreSha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()
+$coreCi=Join-Path $p 'azure-pipelines.yml'
+$coreManifest=git -C $p show "${coreSha}:deployment/package-manifest.json"|ConvertFrom-Json
+if($coreManifest.releaseActivated){throw 'The initial core source must keep release activation dormant.'}
+@{sourceRevision=$coreSha;ciPath='azure-pipelines.yml';ciSha256=(Get-FileHash -LiteralPath $coreCi -Algorithm SHA256).Hash;ciBlob=(git -C $p rev-parse "${coreSha}:azure-pipelines.yml").Trim();releaseActivated=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'core-publication.json')
 ```
 
-Expected state: The reviewed revision contains CI and an unregistered cloud deployment template.
+Expected state: The reviewed revision contains CI and an unregistered cloud deployment template. Historical CI-only source revision and CI file hashes remain independently inspectable after the separate protected release activation.
 
 Positive validation:
 
@@ -219,7 +225,7 @@ $t=Get-Content (Join-Path $WorkRoot 'capstone/azure-pipelines.yml') -Raw
  if($t -match 'AzureCLI@|az deployment|azureSubscription:'){throw 'CI publication must not activate cloud deployment.'}
 ```
 
-Evidence to retain: Committed SHA and CI-versus-dormant template review.
+Evidence to retain: Committed SHA and CI-versus-dormant template review. core-publication.json links the baseline commit, exact CI path, SHA256 and Git blob; current protected release evidence is separate.
 
 Common failure and safe retry: Keep deployment registration separate until service connection, environment checks, SQL/network prerequisites, and costs are approved.
 
@@ -408,11 +414,13 @@ The operation executes this reviewed lane:
 ```powershell
 $p=Join-Path $WorkRoot 'capstone'
 if(-not $env:AZ400_SQL_MIGRATION_CONNECTION){throw 'Load the reviewed Entra SQL connection through approved secret handling first.'}
+$ownerToken=(Get-Content (Join-Path $WorkRoot 'run.json') -Raw|ConvertFrom-Json).ownerToken
+if($ownerToken -notmatch '^[a-f0-9]{32}$'){throw 'Exact run ownership marker is missing.'}
 $o=Get-Content (Join-Path $WorkRoot 'workload-outputs.json') -Raw|ConvertFrom-Json
 $prefix="/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/"
 if(-not $o.appResourceId.value.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Application ID is outside the journal-owned group.'}
 $appName=$o.appName.value;$appUrl=$o.appUrl.value;$workspace=$o.workspaceCustomerId.value
-& (Join-Path $p 'deployment/scripts/Assert-OwnedWorkload.ps1') -SubscriptionId $SubscriptionId -ResourceGroup $ResourceGroup -RunId $RunId -AppName $appName -WorkspaceId $workspace
+& (Join-Path $p 'deployment/scripts/Assert-OwnedWorkload.ps1') -SubscriptionId $SubscriptionId -ResourceGroup $ResourceGroup -RunId $RunId -OwnerToken $ownerToken -AppName $appName -WorkspaceId $workspace
 $baselineSha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()
 if($baselineSha -notmatch '^[a-f0-9]{40}$' -or $baselineSha -match '^0{40}$'){throw 'Baseline revision is invalid.'}
 $baselineRun=(Get-Content (Join-Path $WorkRoot 'capstone-build-id.txt')).Trim()
@@ -438,7 +446,7 @@ if($defs.Count -eq 1){$release=az pipelines show --organization $AdoOrganization
  $release=az pipelines create --organization $AdoOrganization --project $AdoProject --name $name --repository $r.id --repository-type tfsgit --branch main --yml-path azure-pipelines-release.yml --skip-first-run true -o json|ConvertFrom-Json
 }
 if($release.repository.id -ne $r.id -or $release.project.name -ne $AdoProject -or $release.process.yamlFilename -ne 'azure-pipelines-release.yml'){throw 'Release definition escaped its repository/project/YAML boundary.'}
-$values=@{AppUrl=$appUrl;LogAnalyticsWorkspaceId=$workspace;CiDefinitionId=$ciId;AzureSubscriptionId=$SubscriptionId;AzureResourceGroup=$ResourceGroup;LabRunId=$RunId}
+$values=@{AppUrl=$appUrl;LogAnalyticsWorkspaceId=$workspace;CiDefinitionId=$ciId;AzureSubscriptionId=$SubscriptionId;AzureResourceGroup=$ResourceGroup;LabRunId=$RunId;LabOwnershipMarker=$ownerToken}
 $existing=az pipelines variable list --organization $AdoOrganization --project $AdoProject --pipeline-id $release.id -o json|ConvertFrom-Json
 foreach($key in $values.Keys){
  $verb=if($existing.PSObject.Properties.Name -contains $key){'update'}else{'create'}

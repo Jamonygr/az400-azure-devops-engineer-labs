@@ -8,500 +8,612 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 ## L21-Q001
 
-Foundational · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which next change most directly satisfies the stated requirement?
+A GitHub deployment job needs Azure access without storing a long-lived client secret. Which authentication pattern should be selected?
 
-- **A.** Grant the job the required id-token permission
-- **B.** Assign the necessary narrow Azure resource role
-- **C.** Use GitHub OIDC with a matching Azure federated identity credential
+- **A.** A personal administrator token in workflow source
+- **B.** An App Service publish profile for every Azure operation
+- **C.** OIDC workload identity federation
+- **D.** A shared client secret in repository settings
 
 ## L21-Q002
 
-Foundational · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which explanation best accounts for the behavior or constraint described?
+The Azure login action cannot request a GitHub OIDC token because the job lacks permission. Which permission is required?
 
-- **A.** Identity identifiers do not authorize token issuance
-- **B.** A valid token does not carry unlimited Azure permissions
-- **C.** The current design relies on a reusable stored secret
+- **A.** packages write
+- **B.** id-token write
+- **C.** contents write
+- **D.** actions write
 
 ## L21-Q003
 
-Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which observation provides the strongest evidence that the requested result was achieved?
+A GitHub job uses environment production. Which default subject should its Azure federated credential match for repository owner/course?
 
-- **A.** The intended deployment succeeds while other groups remain inaccessible
-- **B.** The trusted job obtains Azure access without a client secret
-- **C.** The trusted job requests an OIDC token successfully
+```yaml
+repository: owner/course
+job:
+  environment: production
+  permissions:
+    contents: read
+    id-token: write
+```
+
+- **A.** repo:owner/course:environment:production
+- **B.** repo:owner/course:ref:refs/heads/main
+- **C.** repo:owner/course:pull_request
+- **D.** repo:other/course:environment:production
 
 ## L21-Q004
 
-Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. Which execution safeguard most directly addresses the risk in this case?
+The workflow can request an OIDC token but Azure rejects the exchange. Which fields should be compared to the federated credential?
 
-- **A.** Verify tenant subscription and principal before changing assignments
-- **B.** Restrict the federated subject audience and Azure role scope
-- **C.** Keep unrelated token permissions minimal
+- **A.** Issuer, subject and audience
+- **B.** Only the Azure client ID and resource group
+- **C.** Only the Azure role names assigned to the principal
+- **D.** Only the token expiry time and issuance time
 
 ## L21-Q005
 
-Advanced · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Secretless GitHub deployment: A trusted workflow must deploy to Azure without storing a long-lived client secret. The team selects this remedy: "Use GitHub OIDC with a matching Azure federated identity credential." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The workflow adds environment production after federation was configured for main's branch subject. Token issuance succeeds but exchange fails. Which correction preserves protected-environment trust?
 
-- **A.** Federation requires precise trust configuration
-- **B.** Token issuance is only one authentication stage
-- **C.** Federation removes reusable secrets rather than authorization work
+```text
+Configured trust subject: repo:owner/course:ref:refs/heads/main
+New job configuration: environment: production
+Token issuance: succeeded
+Azure exchange: subject mismatch
+```
+
+- **A.** Trust every repository subject broadly
+- **B.** Add repository contents write permission
+- **C.** Configure the exact production-environment subject
+- **D.** Remove the environment and bypass its approval
 
 ## L21-Q006
 
-Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which next change most directly satisfies the stated requirement?
+The repository is renamed while its production credential still trusts the previous default subject. What should federation maintenance review?
 
-- **A.** Grant the job the required id-token permission
-- **B.** Match trust configuration to the actual intended subject claims
-- **C.** Use GitHub OIDC with a matching Azure federated identity credential
+- **A.** Only the client's existing Azure role assignments
+- **B.** Only the workflow artifact expiration date
+- **C.** Only whether package restore succeeds
+- **D.** The exact current subject and configured trust
 
 ## L21-Q007
 
-Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
 
-Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which explanation best accounts for the behavior or constraint described?
+The token exchange succeeds, but creating an Azure resource returns authorization denied. Which control should be checked next?
 
-- **A.** The current design relies on a reusable stored secret
-- **B.** Identity identifiers do not authorize token issuance
-- **C.** The token subject no longer matches the credential's trust
+- **A.** The repository's package publish permission
+- **B.** The identity's role assignment and target scope
+- **C.** The GitHub OIDC issuer alone
+- **D.** The action's id-token permission alone
 
 ## L21-Q008
 
-Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.3](../../docs/objective-map.md)
 
-Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which observation provides the strongest evidence that the requested result was achieved?
+An Azure Pipelines connection should use short-lived workload authentication rather than a reusable secret. Which connection capability should be evaluated?
 
-- **A.** The intended environment job authenticates while other subjects are denied
-- **B.** The trusted job obtains Azure access without a client secret
-- **C.** The trusted job requests an OIDC token successfully
+- **A.** Workload identity federation
+- **B.** A service principal secret without expiration
+- **C.** A user's interactive password
+- **D.** A stored publish profile for all resource operations
 
 ## L21-Q009
 
-Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.3](../../docs/objective-map.md)
 
-Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. Which execution safeguard most directly addresses the risk in this case?
+A WIF service connection should be usable by only one approved release definition. Which authorization setting fits?
 
-- **A.** Do not broaden the subject merely to silence the error
-- **B.** Restrict the federated subject audience and Azure role scope
-- **C.** Keep unrelated token permissions minimal
+- **A.** Copy connection credentials into variable groups
+- **B.** Remove environment checks after enabling federation
+- **C.** Authorize the specific pipeline
+- **D.** Grant access to every pipeline
 
 ## L21-Q010
 
-Advanced · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
 
-Missing OIDC token: A GitHub job has Azure identifiers configured but cannot request its federated identity token. The team selects this remedy: "Grant the job the required id-token permission." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A migration identity needs database schema rights while an application deployment identity must not migrate SQL. Which design preserves federation and separation of duties?
 
-- **A.** Federation requires precise trust configuration
-- **B.** Token issuance is only one authentication stage
-- **C.** Tight subject matching adds configuration maintenance
+```json
+{"migration":{"stage":"production-database","rights":"reviewed schema changes"},"application":{"stage":"production","rights":"deploy application only"}}
+```
+
+- **A.** Use one broadly privileged identity for both
+- **B.** Use two connection names pointing to the same broad principal
+- **C.** Trust all repositories to both identities
+- **D.** Separate trusted identities and scoped protected stages
 
 ## L21-Q011
 
-Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which next change most directly satisfies the stated requirement?
+The GitHub federation job grants contents read and id-token write. What does id-token write itself permit?
 
-- **A.** Grant the job the required id-token permission
-- **B.** Match trust configuration to the actual intended subject claims
-- **C.** Use the current service connection's documented issuer and subject
+- **A.** Reading every environment secret automatically
+- **B.** Requesting the job's OIDC token
+- **C.** Writing any Azure resource directly
+- **D.** Editing the repository's protected branch directly
 
 ## L21-Q012
 
-Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which explanation best accounts for the behavior or constraint described?
+A protected production identity must not be available to an unrelated repository's workflow. What trust boundary is most important?
 
-- **A.** Identity identifiers do not authorize token issuance
-- **B.** The token subject no longer matches the credential's trust
-- **C.** Issuer behavior changes across service lifecycle updates
+- **A.** Match only the public GitHub issuer
+- **B.** Grant fewer Azure CLI command arguments
+- **C.** Match the intended repository and protected subject exactly
+- **D.** Match only the production environment label without repository context
 
 ## L21-Q013
 
-Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
 
-Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which observation provides the strongest evidence that the requested result was achieved?
+A pipeline identity cannot create its own role assignment during setup. Which bootstrap decision respects separation of privilege?
 
-- **A.** The intended environment job authenticates while other subjects are denied
-- **B.** The federated credential matches the connection's emitted claims
-- **C.** The trusted job requests an OIDC token successfully
+- **A.** Have an authorized operator grant the reviewed narrow scope
+- **B.** Grant subscription Owner permanently to the workload
+- **C.** Skip the assignment and claim deployment is ready
+- **D.** Put an administrator password in the pipeline file
 
 ## L21-Q014
 
-Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. Which execution safeguard most directly addresses the risk in this case?
+An OIDC trust entry exists in Azure, but only a local JSON syntax check ran. What remains unverified?
 
-- **A.** Review the announced issuer retirement and migration scope
-- **B.** Keep unrelated token permissions minimal
-- **C.** Do not broaden the subject merely to silence the error
+- **A.** Actual exchange and protected resource authorization
+- **B.** Whether the trust document parses locally
+- **C.** Whether the workflow text contains a client ID
+- **D.** Whether environment names can be written as strings
 
 ## L21-Q015
 
-Advanced · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Subject mismatch: A federated credential trusts main-branch jobs, but the workflow now uses a protected deployment environment and authentication fails. The team selects this remedy: "Match trust configuration to the actual intended subject claims." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Federation works for deployment, but a fork pull request would run on a trusted private runner with access to credential caches. Which control preserves both identity and runner boundaries?
 
-- **A.** Cloud and identity scenarios can differ
-- **B.** Token issuance is only one authentication stage
-- **C.** Tight subject matching adds configuration maintenance
+```text
+Trusted private runner: persistent workspace; Azure CLI cache present
+Proposed workload: arbitrary fork pull-request source
+Deployment protection: production environment approval
+```
+
+- **A.** Keep the private runner and hide the connection name
+- **B.** Grant id-token write to every pull request
+- **C.** Replace federation with a permanent secret
+- **D.** Separate untrusted CI from protected ephemeral deployment runners
 
 ## L21-Q016
 
-Foundational · [CP1](README.md#task-1) · [D4.1.3](../../docs/objective-map.md), [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.2](../../docs/objective-map.md)
 
-Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which next change most directly satisfies the stated requirement?
+A federated credential uses the expected subject but an unintended audience. What should be corrected before changing Azure resource permissions?
 
-- **A.** Grant the identity the necessary scoped secret-data access
-- **B.** Match trust configuration to the actual intended subject claims
-- **C.** Use the current service connection's documented issuer and subject
+- **A.** The test coverage threshold
+- **B.** The audience in the trust configuration
+- **C.** The target resource's Reader assignment
+- **D.** The application package's output path
 
 ## L21-Q017
 
-Applied · [CP1](README.md#task-1) · [D4.1.3](../../docs/objective-map.md), [D4.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md), [D4.1.3](../../docs/objective-map.md)
 
-Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which explanation best accounts for the behavior or constraint described?
+An old secret-based connection is retained during WIF migration for rollback. Which lifecycle control should accompany that temporary fallback?
 
-- **A.** Issuer behavior changes across service lifecycle updates
-- **B.** Management access and data-plane secret access differ
-- **C.** The token subject no longer matches the credential's trust
+- **A.** Authorize the fallback connection for every pipeline
+- **B.** Explicit expiry, access limits and a removal plan
+- **C.** Remove all expiration and monitoring
+- **D.** Commit the fallback secret beside the new YAML
 
 ## L21-Q018
 
-Applied · [CP1](README.md#task-1) · [D4.1.3](../../docs/objective-map.md), [D4.2.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
 
-Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which observation provides the strongest evidence that the requested result was achieved?
+A deployment identity has the correct production subject, but the workflow deploys an app outside the journal-owned group. Which check should block promotion?
 
-- **A.** The federated credential matches the connection's emitted claims
-- **B.** The task retrieves only the intended secret under its identity
-- **C.** The intended environment job authenticates while other subjects are denied
+- **A.** Only a matching app-name prefix
+- **B.** Only whether the identity has any Contributor grant
+- **C.** Exact subscription, group and resource ownership assertions
+- **D.** Only successful azure login output
 
 ## L21-Q019
 
-Applied · [CP1](README.md#task-1) · [D4.1.3](../../docs/objective-map.md), [D4.2.2](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md), [D4.1.3](../../docs/objective-map.md)
 
-Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. Which execution safeguard most directly addresses the risk in this case?
+A connection is configured with WIF, and its pipeline consumer is authorized. Which additional prerequisite still affects real deployment execution?
 
-- **A.** Do not broaden the subject merely to silence the error
-- **B.** Review the announced issuer retirement and migration scope
-- **C.** Avoid granting broad vault administration as a shortcut
+- **A.** Unlimited artifact retention as authentication
+- **B.** An automatically inherited production environment approval
+- **C.** Agent routing and protected-resource access
+- **D.** A copied user password in every job
 
 ## L21-Q020
 
-Advanced · [CP1](README.md#task-1) · [D4.1.3](../../docs/objective-map.md), [D4.2.2](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.2.2](../../docs/objective-map.md)
 
-Legacy issuer: An Azure Pipeline tutorial hardcodes the old federation issuer instead of using the current connection's generated values. The team selects this remedy: "Use the current service connection's documented issuer and subject." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Token exchange succeeds on the protected runner, but the migration stage cannot reach private SQL and the app stage lacks schema rights by design. Which response respects both constraints?
 
-- **A.** Tight subject matching adds configuration maintenance
-- **B.** Cloud and identity scenarios can differ
-- **C.** Vault access adds a runtime service dependency
+```text
+Migration WIF token exchange: passed
+Private SQL DNS: unresolved from current worker
+App deployment identity: deliberately lacks schema-alter permission
+```
+
+- **A.** Move migration to a public hosted runner because token exchange works
+- **B.** Treat token exchange as proof the migration passed
+- **C.** Fix migration routing while keeping identities separate
+- **D.** Run schema changes under the app identity
 
 ## L21-Q021
 
 Foundational · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which next change most directly satisfies the stated requirement?
+An app setting should reference a Key Vault secret instead of containing plaintext. Which reference scheme should validation accept?
 
-- **A.** Store it as a protected secure file or supported secret-store artifact
-- **B.** Use the current service connection's documented issuer and subject
-- **C.** Grant the identity the necessary scoped secret-data access
+- **A.** An HTTPS vault secret URI
+- **B.** An HTTP vault secret URI
+- **C.** A plaintext secret value with the same name
+- **D.** A relative local filesystem path
 
 ## L21-Q022
 
 Foundational · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which explanation best accounts for the behavior or constraint described?
+A URI's hostname begins with a valid vault name but ends with an attacker-controlled suffix. Which parser behavior is correct?
 
-- **A.** Management access and data-plane secret access differ
-- **B.** Source control makes the certificate broadly and historically available
-- **C.** Issuer behavior changes across service lifecycle updates
+- **A.** Accept it if HTTPS is present
+- **B.** Accept it if the path contains secrets
+- **C.** Reject the spoofed hostname
+- **D.** Accept any hostname containing vault.azure.net
 
 ## L21-Q023
 
 Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which observation provides the strongest evidence that the requested result was achieved?
+The service should follow secret rotation without changing its reference whenever a new version is published. Which URI form supports that intent?
 
-- **A.** Only the approved signing task can obtain the protected file
-- **B.** The federated credential matches the connection's emitted claims
-- **C.** The task retrieves only the intended secret under its identity
+- **A.** A versionless secret reference
+- **B.** A reference pinned to one version
+- **C.** The current secret's plaintext value
+- **D.** A URI pointing to a specific old backup file
 
 ## L21-Q024
 
 Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. Which execution safeguard most directly addresses the risk in this case?
+A deployment must retain one tested secret version until a reviewed configuration update. Which reference form meets that requirement?
 
-- **A.** Review the announced issuer retirement and migration scope
-- **B.** Avoid granting broad vault administration as a shortcut
-- **C.** Delete temporary local copies after the supported task lifecycle
+- **A.** A version-pinned secret URI
+- **B.** A versionless secret URI
+- **C.** A URI without a secret name
+- **D.** A reference copied from another environment's vault
 
 ## L21-Q025
 
 Advanced · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Key Vault denial: A pipeline authenticates to Azure successfully but cannot retrieve the specific secret required by its deployment. The team selects this remedy: "Grant the identity the necessary scoped secret-data access." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Rotation publishes a new secret version, but the app intentionally pins the old tested version. Which update preserves controlled adoption while acknowledging service refresh behavior?
 
-- **A.** Cloud and identity scenarios can differ
-- **B.** Vault access adds a runtime service dependency
-- **C.** Secure storage still needs certificate lifecycle management
+```text
+Configured URI: https://training.vault.azure.net/secrets/signing-key/version-a
+Vault now contains: version-a, version-b
+Policy: reviewed adoption only; no plaintext configuration
+```
+
+- **A.** Wait indefinitely for the pinned URI to select latest
+- **B.** Change only the app role assignment while keeping the pinned URI
+- **C.** Refresh the reference without changing the pinned version
+- **D.** Review the new version and update the pinned reference explicitly
 
 ## L21-Q026
 
-Foundational · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which next change most directly satisfies the stated requirement?
+The local reference parser accepts a valid HTTPS URI but never contacts Key Vault. Which conclusion is justified?
 
-- **A.** Grant the identity the necessary scoped secret-data access
-- **B.** Store it as a protected secure file or supported secret-store artifact
-- **C.** Stop emitting secret-derived material to logs
+- **A.** Secret value successfully retrieved from the vault
+- **B.** Application rotation behavior fully verified
+- **C.** Vault access granted to the app automatically
+- **D.** Reference syntax accepted; live resolution unverified
 
 ## L21-Q027
 
-Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which explanation best accounts for the behavior or constraint described?
+The app has a valid secret URI but no managed identity permission to read the secret. Which change addresses actual resolution authorization?
 
-- **A.** Management access and data-plane secret access differ
-- **B.** Source control makes the certificate broadly and historically available
-- **C.** Masking may not recognize derived or partial values
+- **A.** Change HTTPS to HTTP
+- **B.** Append the secret value to the URI
+- **C.** Give the pipeline repository write permission
+- **D.** Grant the intended identity narrow secret-read access
 
 ## L21-Q028
 
-Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which observation provides the strongest evidence that the requested result was achieved?
+A versionless reference points to the correct vault, but a new secret version is not visible immediately. What should operations consider before declaring rotation broken?
 
-- **A.** Logs contain no raw transformed or partial sensitive value
-- **B.** The task retrieves only the intended secret under its identity
-- **C.** Only the approved signing task can obtain the protected file
+- **A.** The service's documented cache and refresh behavior
+- **B.** Versionless always means permanent first-version pinning
+- **C.** Every cached value proves the new version is absent
+- **D.** Changing repository roles forces immediate vault refresh
 
 ## L21-Q029
 
-Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. Which execution safeguard most directly addresses the risk in this case?
+A secret URI passes syntax checks but private endpoint DNS fails on the app's network. Which prerequisite still needs validation?
 
-- **A.** Delete temporary local copies after the supported task lifecycle
-- **B.** Use synthetic secrets during deliberate leakage tests
-- **C.** Avoid granting broad vault administration as a shortcut
+- **A.** Runtime network path to the vault
+- **B.** Only the local URI parser's regex
+- **C.** Only the secret reference's version-pinning format
+- **D.** Only the secret name's letter case in documentation
 
 ## L21-Q030
 
-Advanced · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
 
-Secure file spread: A signing certificate is checked into source so every job can access it without library authorization. The team selects this remedy: "Store it as a protected secure file or supported secret-store artifact." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Two references are accepted locally, one versioned and one versionless, but no identity exchange or service reads occurred. Which evidence fields avoid overstating coverage?
 
-- **A.** Secure storage still needs certificate lifecycle management
-- **B.** Masking is a defensive aid with limitations
-- **C.** Vault access adds a runtime service dependency
+```json
+{"accepted":2,"rejected":3,"versioned":1,"fixtureOnly":true,"resolvedLive":false}
+```
+
+- **A.** providerAuthorizationVerified true after parsing
+- **B.** rotationPassed true after inspecting the URI
+- **C.** fixtureOnly true and resolvedLive false
+- **D.** resolvedLive true whenever HTTPS is present
 
 ## L21-Q031
 
-Foundational · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which next change most directly satisfies the stated requirement?
+A pipeline needs a signing certificate as a protected file rather than source-controlled contents. Which Azure Pipelines facility fits?
 
-- **A.** Store it as a protected secure file or supported secret-store artifact
-- **B.** Stop emitting secret-derived material to logs
-- **C.** Align version selection and consumers with the rotation plan
+- **A.** Secure files with authorized pipeline access
+- **B.** A normal repository source file
+- **C.** A public pipeline artifact containing the key
+- **D.** A plain-text variable containing the complete binary
 
 ## L21-Q032
 
-Foundational · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which explanation best accounts for the behavior or constraint described?
+A secure file exists in Library, but a pipeline cannot use it. Which control should be checked before copying it elsewhere?
 
-- **A.** Source control makes the certificate broadly and historically available
-- **B.** Masking may not recognize derived or partial values
-- **C.** The consumer is still bound to an obsolete secret version
+- **A.** Only whether the agent has extra disk space
+- **B.** The file's authorized pipelines and approvals
+- **C.** Only the repository's default branch name
+- **D.** Only the artifact's retention setting
 
 ## L21-Q033
 
-Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which observation provides the strongest evidence that the requested result was achieved?
+The signing step downloads a private file into the agent workspace. When should the script remove its temporary working copy?
 
-- **A.** Only the approved signing task can obtain the protected file
-- **B.** Logs contain no raw transformed or partial sensitive value
-- **C.** The consumer retrieves the intended valid version
+- **A.** Only during the next unrelated pipeline run
+- **B.** Never because Library is encrypted
+- **C.** In guaranteed cleanup after consumption
+- **D.** Only after a fully successful release
 
 ## L21-Q034
 
-Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. Which execution safeguard most directly addresses the risk in this case?
+A synthetic secure-file fixture verifies a hash before consumption. What does the hash check establish?
 
-- **A.** Delete temporary local copies after the supported task lifecycle
-- **B.** Use synthetic secrets during deliberate leakage tests
-- **C.** Coordinate overlap and rollback before invalidating the old credential
+- **A.** The file's private key cannot be copied
+- **B.** The consumed bytes match the expected fixture
+- **C.** The pipeline is authorized in Azure DevOps
+- **D.** The file was never present on disk
 
 ## L21-Q035
 
-Advanced · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Transformed secret: A script base64-encodes a secret and writes it to logs, assuming the platform's secret masker will hide it. The team selects this remedy: "Stop emitting secret-derived material to logs." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The consumer throws after reading the temporary signing file. What implementation ensures cleanup still runs while preserving the failure?
 
-- **A.** Secure storage still needs certificate lifecycle management
-- **B.** Masking is a defensive aid with limitations
-- **C.** Version pinning improves determinism but needs planned updates
+```powershell
+try {
+  $bytes = Get-Content -LiteralPath $temporaryFile -AsByteStream
+  Invoke-SigningConsumer $bytes # throws
+}
+finally { Remove-Item -LiteralPath $temporaryFile }
+```
+
+- **A.** Delete only after the consumer returns normally
+- **B.** Catch the error and report a successful signing result
+- **C.** Leave the file for a future agent job
+- **D.** Remove the file in finally and retain the error
 
 ## L21-Q036
 
-Foundational · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which next change most directly satisfies the stated requirement?
+The local fixture consumes harmless input and deletes it on normal and failing paths. Which provider capability remains unverified?
 
-- **A.** Align version selection and consumers with the rotation plan
-- **B.** Pass secrets only to a trusted deployment path
-- **C.** Stop emitting secret-derived material to logs
+- **A.** Azure DevOps secure-file authorization and delivery
+- **B.** Whether finally executes after the injected failure
+- **C.** Whether the expected harmless bytes were hash-checked
+- **D.** Whether the temporary local copy was removed
 
 ## L21-Q037
 
-Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which explanation best accounts for the behavior or constraint described?
+A script emits the complete downloaded certificate bytes for troubleshooting. What diagnostic alternative reduces unnecessary disclosure?
 
-- **A.** The consumer is still bound to an obsolete secret version
-- **B.** Broad inheritance gives untrusted code sensitive capabilities
-- **C.** Masking may not recognize derived or partial values
+- **A.** Print contents only after failure
+- **B.** Store contents inside the evidence JSON
+- **C.** Record digest and lifecycle status without contents
+- **D.** Encode bytes as Base64 in logs
 
 ## L21-Q038
 
-Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which observation provides the strongest evidence that the requested result was achieved?
+The agent directory is reused between jobs and a temporary secure-file copy remains. Which response should the lifecycle require?
 
-- **A.** Logs contain no raw transformed or partial sensitive value
-- **B.** The consumer retrieves the intended valid version
-- **C.** Untrusted tests cannot read the deployment credential
+- **A.** Pass because the signing step succeeded
+- **B.** Delete every file across the agent's home
+- **C.** Hide the directory listing from evidence
+- **D.** Fail cleanup validation and remove the exact owned residual
 
 ## L21-Q039
 
-Applied · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. Which execution safeguard most directly addresses the risk in this case?
+A team wants a real private key for the local lifecycle exercise. Which choice provides meaningful test coverage without unnecessary secret handling?
 
-- **A.** Use synthetic secrets during deliberate leakage tests
-- **B.** Coordinate overlap and rollback before invalidating the old credential
-- **C.** Review reusable-workflow caller permissions and secret propagation
+- **A.** Report provider authorization from a local file read
+- **B.** Use a harmless synthetic file with the same lifecycle
+- **C.** Use the production signing key and print it
+- **D.** Skip the failure path because input is synthetic
 
 ## L21-Q040
 
-Advanced · [CP3](README.md#task-3) · [D4.2.1](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.2.3](../../docs/objective-map.md)
 
-Credential rotation: A secret is rotated in Key Vault, but the deployment uses a pinned old version and authentication now fails. The team selects this remedy: "Align version selection and consumers with the rotation plan." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Secure-file access is correctly authorized, but the consuming tool fails after opening it on a persistent agent. Which evidence is required before reporting safe consumption?
 
-- **A.** Masking is a defensive aid with limitations
-- **B.** Version pinning improves determinism but needs planned updates
-- **C.** Selective secret passing requires clearer interfaces
+```json
+{"libraryAuthorized":true,"consumerOpenedFile":true,"consumerFailed":true,"temporaryFileExists":true}
+```
+
+- **A.** Only the Library authorization record
+- **B.** Only the consumer's stdout
+- **C.** Only a passing hash check before execution
+- **D.** Both the original failure and verified temporary-file removal
 
 ## L21-Q041
 
-Foundational · [CP5](README.md#task-5) · [D4.1.2](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which next change most directly satisfies the stated requirement?
+A pipeline needs a secret value during one step but currently prints its environment for debugging. Which logging change should be made?
 
-- **A.** Pass secrets only to a trusted deployment path
-- **B.** Assign the necessary narrow Azure resource role
-- **C.** Align version selection and consumers with the rotation plan
+- **A.** Rely only on masking every possible transformation
+- **B.** Print secrets only in pull requests
+- **C.** Move the dump into a downloadable artifact
+- **D.** Remove broad environment dumps and log safe metadata
 
 ## L21-Q042
 
-Foundational · [CP5](README.md#task-5) · [D4.1.2](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which explanation best accounts for the behavior or constraint described?
+A leaked credential is found in a committed file and is still valid. What should happen before treating Git history cleanup as sufficient?
 
-- **A.** Broad inheritance gives untrusted code sensitive capabilities
-- **B.** A valid token does not carry unlimited Azure permissions
-- **C.** The consumer is still bound to an obsolete secret version
+- **A.** Rewrite history and leave the credential valid
+- **B.** Rename the file containing the credential
+- **C.** Add the file to gitignore only
+- **D.** Revoke or rotate the credential promptly
 
 ## L21-Q043
 
-Applied · [CP5](README.md#task-5) · [D4.1.2](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which observation provides the strongest evidence that the requested result was achieved?
+A token is Base64-encoded before being printed, and the raw token is registered for masking. Which conclusion is safest?
 
-- **A.** The consumer retrieves the intended valid version
-- **B.** Untrusted tests cannot read the deployment credential
-- **C.** The intended deployment succeeds while other groups remain inaccessible
+- **A.** Base64 encryption makes publication harmless
+- **B.** A private repository eliminates the need for redaction
+- **C.** The encoded output can still leak the token
+- **D.** Masking the raw token guarantees all encodings are hidden
 
 ## L21-Q044
 
-Applied · [CP5](README.md#task-5) · [D4.1.2](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. Which execution safeguard most directly addresses the risk in this case?
+The exercise searches generated evidence for a synthetic leakage marker. What should validation establish before recording the negative check as passed?
 
-- **A.** Coordinate overlap and rollback before invalidating the old credential
-- **B.** Review reusable-workflow caller permissions and secret propagation
-- **C.** Verify tenant subscription and principal before changing assignments
+- **A.** The marker is absent from the intended output paths
+- **B.** The marker variable exists in memory
+- **C.** The evidence directory's name contains private
+- **D.** No real token was used anywhere
 
 ## L21-Q045
 
-Advanced · [CP5](README.md#task-5) · [D4.1.2](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Secret inherited by tests: A reusable workflow exposes deployment credentials to all jobs including code from an untrusted pull request. The team selects this remedy: "Pass secrets only to a trusted deployment path." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A secret was removed from current source, but remains in CI logs and a retained artifact. Which response covers the complete observed exposure?
 
-- **A.** Version pinning improves determinism but needs planned updates
-- **B.** Selective secret passing requires clearer interfaces
-- **C.** Federation removes reusable secrets rather than authorization work
+```json
+{"currentSourceClean":true,"credentialStillValid":true,"exposurePaths":["previous CI log","retained artifact"]}
+```
+
+- **A.** Disable the scanner to avoid duplicate findings
+- **B.** Shorten future log retention without rotating
+- **C.** Rotate it and address the affected retained evidence
+- **D.** Commit another source deletion only
 
 ## L21-Q046
 
-Foundational · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which next change most directly satisfies the stated requirement?
+A scanner fixture uses a recognizable fake token string while evidence intentionally records only counts. What is the best assertion for the redaction path?
 
-- **A.** Use GitHub OIDC with a matching Azure federated identity credential
-- **B.** Pass secrets only to a trusted deployment path
-- **C.** Assign the necessary narrow Azure resource role
+- **A.** Assert that the output JSON is valid
+- **B.** Assert that at least one log exists
+- **C.** Assert the marker appears in every result
+- **D.** Search output files for the exact synthetic marker
 
 ## L21-Q047
 
-Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which explanation best accounts for the behavior or constraint described?
+A pipeline author wants to commit learner identifiers and secret-resolution responses as proof of completion. Which evidence format is preferable?
 
-- **A.** The current design relies on a reusable stored secret
-- **B.** Broad inheritance gives untrusted code sensitive capabilities
-- **C.** A valid token does not carry unlimited Azure permissions
+- **A.** Full raw service responses including tokens
+- **B.** A screenshot showing the complete connection string
+- **C.** A reusable production password beside the status
+- **D.** Redacted statuses, hashes and scoped nonsecret observations
 
 ## L21-Q048
 
-Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which observation provides the strongest evidence that the requested result was achieved?
+A redaction function masks a known token but includes an unknown password under another JSON key. What limitation should the test address?
 
-- **A.** Untrusted tests cannot read the deployment credential
-- **B.** The intended deployment succeeds while other groups remain inaccessible
-- **C.** The trusted job obtains Azure access without a client secret
+- **A.** Only whether the known token was masked in stdout
+- **B.** Coverage across sensitive fields and structured outputs
+- **C.** Only whether one exact token string was replaced
+- **D.** Only whether the JSON remains pretty-printed
 
 ## L21-Q049
 
-Applied · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. Which execution safeguard most directly addresses the risk in this case?
+The pipeline enables shell command tracing while passing a secret to a command argument. Which change reduces log exposure most directly?
 
-- **A.** Restrict the federated subject audience and Azure role scope
-- **B.** Review reusable-workflow caller permissions and secret propagation
-- **C.** Verify tenant subscription and principal before changing assignments
+- **A.** Encode the argument before tracing it
+- **B.** Publish the trace only after successful deployment
+- **C.** Avoid tracing secrets and use supported protected input mechanisms
+- **D.** Increase trace verbosity to improve masking
 
 ## L21-Q050
 
-Advanced · [CP1](README.md#task-1) · [D4.2.2](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D4.2.4](../../docs/objective-map.md)
 
-Federated but forbidden: OIDC exchange succeeds, yet the deployment cannot modify the target resource group. The team selects this remedy: "Assign the necessary narrow Azure resource role." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The local exercise rejects unsafe references, removes synthetic files on both paths and finds no leakage marker. Federation, vault resolution and Library authorization were not executed. Which final status is accurate?
 
-- **A.** Federation requires precise trust configuration
-- **B.** Selective secret passing requires clearer interfaces
-- **C.** Federation removes reusable secrets rather than authorization work
+```json
+{"unsafeReferencesRejected":true,"bothFilePathsCleaned":true,"leakMarkerAbsent":true,"federationExecuted":false,"vaultResolvedLive":false,"libraryAuthorizationVerified":false}
+```
+
+- **A.** Mark secure-file provider validation passed after local temporary-file cleanup
+- **B.** Local handling verified; provider integrations remain unverified
+- **C.** All live secrets integrations passed
+- **D.** Provider failures proven by synthetic tests

@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Expected tool and sample-test results establish readiness only. Compare every subsequent resource ID with the original run journal before retrying a mutation.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Inspect the local toolchain
 

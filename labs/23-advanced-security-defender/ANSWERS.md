@@ -8,698 +8,772 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Paid feature onboarding: A learner enables Advanced Security for every Azure Repos repository without checking the active-committer billing estimate. Which next change most directly satisfies the stated requirement?
+An Azure Repos security proposal estimates licenses by everyone who can read the repository. Which population should determine the active-committer estimate?
 
-- **A. Review licensing estimate and enable only the intended training repository** **Correct.** Security onboarding can create subscription charges. This directly addresses the constraint stated in this case.
-- **B. Configure the security product for the actual repository host** Host-specific products protect their supported repository surfaces. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **C. Disable only owned training capabilities after dependency review** Cleanup should match the lab's resource and billing boundary. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
+- **A. Only developers who opened pull requests this month** The billing window and push-based definition extend beyond monthly pull request authors.
+- **B. Only users who can dismiss security alerts** Alert administration permissions do not define the billed contributor population.
+- **C. Unique qualifying committers represented in pushes during the preceding 90 days** **Correct.** Billing counts qualifying active committers, rather than all readers or repository members.
+- **D. All users with repository read permission** Read permission alone does not make a person an active committer.
 
-**Explanation:** Security onboarding can create subscription charges. The selected answer is review licensing estimate and enable only the intended training repository.
+**Explanation:** The billing window and push-based definition extend beyond monthly pull request authors. Alert administration permissions do not define the billed contributor population. Billing counts qualifying active committers, rather than all readers or repository members. Read permission alone does not make a person an active committer.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q002
 
 Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Paid feature onboarding: A learner enables Advanced Security for every Azure Repos repository without checking the active-committer billing estimate. Which explanation best accounts for the behavior or constraint described?
+A developer needs to inspect Azure Repos security findings but must not dismiss them or enable paid features. Which permission fits this task?
 
-- **A. Feature activation has a billing lifecycle** **Correct.** Training intent does not make paid capabilities free. This directly addresses the constraint stated in this case.
-- **B. Azure Repos configuration is not GitHub repository configuration** The integrations have different onboarding boundaries. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **C. Feature and connector lifecycles continue beyond the exercise** Closing a browser does not stop paid services. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
+- **A. Project Collection Administrators membership** Collection administration grants substantially broader control than viewing repository findings.
+- **B. Advanced Security: view alerts** **Correct.** This permission permits finding inspection without alert lifecycle or billable settings control.
+- **C. Advanced Security: Manage and dismiss alerts** This adds dismissal authority that the inspection task does not require.
+- **D. Advanced Security: Manage settings** This permits enabling billable features and exceeds the inspection requirement.
 
-**Explanation:** Training intent does not make paid capabilities free. The selected answer is feature activation has a billing lifecycle.
+**Explanation:** Collection administration grants substantially broader control than viewing repository findings. This permission permits finding inspection without alert lifecycle or billable settings control. This adds dismissal authority that the inspection task does not require. This permits enabling billable features and exceeds the inspection requirement.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q003
 
-Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
 
-Paid feature onboarding: A learner enables Advanced Security for every Azure Repos repository without checking the active-committer billing estimate. Which observation provides the strongest evidence that the requested result was achieved?
+An analyst wants a unified view of repository security posture across supported source platforms in Azure. Which service supplies this integration?
 
-- **A. The intended host displays its repository findings** The verification must use the correct product surface. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **B. The owned activation is removed and retained services are documented** The evidence must distinguish cleanup from shared dependencies. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **C. Only the scoped repository is enabled with acknowledged billing** **Correct.** The evidence should include scope rather than broad activation. This directly addresses the constraint stated in this case.
+- **A. Azure Monitor Application Insights** Application Insights observes application execution rather than integrating repository security posture.
+- **B. Azure DevOps repository branch policies** Branch policies govern repository changes but do not aggregate cross-platform Defender posture.
+- **C. GitHub repository traffic insights** Traffic insights describe repository activity rather than cross-platform security findings.
+- **D. Microsoft Defender for Cloud DevOps security** **Correct.** Defender for Cloud integrates supported source platforms into a DevOps security posture view.
 
-**Explanation:** The evidence should include scope rather than broad activation. The selected answer is only the scoped repository is enabled with acknowledged billing.
+**Explanation:** Application Insights observes application execution rather than integrating repository security posture. Branch policies govern repository changes but do not aggregate cross-platform Defender posture. Traffic insights describe repository activity rather than cross-platform security findings. Defender for Cloud integrates supported source platforms into a DevOps security posture view.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support)
 
 ## L23-Q004
 
-Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Paid feature onboarding: A learner enables Advanced Security for every Azure Repos repository without checking the active-committer billing estimate. Which execution safeguard most directly addresses the risk in this case?
+The security owner wants existing Azure Repos repositories enabled now and new repositories enabled by default later. Which configuration distinction matters?
 
-- **A. Use a dedicated lab and document cleanup ownership** **Correct.** Shared organizations can include unrelated billable contributors. This directly addresses the constraint stated in this case.
-- **B. Review host-specific permissions and licensing before enabling** Similar names do not imply identical prerequisites. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **C. Do not remove security coverage used by other teams** Shared organizations require ownership-aware changes. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
+- **A. Existing-repository activation and defaults for future repositories are separate choices** **Correct.** Existing scope activation does not automatically establish the desired future-repository default.
+- **B. Enabling one current repository automatically enables future repositories** A repository-specific activation does not become an organization-wide creation policy.
+- **C. The future default enables every existing repository retroactively** Creation defaults do not replace explicit decisions for already existing repositories.
+- **D. A billing subscription association automatically enables all repositories** A billing association supplies payment context rather than repository activation intent.
 
-**Explanation:** Shared organizations can include unrelated billable contributors. The selected answer is use a dedicated lab and document cleanup ownership.
+**Explanation:** Existing scope activation does not automatically establish the desired future-repository default. A repository-specific activation does not become an organization-wide creation policy. Creation defaults do not replace explicit decisions for already existing repositories. A billing association supplies payment context rather than repository activation intent.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
 
 ## L23-Q005
 
-Advanced · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Paid feature onboarding: A learner enables Advanced Security for every Azure Repos repository without checking the active-committer billing estimate. The team selects this remedy: "Review licensing estimate and enable only the intended training repository." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An Azure Repos project has a license, but no CodeQL execution or analysis results. What additional evidence is needed before claiming code scanning coverage?
 
-- **A. Some billing and inventory updates are not instantaneous** Verify the current service's reporting behavior. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **B. Active-committer licensing may include historical contributors** **Correct.** Costs are not simply the number of current viewers. This directly addresses the constraint stated in this case.
-- **C. Multi-host organizations may need separate administration** Central reporting does not eliminate host-level setup. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
+- **A. A repository-level permission granting view alerts** Viewing permission cannot establish that a scan produced results.
+- **B. A successful ordinary build without security analysis steps** A build succeeds independently of whether CodeQL analysis was configured or executed.
+- **C. A supported scan configuration and successful analysis for the relevant code revision** **Correct.** Licensing permits use; completed analysis establishes whether that revision was scanned.
+- **D. A screenshot showing the project's active committer estimate** A billing estimate does not establish that any code analysis ran.
 
-**Explanation:** Costs are not simply the number of current viewers. The selected answer is active-committer licensing may include historical contributors.
+**Explanation:** Viewing permission cannot establish that a scan produced results. A build succeeds independently of whether CodeQL analysis was configured or executed. Licensing permits use; completed analysis establishes whether that revision was scanned. A billing estimate does not establish that any code analysis ran.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-code-scanning?view=azure-devops)
 
 ## L23-Q006
 
-Foundational · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Wrong product target: A team expects Advanced Security for Azure DevOps to scan GitHub repositories through an Azure Repos setting. Which next change most directly satisfies the stated requirement?
+A team designs a Defender connector for one GitHub organization. Which GitHub role is a documented onboarding prerequisite?
 
-- **A. Review licensing estimate and enable only the intended training repository** Security onboarding can create subscription charges. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **B. Configure the security product for the actual repository host** **Correct.** Host-specific products protect their supported repository surfaces. This directly addresses the constraint stated in this case.
-- **C. Onboard the intended DevOps source through its supported connector** Inventory requires an authorized integration path. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
+- **A. Member of an unrelated GitHub organization** Membership elsewhere conveys no authority over the organization being connected.
+- **B. Organization owner** **Correct.** The onboarding procedure requires organization-owner authority for the GitHub organization connection.
+- **C. Repository read-only collaborator** Repository reading does not authorize organization-level connector installation.
+- **D. Outside collaborator on a single issue** Issue collaboration does not grant organization authorization rights.
 
-**Explanation:** Host-specific products protect their supported repository surfaces. The selected answer is configure the security product for the actual repository host.
+**Explanation:** Membership elsewhere conveys no authority over the organization being connected. The onboarding procedure requires organization-owner authority for the GitHub organization connection. Repository reading does not authorize organization-level connector installation. Issue collaboration does not grant organization authorization rights.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q007
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
 
-Wrong product target: A team expects Advanced Security for Azure DevOps to scan GitHub repositories through an Azure Repos setting. Which explanation best accounts for the behavior or constraint described?
+An engineer runs the shown Azure CLI command during a security review. What does successful output establish?
 
-- **A. Azure Repos configuration is not GitHub repository configuration** **Correct.** The integrations have different onboarding boundaries. This directly addresses the constraint stated in this case.
-- **B. The dashboard cannot infer access to external source systems** Azure subscription access alone is insufficient. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **C. Feature activation has a billing lifecycle** Training intent does not make paid capabilities free. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
+```powershell
+az security pricing list --subscription $SubscriptionId -o json
+```
 
-**Explanation:** The integrations have different onboarding boundaries. The selected answer is azure Repos configuration is not GitHub repository configuration.
+- **A. That all repositories have completed security scanning** Subscription pricing inventory contains no proof of repository scan completion.
+- **B. That the operator approved a new paid plan** A read operation does not express approval or change a pricing tier.
+- **C. That every security alert is assigned to an owner** Pricing configuration does not describe repository finding assignments.
+- **D. The subscription's readable current Defender pricing configuration** **Correct.** Listing pricing is an inventory read and does not create a connector or activate scanning.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Explanation:** Subscription pricing inventory contains no proof of repository scan completion. A read operation does not express approval or change a pricing tier. Pricing configuration does not describe repository finding assignments. Listing pricing is an inventory read and does not create a connector or activate scanning.
+
+**Sources:** [S10](https://learn.microsoft.com/en-us/cli/azure/security/pricing?view=azure-cli-latest)
 
 ## L23-Q008
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Wrong product target: A team expects Advanced Security for Azure DevOps to scan GitHub repositories through an Azure Repos setting. Which observation provides the strongest evidence that the requested result was achieved?
+An Azure DevOps Defender connector works after creation but fails when its creator loses source permissions. Which dependency explains the failure?
 
-- **A. The intended host displays its repository findings** **Correct.** The verification must use the correct product surface. This directly addresses the constraint stated in this case.
-- **B. The scoped repositories appear in the Defender inventory** Fresh inventory demonstrates connector authorization. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **C. Only the scoped repository is enabled with acknowledged billing** The evidence should include scope rather than broad activation. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
+- **A. The connector inherits permissions from every Azure subscription reader** Subscription readership does not transfer source-platform permissions to the connector.
+- **B. The connector must use the most recent repository committer's identity** Committing changes does not select the connector's authorization identity.
+- **C. The connector permanently preserves all permissions held at installation** Source access changes can affect operation; authorization is not a frozen permission snapshot.
+- **D. The connector uses the creating account's permissions for Azure DevOps operations** **Correct.** The documented authorization model makes that account's continuing source access operationally relevant.
 
-**Explanation:** The verification must use the correct product surface. The selected answer is the intended host displays its repository findings.
+**Explanation:** Subscription readership does not transfer source-platform permissions to the connector. Committing changes does not select the connector's authorization identity. Source access changes can affect operation; authorization is not a frozen permission snapshot. The documented authorization model makes that account's continuing source access operationally relevant.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S8](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-devops)
 
 ## L23-Q009
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Wrong product target: A team expects Advanced Security for Azure DevOps to scan GitHub repositories through an Azure Repos setting. Which execution safeguard most directly addresses the risk in this case?
+A source inventory includes Azure Repos Git and Team Foundation Version Control repositories. Which repository type is supported by Defender DevOps onboarding?
 
-- **A. Review host-specific permissions and licensing before enabling** **Correct.** Similar names do not imply identical prerequisites. This directly addresses the constraint stated in this case.
-- **B. Grant only the intended organization and repository scope** The connector should not collect unrelated source metadata. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **C. Use a dedicated lab and document cleanup ownership** Shared organizations can include unrelated billable contributors. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
+- **A. TfsGit repositories** **Correct.** The documented Azure DevOps integration supports Git repositories identified as TfsGit.
+- **B. Every repository type because the organization is connected** Organization onboarding does not remove repository-type support constraints.
+- **C. Only TFVC repositories with a release pipeline** A release pipeline does not make TFVC a supported repository type.
+- **D. Only GitHub repositories mirrored into TFVC** Mirroring into an unsupported type does not satisfy the source integration requirement.
 
-**Explanation:** Similar names do not imply identical prerequisites. The selected answer is review host-specific permissions and licensing before enabling.
+**Explanation:** The documented Azure DevOps integration supports Git repositories identified as TfsGit. Organization onboarding does not remove repository-type support constraints. A release pipeline does not make TFVC a supported repository type. Mirroring into an unsupported type does not satisfy the source integration requirement.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S9](https://learn.microsoft.com/en-us/azure/defender-for-cloud/faq-defender-for-devops)
 
 ## L23-Q010
 
-Advanced · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Wrong product target: A team expects Advanced Security for Azure DevOps to scan GitHub repositories through an Azure Repos setting. The team selects this remedy: "Configure the security product for the actual repository host." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A repository owner enables eligible secret scanning and wants to understand its initial scope. Which behavior is documented?
 
-- **A. Active-committer licensing may include historical contributors** Costs are not simply the number of current viewers. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **B. Multi-host organizations may need separate administration** **Correct.** Central reporting does not eliminate host-level setup. This directly addresses the constraint stated in this case.
-- **C. Connector permissions and service support vary by host** Follow the current supported onboarding flow. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
+- **A. Only the current default-branch tip is examined** The initial scan is not limited to a single current tree.
+- **B. Every arbitrary string is recognized as a secret** Secret detection relies on supported patterns and capabilities rather than universal recognition.
+- **C. Only files opened in an active pull request are examined** Initial secret scanning is independent of whether a file appears in an open pull request.
+- **D. An initial scan checks repository history for supported secret types** **Correct.** Historical scanning can discover supported credentials in earlier commits, not just future pushes.
 
-**Explanation:** Central reporting does not eliminate host-level setup. The selected answer is multi-host organizations may need separate administration.
+**Explanation:** The initial scan is not limited to a single current tree. Secret detection relies on supported patterns and capabilities rather than universal recognition. Initial secret scanning is independent of whether a file appears in an open pull request. Historical scanning can discover supported credentials in earlier commits, not just future pushes.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S5](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-secret-scanning?view=azure-devops)
 
 ## L23-Q011
 
-Foundational · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-No Defender inventory: A Defender for Cloud dashboard shows no DevOps repositories because no authorized source connector has been established. Which next change most directly satisfies the stated requirement?
+A security engineer needs to dismiss a verified false-positive Azure Repos alert but must not change product activation. Which specialized permission is appropriate?
 
-- **A. Verify supported integration prerequisites and connector scope** Central visibility depends on configured source integration. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **B. Configure the security product for the actual repository host** Host-specific products protect their supported repository surfaces. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **C. Onboard the intended DevOps source through its supported connector** **Correct.** Inventory requires an authorized integration path. This directly addresses the constraint stated in this case.
+- **A. Advanced Security: Manage settings only** Settings management targets feature activation rather than the narrower alert disposition task.
+- **B. Azure subscription Billing Reader alone** Subscription billing inspection does not authorize repository alert lifecycle changes.
+- **C. Advanced Security: Manage and dismiss alerts** **Correct.** Alert lifecycle permission supports dismissal without granting billable settings management.
+- **D. Advanced Security: view alerts** Viewing permits inspection but does not authorize alert dismissal.
 
-**Explanation:** Inventory requires an authorized integration path. The selected answer is onboard the intended DevOps source through its supported connector.
+**Explanation:** Settings management targets feature activation rather than the narrower alert disposition task. Subscription billing inspection does not authorize repository alert lifecycle changes. Alert lifecycle permission supports dismissal without granting billable settings management. Viewing permits inspection but does not authorize alert dismissal.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q012
 
-Foundational · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-No Defender inventory: A Defender for Cloud dashboard shows no DevOps repositories because no authorized source connector has been established. Which explanation best accounts for the behavior or constraint described?
+A newly created GitHub Defender connector shows no recommendations immediately. Which conclusion is justified?
 
-- **A. Azure Repos configuration is not GitHub repository configuration** The integrations have different onboarding boundaries. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **B. The dashboard cannot infer access to external source systems** **Correct.** Azure subscription access alone is insufficient. This directly addresses the constraint stated in this case.
-- **C. Local findings do not automatically imply central ingestion** The reporting connection may be absent or out of scope. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
+- **A. Inventory and recommendation availability require their own ingestion and scan checks** **Correct.** Connector creation is distinct from discovery and completed security analysis, which can take time.
+- **B. The absence proves the organization contains no vulnerabilities** An empty initial view can reflect discovery or scan timing rather than a clean repository.
+- **C. The connector must be recreated immediately under a different name** Recreating a newly created connector does not first diagnose normal discovery latency.
+- **D. The repository's source security features are automatically disabled** An initially empty Defender view does not establish source-feature state.
 
-**Explanation:** Azure subscription access alone is insufficient. The selected answer is the dashboard cannot infer access to external source systems.
+**Explanation:** Connector creation is distinct from discovery and completed security analysis, which can take time. An empty initial view can reflect discovery or scan timing rather than a clean repository. Recreating a newly created connector does not first diagnose normal discovery latency. An initially empty Defender view does not establish source-feature state.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q013
 
-Applied · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-No Defender inventory: A Defender for Cloud dashboard shows no DevOps repositories because no authorized source connector has been established. Which observation provides the strongest evidence that the requested result was achieved?
+Two repositories on the same Azure subscription have 20 and 30 active committers; 10 identities overlap. For the same enabled product, what is the combined unique count?
 
-- **A. A known finding appears for the correct repository in Defender** The test should correlate the same source issue. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **B. The intended host displays its repository findings** The verification must use the correct product surface. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **C. The scoped repositories appear in the Defender inventory** **Correct.** Fresh inventory demonstrates connector authorization. This directly addresses the constraint stated in this case.
+- **A. 30** Choosing the larger repository count discards ten contributors unique to the other repository.
+- **B. 10** Counting only the overlap omits all contributors unique to either repository.
+- **C. 40** **Correct.** Subscription-level deduplication counts the ten overlapping identities once, so 20 plus 30 minus 10 equals 40.
+- **D. 50** Adding repository totals without removing overlap double-counts ten identities.
 
-**Explanation:** Fresh inventory demonstrates connector authorization. The selected answer is the scoped repositories appear in the Defender inventory.
+**Explanation:** Choosing the larger repository count discards ten contributors unique to the other repository. Counting only the overlap omits all contributors unique to either repository. Subscription-level deduplication counts the ten overlapping identities once, so 20 plus 30 minus 10 equals 40. Adding repository totals without removing overlap double-counts ten identities.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q014
 
-Applied · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
 
-No Defender inventory: A Defender for Cloud dashboard shows no DevOps repositories because no authorized source connector has been established. Which execution safeguard most directly addresses the risk in this case?
+A team checks supported Defender DevOps hosting options before procurement. Which combination is documented?
 
-- **A. Review host-specific permissions and licensing before enabling** Similar names do not imply identical prerequisites. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **B. Grant only the intended organization and repository scope** **Correct.** The connector should not collect unrelated source metadata. This directly addresses the constraint stated in this case.
-- **C. Check freshness and permissions before re-enabling broad products** Missing data may be an ingestion or authorization problem. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
+- **A. Every GitHub Enterprise Cloud data-residency configuration** The documented support exceptions must be checked rather than assuming all configurations qualify.
+- **B. Azure DevOps Services, GitHub Enterprise Cloud, and GitLab SaaS** **Correct.** The support matrix names these hosted source platforms, subject to their detailed prerequisites.
+- **C. Azure DevOps Server and GitHub Enterprise Server only** The documented hosted integration support does not equate these server products with their cloud counterparts.
+- **D. Any self-hosted Git server exposing HTTPS** A reachable Git endpoint is insufficient to establish a supported Defender connector.
 
-**Explanation:** The connector should not collect unrelated source metadata. The selected answer is grant only the intended organization and repository scope.
+**Explanation:** The documented support exceptions must be checked rather than assuming all configurations qualify. The support matrix names these hosted source platforms, subject to their detailed prerequisites. The documented hosted integration support does not equate these server products with their cloud counterparts. A reachable Git endpoint is insufficient to establish a supported Defender connector.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support)
 
 ## L23-Q015
 
-Advanced · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D4.3.4](../../docs/objective-map.md)
 
-No Defender inventory: A Defender for Cloud dashboard shows no DevOps repositories because no authorized source connector has been established. The team selects this remedy: "Onboard the intended DevOps source through its supported connector." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A lab uses a synthetic high-severity finding to practice triage. What evidence can the lab honestly report?
 
-- **A. Multi-host organizations may need separate administration** Central reporting does not eliminate host-level setup. That addresses a different requirement: Wrong product target. It does not directly resolve this case's stated constraint.
-- **B. Connector permissions and service support vary by host** **Correct.** Follow the current supported onboarding flow. This directly addresses the constraint stated in this case.
-- **C. Central ingestion can have delay and coverage limits** Host results remain important diagnostic evidence. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
+- **A. A successful live Defender vulnerability detection** A fixture is not evidence of a live Defender detection or ingestion run.
+- **B. Complete production repository scanning coverage** One synthetic input cannot establish production scan coverage.
+- **C. An automatically approved source-platform risk exception** A local rule test does not authorize a production risk acceptance decision.
+- **D. A tested local disposition rule against labeled fixture input** **Correct.** The exercise establishes rule behavior on the fixture without claiming a provider scanner produced that finding.
 
-**Explanation:** Follow the current supported onboarding flow. The selected answer is connector permissions and service support vary by host.
+**Explanation:** A fixture is not evidence of a live Defender detection or ingestion run. One synthetic input cannot establish production scan coverage. A local rule test does not authorize a production risk acceptance decision. The exercise establishes rule behavior on the fixture without claiming a provider scanner produced that finding.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q016
 
-Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Empty integration view: Advanced Security findings exist in the repository host but do not appear in Defender for Cloud. Which next change most directly satisfies the stated requirement?
+A migration imports old commits into an enabled Azure Repos repository today. Their original authors committed more than 90 days ago. Which estimate is appropriate?
 
-- **A. Configure the supported code-analysis execution path** Feature availability and completed analysis are separate requirements. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **B. Onboard the intended DevOps source through its supported connector** Inventory requires an authorized integration path. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **C. Verify supported integration prerequisites and connector scope** **Correct.** Central visibility depends on configured source integration. This directly addresses the constraint stated in this case.
+- **A. Count only the person who ran the import command** A pushed change can represent qualifying contributors beyond the pushing operator.
+- **B. Count every historical organization member regardless of the import** Organization membership without qualifying pushed contributions does not establish active-committer status.
+- **C. Review qualifying identities represented in today's push, even when original commit dates are older** **Correct.** The active-committer definition uses recent pushes containing qualifying identities, rather than only original commit timestamps.
+- **D. Exclude every imported author because each original commit is old** Old commit timestamps do not by themselves remove identities represented in recent pushes.
 
-**Explanation:** Central visibility depends on configured source integration. The selected answer is verify supported integration prerequisites and connector scope.
+**Explanation:** A pushed change can represent qualifying contributors beyond the pushing operator. Organization membership without qualifying pushed contributions does not establish active-committer status. The active-committer definition uses recent pushes containing qualifying identities, rather than only original commit timestamps. Old commit timestamps do not by themselves remove identities represented in recent pushes.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q017
 
-Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Empty integration view: Advanced Security findings exist in the repository host but do not appear in Defender for Cloud. Which explanation best accounts for the behavior or constraint described?
+Finance compares 35 active committers before activation with a billing page read taken immediately afterward. Why might these numbers differ without proving an error?
 
-- **A. Enabling the product does not prove code analysis ran** The repository still needs valid analysis setup. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **B. The dashboard cannot infer access to external source systems** Azure subscription access alone is insufficient. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **C. Local findings do not automatically imply central ingestion** **Correct.** The reporting connection may be absent or out of scope. This directly addresses the constraint stated in this case.
+- **A. The billing usage view represents the previous day's measured count** **Correct.** Documented usage timing can differ from a current estimate, so compare matching measurement periods.
+- **B. The billing page always counts repository readers instead of committers** The timing difference does not change the documented billing population.
+- **C. The estimate guarantees a fixed monthly license total** Active populations can change and estimates do not freeze future daily charges.
+- **D. Enabling the feature erases all recent contributor identities** Activation does not remove contribution history from the active-committer definition.
 
-**Explanation:** The reporting connection may be absent or out of scope. The selected answer is local findings do not automatically imply central ingestion.
+**Explanation:** Documented usage timing can differ from a current estimate, so compare matching measurement periods. The timing difference does not change the documented billing population. Active populations can change and estimates do not freeze future daily charges. Activation does not remove contribution history from the active-committer definition.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q018
 
-Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Empty integration view: Advanced Security findings exist in the repository host but do not appear in Defender for Cloud. Which observation provides the strongest evidence that the requested result was achieved?
+A pilot is approved for one repository with 12 active committers. The administrator sees an enable-all control for a 400-repository project. Which implementation matches the approval?
 
-- **A. A known finding appears for the correct repository in Defender** **Correct.** The test should correlate the same source issue. This directly addresses the constraint stated in this case.
-- **B. A completed run produces results for the intended source revision** The evidence must identify an actual scan. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **C. The scoped repositories appear in the Defender inventory** Fresh inventory demonstrates connector authorization. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
+- **A. Enable the organization temporarily and assess the bill at month end** Organization-wide activation exceeds the approved pilot boundary before the estimate can be reviewed.
+- **B. Enable the reviewed product only on the approved repository and record its estimate** **Correct.** Repository-specific activation preserves the authorized scope and its reviewed billing basis.
+- **C. Enable the project and exclude unwanted findings in a report** Filtering reports does not narrow the product activation or potential billing scope.
+- **D. Set the future-repository default and assume the current pilot is enabled** A future creation default does not establish activation of the existing pilot repository.
 
-**Explanation:** The test should correlate the same source issue. The selected answer is a known finding appears for the correct repository in Defender.
+**Explanation:** Organization-wide activation exceeds the approved pilot boundary before the estimate can be reviewed. Repository-specific activation preserves the authorized scope and its reviewed billing basis. Filtering reports does not narrow the product activation or potential billing scope. A future creation default does not establish activation of the existing pilot repository.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops); [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q019
 
-Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
 
-Empty integration view: Advanced Security findings exist in the repository host but do not appear in Defender for Cloud. Which execution safeguard most directly addresses the risk in this case?
+A capability read returns the shown response for a private GitHub repository. What should the reviewer do with the missing security field?
 
-- **A. Check freshness and permissions before re-enabling broad products** **Correct.** Missing data may be an ingestion or authorization problem. This directly addresses the constraint stated in this case.
-- **B. Use supported languages build steps and task permissions** Incomplete setup can yield no useful coverage. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **C. Grant only the intended organization and repository scope** The connector should not collect unrelated source metadata. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
+```json
+{"full_name":"org/training","visibility":"private"}
+```
 
-**Explanation:** Missing data may be an ingestion or authorization problem. The selected answer is check freshness and permissions before re-enabling broad products.
+- **A. Record every security capability as enabled** Repository visibility and a successful read do not establish enabled security features.
+- **B. Change the repository to public to make the inspection pass** Changing visibility is a separate security decision and does not diagnose the missing metadata.
+- **C. Verify token permissions and feature eligibility before deciding whether the feature is disabled** **Correct.** An absent or unexposed field can reflect access or entitlement limits and is not an explicit disabled state.
+- **D. Record every security capability as disabled** A missing field is not a returned status for each capability.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Explanation:** Repository visibility and a successful read do not establish enabled security features. Changing visibility is a separate security decision and does not diagnose the missing metadata. An absent or unexposed field can reflect access or entitlement limits and is not an explicit disabled state. A missing field is not a returned status for each capability.
+
+**Sources:** [S12](https://docs.github.com/en/rest/repos/repos#get-a-repository)
 
 ## L23-Q020
 
-Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Empty integration view: Advanced Security findings exist in the repository host but do not appear in Defender for Cloud. The team selects this remedy: "Verify supported integration prerequisites and connector scope." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Developers can read alerts, and security triagers can dismiss them. Only billing-approved administrators should enable features. Which permission design fits?
 
-- **A. Connector permissions and service support vary by host** Follow the current supported onboarding flow. That addresses a different requirement: No Defender inventory. It does not directly resolve this case's stated constraint.
-- **B. Central ingestion can have delay and coverage limits** **Correct.** Host results remain important diagnostic evidence. This directly addresses the constraint stated in this case.
-- **C. Scanning setup differs by language and mode** One configuration may not suit every repository. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
+- **A. Make all repository contributors collection administrators** Broad administration defeats the stated separation of security responsibilities.
+- **B. Grant only view alerts to every group** Read-only access prevents authorized triagers and settings administrators from completing their distinct duties.
+- **C. Separate view, lifecycle, and settings permissions for the three groups** **Correct.** The specialized permissions distinguish inspection, disposition, and billable product settings.
+- **D. Give the triager group Manage settings so it can dismiss alerts** Settings management unnecessarily grants activation authority for an alert lifecycle task.
 
-**Explanation:** Host results remain important diagnostic evidence. The selected answer is central ingestion can have delay and coverage limits.
+**Explanation:** Broad administration defeats the stated separation of security responsibilities. Read-only access prevents authorized triagers and settings administrators from completing their distinct duties. The specialized permissions distinguish inspection, disposition, and billable product settings. Settings management unnecessarily grants activation authority for an alert lifecycle task.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q021
 
-Foundational · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Enablement misconception: Advanced Security is enabled for a repository, but no code-scanning workflow has completed for its language. Which next change most directly satisfies the stated requirement?
+A pipeline produces valid third-party SARIF, but Azure Repos shows no code scanning results. Which next step targets the missing integration?
 
-- **A. Enable and validate the supported push-protection control** Detection and prevention occur at different workflow points. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
-- **B. Verify supported integration prerequisites and connector scope** Central visibility depends on configured source integration. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **C. Configure the supported code-analysis execution path** **Correct.** Feature availability and completed analysis are separate requirements. This directly addresses the constraint stated in this case.
+- **A. Dismiss prior findings to force the dashboard to refresh** Changing old dispositions does not upload the missing analysis.
+- **B. Check the supported Advanced Security result-publication task and its upload outcome** **Correct.** Producing a file and publishing supported analysis to Advanced Security are different pipeline steps.
+- **C. Rename the SARIF file to the repository name** Naming alone does not publish a report to the security service.
+- **D. Increase the active-committer estimate in the billing review** License counts do not transport analysis output into the service.
 
-**Explanation:** Feature availability and completed analysis are separate requirements. The selected answer is configure the supported code-analysis execution path.
+**Explanation:** Changing old dispositions does not upload the missing analysis. Producing a file and publishing supported analysis to Advanced Security are different pipeline steps. Naming alone does not publish a report to the security service. License counts do not transport analysis output into the service.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-code-scanning?view=azure-devops)
 
 ## L23-Q022
 
-Foundational · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.3.3](../../docs/objective-map.md)
 
-Enablement misconception: Advanced Security is enabled for a repository, but no code-scanning workflow has completed for its language. Which explanation best accounts for the behavior or constraint described?
+A supported credential appears in a historical commit and is now valid in the provider. What is the first containment action when the alert is confirmed?
 
-- **A. Local findings do not automatically imply central ingestion** The reporting connection may be absent or out of scope. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **B. Enabling the product does not prove code analysis ran** **Correct.** The repository still needs valid analysis setup. This directly addresses the constraint stated in this case.
-- **C. A post-commit alert does not guarantee push rejection** The preventive control needs its own configuration. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
+- **A. Revoke or rotate the credential, then remove exposure and investigate use** **Correct.** Credential containment addresses active access; repository cleanup and investigation complete remediation.
+- **B. Delete the current file and close the alert immediately** Current-tree deletion does not invalidate a credential retained in history or elsewhere.
+- **C. Rewrite history first and leave the credential active until completion** History cleanup can take time and does not itself revoke the exposed credential.
+- **D. Mark the alert false positive because the default branch no longer contains it** Historical exposure of a valid credential is not disproved by its absence from the current tree.
 
-**Explanation:** The repository still needs valid analysis setup. The selected answer is enabling the product does not prove code analysis ran.
+**Explanation:** Credential containment addresses active access; repository cleanup and investigation complete remediation. Current-tree deletion does not invalidate a credential retained in history or elsewhere. History cleanup can take time and does not itself revoke the exposed credential. Historical exposure of a valid credential is not disproved by its absence from the current tree.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S5](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-secret-scanning?view=azure-devops)
 
 ## L23-Q023
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Enablement misconception: Advanced Security is enabled for a repository, but no code-scanning workflow has completed for its language. Which observation provides the strongest evidence that the requested result was achieved?
+A Defender connector should discover only the training organization's approved repositories. Which review is essential before creation?
 
-- **A. A known finding appears for the correct repository in Defender** The test should correlate the same source issue. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **B. A completed run produces results for the intended source revision** **Correct.** The evidence must identify an actual scan. This directly addresses the constraint stated in this case.
-- **C. A controlled matching test push is blocked** A negative test demonstrates prevention before acceptance. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
+- **A. Verify only that one selected repository has a green build** Build state does not define which repositories the connector may discover.
+- **B. Verify that every organization member can read the Azure subscription** Broad Azure readership is not needed to define source collection scope.
+- **C. Verify GitHub app installation access and the connector's source selection** **Correct.** Both source authorization and connector configuration affect which repositories can be collected.
+- **D. Verify only the Azure resource group's display name** The destination resource name does not establish source repository authorization.
 
-**Explanation:** The evidence must identify an actual scan. The selected answer is a completed run produces results for the intended source revision.
+**Explanation:** Build state does not define which repositories the connector may discover. Broad Azure readership is not needed to define source collection scope. Both source authorization and connector configuration affect which repositories can be collected. The destination resource name does not establish source repository authorization.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q024
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Enablement misconception: Advanced Security is enabled for a repository, but no code-scanning workflow has completed for its language. Which execution safeguard most directly addresses the risk in this case?
+An analyst needs to inspect findings for one Defender connector but not other teams' connectors. Which Azure access design is best?
 
-- **A. Use a documented synthetic fixture and isolated training branch** A real secret should never be the test input. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
-- **B. Check freshness and permissions before re-enabling broad products** Missing data may be an ingestion or authorization problem. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **C. Use supported languages build steps and task permissions** **Correct.** Incomplete setup can yield no useful coverage. This directly addresses the constraint stated in this case.
+- **A. Grant subscription Contributor to the analyst** Contributor adds broad change permissions beyond reading the selected findings.
+- **B. Grant GitHub repository write access and no Azure role** Source repository access alone does not authorize reading the Defender destination.
+- **C. Grant tenant-wide Global Administrator for the investigation window** Tenant administration is far broader than the connector-level read requirement.
+- **D. Scope Security Reader to the appropriate connector or containing resource group** **Correct.** Supported narrower role scopes allow inspection without exposing unrelated subscription security inventory.
 
-**Explanation:** Incomplete setup can yield no useful coverage. The selected answer is use supported languages build steps and task permissions.
+**Explanation:** Contributor adds broad change permissions beyond reading the selected findings. Source repository access alone does not authorize reading the Defender destination. Tenant administration is far broader than the connector-level read requirement. Supported narrower role scopes allow inspection without exposing unrelated subscription security inventory.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q025
 
-Advanced · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Enablement misconception: Advanced Security is enabled for a repository, but no code-scanning workflow has completed for its language. The team selects this remedy: "Configure the supported code-analysis execution path." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A connector health check began failing after the creating Azure DevOps account was disabled. Which repair best preserves accountable operations?
 
-- **A. Central ingestion can have delay and coverage limits** Host results remain important diagnostic evidence. That addresses a different requirement: Empty integration view. It does not directly resolve this case's stated constraint.
-- **B. Scanning setup differs by language and mode** **Correct.** One configuration may not suit every repository. This directly addresses the constraint stated in this case.
-- **C. Push protection cannot recognize every possible secret** Secret hygiene and response remain necessary. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
+- **A. Refresh only the Azure destination token while leaving the disabled source authorization unchanged** A healthy destination token does not restore the connector creating account source permissions.
+- **B. Restore or reauthorize the connection using an approved maintained identity and verify its source scope** **Correct.** The source-account lifecycle dependency should be repaired with deliberate authorization and health validation.
+- **C. Grant a new Azure Security Reader assignment without reauthorizing the source connection** Destination read permission does not replace the disabled source identity used for Azure DevOps operations.
+- **D. Recreate the connector with the same disabled source identity and unchanged authorization** A new connector object using the broken source authorization retains the underlying lifecycle failure.
 
-**Explanation:** One configuration may not suit every repository. The selected answer is scanning setup differs by language and mode.
+**Explanation:** A healthy destination token does not restore the connector creating account source permissions. The source-account lifecycle dependency should be repaired with deliberate authorization and health validation. Destination read permission does not replace the disabled source identity used for Azure DevOps operations. A new connector object using the broken source authorization retains the underlying lifecycle failure.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S8](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-devops)
 
 ## L23-Q026
 
-Foundational · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Secret push prevention: A repository detects a test secret after commit, but the team also needs to stop future matching pushes. Which next change most directly satisfies the stated requirement?
+An integration report lists the same CVE in GitHub service-a and Azure Repos service-b. How should aggregation preserve remediation accountability?
 
-- **A. Grant the appropriate scoped integration and source permissions** Different systems enforce different authorization boundaries. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **B. Configure the supported code-analysis execution path** Feature availability and completed analysis are separate requirements. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **C. Enable and validate the supported push-protection control** **Correct.** Detection and prevention occur at different workflow points. This directly addresses the constraint stated in this case.
+- **A. Treat identical CVE text as proof of one scanner duplicate** The same vulnerability can affect different repositories without duplicate ingestion.
+- **B. Merge both rows into one resolved alert when either repository is patched** Fixing one codebase does not demonstrate remediation in the other.
+- **C. Keep repository and source identities while grouping the common vulnerability for overview** **Correct.** A shared vulnerability can require separate fixes in independently owned repositories.
+- **D. Keep only the highest-severity row and drop the other repository** Dropping the second occurrence hides a distinct affected codebase and owner.
 
-**Explanation:** Detection and prevention occur at different workflow points. The selected answer is enable and validate the supported push-protection control.
+**Explanation:** The same vulnerability can affect different repositories without duplicate ingestion. Fixing one codebase does not demonstrate remediation in the other. A shared vulnerability can require separate fixes in independently owned repositories. Dropping the second occurrence hides a distinct affected codebase and owner.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q027
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Secret push prevention: A repository detects a test secret after commit, but the team also needs to stop future matching pushes. Which explanation best accounts for the behavior or constraint described?
+The fixture contains three findings, but the approved lab owns only org/training. Which result should the correlation stage produce?
 
-- **A. Azure resource visibility does not imply source-host security access** The analyst crosses several permission domains. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **B. Enabling the product does not prove code analysis ran** The repository still needs valid analysis setup. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **C. A post-commit alert does not guarantee push rejection** **Correct.** The preventive control needs its own configuration. This directly addresses the constraint stated in this case.
+```json
+[{"id":"a","host":"GitHub","scope":"org/training","severity":"high"},
+ {"id":"b","host":"GitHub","scope":"org/training","severity":"medium"},
+ {"id":"c","host":"GitHub","scope":"other/production","severity":"critical"}]
+```
 
-**Explanation:** The preventive control needs its own configuration. The selected answer is a post-commit alert does not guarantee push rejection.
+- **A. Retain only one owned finding to equal the number of repositories** One repository can have multiple independent findings, so repository count is not an alert limit.
+- **B. Retain the two exact owned matches and report the excluded foreign finding separately** **Correct.** Exact source scope filtering preserves the collection boundary without modifying foreign alert state.
+- **C. Retain all findings because severity is the only relevant filter** Severity does not authorize processing resources outside the approved source scope.
+- **D. Delete the foreign finding at its source to make counts agree** A correlation exclusion does not authorize altering another team's finding.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Explanation:** One repository can have multiple independent findings, so repository count is not an alert limit. Exact source scope filtering preserves the collection boundary without modifying foreign alert state. Severity does not authorize processing resources outside the approved source scope. A correlation exclusion does not authorize altering another team's finding.
+
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q028
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.3.3](../../docs/objective-map.md)
 
-Secret push prevention: A repository detects a test secret after commit, but the team also needs to stop future matching pushes. Which observation provides the strongest evidence that the requested result was achieved?
+An alert labeled high has a demonstrated input-to-sink path in the released application. Which triage record best supports a release decision?
 
-- **A. A completed run produces results for the intended source revision** The evidence must identify an actual scan. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **B. A controlled matching test push is blocked** **Correct.** A negative test demonstrates prevention before acceptance. This directly addresses the constraint stated in this case.
-- **C. The analyst sees required findings without unnecessary source administration** Effective access should match the review role. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
+- **A. Lower its severity to meet the release threshold without technical review** Changing a label does not change the exposure demonstrated by the finding.
+- **B. Assign an owner, record the path evidence, block release, and define a verified fix criterion** **Correct.** The decision connects observed exploitability to accountable remediation and a testable release condition.
+- **C. Accept the risk solely because a medium alert was fixed earlier** Progress on a different finding does not mitigate this reachable high finding.
+- **D. Dismiss it as false positive because the scanner is occasionally noisy** General scanner noise is not contrary evidence for this specific demonstrated path.
 
-**Explanation:** A negative test demonstrates prevention before acceptance. The selected answer is a controlled matching test push is blocked.
+**Explanation:** Changing a label does not change the exposure demonstrated by the finding. The decision connects observed exploitability to accountable remediation and a testable release condition. Progress on a different finding does not mitigate this reachable high finding. General scanner noise is not contrary evidence for this specific demonstrated path.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q029
 
-Applied · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Secret push prevention: A repository detects a test secret after commit, but the team also needs to stop future matching pushes. Which execution safeguard most directly addresses the risk in this case?
+CodeQL is configured for an unsupported language in one repository. Which coverage statement is accurate?
 
-- **A. Review each platform's role and permission requirements separately** Broad elevation on one system may not solve another's denial. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **B. Use supported languages build steps and task permissions** Incomplete setup can yield no useful coverage. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
-- **C. Use a documented synthetic fixture and isolated training branch** **Correct.** A real secret should never be the test input. This directly addresses the constraint stated in this case.
+- **A. That language needs a supported alternative analysis path or a recorded coverage gap** **Correct.** CodeQL support is language-dependent, so configuration alone cannot establish coverage for unsupported code.
+- **B. The enabled product automatically analyzes every language equally** Product entitlement does not remove analysis language support limits.
+- **C. A scan of a neighboring repository covers this repository too** Analysis scope and results must correspond to the code being claimed as covered.
+- **D. An empty result list proves the unsupported code is safe** No supported analysis is not equivalent to an analysis with no findings.
 
-**Explanation:** A real secret should never be the test input. The selected answer is use a documented synthetic fixture and isolated training branch.
+**Explanation:** CodeQL support is language-dependent, so configuration alone cannot establish coverage for unsupported code. Product entitlement does not remove analysis language support limits. Analysis scope and results must correspond to the code being claimed as covered. No supported analysis is not equivalent to an analysis with no findings.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-code-scanning?view=azure-devops)
 
 ## L23-Q030
 
-Advanced · [CP1](README.md#task-1) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Secret push prevention: A repository detects a test secret after commit, but the team also needs to stop future matching pushes. The team selects this remedy: "Enable and validate the supported push-protection control." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Secret scanning has completed with no findings. A developer asks whether this proves no credentials ever entered Git history. Which response is defensible?
 
-- **A. Push protection cannot recognize every possible secret** **Correct.** Secret hygiene and response remain necessary. This directly addresses the constraint stated in this case.
-- **B. Cross-platform least privilege is more complex** It still offers clearer accountability and reduced exposure. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **C. Scanning setup differs by language and mode** One configuration may not suit every repository. That addresses a different requirement: Enablement misconception. It does not directly resolve this case's stated constraint.
+- **A. It proves the repository no longer needs credential management** Clean detection results do not eliminate the need for appropriate credential handling.
+- **B. It establishes no detected supported secrets within the scan's documented scope and limits** **Correct.** Detection results must be interpreted against supported patterns and completed scope, rather than as universal absence proof.
+- **C. It proves every historical credential value was identified** Pattern-based detection does not establish recognition of every possible credential format.
+- **D. It proves credentials could not have been copied outside Git** Repository scanning does not establish behavior of external systems or users.
 
-**Explanation:** Secret hygiene and response remain necessary. The selected answer is push protection cannot recognize every possible secret.
+**Explanation:** Clean detection results do not eliminate the need for appropriate credential handling. Detection results must be interpreted against supported patterns and completed scope, rather than as universal absence proof. Pattern-based detection does not establish recognition of every possible credential format. Repository scanning does not establish behavior of external systems or users.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S5](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-secret-scanning?view=azure-devops)
 
 ## L23-Q031
 
-Foundational · [CP4](README.md#task-4) · [D4.3.2](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Access confusion: A security analyst can view Azure resources but cannot administer the DevOps connector or read repository findings. Which next change most directly satisfies the stated requirement?
+An organization enables Advanced Security for existing projects but elects not to enable it automatically for future repositories. What onboarding control is needed?
 
-- **A. Configure future-repository defaults deliberately where supported** Existing-resource activation and future defaults are separate controls. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **B. Enable and validate the supported push-protection control** Detection and prevention occur at different workflow points. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
-- **C. Grant the appropriate scoped integration and source permissions** **Correct.** Different systems enforce different authorization boundaries. This directly addresses the constraint stated in this case.
+- **A. A branch naming convention that includes security** Branch names do not activate licensed repository features.
+- **B. An alert dismissal workflow in another project** Alert lifecycle actions do not configure coverage for newly created repositories.
+- **C. An explicit new-repository entitlement and activation review** **Correct.** Without the future default, each new repository needs a deliberate coverage decision.
+- **D. No control because all future repositories inherit existing activation** The selected configuration does not automatically extend activation to future repositories.
 
-**Explanation:** Different systems enforce different authorization boundaries. The selected answer is grant the appropriate scoped integration and source permissions.
+**Explanation:** Branch names do not activate licensed repository features. Alert lifecycle actions do not configure coverage for newly created repositories. Without the future default, each new repository needs a deliberate coverage decision. The selected configuration does not automatically extend activation to future repositories.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
 
 ## L23-Q032
 
-Foundational · [CP4](README.md#task-4) · [D4.3.2](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Access confusion: A security analyst can view Azure resources but cannot administer the DevOps connector or read repository findings. Which explanation best accounts for the behavior or constraint described?
+Eight hours after creating a GitHub connector, source inventory appears but code recommendations remain absent. Source code scanning was never configured. What should be checked next?
 
-- **A. An onboarding action may not apply to later repositories** Current coverage does not prove automatic future coverage. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **B. A post-commit alert does not guarantee push rejection** The preventive control needs its own configuration. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
-- **C. Azure resource visibility does not imply source-host security access** **Correct.** The analyst crosses several permission domains. This directly addresses the constraint stated in this case.
+- **A. Create duplicate connectors for the same organization** Duplicate destination connections do not supply the missing source analysis.
+- **B. Change every repository to public so inventory becomes a scan** Visibility changes do not execute the missing security analysis.
+- **C. Configure and verify the required source security scanning path and its completed results** **Correct.** Inventory discovery does not substitute for the scan setup needed to produce recommendations.
+- **D. Increase the connector discovery wait indefinitely** Additional waiting cannot complete a scan configuration that does not exist.
 
-**Explanation:** The analyst crosses several permission domains. The selected answer is azure resource visibility does not imply source-host security access.
+**Explanation:** Duplicate destination connections do not supply the missing source analysis. Visibility changes do not execute the missing security analysis. Inventory discovery does not substitute for the scan setup needed to produce recommendations. Additional waiting cannot complete a scan configuration that does not exist.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q033
 
-Applied · [CP4](README.md#task-4) · [D4.3.2](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
 
-Access confusion: A security analyst can view Azure resources but cannot administer the DevOps connector or read repository findings. Which observation provides the strongest evidence that the requested result was achieved?
+The review pipeline currently invokes the shown command to collect Defender plan inventory. Which change makes this step read-only?
 
-- **A. The analyst sees required findings without unnecessary source administration** **Correct.** Effective access should match the review role. This directly addresses the constraint stated in this case.
-- **B. A newly created test repository receives the intended protection** The validation must include a future-resource scenario. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. A controlled matching test push is blocked** A negative test demonstrates prevention before acceptance. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
+```powershell
+az security pricing create --name CloudPosture --tier Standard --subscription $SubscriptionId
+```
 
-**Explanation:** Effective access should match the review role. The selected answer is the analyst sees required findings without unnecessary source administration.
+- **A. Run pricing create using a shorter-lived token** Credential lifetime does not change the mutating semantics of the API call.
+- **B. Replace pricing create with pricing list for the selected subscription** **Correct.** The list operation reads current plan state; create changes pricing configuration.
+- **C. Keep pricing create but suppress its output** Output suppression does not prevent the command from modifying the plan.
+- **D. Keep pricing create and add a descriptive subscription tag** Tagging the subscription does not make a pricing mutation read-only.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Explanation:** Credential lifetime does not change the mutating semantics of the API call. The list operation reads current plan state; create changes pricing configuration. Output suppression does not prevent the command from modifying the plan. Tagging the subscription does not make a pricing mutation read-only.
+
+**Sources:** [S10](https://learn.microsoft.com/en-us/cli/azure/security/pricing?view=azure-cli-latest)
 
 ## L23-Q034
 
-Applied · [CP4](README.md#task-4) · [D4.3.2](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Access confusion: A security analyst can view Azure resources but cannot administer the DevOps connector or read repository findings. Which execution safeguard most directly addresses the risk in this case?
+Two Azure DevOps organizations share one subscription. An administrator proposes migrating only one organization from bundled Advanced Security billing to standalone products. Which issue needs escalation?
 
-- **A. Use a documented synthetic fixture and isolated training branch** A real secret should never be the test input. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
-- **B. Review each platform's role and permission requirements separately** **Correct.** Broad elevation on one system may not solve another's denial. This directly addresses the constraint stated in this case.
-- **C. Confirm the billing implications of automatic enablement** New repositories can introduce additional paid contributors. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
+- **A. The migration automatically separates organizations onto new subscriptions** The migration does not silently redesign subscription associations.
+- **B. The migration grants GitHub.com licenses for all users** Azure Repos product billing changes do not establish GitHub.com entitlement.
+- **C. The documented migration operates at subscription level and affects associated organizations** **Correct.** The migration boundary and irreversible nature require a subscription-wide review, not an isolated organization assumption.
+- **D. Each repository can independently reverse the migration afterward** The documented migration is not a reversible per-repository toggle.
 
-**Explanation:** Broad elevation on one system may not solve another's denial. The selected answer is review each platform's role and permission requirements separately.
+**Explanation:** The migration does not silently redesign subscription associations. Azure Repos product billing changes do not establish GitHub.com entitlement. The migration boundary and irreversible nature require a subscription-wide review, not an isolated organization assumption. The documented migration is not a reversible per-repository toggle.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q035
 
-Advanced · [CP4](README.md#task-4) · [D4.3.2](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Access confusion: A security analyst can view Azure resources but cannot administer the DevOps connector or read repository findings. The team selects this remedy: "Grant the appropriate scoped integration and source permissions." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An automated integration must read Azure Repos security findings. The team can use Microsoft Entra authentication. Which choice follows current guidance?
 
-- **A. Cross-platform least privilege is more complex** **Correct.** It still offers clearer accountability and reduced exposure. This directly addresses the constraint stated in this case.
-- **B. Automatic coverage reduces gaps but broadens cost scope** Defaults need clear ownership and budget review. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. Push protection cannot recognize every possible secret** Secret hygiene and response remain necessary. That addresses a different requirement: Secret push prevention. It does not directly resolve this case's stated constraint.
+- **A. Use a collection-administrator PAT for convenience despite available Entra authentication** That introduces broader personal credential authority than the automated read requires.
+- **B. Use an Entra token with no repository security permission because authentication alone is sufficient** A valid token still needs the source authorization required to read the security findings.
+- **C. Grant Azure subscription Security Reader and assume it supplies Azure Repos finding access** Azure destination permissions do not replace the repository security authorization required by the source service.
+- **D. Use an appropriately scoped Entra token and required repository permissions** **Correct.** The documentation recommends Entra tokens and still requires task-appropriate authorization.
 
-**Explanation:** It still offers clearer accountability and reduced exposure. The selected answer is cross-platform least privilege is more complex.
+**Explanation:** That introduces broader personal credential authority than the automated read requires. A valid token still needs the source authorization required to read the security findings. Azure destination permissions do not replace the repository security authorization required by the source service. The documentation recommends Entra tokens and still requires task-appropriate authorization.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q036
 
-Foundational · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.3.4](../../docs/objective-map.md)
 
-Organization-wide activation: An administrator wants future repositories to inherit a security policy but only enabled existing repositories. Which next change most directly satisfies the stated requirement?
+A scanner finding was accepted as risk for 30 days with a named owner. What should the aggregation view show during that period?
 
-- **A. Grant the appropriate scoped integration and source permissions** Different systems enforce different authorization boundaries. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **B. Configure future-repository defaults deliberately where supported** **Correct.** Existing-resource activation and future defaults are separate controls. This directly addresses the constraint stated in this case.
-- **C. Correlate records by source identity and relationship** Multiple views can represent the same underlying issue. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
+- **A. The open exposure with its approved exception, owner, and expiry** **Correct.** Risk acceptance documents a governed disposition but does not prove the vulnerability was fixed.
+- **B. A fixed finding with no follow-up date** Acceptance and remediation are different states, and the exception has an explicit expiry.
+- **C. No record because accepted findings are irrelevant to posture** The exposure remains relevant even while an authorized exception is active.
+- **D. A false-positive disposition because the release proceeded** Release authorization does not establish that the detection was incorrect.
 
-**Explanation:** Existing-resource activation and future defaults are separate controls. The selected answer is configure future-repository defaults deliberately where supported.
+**Explanation:** Risk acceptance documents a governed disposition but does not prove the vulnerability was fixed. Acceptance and remediation are different states, and the exception has an explicit expiry. The exposure remains relevant even while an authorized exception is active. Release authorization does not establish that the detection was incorrect.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q037
 
-Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D4.3.3](../../docs/objective-map.md)
 
-Organization-wide activation: An administrator wants future repositories to inherit a security policy but only enabled existing repositories. Which explanation best accounts for the behavior or constraint described?
+A code alert claims an input-to-sink path, but analysis of the exact shipped build proves that claimed path is impossible. Which evidence best supports an evidence-based false-positive disposition?
 
-- **A. Central aggregation is being mistaken for additional unique risk** The same finding may appear in different surfaces. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
-- **B. Azure resource visibility does not imply source-host security access** The analyst crosses several permission domains. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **C. An onboarding action may not apply to later repositories** **Correct.** Current coverage does not prove automatic future coverage. This directly addresses the constraint stated in this case.
+- **A. The source revision, build configuration, reachability analysis, and reviewer decision** **Correct.** Specific evidence connects the disposition to the exact shipped code and permits later reassessment.
+- **B. The repository's overall test pass percentage** Aggregate test results do not establish whether this flagged path is reachable.
+- **C. The age of the scanner product's latest release** Scanner age alone does not prove this individual result is wrong.
+- **D. A comment saying the team has never observed an exploit** Lack of observed exploitation does not demonstrate unreachable code or incorrect detection.
 
-**Explanation:** Current coverage does not prove automatic future coverage. The selected answer is an onboarding action may not apply to later repositories.
+**Explanation:** Specific evidence connects the disposition to the exact shipped code and permits later reassessment. Aggregate test results do not establish whether this flagged path is reachable. Scanner age alone does not prove this individual result is wrong. Lack of observed exploitation does not demonstrate unreachable code or incorrect detection.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q038
 
-Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Organization-wide activation: An administrator wants future repositories to inherit a security policy but only enabled existing repositories. Which observation provides the strongest evidence that the requested result was achieved?
+A GitHub connector includes only selected repositories, and a newly created repository is absent. Which diagnosis should precede a platform incident?
 
-- **A. The report distinguishes unique findings from their representations** The evidence should preserve traceability without double counting. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
-- **B. The analyst sees required findings without unnecessary source administration** Effective access should match the review role. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **C. A newly created test repository receives the intended protection** **Correct.** The validation must include a future-resource scenario. This directly addresses the constraint stated in this case.
+- **A. Assume the new repository is automatically included because the organization is connected** Organization connection does not override selected-repository authorization limits.
+- **B. Review installation repository access and the connector's selected scope** **Correct.** A repository excluded by configuration can correctly remain absent from inventory.
+- **C. Increase every repository's code scanning timeout** Scan duration cannot grant an excluded repository to the installation.
+- **D. Reassign every repository owner to the connector creator** Changing ownership is not the first step for checking explicit selection configuration.
 
-**Explanation:** The validation must include a future-resource scenario. The selected answer is a newly created test repository receives the intended protection.
+**Explanation:** Organization connection does not override selected-repository authorization limits. A repository excluded by configuration can correctly remain absent from inventory. Scan duration cannot grant an excluded repository to the installation. Changing ownership is not the first step for checking explicit selection configuration.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q039
 
-Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Organization-wide activation: An administrator wants future repositories to inherit a security policy but only enabled existing repositories. Which execution safeguard most directly addresses the risk in this case?
+The correlation job receives two rows with the same alert ID from different source hosts. What key prevents accidental merging?
 
-- **A. Keep original source identifiers during normalization** Removing provenance makes correlation unreliable. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
-- **B. Review each platform's role and permission requirements separately** Broad elevation on one system may not solve another's denial. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **C. Confirm the billing implications of automatic enablement** **Correct.** New repositories can introduce additional paid contributors. This directly addresses the constraint stated in this case.
+- **A. Severity plus detection date** Many unrelated alerts share a severity and detection date.
+- **B. Repository display name alone** Display names can collide across organizations and source hosts.
+- **C. Source host plus organization/repository identity plus alert ID** **Correct.** Alert identifiers must be interpreted within their source namespace and resource context.
+- **D. Alert ID alone** Two systems can legitimately issue the same local alert identifier.
 
-**Explanation:** New repositories can introduce additional paid contributors. The selected answer is confirm the billing implications of automatic enablement.
+**Explanation:** Many unrelated alerts share a severity and detection date. Display names can collide across organizations and source hosts. Alert identifiers must be interpreted within their source namespace and resource context. Two systems can legitimately issue the same local alert identifier.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q040
 
-Advanced · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Organization-wide activation: An administrator wants future repositories to inherit a security policy but only enabled existing repositories. The team selects this remedy: "Configure future-repository defaults deliberately where supported." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A pilot is ending, but another team uses paid scanning in the same organization. Which cleanup action fits the pilot boundary?
 
-- **A. Deduplication rules need maintenance across products** Different tools may also find genuinely distinct issues. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
-- **B. Cross-platform least privilege is more complex** It still offers clearer accountability and reduced exposure. That addresses a different requirement: Access confusion. It does not directly resolve this case's stated constraint.
-- **C. Automatic coverage reduces gaps but broadens cost scope** **Correct.** Defaults need clear ownership and budget review. This directly addresses the constraint stated in this case.
+- **A. Delete the shared billing subscription association** Changing shared billing affects unrelated repositories beyond the pilot scope.
+- **B. Leave the pilot enabled because any cleanup could affect shared coverage** The shared context requires scoped cleanup, not abandoning the approved pilot cleanup responsibility.
+- **C. Disable only the pilot's authorized activation and verify remaining shared coverage and billing state** **Correct.** Cleanup must target the reviewed owned scope while retaining other teams' intended product use.
+- **D. Disable Advanced Security across the organization to ensure no pilot charges remain** Organization-wide disablement also changes the other team's intentional security coverage.
 
-**Explanation:** Defaults need clear ownership and budget review. The selected answer is automatic coverage reduces gaps but broadens cost scope.
+**Explanation:** Changing shared billing affects unrelated repositories beyond the pilot scope. The shared context requires scoped cleanup, not abandoning the approved pilot cleanup responsibility. Cleanup must target the reviewed owned scope while retaining other teams' intended product use. Organization-wide disablement also changes the other team's intentional security coverage.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops); [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops)
 
 ## L23-Q041
 
-Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Duplicate risk records: Repository findings and Defender recommendations are counted as independent vulnerabilities, doubling the dashboard total. Which next change most directly satisfies the stated requirement?
+A repository pilot has 12 unique active committers; a second approved pilot has 18, including five from the first. Finance approves the same product for these repositories only. What activation and estimate should be proposed?
 
-- **A. Disable only owned training capabilities after dependency review** Cleanup should match the lab's resource and billing boundary. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **B. Configure future-repository defaults deliberately where supported** Existing-resource activation and future defaults are separate controls. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. Correlate records by source identity and relationship** **Correct.** Multiple views can represent the same underlying issue. This directly addresses the constraint stated in this case.
+- **A. Enable the two named repositories with a combined estimate of 25 unique committers** **Correct.** Scoped activation matches the authorization, and 12 plus 18 minus 5 gives the deduplicated population.
+- **B. Enable the two repositories with an estimate of 30** The proposed scope is correct, but the estimate double-counts five shared identities.
+- **C. Enable the project with an estimate of 25** The estimate covers the two pilots, but project-wide activation adds unreviewed repositories.
+- **D. Enable only the first repository with an estimate of 12** This omits the second explicitly approved pilot and fails to meet the requested coverage.
 
-**Explanation:** Multiple views can represent the same underlying issue. The selected answer is correlate records by source identity and relationship.
+**Explanation:** Scoped activation matches the authorization, and 12 plus 18 minus 5 gives the deduplicated population. The proposed scope is correct, but the estimate double-counts five shared identities. The estimate covers the two pilots, but project-wide activation adds unreviewed repositories. This omits the second explicitly approved pilot and fails to meet the requested coverage.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
 
 ## L23-Q042
 
-Foundational · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D4.3.2](../../docs/objective-map.md)
 
-Duplicate risk records: Repository findings and Defender recommendations are counted as independent vulnerabilities, doubling the dashboard total. Which explanation best accounts for the behavior or constraint described?
+A regulated team uses GitHub Enterprise Cloud with data residency. It wants Defender DevOps onboarding next week and already has subscription Contributor. What is the best planning decision?
 
-- **A. Feature and connector lifecycles continue beyond the exercise** Closing a browser does not stop paid services. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **B. An onboarding action may not apply to later repositories** Current coverage does not prove automatic future coverage. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. Central aggregation is being mistaken for additional unique risk** **Correct.** The same finding may appear in different surfaces. This directly addresses the constraint stated in this case.
+- **A. Install the connector using a more privileged Azure role** Additional Azure privileges do not create support for an excluded source configuration.
+- **B. Report source-native scan findings as successful Defender ingestion** Source-native evidence may be useful but cannot be relabeled as an unperformed Defender integration.
+- **C. Record the documented hosting support gap and choose a supported evidence path with the platform owner** **Correct.** Azure destination permission does not remove the source-hosting support limitation in the current support matrix.
+- **D. Proceed because all GitHub Enterprise Cloud configurations are interchangeable** The documented data-residency exception prevents that assumption.
 
-**Explanation:** The same finding may appear in different surfaces. The selected answer is central aggregation is being mistaken for additional unique risk.
+**Explanation:** Additional Azure privileges do not create support for an excluded source configuration. Source-native evidence may be useful but cannot be relabeled as an unperformed Defender integration. Azure destination permission does not remove the source-hosting support limitation in the current support matrix. The documented data-residency exception prevents that assumption.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support)
 
 ## L23-Q043
 
-Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Duplicate risk records: Repository findings and Defender recommendations are counted as independent vulnerabilities, doubling the dashboard total. Which observation provides the strongest evidence that the requested result was achieved?
+A central security account can view Azure Repos findings but cannot enable features; the connector creator is leaving. Which transition addresses both constraints?
 
-- **A. The report distinguishes unique findings from their representations** **Correct.** The evidence should preserve traceability without double counting. This directly addresses the constraint stated in this case.
-- **B. The owned activation is removed and retained services are documented** The evidence must distinguish cleanup from shared dependencies. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **C. A newly created test repository receives the intended protection** The validation must include a future-resource scenario. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
+- **A. Keep the connector unchanged and transfer only the Azure resource group's tags** Destination metadata changes do not transfer source authorization or ensure continued connector access.
+- **B. Reauthorize the connector under a maintained approved source identity and retain separate settings authority** **Correct.** Connector continuity and billable activation are separate responsibilities, so preserve both the account lifecycle and permission boundaries.
+- **C. Give the departing creator permanent collection administration and retain its disabled account** Permanent broad access does not provide a maintained operational identity after account disablement.
+- **D. Give every security reader feature settings permission to avoid future dependency** This broadens billable settings authority without specifically repairing the connector's authorization lifecycle.
 
-**Explanation:** The evidence should preserve traceability without double counting. The selected answer is the report distinguishes unique findings from their representations.
+**Explanation:** Destination metadata changes do not transfer source authorization or ensure continued connector access. Connector continuity and billable activation are separate responsibilities, so preserve both the account lifecycle and permission boundaries. Permanent broad access does not provide a maintained operational identity after account disablement. This broadens billable settings authority without specifically repairing the connector's authorization lifecycle.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S8](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-devops); [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q044
 
-Applied · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Duplicate risk records: Repository findings and Defender recommendations are counted as independent vulnerabilities, doubling the dashboard total. Which execution safeguard most directly addresses the risk in this case?
+A merged report contains the shown records. The deployment concerns GitHub org/api at revision aaa. Which release interpretation preserves provenance?
 
-- **A. Do not remove security coverage used by other teams** Shared organizations require ownership-aware changes. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **B. Confirm the billing implications of automatic enablement** New repositories can introduce additional paid contributors. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. Keep original source identifiers during normalization** **Correct.** Removing provenance makes correlation unreliable. This directly addresses the constraint stated in this case.
+```text
+GitHub | org/api | revision aaa | alert 42 | high   | open, reachable
+GitHub | org/api | revision bbb | alert 42 | high   | fixed
+ADO    | org/api | revision ccc | alert 42 | medium | open
+```
 
-**Explanation:** Removing provenance makes correlation unreliable. The selected answer is keep original source identifiers during normalization.
+- **A. Release aaa because the latest row for that repository says fixed** A fix in bbb does not establish that the released revision aaa contains the remediation.
+- **B. Block solely on the medium Azure Repos row because it is newest** A different source namespace and revision do not override the matching reachable high finding.
+- **C. Merge all rows into one low-risk alert because repository names share api** Similar names do not establish identical code identity, revision, or remediation state.
+- **D. The high finding at aaa blocks that release; the fixed result at bbb does not prove aaa was repaired** **Correct.** Disposition must follow the exact source and released revision rather than a newer result from a different revision.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Explanation:** A fix in bbb does not establish that the released revision aaa contains the remediation. A different source namespace and revision do not override the matching reachable high finding. Similar names do not establish identical code identity, revision, or remediation state. Disposition must follow the exact source and released revision rather than a newer result from a different revision.
+
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q045
 
 Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Duplicate risk records: Repository findings and Defender recommendations are counted as independent vulnerabilities, doubling the dashboard total. The team selects this remedy: "Correlate records by source identity and relationship." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+GitHub inventory is visible in Defender, but the only security evidence is a pipeline log showing CodeQL initialization succeeded and analysis later failed. What should the readiness report say?
 
-- **A. Some billing and inventory updates are not instantaneous** Verify the current service's reporting behavior. That addresses a different requirement: Lab offboarding. It does not directly resolve this case's stated constraint.
-- **B. Automatic coverage reduces gaps but broadens cost scope** Defaults need clear ownership and budget review. That addresses a different requirement: Organization-wide activation. It does not directly resolve this case's stated constraint.
-- **C. Deduplication rules need maintenance across products** **Correct.** Different tools may also find genuinely distinct issues. This directly addresses the constraint stated in this case.
+- **A. The source is vulnerability-free because no code alerts arrived** A failed analysis cannot establish absence of vulnerabilities.
+- **B. The source connector is necessarily broken because analysis failed** A source analysis failure can occur independently of connector discovery or authorization health.
+- **C. Discovery succeeded; code analysis and downstream finding coverage remain unverified pending a successful scan** **Correct.** Initialization and inventory do not establish completed analysis or ingestion of its results.
+- **D. Defender integration is fully verified because repository discovery succeeded** Discovery proves only one part of the integration, not completed code scanning.
 
-**Explanation:** Different tools may also find genuinely distinct issues. The selected answer is deduplication rules need maintenance across products.
+**Explanation:** A failed analysis cannot establish absence of vulnerabilities. A source analysis failure can occur independently of connector discovery or authorization health. Initialization and inventory do not establish completed analysis or ingestion of its results. Discovery proves only one part of the integration, not completed code scanning.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-code-scanning?view=azure-devops); [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github)
 
 ## L23-Q046
 
-Foundational · [CP5](README.md#task-5) · [D4.3.2](../../docs/objective-map.md), [D4.3.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D4.3.3](../../docs/objective-map.md)
 
-Lab offboarding: The training exercise ends, but its paid security activation and connector remain enabled on a shared organization. Which next change most directly satisfies the stated requirement?
+A high-severity secret alert contains an active credential, while a high code alert has a plausible but unconfirmed input path. The release window is short. Which triage plan is best?
 
-- **A. Correlate records by source identity and relationship** Multiple views can represent the same underlying issue. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
-- **B. Disable only owned training capabilities after dependency review** **Correct.** Cleanup should match the lab's resource and billing boundary. This directly addresses the constraint stated in this case.
-- **C. Review licensing estimate and enable only the intended training repository** Security onboarding can create subscription charges. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
+- **A. Dismiss the code alert and defer credential rotation until both root causes are known** Neither disposition follows the known credential exposure or the unresolved reachability evidence.
+- **B. Rotate the credential and automatically close both alerts** Credential rotation addresses one exposure but supplies no remediation evidence for the distinct code finding.
+- **C. Revoke the active credential immediately, investigate its use, and assign time-bounded reachability analysis for the code alert** **Correct.** The confirmed credential exposure needs immediate containment while the unconfirmed path needs specific evidence and accountable follow-up.
+- **D. Fix the code alert first because all high severities have identical operational urgency** Equal severity labels do not erase the difference between confirmed active access and an unconfirmed path.
 
-**Explanation:** Cleanup should match the lab's resource and billing boundary. The selected answer is disable only owned training capabilities after dependency review.
+**Explanation:** Neither disposition follows the known credential exposure or the unresolved reachability evidence. Credential rotation addresses one exposure but supplies no remediation evidence for the distinct code finding. The confirmed credential exposure needs immediate containment while the unconfirmed path needs specific evidence and accountable follow-up. Equal severity labels do not erase the difference between confirmed active access and an unconfirmed path.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction); [S5](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-secret-scanning?view=azure-devops)
 
 ## L23-Q047
 
-Applied · [CP5](README.md#task-5) · [D4.3.2](../../docs/objective-map.md), [D4.3.3](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.3.3](../../docs/objective-map.md)
 
-Lab offboarding: The training exercise ends, but its paid security activation and connector remain enabled on a shared organization. Which explanation best accounts for the behavior or constraint described?
+Finance permits alert triage but has not approved standalone-product migration. An administrator proposes granting triagers Manage settings to migrate and then disabling that permission. Which response fits the documented boundaries?
 
-- **A. Feature and connector lifecycles continue beyond the exercise** **Correct.** Closing a browser does not stop paid services. This directly addresses the constraint stated in this case.
-- **B. Feature activation has a billing lifecycle** Training intent does not make paid capabilities free. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **C. Central aggregation is being mistaken for additional unique risk** The same finding may appear in different surfaces. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
+- **A. Grant Manage settings temporarily because the permission can later be revoked** Revoking access does not reverse a completed billing migration or its cross-organization effects.
+- **B. Let triagers migrate only one repository and reconcile billing afterward** The documented migration is not a repository-isolated billing change.
+- **C. Disable all repository security products until every triager has settings permission** Triage can proceed with the appropriate lifecycle permission without stopping unrelated coverage.
+- **D. Keep lifecycle-only triage permission and route the subscription-level irreversible migration through the billing decision process** **Correct.** Temporary permission does not narrow an irreversible subscription-wide migration or replace financial authorization.
 
-**Explanation:** Closing a browser does not stop paid services. The selected answer is feature and connector lifecycles continue beyond the exercise.
+**Explanation:** Revoking access does not reverse a completed billing migration or its cross-organization effects. The documented migration is not a repository-isolated billing change. Triage can proceed with the appropriate lifecycle permission without stopping unrelated coverage. Temporary permission does not narrow an irreversible subscription-wide migration or replace financial authorization.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S6](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-permissions?view=azure-devops)
 
 ## L23-Q048
 
-Applied · [CP5](README.md#task-5) · [D4.3.2](../../docs/objective-map.md), [D4.3.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Lab offboarding: The training exercise ends, but its paid security activation and connector remain enabled on a shared organization. Which observation provides the strongest evidence that the requested result was achieved?
+After connector onboarding, a dashboard count rises from 20 to 80. Source access was expanded yesterday, scan completion varies by repository, and leadership asks whether risk quadrupled. Which analysis is sound?
 
-- **A. The owned activation is removed and retained services are documented** **Correct.** The evidence must distinguish cleanup from shared dependencies. This directly addresses the constraint stated in this case.
-- **B. Only the scoped repository is enabled with acknowledged billing** The evidence should include scope rather than broad activation. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **C. The report distinguishes unique findings from their representations** The evidence should preserve traceability without double counting. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
+- **A. Compare like-for-like repository scope, scan freshness, and finding states before interpreting the trend** **Correct.** Collection expansion and scan timing can change observed counts independently of a fourfold change in underlying exposure.
+- **B. Report a fourfold risk increase because total findings rose fourfold** Raw counts across changed scope and coverage are not a controlled risk comparison.
+- **C. Report unchanged risk because connector changes never affect security posture** Scope changes can reveal important exposure, so dismissing the new findings is unjustified.
+- **D. Remove newly discovered repositories from all future reports to preserve the old baseline** A scoped baseline comparison can coexist with transparent reporting of newly covered repositories.
 
-**Explanation:** The evidence must distinguish cleanup from shared dependencies. The selected answer is the owned activation is removed and retained services are documented.
+**Explanation:** Collection expansion and scan timing can change observed counts independently of a fourfold change in underlying exposure. Raw counts across changed scope and coverage are not a controlled risk comparison. Scope changes can reveal important exposure, so dismissing the new findings is unjustified. A scoped baseline comparison can coexist with transparent reporting of newly covered repositories.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github); [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q049
 
-Applied · [CP5](README.md#task-5) · [D4.3.2](../../docs/objective-map.md), [D4.3.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.4](../../docs/objective-map.md)
 
-Lab offboarding: The training exercise ends, but its paid security activation and connector remain enabled on a shared organization. Which execution safeguard most directly addresses the risk in this case?
+A release dashboard must show two owned findings and one excluded foreign finding without leaking the foreign repository name. Which design best preserves auditability?
 
-- **A. Do not remove security coverage used by other teams** **Correct.** Shared organizations require ownership-aware changes. This directly addresses the constraint stated in this case.
-- **B. Use a dedicated lab and document cleanup ownership** Shared organizations can include unrelated billable contributors. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **C. Keep original source identifiers during normalization** Removing provenance makes correlation unreliable. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
+- **A. Publish owned finding details plus an exclusion count and a restricted provenance record** **Correct.** This supports scoped triage and auditable filtering while respecting the different visibility boundary.
+- **B. Publish all raw records because exclusions must always be publicly named** Auditability does not require exposing unrelated repository identities to the release audience.
+- **C. Discard foreign input without recording that filtering occurred** Silent removal prevents reviewers from distinguishing correct scope filtering from lost data.
+- **D. Combine the foreign finding into the owned critical count without identifying its source** That inflates the owned release signal and obscures the collection boundary.
 
-**Explanation:** Shared organizations require ownership-aware changes. The selected answer is do not remove security coverage used by other teams.
+**Explanation:** This supports scoped triage and auditable filtering while respecting the different visibility boundary. Auditability does not require exposing unrelated repository identities to the release audience. Silent removal prevents reviewers from distinguishing correct scope filtering from lost data. That inflates the owned release signal and obscures the collection boundary.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)
 
 ## L23-Q050
 
-Advanced · [CP5](README.md#task-5) · [D4.3.2](../../docs/objective-map.md), [D4.3.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D4.3.3](../../docs/objective-map.md), [D4.3.4](../../docs/objective-map.md)
 
-Lab offboarding: The training exercise ends, but its paid security activation and connector remain enabled on a shared organization. The team selects this remedy: "Disable only owned training capabilities after dependency review." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A security pilot checklist has green boxes for entitlement review, connector inventory, fixture triage, and local validation. No paid activation or live alert ingestion occurred. Which completion statement is accurate?
 
-- **A. Some billing and inventory updates are not instantaneous** **Correct.** Verify the current service's reporting behavior. This directly addresses the constraint stated in this case.
-- **B. Active-committer licensing may include historical contributors** Costs are not simply the number of current viewers. That addresses a different requirement: Paid feature onboarding. It does not directly resolve this case's stated constraint.
-- **C. Deduplication rules need maintenance across products** Different tools may also find genuinely distinct issues. That addresses a different requirement: Duplicate risk records. It does not directly resolve this case's stated constraint.
+- **A. Repository inventory proves the connector discovery lane; fixture outcomes also establish production enforcement** Discovery and fixture processing do not establish that paid provider enforcement or live alert ingestion occurred.
+- **B. A reviewed entitlement matrix is equivalent to a successful licensed scan** An eligibility decision is a prerequisite rather than execution evidence for the scanner.
+- **C. The offline workflow and prerequisite decisions passed; live security enforcement and Defender ingestion remain gated** **Correct.** Each evidence item supports its actual boundary, and none proves unexecuted live integration.
+- **D. Successful local validation proves the complete integration even without a live source alert** Local assertions do not cross the unexecuted provider scanning and ingestion boundaries.
 
-**Explanation:** Verify the current service's reporting behavior. The selected answer is some billing and inventory updates are not instantaneous.
+**Explanation:** Discovery and fixture processing do not establish that paid provider enforcement or live alert ingestion occurred. An eligibility decision is a prerequisite rather than execution evidence for the scanner. Each evidence item supports its actual boundary, and none proves unexecuted live integration. Local assertions do not cross the unexecuted provider scanning and ingestion boundaries.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-billing?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/devops-support); [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/devops/repos/security/configure-github-advanced-security-features?view=azure-devops); [S7](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github); [S11](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction)

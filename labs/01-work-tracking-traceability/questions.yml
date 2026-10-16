@@ -33,7 +33,19 @@
     },
     {
       "id": "S8",
-      "url": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management"
+      "url": "https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops"
+    },
+    {
+      "id": "S9",
+      "url": "https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects"
+    },
+    {
+      "id": "S10",
+      "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+    },
+    {
+      "id": "S11",
+      "url": "https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms"
     }
   ],
   "questions": [
@@ -44,77 +56,73 @@
         "D1.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which workflow change reduces the delay before developers discover conflicts with colleagues' changes?",
+      "question": "A GitHub pull request implements issue 42 in the same repository. The author wants the issue to close when the change reaches the default branch. Which description text expresses that intent?",
       "options": [
         {
           "key": "A",
-          "text": "Run the existing branch's local tests twice daily",
-          "rationale": "More isolated tests do not exercise integration. Short feedback cycles reduce integration batch size."
+          "text": "Related to #42",
+          "rationale": "This references the issue but does not use a supported automatic closing keyword."
         },
         {
           "key": "B",
-          "text": "Merge features only when the release branch freezes",
-          "rationale": "This postpones integration until the busiest period. Short feedback cycles reduce integration batch size."
+          "text": "Fixes PR 42",
+          "rationale": "This does not identify issue 42 using the supported issue-reference syntax."
         },
         {
           "key": "C",
-          "text": "Create a separate permanent branch for each developer",
-          "rationale": "Permanent isolation increases divergence rather than reducing it. Short feedback cycles reduce integration batch size."
+          "text": "AB#42",
+          "rationale": "This is Azure Boards reference syntax rather than a GitHub issue-closing instruction."
         },
         {
           "key": "D",
-          "text": "Integrate small pull requests into the default branch frequently",
-          "rationale": "Short feedback cycles reduce integration batch size."
+          "text": "Fixes #42",
+          "rationale": "A supported closing keyword followed by the local issue reference links the work and requests closure on the qualifying merge."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Short feedback cycles reduce integration batch size. More isolated tests do not exercise integration. This postpones integration until the busiest period. Permanent isolation increases divergence rather than reducing it.",
+      "explanation": "This references the issue but does not use a supported automatic closing keyword. This does not identify issue 42 using the supported issue-reference syntax. This is Azure Boards reference syntax rather than a GitHub issue-closing instruction. A supported closing keyword followed by the local issue reference links the work and requests closure on the qualifying merge.",
       "sourceIds": [
-        "S3"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "main:       A---B---C---D\nfeature:    A---E---F---G  (21 days unmerged)\nLocal tests on E, F, G: passed\nIntegration conflict at merge: shared dependency version"
-      }
+        "S1"
+      ]
     },
     {
       "id": "L01-Q002",
-      "checkpointId": "CP4",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.1"
+        "D1.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Why can every developer's local test suite pass while integration remains painful?",
+      "question": "An author adds AB#217 only to a GitHub pull request title, but no Azure Boards development link appears. Where should the reference be moved?",
       "options": [
         {
           "key": "A",
-          "text": "Passing unit tests means the branch is already compatible with main",
-          "rationale": "Tests against an isolated branch cannot establish integration compatibility. Local tests do not exercise concurrent team changes."
+          "text": "A pull request review comment",
+          "rationale": "Azure Boards does not create this development link from a review comment alone."
         },
         {
           "key": "B",
-          "text": "The default branch automatically imports every feature branch nightly",
-          "rationale": "GitHub does not merge branches merely because tests pass. Local tests do not exercise concurrent team changes."
+          "text": "The pull request description",
+          "rationale": "Azure Boards recognizes AB references in supported descriptions; the pull request title alone does not create the development link."
         },
         {
           "key": "C",
-          "text": "Long-lived branches defer integration feedback",
-          "rationale": "Local tests do not exercise concurrent team changes."
+          "text": "The pull request title with a closing keyword",
+          "rationale": "Adding a transition keyword does not make the unsupported title location create the link."
         },
         {
           "key": "D",
-          "text": "GitHub rejects merges containing more than one developer's commits",
-          "rationale": "Git has no such contributor-count merge restriction. Local tests do not exercise concurrent team changes."
+          "text": "A GitHub issue comment that quotes the pull request URL",
+          "rationale": "Quoting another artifact in an issue comment does not place the AB reference in the pull request description."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Local tests do not exercise concurrent team changes. Git has no such contributor-count merge restriction. Tests against an isolated branch cannot establish integration compatibility. GitHub does not merge branches merely because tests pass.",
+      "explanation": "Azure Boards does not create this development link from a review comment alone. Azure Boards recognizes AB references in supported descriptions; the pull request title alone does not create the development link. Adding a transition keyword does not make the unsupported title location create the link. Quoting another artifact in an issue comment does not place the AB reference in the pull request description.",
       "sourceIds": [
-        "S3"
+        "S8"
       ]
     },
     {
@@ -123,227 +131,226 @@
       "objectiveIds": [
         "D1.1.1"
       ],
-      "difficulty": "applied",
-      "question": "Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which observation best distinguishes improved integration flow from simply running more tests?",
+      "difficulty": "foundational",
+      "question": "A five-person team integrates changes daily and needs review before shared code changes. Which workflow fits GitHub flow?",
       "options": [
         {
           "key": "A",
-          "text": "Small changes reach the default branch regularly",
-          "rationale": "Integration cadence measures the requested workflow improvement."
+          "text": "Create a focused branch, open a pull request, review and test it, then merge",
+          "rationale": "GitHub flow uses focused branch-based changes with pull request review before integration."
         },
         {
           "key": "B",
-          "text": "The number of local test executions doubles",
-          "rationale": "Test volume does not establish integration cadence. Integration cadence measures the requested workflow improvement."
+          "text": "Maintain develop and release branches with scheduled monthly integration",
+          "rationale": "This can suit other release models but adds a delayed integration boundary to the daily focused workflow."
         },
         {
           "key": "C",
-          "text": "Each feature branch contains more commits before merging",
-          "rationale": "A larger unmerged batch preserves the original problem. Integration cadence measures the requested workflow improvement."
+          "text": "Use personal long-lived branches and review their combined quarterly merge",
+          "rationale": "A quarterly combined change delays the review and integration feedback the team needs."
         },
         {
           "key": "D",
-          "text": "The team publishes one larger release each quarter",
-          "rationale": "Release size does not measure early source integration. Integration cadence measures the requested workflow improvement."
+          "text": "Push directly to main and review the completed changes in a nightly batch",
+          "rationale": "That puts changes into shared code before the requested independent review."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Integration cadence measures the requested workflow improvement. Test volume does not establish integration cadence. A larger unmerged batch preserves the original problem. Release size does not measure early source integration.",
+      "explanation": "GitHub flow uses focused branch-based changes with pull request review before integration. This can suit other release models but adds a delayed integration boundary to the daily focused workflow. A quarterly combined change delays the review and integration feedback the team needs. That puts changes into shared code before the requested independent review.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L01-Q004",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D1.1.1"
-      ],
-      "difficulty": "applied",
-      "question": "Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. How should the team preserve merge quality while adopting frequent integration?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Allow direct pushes whenever the author reports local success",
-          "rationale": "Self-reported checks do not enforce review or shared validation. Frequent integration still needs enforceable quality controls."
-        },
-        {
-          "key": "B",
-          "text": "Disable required checks for changes under twenty lines",
-          "rationale": "Small changes can still introduce serious defects. Frequent integration still needs enforceable quality controls."
-        },
-        {
-          "key": "C",
-          "text": "Review only the quarterly release branch",
-          "rationale": "Late review misses the intended short feedback loop. Frequent integration still needs enforceable quality controls."
-        },
-        {
-          "key": "D",
-          "text": "Require review and automated checks before merging",
-          "rationale": "Frequent integration still needs enforceable quality controls."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Frequent integration still needs enforceable quality controls. Self-reported checks do not enforce review or shared validation. Small changes can still introduce serious defects. Late review misses the intended short feedback loop.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L01-Q005",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D1.1.1"
-      ],
-      "difficulty": "advanced",
-      "question": "Two teams must integrate into main at least daily. Main is deployed automatically, but an unfinished feature must remain unavailable for three weeks. Every production change must retain review and test evidence. Which design satisfies all three constraints?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Keep one feature branch for three weeks and run its tests daily.",
-          "rationale": "This preserves isolation but fails the requirement to integrate changes into main daily."
-        },
-        {
-          "key": "B",
-          "text": "Merge tested, reviewed increments behind a disabled feature flag; verify both flag states and schedule flag removal.",
-          "rationale": "Small reviewed integrations preserve evidence while a separate exposure control keeps unfinished behavior unavailable."
-        },
-        {
-          "key": "C",
-          "text": "Merge the unfinished feature daily and temporarily disable automatic deployment of every main change.",
-          "rationale": "This changes the established deployment behavior for unrelated work instead of controlling only the unfinished feature."
-        },
-        {
-          "key": "D",
-          "text": "Merge directly into main daily and perform one combined review immediately before launch.",
-          "rationale": "A later review does not provide the required review evidence for each production change."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "This preserves isolation but fails the requirement to integrate changes into main daily. Small reviewed integrations preserve evidence while a separate exposure control keeps unfinished behavior unavailable. This changes the established deployment behavior for unrelated work instead of controlling only the unfinished feature. A later review does not provide the required review evidence for each production change.",
-      "sourceIds": [
-        "S3",
-        "S8"
-      ]
-    },
-    {
-      "id": "L01-Q006",
       "checkpointId": "CP1",
       "objectiveIds": [
         "D1.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. What closes the gap between collecting a defect and beginning a useful response?",
+      "question": "An on-call engineer wants security discussion updates without receiving every issue notification from a busy repository. Which subscription choice best fits?",
       "options": [
         {
           "key": "A",
-          "text": "Create a second label called production",
-          "rationale": "A label without ownership does not route a response. Feedback needs an accountable recipient and response path."
+          "text": "Watch all activity and rely only on manually deleting unwanted email",
+          "rationale": "That subscribes to the noise the engineer wants to avoid rather than narrowing source categories."
         },
         {
           "key": "B",
-          "text": "Require customers to watch the repository",
-          "rationale": "The team still needs an accountable responder. Feedback needs an accountable recipient and response path."
+          "text": "Unwatch the repository and assume all security conversations still arrive",
+          "rationale": "Unwatching does not guarantee the specifically desired notification stream."
         },
         {
           "key": "C",
-          "text": "Close issues automatically after twenty-four hours",
-          "rationale": "Closing unreviewed reports suppresses rather than processes feedback. Feedback needs an accountable recipient and response path."
+          "text": "Star the repository and expect it to behave like a custom watch subscription",
+          "rationale": "Starring is distinct from configuring the repository notification events to receive."
         },
         {
           "key": "D",
-          "text": "Assign triage ownership and targeted issue notifications",
-          "rationale": "Feedback needs an accountable recipient and response path."
+          "text": "Use a custom repository notification subscription for the relevant event categories",
+          "rationale": "Custom notification settings can narrow subscribed event types without watching every discussion."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Feedback needs an accountable recipient and response path. A label without ownership does not route a response. The team still needs an accountable responder. Closing unreviewed reports suppresses rather than processes feedback.",
+      "explanation": "That subscribes to the noise the engineer wants to avoid rather than narrowing source categories. Unwatching does not guarantee the specifically desired notification stream. Starring is distinct from configuring the repository notification events to receive. Custom notification settings can narrow subscribed event types without watching every discussion.",
       "sourceIds": [
         "S4"
+      ]
+    },
+    {
+      "id": "L01-Q005",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D1.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "A feature contains three independently tracked implementation tasks in Azure Boards. Which link best represents the decomposition?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Related links with no hierarchy",
+          "rationale": "Related links show association but do not express the requested parent-child structure."
+        },
+        {
+          "key": "B",
+          "text": "Predecessor links from every task to the feature",
+          "rationale": "Dependency ordering is different from describing tasks that belong beneath a feature."
+        },
+        {
+          "key": "C",
+          "text": "Parent/Child links from the feature to its tasks",
+          "rationale": "Hierarchical links express that the tasks are constituent work beneath the feature."
+        },
+        {
+          "key": "D",
+          "text": "Duplicate links among all four items",
+          "rationale": "Duplicate links express redundant work records rather than a feature's decomposition."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Related links show association but do not express the requested parent-child structure. Dependency ordering is different from describing tasks that belong beneath a feature. Hierarchical links express that the tasks are constituent work beneath the feature. Duplicate links express redundant work records rather than a feature's decomposition.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L01-Q006",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A GitHub Project should move an issue to Done when that issue is closed. What is the appropriate first configuration?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Enable automatic archive after issue closure",
+          "rationale": "Archiving changes item visibility rather than explicitly setting the requested Status field."
+        },
+        {
+          "key": "B",
+          "text": "Apply a Done issue label when the issue closes",
+          "rationale": "An issue label is distinct from the Project Status field."
+        },
+        {
+          "key": "C",
+          "text": "Use the workflow that sets status when an item is added",
+          "rationale": "Item addition is a different event from the requested issue-closed transition."
+        },
+        {
+          "key": "D",
+          "text": "Enable the project's issue-closed status workflow",
+          "rationale": "The built-in workflow supports updating project status in response to issue closure."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Archiving changes item visibility rather than explicitly setting the requested Status field. An issue label is distinct from the Project Status field. Item addition is a different event from the requested issue-closed transition. The built-in workflow supports updating project status in response to issue closure.",
+      "sourceIds": [
+        "S5"
       ]
     },
     {
       "id": "L01-Q007",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.2"
+        "D1.1.3"
       ],
-      "difficulty": "applied",
-      "question": "Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. What capability is missing even though every report has been successfully stored?",
+      "difficulty": "foundational",
+      "question": "A pull request should link Azure Boards work item 91 without changing its workflow state. Which description is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Durable issue storage",
-          "rationale": "The reports are already present in Issues. Unassigned work can remain invisible to responders."
+          "text": "Resolved AB#91",
+          "rationale": "A recognized state or category name can request a transition, exceeding the link-only intent."
         },
         {
           "key": "B",
-          "text": "A second independent bug database",
-          "rationale": "Duplicate storage does not establish ownership or notification. Unassigned work can remain invisible to responders."
+          "text": "Implements validation for AB#91",
+          "rationale": "A plain AB reference creates linkage without a transition keyword."
         },
         {
           "key": "C",
-          "text": "A branch policy requiring two approvals",
-          "rationale": "Merge controls do not route incoming support reports. Unassigned work can remain invisible to responders."
+          "text": "Fixes AB#91",
+          "rationale": "A fixes keyword requests the documented state transition on the qualifying merge."
         },
         {
           "key": "D",
-          "text": "Issue capture alone does not establish a feedback loop",
-          "rationale": "Unassigned work can remain invisible to responders."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Unassigned work can remain invisible to responders. The reports are already present in Issues. Duplicate storage does not establish ownership or notification. Merge controls do not route incoming support reports.",
-      "sourceIds": [
-        "S4"
-      ]
-    },
-    {
-      "id": "L01-Q008",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D1.1.2"
-      ],
-      "difficulty": "applied",
-      "question": "Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. Which end-to-end check proves the triage path works rather than merely proving an issue exists?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A screenshot shows the issue count increased",
-          "rationale": "A count proves capture but not feedback processing. Acknowledgement proves the notification path is actionable."
-        },
-        {
-          "key": "B",
-          "text": "A test issue reaches its owner and receives acknowledgement",
-          "rationale": "Acknowledgement proves the notification path is actionable."
-        },
-        {
-          "key": "C",
-          "text": "The issue URL returns HTTP200",
-          "rationale": "Reachability does not establish owner notification or acknowledgement. Acknowledgement proves the notification path is actionable."
-        },
-        {
-          "key": "D",
-          "text": "The issue has the production label",
-          "rationale": "A label alone does not demonstrate responder action. Acknowledgement proves the notification path is actionable."
+          "text": "Closed AB#91",
+          "rationale": "A supported workflow state name requests closure rather than link-only behavior."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Acknowledgement proves the notification path is actionable. Reachability does not establish owner notification or acknowledgement. A label alone does not demonstrate responder action. A count proves capture but not feedback processing.",
+      "explanation": "A recognized state or category name can request a transition, exceeding the link-only intent. A plain AB reference creates linkage without a transition keyword. A fixes keyword requests the documented state transition on the qualifying merge. A supported workflow state name requests closure rather than link-only behavior.",
       "sourceIds": [
-        "S4"
+        "S8"
+      ]
+    },
+    {
+      "id": "L01-Q008",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A pull request in org/api fixes issue 28 in org/platform. Which closing reference identifies the intended issue?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Fixes org/platform#28",
+          "rationale": "The owner/repository-qualified reference distinguishes the issue in another repository."
+        },
+        {
+          "key": "B",
+          "text": "Fixes #28",
+          "rationale": "The unqualified reference targets issue 28 in the pull request's repository."
+        },
+        {
+          "key": "C",
+          "text": "Fixes platform/28",
+          "rationale": "This is not the supported cross-repository issue reference syntax."
+        },
+        {
+          "key": "D",
+          "text": "Fixes org/api#28",
+          "rationale": "This explicitly targets the issue in the wrong repository."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The owner/repository-qualified reference distinguishes the issue in another repository. The unqualified reference targets issue 28 in the pull request's repository. This is not the supported cross-repository issue reference syntax. This explicitly targets the issue in the wrong repository.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
@@ -352,74 +359,74 @@
       "objectiveIds": [
         "D1.1.2"
       ],
-      "difficulty": "applied",
-      "question": "Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. The team adds customer-report notifications. Which publication rule prevents the new route from creating another disclosure channel?",
+      "difficulty": "foundational",
+      "question": "A support queue repeatedly receives bugs without reproduction steps. Which repository feature best collects those details at issue creation?",
       "options": [
         {
           "key": "A",
-          "text": "Send access tokens only to private chat rooms",
-          "rationale": "A private room is still an unnecessary credential disclosure. Operational feedback can contain sensitive customer details."
+          "text": "An issue template that requires only priority and component labels",
+          "rationale": "These fields help routing but do not require the missing reproduction details."
         },
         {
           "key": "B",
-          "text": "Include complete environment variables to speed triage",
-          "rationale": "Environment values can contain live secrets. Operational feedback can contain sensitive customer details."
+          "text": "A pull request template with test instructions",
+          "rationale": "That structures proposed code changes rather than the initial bug report."
         },
         {
           "key": "C",
-          "text": "Avoid sending customer secrets into issue notifications",
-          "rationale": "Operational feedback can contain sensitive customer details."
+          "text": "A saved issue-search filter for titles containing bug",
+          "rationale": "A query selects existing reports but does not collect required reproduction evidence at creation."
         },
         {
           "key": "D",
-          "text": "Copy the full customer request body into every message",
-          "rationale": "Report payloads can contain sensitive customer information. Operational feedback can contain sensitive customer details."
+          "text": "An issue form with required reproduction and expected-behavior fields",
+          "rationale": "Structured issue forms can require the specific information needed for reproducible feedback."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Operational feedback can contain sensitive customer details. Report payloads can contain sensitive customer information. A private room is still an unnecessary credential disclosure. Environment values can contain live secrets.",
+      "explanation": "These fields help routing but do not require the missing reproduction details. That structures proposed code changes rather than the initial bug report. A query selects existing reports but does not collect required reproduction evidence at creation. Structured issue forms can require the specific information needed for reproducible feedback.",
       "sourceIds": [
-        "S4"
+        "S11"
       ]
     },
     {
       "id": "L01-Q010",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.2"
+        "D1.1.3"
       ],
-      "difficulty": "advanced",
-      "question": "Customer defect reports contain account details. The triage team needs rapid acknowledgement, but a previous all-events notification feed was ignored. Which response design best improves feedback without spreading unnecessary customer data?",
+      "difficulty": "foundational",
+      "question": "A reviewer sees GitHub issue #125 and Azure Boards work item AB#125 mentioned together. What should be assumed about these references?",
       "options": [
         {
           "key": "A",
-          "text": "Post every complete report to the engineering channel and assign an owner only after someone replies.",
-          "rationale": "This repeats the volume problem, distributes account details, and leaves initial ownership ambiguous."
+          "text": "They automatically identify a synchronized record when their numbers match",
+          "rationale": "The identifiers belong to separate products and number equality is not an identity mapping."
         },
         {
           "key": "B",
-          "text": "Keep all reports private and ask engineers to check the issue list whenever they have spare capacity.",
-          "rationale": "Privacy alone does not establish the required timely routing and acknowledgement process."
+          "text": "They refer to separate namespaces and may identify unrelated work",
+          "rationale": "The GitHub issue number and Azure Boards work-item ID are not interchangeable identifiers."
         },
         {
           "key": "C",
-          "text": "Route actionable redacted summaries to the responsible triage owner, link to the access-controlled report, and measure acknowledgement.",
-          "rationale": "This combines accountable response with targeted signal and controlled access to sensitive report details."
+          "text": "They are two aliases within the same repository-local namespace",
+          "rationale": "Azure Boards work-item identity is not the GitHub repository issue namespace."
         },
         {
           "key": "D",
-          "text": "Create a public issue containing the account details, then send only its link to the triage owner.",
-          "rationale": "A link-only message does not undo the disclosure created by publishing the underlying report."
+          "text": "AB#125 is resolved using whichever GitHub issue 125 is currently open",
+          "rationale": "The user interface selection does not determine the Azure Boards target identity."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "This repeats the volume problem, distributes account details, and leaves initial ownership ambiguous. Privacy alone does not establish the required timely routing and acknowledgement process. This combines accountable response with targeted signal and controlled access to sensitive report details. A link-only message does not undo the disclosure created by publishing the underlying report.",
+      "explanation": "The identifiers belong to separate products and number equality is not an identity mapping. The GitHub issue number and Azure Boards work-item ID are not interchangeable identifiers. Azure Boards work-item identity is not the GitHub repository issue namespace. The user interface selection does not determine the Azure Boards target identity.",
       "sourceIds": [
-        "S4"
+        "S8"
       ]
     },
     {
@@ -429,573 +436,575 @@
         "D1.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which integration design reduces status drift without forcing developers to abandon source links?",
+      "question": "A cross-team delivery cannot start database migration until a schema design task is complete. Which Azure Boards link captures the ordering?",
       "options": [
         {
           "key": "A",
-          "text": "Recreate every task manually in both systems",
-          "rationale": "Independent records preserve the synchronization problem. Shared identity prevents independent duplicate work records."
+          "text": "Tested By only",
+          "rationale": "A test relationship does not describe the prerequisite implementation task."
         },
         {
           "key": "B",
-          "text": "Use identical titles as the only cross-tool key",
-          "rationale": "Titles are mutable and not guaranteed unique. Shared identity prevents independent duplicate work records."
+          "text": "Predecessor/Successor",
+          "rationale": "Dependency links describe that one work item must precede another."
         },
         {
           "key": "C",
-          "text": "Let both systems create replacement tasks whenever status differs",
-          "rationale": "Competing record creation increases duplication. Shared identity prevents independent duplicate work records."
+          "text": "Parent/Child only",
+          "rationale": "Hierarchy describes decomposition and does not itself specify execution ordering."
         },
         {
           "key": "D",
-          "text": "Define one planning record and link repository activity",
-          "rationale": "Shared identity prevents independent duplicate work records."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Shared identity prevents independent duplicate work records. Independent records preserve the synchronization problem. Titles are mutable and not guaranteed unique. Competing record creation increases duplication.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L01-Q012",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Why does a common dashboard still show contradictory task status?",
-      "options": [
-        {
-          "key": "A",
-          "text": "GitHub commits automatically synchronize every custom Boards field",
-          "rationale": "The integration does not infer arbitrary workflow mappings. Duplicate records drift when updates are manual."
-        },
-        {
-          "key": "B",
-          "text": "Azure Boards ignores all repository links",
-          "rationale": "Supported links can exist even when planning records drift. Duplicate records drift when updates are manual."
-        },
-        {
-          "key": "C",
-          "text": "Independent trackers lack a common work-item relationship",
-          "rationale": "Duplicate records drift when updates are manual."
-        },
-        {
-          "key": "D",
-          "text": "A chart makes all underlying records authoritative",
-          "rationale": "Presentation does not resolve conflicting source records. Duplicate records drift when updates are manual."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Duplicate records drift when updates are manual. Presentation does not resolve conflicting source records. The integration does not infer arbitrary workflow mappings. Supported links can exist even when planning records drift.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L01-Q013",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "applied",
-      "question": "Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which evidence establishes a usable relationship between planning and implementation?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A pipeline passes without referencing a task",
-          "rationale": "Build success alone does not connect business work to source. Bidirectional navigation demonstrates the required traceability."
-        },
-        {
-          "key": "B",
-          "text": "A work item navigates to its corresponding pull request",
-          "rationale": "Bidirectional navigation demonstrates the required traceability."
-        },
-        {
-          "key": "C",
-          "text": "Matching task titles appear in screenshots",
-          "rationale": "Similar text does not provide a navigable stable relationship. Bidirectional navigation demonstrates the required traceability."
-        },
-        {
-          "key": "D",
-          "text": "Both tools contain the same developer display name",
-          "rationale": "Person identity does not identify the work-item relationship. Bidirectional navigation demonstrates the required traceability."
+          "text": "Duplicate",
+          "rationale": "A duplicate relation says the records represent redundant work, not sequential work."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Bidirectional navigation demonstrates the required traceability. Similar text does not provide a navigable stable relationship. Person identity does not identify the work-item relationship. Build success alone does not connect business work to source.",
+      "explanation": "A test relationship does not describe the prerequisite implementation task. Dependency links describe that one work item must precede another. Hierarchy describes decomposition and does not itself specify execution ordering. A duplicate relation says the records represent redundant work, not sequential work.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L01-Q012",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A GitHub pull request contains Fixes #63 but merges into release/2 rather than the repository default branch. What should the author expect?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The issue closes immediately because the closing keyword overrides the base branch",
+          "rationale": "The documented automatic behavior still depends on the qualifying default-branch merge."
+        },
+        {
+          "key": "B",
+          "text": "The issue closes when the pull request is approved, even before merge",
+          "rationale": "Approval is not the qualifying default-branch merge event."
+        },
+        {
+          "key": "C",
+          "text": "The keyword will not automatically close the issue on that non-default-branch merge",
+          "rationale": "GitHub's automatic closing behavior is tied to the qualifying default-branch merge."
+        },
+        {
+          "key": "D",
+          "text": "The issue closes when the source branch is deleted after the release merge",
+          "rationale": "Deleting a topic branch is not the documented issue-closing trigger."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The documented automatic behavior still depends on the qualifying default-branch merge. Approval is not the qualifying default-branch merge event. GitHub's automatic closing behavior is tied to the qualifying default-branch merge. Deleting a topic branch is not the documented issue-closing trigger.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L01-Q013",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "The Azure Boards app was installed for two selected GitHub repositories. A third repository needs work-item linking. What should be reviewed first?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Whether the third repository uses the same default branch name as the first two",
+          "rationale": "Matching branch names do not put the repository within the installation authorization."
+        },
+        {
+          "key": "B",
+          "text": "Whether the third repository has matching GitHub issue numbers",
+          "rationale": "Issue numbering does not authorize the app to receive that repository activity."
+        },
+        {
+          "key": "C",
+          "text": "The app installation's repository access and the Azure Boards connection scope",
+          "rationale": "The third repository must be within the authorized installation and connection before linking can work."
+        },
+        {
+          "key": "D",
+          "text": "Whether all three repositories have the same visibility",
+          "rationale": "Matching visibility does not replace the selected-repository installation scope."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Matching branch names do not put the repository within the installation authorization. Issue numbering does not authorize the app to receive that repository activity. The third repository must be within the authorized installation and connection before linking can work. Matching visibility does not replace the selected-repository installation scope.",
       "sourceIds": [
         "S2"
       ]
     },
     {
       "id": "L01-Q014",
-      "checkpointId": "CP2",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D1.1.3"
+        "D1.1.2"
       ],
-      "difficulty": "applied",
-      "question": "Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Before enabling two-way status automation, which decision prevents update loops and conflicting transitions?",
+      "difficulty": "foundational",
+      "question": "A public webhook endpoint receives a request claiming to be a GitHub issue event. What must the receiver verify before trusting its contents?",
       "options": [
         {
           "key": "A",
-          "text": "Use the newest visible dashboard as the source of truth",
-          "rationale": "A presentation surface does not define ownership. Competing updates can create inconsistent planning states."
+          "text": "Only that the JSON contains an issue title",
+          "rationale": "Anyone able to send JSON can invent the expected payload fields."
         },
         {
           "key": "B",
-          "text": "Remove stable identifiers from synchronized records",
-          "rationale": "That makes reliable matching harder. Competing updates can create inconsistent planning states."
+          "text": "Only that the request uses port 443",
+          "rationale": "HTTPS transport does not establish that GitHub originated this particular request."
         },
         {
           "key": "C",
-          "text": "Agree ownership of status transitions before integrating tools",
-          "rationale": "Competing updates can create inconsistent planning states."
+          "text": "The delivery signature using the configured webhook secret",
+          "rationale": "Signature verification checks request authenticity before event data drives workflow actions."
         },
         {
           "key": "D",
-          "text": "Allow every connector to overwrite every state",
-          "rationale": "Uncoordinated writers can fight over status. Competing updates can create inconsistent planning states."
+          "text": "Only that User-Agent contains GitHub",
+          "rationale": "A caller can forge a header value, so it is insufficient for authentication."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Competing updates can create inconsistent planning states. Uncoordinated writers can fight over status. A presentation surface does not define ownership. That makes reliable matching harder.",
+      "explanation": "Anyone able to send JSON can invent the expected payload fields. HTTPS transport does not establish that GitHub originated this particular request. Signature verification checks request authenticity before event data drives workflow actions. A caller can forge a header value, so it is insufficient for authentication.",
       "sourceIds": [
-        "S2"
+        "S10"
       ]
     },
     {
       "id": "L01-Q015",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "advanced",
-      "question": "GitHub Projects and Azure Boards must remain in use. Both currently recreate tasks when a status differs, producing duplicate records and update loops. Which integration contract best preserves the two tools while stopping the loops?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Match records by title and accept whichever status update arrives last.",
-          "rationale": "Mutable nonunique titles and arrival order cannot establish stable ownership or prevent conflicting writes."
-        },
-        {
-          "key": "B",
-          "text": "Assign stable cross-tool identifiers, define which system owns each synchronized field, and process repeated events idempotently.",
-          "rationale": "Stable identity, explicit field ownership, and retry-safe event handling address distinct causes of duplicate and conflicting updates."
-        },
-        {
-          "key": "C",
-          "text": "Increase event polling frequency and give both integrations permission to overwrite every field.",
-          "rationale": "Faster conflicting writers and broader authority amplify rather than resolve the synchronization ambiguity."
-        },
-        {
-          "key": "D",
-          "text": "Stop synchronizing all fields and create a replacement record in the other system whenever work changes team.",
-          "rationale": "Replacement records fragment traceability and preserve the duplicate-record lifecycle."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Mutable nonunique titles and arrival order cannot establish stable ownership or prevent conflicting writes. Stable identity, explicit field ownership, and retry-safe event handling address distinct causes of duplicate and conflicting updates. Faster conflicting writers and broader authority amplify rather than resolve the synchronization ambiguity. Replacement records fragment traceability and preserve the duplicate-record lifecycle.",
-      "sourceIds": [
-        "S2",
-        "S7"
-      ]
-    },
-    {
-      "id": "L01-Q016",
       "checkpointId": "CP5",
       "objectiveIds": [
         "D1.1.4"
       ],
       "difficulty": "foundational",
-      "question": "Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which change makes the release's business purpose auditable from its deployed source revision?",
+      "question": "An auditor wants to trace an Azure Boards requirement to its verification work. Which relation adds the appropriate test connection?",
       "options": [
         {
           "key": "A",
-          "text": "Rename all bugs to include the release date",
-          "rationale": "Dates do not uniquely identify the implementing change. The delivery chain must preserve relationships end to end."
+          "text": "A Related link to the test plan homepage",
+          "rationale": "A general association to a plan is weaker than the requested typed connection to the verifying test case."
         },
         {
           "key": "B",
-          "text": "Retain only the successful deployment screenshot",
-          "rationale": "A screenshot omits source-to-bug relationships. The delivery chain must preserve relationships end to end."
+          "text": "A Parent link making the test case the requirement owner",
+          "rationale": "A hierarchical relationship does not express that the test verifies this requirement."
         },
         {
           "key": "C",
-          "text": "Link bug, pull request, build, and release evidence",
-          "rationale": "The delivery chain must preserve relationships end to end."
+          "text": "A Tested By link to the relevant test case",
+          "rationale": "A typed test relationship connects the requirement to the case intended to verify it."
         },
         {
           "key": "D",
-          "text": "Add the release name to an unrelated dashboard",
-          "rationale": "An unconnected label does not establish the evidence chain. The delivery chain must preserve relationships end to end."
+          "text": "A hyperlink to the latest overall build status",
+          "rationale": "An aggregate run status does not identify the relevant test case or its requirement relationship."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The delivery chain must preserve relationships end to end. An unconnected label does not establish the evidence chain. Dates do not uniquely identify the implementing change. A screenshot omits source-to-bug relationships.",
+      "explanation": "A general association to a plan is weaker than the requested typed connection to the verifying test case. A hierarchical relationship does not express that the test verifies this requirement. A typed test relationship connects the requirement to the case intended to verify it. An aggregate run status does not identify the relevant test case or its requirement relationship.",
       "sourceIds": [
         "S6"
       ]
     },
     {
-      "id": "L01-Q017",
-      "checkpointId": "CP5",
+      "id": "L01-Q016",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.3"
       ],
       "difficulty": "applied",
-      "question": "Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Why does a successful deployment record alone fail this audit request?",
+      "question": "The description contains Fixes AB#101, AB#102, and AB#103. All three items must transition on the default-branch merge. Which revision achieves this?",
       "options": [
         {
           "key": "A",
-          "text": "Passing tests prove which customer report requested the fix",
-          "rationale": "Tests describe behavior but not necessarily its originating report. A green run alone cannot explain the fix."
+          "text": "Leave the text unchanged because the first keyword applies to every following item",
+          "rationale": "The documented multi-reference example transitions only the first item when the keyword is not repeated."
         },
         {
           "key": "B",
-          "text": "Deployment success does not identify business intent",
-          "rationale": "A green run alone cannot explain the fix."
+          "text": "Replace every reference with #101, #102, and #103",
+          "rationale": "Those are GitHub issue references rather than Azure Boards transition targets."
         },
         {
           "key": "C",
-          "text": "A successful deployment cannot have a commit identity",
-          "rationale": "Deployment systems can retain precise source provenance. A green run alone cannot explain the fix."
+          "text": "Move the list to the pull request title only",
+          "rationale": "Azure Boards does not create these work-item links from the title alone."
         },
         {
           "key": "D",
-          "text": "Bug reports are automatically deleted after deployment",
-          "rationale": "Deployment does not inherently remove planning records. A green run alone cannot explain the fix."
+          "text": "Fixes AB#101, Fixes AB#102, Fixes AB#103",
+          "rationale": "Repeating the transition keyword associates it with each work-item reference."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "A green run alone cannot explain the fix. Deployment systems can retain precise source provenance. Deployment does not inherently remove planning records. Tests describe behavior but not necessarily its originating report.",
+      "explanation": "The documented multi-reference example transitions only the first item when the keyword is not repeated. Those are GitHub issue references rather than Azure Boards transition targets. Azure Boards does not create these work-item links from the title alone. Repeating the transition keyword associates it with each work-item reference.",
       "sourceIds": [
-        "S6"
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Fixes AB#101, AB#102, and AB#103"
+      }
+    },
+    {
+      "id": "L01-Q017",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "A webhook receiver sometimes receives the same delivery twice. Creating two follow-up work items would corrupt the queue. Which receiver design addresses this?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assume GitHub delivers each event exactly once and remove duplicate checks",
+          "rationale": "Robust webhook handling must account for repeat deliveries."
+        },
+        {
+          "key": "B",
+          "text": "Assign a new random event identity on every retry",
+          "rationale": "A new random identity hides the fact that two requests represent the same delivery."
+        },
+        {
+          "key": "C",
+          "text": "Track a stable delivery identifier and make processing idempotent",
+          "rationale": "Delivery deduplication prevents repeat handling from creating duplicate work for the same event."
+        },
+        {
+          "key": "D",
+          "text": "Compare only the issue title and discard every later matching title",
+          "rationale": "Distinct events can legitimately share a title, so this can suppress real work."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Robust webhook handling must account for repeat deliveries. A new random identity hides the fact that two requests represent the same delivery. Delivery deduplication prevents repeat handling from creating duplicate work for the same event. Distinct events can legitimately share a title, so this can suppress real work.",
+      "sourceIds": [
+        "S7"
       ]
     },
     {
       "id": "L01-Q018",
       "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.1"
       ],
       "difficulty": "applied",
-      "question": "Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which reviewer navigation demonstrates the missing end-to-end relationship?",
+      "question": "Closing an issue sets its Project status to Done. The team also wants reopening to reset status, but the current documented built-in workflows do not promise that reverse mapping. What should the design say?",
       "options": [
         {
           "key": "A",
-          "text": "Bug to an arbitrary successful build",
-          "rationale": "Success does not show the build contains that fix. This connects delivered behavior to the original report."
+          "text": "Verify available workflows and implement an explicit reopen handler if needed",
+          "rationale": "The desired reverse transition needs confirmed product support or a separate tested automation."
         },
         {
           "key": "B",
-          "text": "Deployment to an unversioned local working directory",
-          "rationale": "Local mutable files do not establish delivered provenance. This connects delivered behavior to the original report."
+          "text": "Assume the issue-closed rule also handles the reopened event",
+          "rationale": "The documented direction does not establish that inverse event mapping."
         },
         {
           "key": "C",
-          "text": "The deployed commit can be traced back to its bug",
-          "rationale": "This connects delivered behavior to the original report."
+          "text": "Enable automatic archiving for closed items and leave reopened items archived",
+          "rationale": "Archive policy does not establish the requested active status transition."
         },
         {
           "key": "D",
-          "text": "Release to current main, regardless of deployed revision",
-          "rationale": "Main may have advanced beyond the deployed commit. This connects delivered behavior to the original report."
+          "text": "Set every item to In progress on a nightly schedule",
+          "rationale": "That also moves legitimately completed work and does not implement the event-specific rule."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "This connects delivered behavior to the original report. Main may have advanced beyond the deployed commit. Success does not show the build contains that fix. Local mutable files do not establish delivered provenance.",
+      "explanation": "The desired reverse transition needs confirmed product support or a separate tested automation. The documented direction does not establish that inverse event mapping. Archive policy does not establish the requested active status transition. That also moves legitimately completed work and does not implement the event-specific rule.",
       "sourceIds": [
-        "S6"
+        "S5"
       ]
     },
     {
       "id": "L01-Q019",
-      "checkpointId": "CP5",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.3"
       ],
       "difficulty": "applied",
-      "question": "Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. A release label can be moved by maintainers. What extra record protects this audit trail against later label movement?",
+      "question": "A task is blocked by an external team's issue, but both items are under different features. How should the relationship be recorded?",
       "options": [
         {
           "key": "A",
-          "text": "Trust the latest commit with the same message",
-          "rationale": "Commit messages are not unique content identity. Mutable labels can obscure the actual deployed version."
+          "text": "Move the blocked task beneath the external issue as its child",
+          "rationale": "That changes hierarchy merely to express a dependency between separately owned work."
         },
         {
           "key": "B",
-          "text": "Preserve immutable build identifiers with release records",
-          "rationale": "Mutable labels can obscure the actual deployed version."
+          "text": "Duplicate the external issue into the local feature and stop linking it",
+          "rationale": "Copying creates another record without a maintained dependency on the actual external work."
         },
         {
           "key": "C",
-          "text": "Store only the friendly release display name",
-          "rationale": "The display name is the mutable reference at issue. Mutable labels can obscure the actual deployed version."
+          "text": "Mention blocked in the task title without identifying the blocker",
+          "rationale": "The title alone does not provide a navigable relationship to the prerequisite."
         },
         {
           "key": "D",
-          "text": "Delete the build record after copying the label",
-          "rationale": "That removes the stable execution evidence. Mutable labels can obscure the actual deployed version."
+          "text": "Add a dependency link and keep each item's correct parent",
+          "rationale": "Ordering and decomposition are different relationships, so both can be represented without falsifying ownership."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Mutable labels can obscure the actual deployed version. The display name is the mutable reference at issue. That removes the stable execution evidence. Commit messages are not unique content identity.",
+      "explanation": "That changes hierarchy merely to express a dependency between separately owned work. Copying creates another record without a maintained dependency on the actual external work. The title alone does not provide a navigable relationship to the prerequisite. Ordering and decomposition are different relationships, so both can be represented without falsifying ownership.",
       "sourceIds": [
         "S6"
       ]
     },
     {
       "id": "L01-Q020",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.3"
       ],
-      "difficulty": "advanced",
-      "question": "An auditor must identify the customer bug fixed by last week’s release. The release tag has since moved, and main contains newer work. Which retained evidence supports the audit without relying on today’s branch or tag state?",
+      "difficulty": "applied",
+      "question": "A GitHub repository is connected to projects in two Azure DevOps organizations, both containing work item 460. Linking is inconsistent. What is the strongest diagnosis?",
       "options": [
         {
           "key": "A",
-          "text": "The current main commit, the moved tag, and the bug title printed in release notes.",
-          "rationale": "Current mutable references can identify newer code, while a title does not uniquely establish the originating bug."
+          "text": "Remove project filters because work-item IDs are only project-unique",
+          "rationale": "The IDs are organization-unique; the cross-organization connection is the relevant ambiguity."
         },
         {
           "key": "B",
-          "text": "The latest passing run plus every open bug with a matching release label.",
-          "rationale": "A later successful run and a broad label do not establish what last week’s release actually contained."
+          "text": "Rename one project so its work-item number changes",
+          "rationale": "Project display names do not change organization-level work-item identities."
         },
         {
           "key": "C",
-          "text": "The original producing run and source commit, its released artifact identity, and links through the implementing pull request to the stable bug record.",
-          "rationale": "The retained execution and content identities preserve the delivered revision, while explicit work relationships identify its business purpose."
+          "text": "Use the same AB text and rely on the last connected organization always winning",
+          "rationale": "An assumed connection-order precedence is not a reliable supported resolution rule."
         },
         {
           "key": "D",
-          "text": "A screenshot of the deployment-success message and the developer’s recollection of the bug number.",
-          "rationale": "The screenshot lacks a durable source-to-work chain, and recollection is not a stable shared audit relationship."
+          "text": "AB references can be ambiguous across connected organizations; consolidate the repository connection to one organization",
+          "rationale": "Work-item IDs are organization-unique, and Microsoft recommends one connected organization for predictable AB linking."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Current mutable references can identify newer code, while a title does not uniquely establish the originating bug. A later successful run and a broad label do not establish what last week’s release actually contained. The retained execution and content identities preserve the delivered revision, while explicit work relationships identify its business purpose. The screenshot lacks a durable source-to-work chain, and recollection is not a stable shared audit relationship.",
+      "explanation": "The IDs are organization-unique; the cross-organization connection is the relevant ambiguity. Project display names do not change organization-level work-item identities. An assumed connection-order precedence is not a reliable supported resolution rule. Work-item IDs are organization-unique, and Microsoft recommends one connected organization for predictable AB linking.",
       "sourceIds": [
-        "S6",
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "GitHub: org/api\nConnections: dev.azure.com/first-org and dev.azure.com/second-org\nBoth organizations contain a work item numbered 460."
+      }
+    },
+    {
+      "id": "L01-Q021",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "applied",
+      "question": "A maintainer manually links an issue to a pull request whose description has no closing keyword. Which evidence should confirm the intended automatic closure relationship?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The pull request source branch contains the issue number",
+          "rationale": "A naming convention does not prove the server-side closing relationship."
+        },
+        {
+          "key": "B",
+          "text": "The pull request title repeats the issue title",
+          "rationale": "Text similarity does not establish which issue the request is linked to close."
+        },
+        {
+          "key": "C",
+          "text": "The issue was assigned to the pull request author",
+          "rationale": "Shared ownership does not establish a closing implementation relationship."
+        },
+        {
+          "key": "D",
+          "text": "The issue and pull request linked-development sections showing the correct relationship",
+          "rationale": "An explicit verified link can establish the connection without relying only on description text."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A naming convention does not prove the server-side closing relationship. Text similarity does not establish which issue the request is linked to close. Shared ownership does not establish a closing implementation relationship. An explicit verified link can establish the connection without relying only on description text.",
+      "sourceIds": [
         "S1"
       ]
     },
     {
-      "id": "L01-Q021",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D1.3.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which repair should precede changing the work item's description again?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Enable anonymous repository access",
-          "rationale": "Public exposure is unnecessary for a scoped integration. Repository authorization and link syntax enable integration."
-        },
-        {
-          "key": "B",
-          "text": "Delete and recreate every Boards work item",
-          "rationale": "That is broader than repairing the integration relationship. Repository authorization and link syntax enable integration."
-        },
-        {
-          "key": "C",
-          "text": "Verify the Boards GitHub connection and supported linking syntax",
-          "rationale": "Repository authorization and link syntax enable integration."
-        },
-        {
-          "key": "D",
-          "text": "Add more copies of the plain URL",
-          "rationale": "Repeated text cannot restore connector authorization. Repository authorization and link syntax enable integration."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Repository authorization and link syntax enable integration. Repeated text cannot restore connector authorization. Public exposure is unnecessary for a scoped integration. That is broader than repairing the integration relationship.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
       "id": "L01-Q022",
-      "checkpointId": "CP3",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D1.3.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. The URL opens in a browser. Why might it still be absent from the development panel?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Azure Boards supports links only to Azure Repos",
-          "rationale": "The connected GitHub integration supports repository links. The connector must associate authorized repository events."
-        },
-        {
-          "key": "B",
-          "text": "GitHub pull requests never carry stable IDs",
-          "rationale": "Repository pull requests have stable identifiers. The connector must associate authorized repository events."
-        },
-        {
-          "key": "C",
-          "text": "A text URL is not necessarily a recognized development link",
-          "rationale": "The connector must associate authorized repository events."
-        },
-        {
-          "key": "D",
-          "text": "Any reachable URL must become a development link",
-          "rationale": "Reachability alone is not the integration contract. The connector must associate authorized repository events."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The connector must associate authorized repository events. Reachability alone is not the integration contract. The connected GitHub integration supports repository links. Repository pull requests have stable identifiers.",
-      "sourceIds": [
-        "S2"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "Repository URL: opens successfully\nWork-item description: https://github.com/example/service/pull/42\nDevelopment panel: No linked pull requests\nIntegration installation: repository access removed after move"
-      }
-    },
-    {
-      "id": "L01-Q023",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D1.3.5"
+        "D1.1.2"
       ],
       "difficulty": "applied",
-      "question": "Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which result differentiates a repaired connector from a work item containing an ordinary hyperlink?",
+      "question": "A bug form requires Expected behavior and Actual behavior, yet reports still contain only vague text. What improvement most directly strengthens feedback quality?",
       "options": [
         {
           "key": "A",
-          "text": "The work-item title contains the repository name",
-          "rationale": "A title is not a supported development relationship. Recognized links demonstrate integration rather than plain text."
+          "text": "Add a minimal reproducible example prompt and a triage check for usable evidence",
+          "rationale": "Structured prompts and triage validation address whether submitted content can reproduce the defect."
         },
         {
           "key": "B",
-          "text": "The work item displays the pull request in development links",
-          "rationale": "Recognized links demonstrate integration rather than plain text."
+          "text": "Require a higher-priority label before allowing report submission",
+          "rationale": "Priority classification does not supply reproducible steps."
         },
         {
           "key": "C",
-          "text": "The description renders blue underlined text",
-          "rationale": "Hyperlink rendering does not prove recognized integration. Recognized links demonstrate integration rather than plain text."
+          "text": "Require a target release field while keeping reproduction guidance unchanged",
+          "rationale": "A planned release can aid scheduling without addressing the missing reproduction evidence."
         },
         {
           "key": "D",
-          "text": "The repository home page is reachable",
-          "rationale": "That does not test work-item association. Recognized links demonstrate integration rather than plain text."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Recognized links demonstrate integration rather than plain text. Hyperlink rendering does not prove recognized integration. That does not test work-item association. A title is not a supported development relationship.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L01-Q024",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D1.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. The installation currently has account-wide access. Which authorization boundary should the repair retain?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Authorize only the repositories needed by the project",
-          "rationale": "Broad connector access expands the integration trust boundary."
-        },
-        {
-          "key": "B",
-          "text": "Authorize all private repositories to prevent future issues",
-          "rationale": "That broadens access beyond the participating scope. Broad connector access expands the integration trust boundary."
-        },
-        {
-          "key": "C",
-          "text": "Use the maintainer's unrestricted personal token",
-          "rationale": "A personal credential adds unnecessary authority and lifecycle dependence. Broad connector access expands the integration trust boundary."
-        },
-        {
-          "key": "D",
-          "text": "Grant write access to unrelated repositories",
-          "rationale": "Cross-tool links do not require that unrelated write scope. Broad connector access expands the integration trust boundary."
+          "text": "Route every report directly to implementation without triage",
+          "rationale": "Implementation assignment does not validate whether the report can be reproduced."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Broad connector access expands the integration trust boundary. That broadens access beyond the participating scope. A personal credential adds unnecessary authority and lifecycle dependence. Cross-tool links do not require that unrelated write scope.",
+      "explanation": "Structured prompts and triage validation address whether submitted content can reproduce the defect. Priority classification does not supply reproducible steps. A planned release can aid scheduling without addressing the missing reproduction evidence. Implementation assignment does not validate whether the report can be reproduced.",
       "sourceIds": [
-        "S2"
+        "S11"
+      ]
+    },
+    {
+      "id": "L01-Q023",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "A pull request was linked by AB#72 in its description. The author later removes that reference. Why can the link disappear from the GitHub development section?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The description-derived relationship becomes permanent after its first creation",
+          "rationale": "The documented AB development link can be removed with the reference text."
+        },
+        {
+          "key": "B",
+          "text": "That section's AB reference link depends on the description retaining the reference",
+          "rationale": "The documented integration removes the description-derived development link when the AB reference is removed."
+        },
+        {
+          "key": "C",
+          "text": "The issue reference automatically moves into the pull request title",
+          "rationale": "Removing description text does not establish supported title-based linking."
+        },
+        {
+          "key": "D",
+          "text": "The missing reference is restored automatically from the branch name",
+          "rationale": "A branch naming convention does not guarantee restoration of this description-derived relationship."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The documented AB development link can be removed with the reference text. The documented integration removes the description-derived development link when the AB reference is removed. Removing description text does not establish supported title-based linking. A branch naming convention does not guarantee restoration of this description-derived relationship.",
+      "sourceIds": [
+        "S8"
+      ]
+    },
+    {
+      "id": "L01-Q024",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "A webhook receiver performs slow external work before returning a response, causing delivery timeouts. Which design improves reliability?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Validate and enqueue the event promptly, acknowledge it, and process durable work asynchronously",
+          "rationale": "A fast response with durable background processing avoids tying delivery success to slow downstream work."
+        },
+        {
+          "key": "B",
+          "text": "Keep synchronous processing and retry the entire external workflow after each timeout",
+          "rationale": "This retains the timeout-sensitive request path and needs separate duplicate-side-effect handling."
+        },
+        {
+          "key": "C",
+          "text": "Return success immediately and keep the accepted work only in process memory",
+          "rationale": "A process crash can lose work already acknowledged to the sender."
+        },
+        {
+          "key": "D",
+          "text": "Increase the sender retry count without changing receiver processing",
+          "rationale": "More deliveries do not remove the slow synchronous acknowledgement bottleneck."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A fast response with durable background processing avoids tying delivery success to slow downstream work. This retains the timeout-sensitive request path and needs separate duplicate-side-effect handling. A process crash can lose work already acknowledged to the sender. More deliveries do not remove the slow synchronous acknowledgement bottleneck.",
+      "sourceIds": [
+        "S7"
       ]
     },
     {
       "id": "L01-Q025",
-      "checkpointId": "CP3",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.3.5"
+        "D1.1.4"
       ],
-      "difficulty": "advanced",
-      "question": "A GitHub repository is transferred to another owner just before release. Existing Boards work items still contain its old URLs, and the development panel no longer receives new pull-request links. Which recovery plan minimizes scope while validating the actual integration?",
+      "difficulty": "applied",
+      "question": "A delivery report lists only work-item titles. Auditors cannot navigate to implementation or tests. Which addition most improves traceability?",
       "options": [
         {
           "key": "A",
-          "text": "Make the transferred repository public, then wait for every old URL to redirect.",
-          "rationale": "Public exposure is unnecessary, and URL redirection alone does not establish connector authorization or event processing."
+          "text": "A count of successful builds for the whole repository",
+          "rationale": "An aggregate count cannot connect each work item to its actual implementation and verification."
         },
         {
           "key": "B",
-          "text": "Recreate the Boards project and import the repository again under its old name.",
-          "rationale": "This is a much broader change and risks fragmenting existing planning history without first repairing the connector."
+          "text": "A copied summary of the latest test result in every title",
+          "rationale": "Copies drift and do not retain an authoritative artifact relationship."
         },
         {
           "key": "C",
-          "text": "Restore the supported connector authorization for the transferred repository, test a fresh supported work-item link, and separately check historical link continuity.",
-          "rationale": "Authorization, new event linkage, and existing history are different concerns that need their own scoped verification."
+          "text": "A link to the newest default-branch commit for every work item",
+          "rationale": "The latest moving revision may not implement or verify each specific requirement."
         },
         {
           "key": "D",
-          "text": "Replace every old URL in descriptions and assume the development panel will recognize those text edits automatically.",
-          "rationale": "Plain-text edits do not repair missing repository authorization or prove recognized development relationships."
+          "text": "Stable work-item IDs and typed links to the actual code and verification artifacts",
+          "rationale": "Identifiers and relationships connect the business record to evidence that can be independently inspected."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Public exposure is unnecessary, and URL redirection alone does not establish connector authorization or event processing. This is a much broader change and risks fragmenting existing planning history without first repairing the connector. Authorization, new event linkage, and existing history are different concerns that need their own scoped verification. Plain-text edits do not repair missing repository authorization or prove recognized development relationships.",
+      "explanation": "An aggregate count cannot connect each work item to its actual implementation and verification. Copies drift and do not retain an authoritative artifact relationship. The latest moving revision may not implement or verify each specific requirement. Identifiers and relationships connect the business record to evidence that can be independently inspected.",
       "sourceIds": [
-        "S2"
+        "S6"
       ]
     },
     {
@@ -1004,269 +1013,269 @@
       "objectiveIds": [
         "D1.1.1"
       ],
-      "difficulty": "foundational",
-      "question": "Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. How can the team integrate this work without making the unfinished customer experience available?",
+      "difficulty": "applied",
+      "question": "A small fix has passed review and merged. The team wants to remove branch clutter while preserving the accepted implementation. What is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Expose the feature to every user after every merge",
-          "rationale": "Integration does not require universal exposure. Exposure can be separated from code integration."
+          "text": "Retain every merged topic branch as the required source of audit evidence",
+          "rationale": "The accepted pull request and reachable merged history can retain evidence without the obsolete name."
         },
         {
           "key": "B",
-          "text": "Skip the main-branch checks while the feature is incomplete",
-          "rationale": "Hidden functionality still changes shared code. Exposure can be separated from code integration."
+          "text": "Delete the merged topic branch after confirming the accepted pull request remains available",
+          "rationale": "Retiring the obsolete branch reference is compatible with retaining merged history and review evidence."
         },
         {
           "key": "C",
-          "text": "Merge incrementally behind a disabled feature flag",
-          "rationale": "Exposure can be separated from code integration."
+          "text": "Delete the issue relationship because the feature branch no longer exists",
+          "rationale": "Branch cleanup does not justify removing business-to-implementation traceability."
         },
         {
           "key": "D",
-          "text": "Keep the entire feature on an isolated branch until launch",
-          "rationale": "That abandons the daily integration requirement. Exposure can be separated from code integration."
+          "text": "Recreate the merged branch at the current main revision under the old name",
+          "rationale": "That introduces a misleading moving branch reference rather than preserving the original accepted relationship."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Exposure can be separated from code integration. That abandons the daily integration requirement. Integration does not require universal exposure. Hidden functionality still changes shared code.",
+      "explanation": "The accepted pull request and reachable merged history can retain evidence without the obsolete name. Retiring the obsolete branch reference is compatible with retaining merged history and review evidence. Branch cleanup does not justify removing business-to-implementation traceability. That introduces a misleading moving branch reference rather than preserving the original accepted relationship.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L01-Q027",
-      "checkpointId": "CP4",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D1.1.1"
+        "D1.1.3"
       ],
       "difficulty": "applied",
-      "question": "Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. What mistaken coupling made long-lived branches seem necessary?",
+      "question": "A project uses a custom Azure Boards workflow without a Resolved category. A valid Fixes AB reference is merged into the default branch. Which documented fallback should be checked?",
       "options": [
         {
           "key": "A",
-          "text": "Every feature flag requires a separate deployment",
-          "rationale": "Flags can separate exposure from deployment. That unnecessarily delays integration of safe changes."
+          "text": "The work item's previous state because Fixes never supports custom processes",
+          "rationale": "The documented category-based behavior can apply without a literal Resolved state."
         },
         {
           "key": "B",
-          "text": "Pull requests can merge only complete marketable features",
-          "rationale": "Teams can review safe increments before final launch. That unnecessarily delays integration of safe changes."
+          "text": "The first alphabetical state in any category",
+          "rationale": "The fallback uses workflow categories, not alphabetical ordering across all states."
         },
         {
           "key": "C",
-          "text": "Branch isolation was being used as a release mechanism",
-          "rationale": "That unnecessarily delays integration of safe changes."
+          "text": "The first available state in the Completed category",
+          "rationale": "The documented fix-keyword behavior falls back to Completed when the process has no Resolved state."
         },
         {
           "key": "D",
-          "text": "Git cannot store code for disabled features",
-          "rationale": "Source control does not require runtime exposure. That unnecessarily delays integration of safe changes."
+          "text": "The literal state Done regardless of process configuration",
+          "rationale": "Custom processes do not have to define a state with that exact name."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "That unnecessarily delays integration of safe changes. Source control does not require runtime exposure. Flags can separate exposure from deployment. Teams can review safe increments before final launch.",
+      "explanation": "The documented category-based behavior can apply without a literal Resolved state. The fallback uses workflow categories, not alphabetical ordering across all states. The documented fix-keyword behavior falls back to Completed when the process has no Resolved state. Custom processes do not have to define a state with that exact name.",
       "sourceIds": [
-        "S3"
-      ]
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Process categories:\nProposed: New\nInProgress: Active\nCompleted: Verified\nResolved: (none)"
+      }
     },
     {
       "id": "L01-Q028",
-      "checkpointId": "CP4",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D1.1.1"
       ],
       "difficulty": "applied",
-      "question": "Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. What acceptance test should cover the period between merge and launch?",
+      "question": "A custom GitHub Project workflow must update an item's Status using GraphQL. Which information is needed beyond the issue number?",
       "options": [
         {
           "key": "A",
-          "text": "The feature branch remains ahead of main",
-          "rationale": "That proves isolation rather than controlled integration. This confirms independent control of integration and exposure."
+          "text": "The issue number and the displayed Status option name only",
+          "rationale": "Project mutations require the Project item and field-option identities rather than just these labels."
         },
         {
           "key": "B",
-          "text": "The release notes mention the launch date",
-          "rationale": "Documentation does not verify runtime exposure. This confirms independent control of integration and exposure."
+          "text": "The repository node ID and issue number only",
+          "rationale": "These identify source content but not the Project field and target option."
         },
         {
           "key": "C",
-          "text": "All users can exercise the unfinished path immediately",
-          "rationale": "That violates the stated availability constraint. This confirms independent control of integration and exposure."
+          "text": "The Project item ID, Status field ID, and target single-select option ID",
+          "rationale": "The Project item and its field option have identities distinct from the repository issue number."
         },
         {
           "key": "D",
-          "text": "The merged feature remains hidden until explicitly enabled",
-          "rationale": "This confirms independent control of integration and exposure."
+          "text": "The Project ID and the issue URL only",
+          "rationale": "These omit the Project item and field-option identifiers required for the status update."
         }
       ],
       "correctAnswers": [
-        "D"
+        "C"
       ],
-      "explanation": "This confirms independent control of integration and exposure. That proves isolation rather than controlled integration. Documentation does not verify runtime exposure. That violates the stated availability constraint.",
+      "explanation": "Project mutations require the Project item and field-option identities rather than just these labels. These identify source content but not the Project field and target option. The Project item and its field option have identities distinct from the repository issue number. These omit the Project item and field-option identifiers required for the status update.",
       "sourceIds": [
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L01-Q029",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D1.1.1"
+        "D1.1.2"
       ],
       "difficulty": "applied",
-      "question": "Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. Which test obligation remains even when the flag defaults to disabled?",
+      "question": "A developer keeps missing requests for their own pull request reviews while receiving unrelated repository notifications. What should be checked first?",
       "options": [
         {
           "key": "A",
-          "text": "Test both enabled and disabled feature paths",
-          "rationale": "Hidden code can still affect shared application behavior."
+          "text": "The repository's default reviewer assignment rules only",
+          "rationale": "Assignment rules do not establish whether personal delivery channels and subscriptions are configured correctly."
         },
         {
           "key": "B",
-          "text": "Test only the enabled path on launch day",
-          "rationale": "The disabled path is the production default before launch. Hidden code can still affect shared application behavior."
+          "text": "The developer customizes issue labels but leaves notification settings unchanged",
+          "rationale": "Issue labels do not themselves route the requested pull request review notifications."
         },
         {
           "key": "C",
-          "text": "Skip regression tests because hidden code cannot affect shared services",
-          "rationale": "Shared initialization and dependencies can still change behavior. Hidden code can still affect shared application behavior."
+          "text": "The team adds the developer to every repository watch subscription",
+          "rationale": "Broader subscriptions can increase noise without diagnosing delivery of the specifically missing review requests."
         },
         {
           "key": "D",
-          "text": "Test the flag service but not the application paths",
-          "rationale": "The application must interpret both states correctly. Hidden code can still affect shared application behavior."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Hidden code can still affect shared application behavior. The disabled path is the production default before launch. Shared initialization and dependencies can still change behavior. The application must interpret both states correctly.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L01-Q030",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D1.1.1"
-      ],
-      "difficulty": "advanced",
-      "question": "A temporary launch flag has been enabled for all users for a month. Two applications consume the flag, one still has a disabled-state fallback, and the team wants to remove configuration debt safely. Which retirement sequence is strongest?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Delete the shared flag immediately because the primary application no longer needs its disabled state.",
-          "rationale": "The second consumer can still depend on that configuration and fallback behavior."
-        },
-        {
-          "key": "B",
-          "text": "Leave the flag permanently enabled and remove it from the team’s ownership list.",
-          "rationale": "This preserves the configuration dependency while removing accountability for its lifecycle."
-        },
-        {
-          "key": "C",
-          "text": "Change the default to disabled, remove the tests, and delete the flag after the next incident-free week.",
-          "rationale": "Changing the default can re-expose an obsolete path, and removing tests reduces confidence in the transition."
-        },
-        {
-          "key": "D",
-          "text": "Inventory both consumers, replace the temporary branches with the accepted behavior through reviewed changes, verify the consumers, then remove the unused flag.",
-          "rationale": "Dependency-aware code and configuration retirement removes debt without stranding a remaining consumer."
+          "text": "Personal notification routing, review-request subscriptions, and delivery channel settings",
+          "rationale": "The issue concerns the event subscription and channel used for the developer's requested reviews."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "The second consumer can still depend on that configuration and fallback behavior. This preserves the configuration dependency while removing accountability for its lifecycle. Changing the default can re-expose an obsolete path, and removing tests reduces confidence in the transition. Dependency-aware code and configuration retirement removes debt without stranding a remaining consumer.",
+      "explanation": "Assignment rules do not establish whether personal delivery channels and subscriptions are configured correctly. Issue labels do not themselves route the requested pull request review notifications. Broader subscriptions can increase noise without diagnosing delivery of the specifically missing review requests. The issue concerns the event subscription and channel used for the developer's requested reviews.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L01-Q030",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D1.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "A team copies the same external dependency into five local work items. Updates become inconsistent. What is the better tracking structure?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Delete the dependency record and mention its owner in chat",
+          "rationale": "That removes the stable object needed for durable cross-team traceability."
+        },
+        {
+          "key": "B",
+          "text": "Keep one authoritative dependency and link the dependent items to it",
+          "rationale": "A single maintained record with explicit relationships reduces divergent copies while preserving each consumer."
+        },
+        {
+          "key": "C",
+          "text": "Keep five copies and periodically replace their titles",
+          "rationale": "Periodic title synchronization does not create an authoritative source or typed dependencies."
+        },
+        {
+          "key": "D",
+          "text": "Merge all dependent tasks into the external dependency regardless of ownership",
+          "rationale": "The work items can depend on the same task while retaining separate implementation scope."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "That removes the stable object needed for durable cross-team traceability. A single maintained record with explicit relationships reduces divergent copies while preserving each consumer. Periodic title synchronization does not create an authoritative source or typed dependencies. The work items can depend on the same task while retaining separate implementation scope.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L01-Q031",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "An engineer manually adds a GitHub commit link from an Azure Boards work item, but validation rejects it. The commit exists. What prerequisite should be checked?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Whether the repository branch has an AB reference in every commit message",
+          "rationale": "A valid manual link still requires the repository connection; repeated references do not replace it."
+        },
+        {
+          "key": "B",
+          "text": "Whether the work item is in the Completed category",
+          "rationale": "Completion state does not establish repository authorization for link validation."
+        },
+        {
+          "key": "C",
+          "text": "Whether that GitHub repository is connected to the Azure Boards project",
+          "rationale": "Boards validates GitHub links against repositories connected to the project."
+        },
+        {
+          "key": "D",
+          "text": "Whether the GitHub issue and Boards work-item numbers match",
+          "rationale": "Cross-product numeric equality is not a connection prerequisite."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A valid manual link still requires the repository connection; repeated references do not replace it. Completion state does not establish repository authorization for link validation. Boards validates GitHub links against repositories connected to the project. Cross-product numeric equality is not a connection prerequisite.",
       "sourceIds": [
         "S8"
       ]
     },
     {
-      "id": "L01-Q031",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D1.1.2"
-      ],
-      "difficulty": "foundational",
-      "question": "Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which response improves the incident stream without hiding the real customer regression?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Notify every maintainer for each healthy build",
-          "rationale": "That preserves the low-value event overload. Signal quality matters more than notification count."
-        },
-        {
-          "key": "B",
-          "text": "Disable all build notifications permanently",
-          "rationale": "That discards the useful failure path as well. Signal quality matters more than notification count."
-        },
-        {
-          "key": "C",
-          "text": "Filter events and route actionable failures to owners",
-          "rationale": "Signal quality matters more than notification count."
-        },
-        {
-          "key": "D",
-          "text": "Increase the maximum number of automatically created issues",
-          "rationale": "More capacity does not improve signal quality. Signal quality matters more than notification count."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Signal quality matters more than notification count. More capacity does not improve signal quality. That preserves the low-value event overload. That discards the useful failure path as well.",
-      "sourceIds": [
-        "S4"
-      ]
-    },
-    {
       "id": "L01-Q032",
-      "checkpointId": "CP1",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D1.1.2"
+        "D1.1.1"
       ],
-      "difficulty": "foundational",
-      "question": "Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Why did adding more issue automation make response less reliable?",
+      "difficulty": "applied",
+      "question": "A pull request expands from a small validation fix into an unrelated user-interface redesign. Review time rises sharply. Which adjustment best supports focused flow?",
       "options": [
         {
           "key": "A",
-          "text": "GitHub cannot assign owners to automatically created issues",
-          "rationale": "Automation can route ownership when configured. Identical treatment hides important events among routine activity."
+          "text": "Combine all remaining planned features into this request to minimize pull request count",
+          "rationale": "Reducing request count by increasing unrelated scope makes the review problem larger."
         },
         {
           "key": "B",
-          "text": "Notification frequency automatically ranks business impact",
-          "rationale": "Volume does not determine urgency or customer effect. Identical treatment hides important events among routine activity."
+          "text": "Remove reviewers and merge once the branch builds",
+          "rationale": "That bypasses review rather than addressing the overly broad change."
         },
         {
           "key": "C",
-          "text": "An issue count is the same measure as incident quality",
-          "rationale": "More records can mean more duplicate noise. Identical treatment hides important events among routine activity."
+          "text": "Create a permanent branch for the request and defer integration indefinitely",
+          "rationale": "A long-lived branch postpones feedback without resolving the change's mixed scope."
         },
         {
           "key": "D",
-          "text": "Unfiltered automation creates noise without prioritization",
-          "rationale": "Identical treatment hides important events among routine activity."
+          "text": "Split unrelated work into separate reviewed changes with their own acceptance criteria",
+          "rationale": "Focused changes reduce review scope and preserve the reason each implementation exists."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Identical treatment hides important events among routine activity. Automation can route ownership when configured. Volume does not determine urgency or customer effect. More records can mean more duplicate noise.",
+      "explanation": "Reducing request count by increasing unrelated scope makes the review problem larger. That bypasses review rather than addressing the overly broad change. A long-lived branch postpones feedback without resolving the change's mixed scope. Focused changes reduce review scope and preserve the reason each implementation exists.",
       "sourceIds": [
-        "S4"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "Build event deliveries: 3\nUnique delivery identifier: evt-837\nIssues opened: #211, #212, #213\nIncident fingerprint: identical"
-      }
+        "S3"
+      ]
     },
     {
       "id": "L01-Q033",
@@ -1275,188 +1284,189 @@
         "D1.1.2"
       ],
       "difficulty": "applied",
-      "question": "Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which test demonstrates improved routing while preserving the important failure signal?",
+      "question": "A signed webhook's event header says push, but the receiver processes it as issues because both payloads contain repository information. What should the receiver do?",
       "options": [
         {
           "key": "A",
-          "text": "The webhook receiver returns success for every payload",
-          "rationale": "Transport acknowledgement does not establish actionable triage. The test verifies routing without duplicating healthy events."
+          "text": "Dispatch only supported event types and validate each event's expected action and payload shape",
+          "rationale": "Authentication establishes origin; event-specific validation establishes the appropriate workflow behavior."
         },
         {
           "key": "B",
-          "text": "A simulated regression creates one actionable assigned issue",
-          "rationale": "The test verifies routing without duplicating healthy events."
+          "text": "Use the presence of repository data as sufficient proof of an issues event",
+          "rationale": "Repository data occurs in multiple event types and does not identify issue semantics."
         },
         {
           "key": "C",
-          "text": "A healthy run creates ten notification issues",
-          "rationale": "That measures noise rather than useful failure routing. The test verifies routing without duplicating healthy events."
+          "text": "Skip signature verification because the payload type will be checked",
+          "rationale": "Schema checks do not authenticate who sent the payload."
         },
         {
           "key": "D",
-          "text": "All notification issues are automatically closed",
-          "rationale": "Closing records does not prove response. The test verifies routing without duplicating healthy events."
+          "text": "Treat every push as an issue-close event to keep the queue current",
+          "rationale": "Push and issue lifecycle events have different semantics and effects."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The test verifies routing without duplicating healthy events. That measures noise rather than useful failure routing. Closing records does not prove response. Transport acknowledgement does not establish actionable triage.",
+      "explanation": "Authentication establishes origin; event-specific validation establishes the appropriate workflow behavior. Repository data occurs in multiple event types and does not identify issue semantics. Schema checks do not authenticate who sent the payload. Push and issue lifecycle events have different semantics and effects.",
       "sourceIds": [
-        "S4"
+        "S7",
+        "S10"
       ]
     },
     {
       "id": "L01-Q034",
-      "checkpointId": "CP1",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D1.1.2"
+        "D1.1.1"
       ],
       "difficulty": "applied",
-      "question": "Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Webhook retries are enabled for reliability. What prevents them from generating parallel investigations of one incident?",
+      "question": "Two pull requests implement different parts of one GitHub issue. Only the second completes its acceptance criteria. How should the first describe its relationship?",
       "options": [
         {
           "key": "A",
-          "text": "Wait for a human to delete duplicates after each release",
-          "rationale": "Manual cleanup leaves conflicting live records in the meantime. Retries should not create multiple competing work items."
+          "text": "Use Fixes on the first request because any partial implementation completes the issue",
+          "rationale": "A closing instruction on partial work misrepresents the remaining acceptance criteria."
         },
         {
           "key": "B",
-          "text": "Deduplicate repeated events for the same incident",
-          "rationale": "Retries should not create multiple competing work items."
+          "text": "Omit all issue references from both requests until after release",
+          "rationale": "That loses useful implementation traceability during review."
         },
         {
           "key": "C",
-          "text": "Generate a fresh issue identifier for every retry",
-          "rationale": "That intentionally creates duplicate work. Retries should not create multiple competing work items."
+          "text": "Close the issue manually when the first request opens",
+          "rationale": "Opening partial implementation is not evidence that the acceptance criteria are complete."
         },
         {
           "key": "D",
-          "text": "Disable the incident owner field",
-          "rationale": "Missing ownership does not deduplicate events. Retries should not create multiple competing work items."
+          "text": "Use a non-closing reference, reserving the closing relationship for the completing change",
+          "rationale": "A reference preserves partial-work traceability without prematurely asserting the issue is complete."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Retries should not create multiple competing work items. That intentionally creates duplicate work. Missing ownership does not deduplicate events. Manual cleanup leaves conflicting live records in the meantime.",
+      "explanation": "A closing instruction on partial work misrepresents the remaining acceptance criteria. That loses useful implementation traceability during review. Opening partial implementation is not evidence that the acceptance criteria are complete. A reference preserves partial-work traceability without prematurely asserting the issue is complete.",
       "sourceIds": [
-        "S7"
+        "S1"
       ]
     },
     {
       "id": "L01-Q035",
-      "checkpointId": "CP1",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.1.2"
+        "D1.1.4"
       ],
-      "difficulty": "advanced",
-      "question": "A filter reduced release-notification volume by90percent. Responders now see normal production failures, but one new rollback failure type was silently excluded. Which improvement preserves the lower noise while correcting the coverage gap?",
+      "difficulty": "applied",
+      "question": "A work item is marked Done, but its linked acceptance test failed in the release build. Which response best restores trustworthy quality traceability?",
       "options": [
         {
           "key": "A",
-          "text": "Restore notifications for every healthy and failed build event.",
-          "rationale": "This recovers coverage by recreating the original noise problem rather than addressing the missed failure class."
+          "text": "Treat any linked test as proof of success regardless of outcome",
+          "rationale": "A relationship to a test does not establish that the test passed."
         },
         {
           "key": "B",
-          "text": "Extend the actionable event taxonomy, add regression examples for missed failures, retain owners, and deduplicate retries by delivery identity.",
-          "rationale": "Targeted coverage tests and retry-safe routing address both false negatives and duplicate noise."
+          "text": "Change the requirement wording silently to exclude the failing behavior",
+          "rationale": "Unreviewed acceptance changes do not establish a valid completed requirement."
         },
         {
           "key": "C",
-          "text": "Close any unrecognized event automatically and review only the monthly issue count.",
-          "rationale": "This continues hiding novel important failures, while an aggregate count cannot verify correct routing."
+          "text": "Reopen or otherwise correct the work state under the team's workflow and link the failed verification and repair",
+          "rationale": "The business state should agree with the recorded acceptance evidence and visible follow-up work."
         },
         {
           "key": "D",
-          "text": "Increase the filter threshold until no rollback event can produce a notification.",
-          "rationale": "Suppressing the event class removes the operational feedback that the incident showed was necessary."
+          "text": "Delete the failed test link so the completed item remains green",
+          "rationale": "Removing contrary evidence obscures the quality gap rather than resolving it."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "This recovers coverage by recreating the original noise problem rather than addressing the missed failure class. Targeted coverage tests and retry-safe routing address both false negatives and duplicate noise. This continues hiding novel important failures, while an aggregate count cannot verify correct routing. Suppressing the event class removes the operational feedback that the incident showed was necessary.",
+      "explanation": "A relationship to a test does not establish that the test passed. Unreviewed acceptance changes do not establish a valid completed requirement. The business state should agree with the recorded acceptance evidence and visible follow-up work. Removing contrary evidence obscures the quality gap rather than resolving it.",
       "sourceIds": [
-        "S4",
-        "S7"
+        "S6"
       ]
     },
     {
       "id": "L01-Q036",
       "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.1"
       ],
-      "difficulty": "foundational",
-      "question": "Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. What must the hotfix author add to distinguish the intended report from its similarly named counterpart?",
+      "difficulty": "applied",
+      "question": "The Project's built-in workflow sets Done on issue closure, but the team needs a status rule involving three custom fields and an external approval. Which implementation choice is sound?",
       "options": [
         {
           "key": "A",
-          "text": "The author's display name",
-          "rationale": "One person can work on several similar bugs. Stable identifiers disambiguate similar business descriptions."
+          "text": "Add the external approval URL as a Project text field and keep only the close rule",
+          "rationale": "Storing an approval reference does not implement evaluation of the multi-field condition."
         },
         {
           "key": "B",
-          "text": "The planned release month",
-          "rationale": "Dates are not stable unique work-item keys. Stable identifiers disambiguate similar business descriptions."
+          "text": "Run the built-in close rule repeatedly until the custom fields agree",
+          "rationale": "Repeating the same event rule does not add external approval evaluation."
         },
         {
           "key": "C",
-          "text": "Reference the exact work-item identifier in the pull request",
-          "rationale": "Stable identifiers disambiguate similar business descriptions."
+          "text": "Use a supported custom automation with explicit permissions and tests for the multi-field rule",
+          "rationale": "Complex external conditions need an implemented integration rather than an assumed built-in behavior."
         },
         {
           "key": "D",
-          "text": "Only the current bug title",
-          "rationale": "The title is already ambiguous. Stable identifiers disambiguate similar business descriptions."
+          "text": "Use only the issue-closed event and ignore later approval changes",
+          "rationale": "That cannot correctly evaluate a condition whose external approval may arrive after closure."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Stable identifiers disambiguate similar business descriptions. The title is already ambiguous. One person can work on several similar bugs. Dates are not stable unique work-item keys.",
+      "explanation": "Storing an approval reference does not implement evaluation of the multi-field condition. Repeating the same event rule does not add external approval evaluation. Complex external conditions need an implemented integration rather than an assumed built-in behavior. That cannot correctly evaluate a condition whose external approval may arrive after closure.",
       "sourceIds": [
-        "S6"
+        "S5",
+        "S9"
       ]
     },
     {
       "id": "L01-Q037",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.1.3"
       ],
       "difficulty": "applied",
-      "question": "Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. Why is a title-only link fragile even if it identifies today's intended bug?",
+      "question": "A branch is created from an Azure Boards work item and later used to open a GitHub pull request. What should be verified before relying on automatic traceability?",
       "options": [
         {
           "key": "A",
-          "text": "The merge commit automatically chooses the oldest bug",
-          "rationale": "No such inference establishes business intent. Names can change or be reused across projects."
+          "text": "The branch name includes the numeric work-item ID",
+          "rationale": "The convention is useful context but does not prove the expected server-side links exist."
         },
         {
           "key": "B",
-          "text": "A reviewer can infer identity safely from matching wording",
-          "rationale": "Similar wording is the ambiguity to avoid. Names can change or be reused across projects."
+          "text": "The pull request author also owns the work item",
+          "rationale": "Matching ownership does not establish the development artifact relationship."
         },
         {
           "key": "C",
-          "text": "Human-readable titles are not unique traceability keys",
-          "rationale": "Names can change or be reused across projects."
+          "text": "The work item's development links identify the actual pull request and subsequent merge commit",
+          "rationale": "The documented link propagation should be checked against the actual artifacts rather than inferred from branch naming alone."
         },
         {
           "key": "D",
-          "text": "Work-item titles are immutable globally unique identifiers",
-          "rationale": "Titles can change and be reused. Names can change or be reused across projects."
+          "text": "The branch is visible in both users local clones",
+          "rationale": "Local visibility does not verify the actual Boards development link or merge association."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Names can change or be reused across projects. Titles can change and be reused. No such inference establishes business intent. Similar wording is the ambiguity to avoid.",
+      "explanation": "The convention is useful context but does not prove the expected server-side links exist. Matching ownership does not establish the development artifact relationship. The documented link propagation should be checked against the actual artifacts rather than inferred from branch naming alone. Local visibility does not verify the actual Boards development link or merge association.",
       "sourceIds": [
-        "S6"
+        "S8"
       ]
     },
     {
@@ -1466,499 +1476,509 @@
         "D1.1.4"
       ],
       "difficulty": "applied",
-      "question": "Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. What should the reviewer follow from the hotfix source revision?",
+      "question": "A requirement is reworded after its original acceptance test passed. What traceability update is most useful?",
       "options": [
         {
           "key": "A",
-          "text": "A developer's personal notes without a stable record",
-          "rationale": "Private mutable notes are not a durable shared relationship. A unique relationship prevents mistaken audit conclusions."
+          "text": "Record the requirement revision and reassess whether linked tests verify the new criteria",
+          "rationale": "Test evidence is meaningful against the requirement version and behavior it actually verified."
         },
         {
           "key": "B",
-          "text": "The release label's current dashboard color",
-          "rationale": "Visual state does not identify the originating defect. A unique relationship prevents mistaken audit conclusions."
+          "text": "Keep the old pass as unconditional proof for any future requirement text",
+          "rationale": "Changed criteria can invalidate the relevance of earlier validation."
         },
         {
           "key": "C",
-          "text": "The hotfix commit resolves to one specific bug record",
-          "rationale": "A unique relationship prevents mistaken audit conclusions."
+          "text": "Remove all historical test records whenever wording changes",
+          "rationale": "History remains useful if its applicable revision is clear."
         },
         {
           "key": "D",
-          "text": "The newest bug sharing its title",
-          "rationale": "Recency does not establish the actual relationship. A unique relationship prevents mistaken audit conclusions."
+          "text": "Create a new unrelated test title without linking it to the requirement",
+          "rationale": "An unlinked title does not restore navigable requirement-to-verification traceability."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A unique relationship prevents mistaken audit conclusions. Recency does not establish the actual relationship. Private mutable notes are not a durable shared relationship. Visual state does not identify the originating defect.",
+      "explanation": "Test evidence is meaningful against the requirement version and behavior it actually verified. Changed criteria can invalidate the relevance of earlier validation. History remains useful if its applicable revision is clear. An unlinked title does not restore navigable requirement-to-verification traceability.",
       "sourceIds": [
         "S6"
       ]
     },
     {
       "id": "L01-Q039",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D1.1.4"
+        "D1.3.5"
       ],
       "difficulty": "applied",
-      "question": "Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. The organization uses several Boards projects. Which check prevents the stable number from resolving in the wrong context?",
+      "question": "The Azure Boards app needs one additional private repository after an approved pilot. Which change fits the requested access boundary?",
       "options": [
         {
           "key": "A",
-          "text": "Strip every project qualifier from the reference",
-          "rationale": "That can remove information needed for disambiguation. Identifiers may require project qualification across boundaries."
+          "text": "Add only that repository to the installation and connection, then verify the existing integration still works",
+          "rationale": "Scoped onboarding extends access deliberately without replacing the governed integration."
         },
         {
           "key": "B",
-          "text": "Replace the numeric ID with a shorter title",
-          "rationale": "That reintroduces title ambiguity. Identifiers may require project qualification across boundaries."
+          "text": "Grant the app all current and future repositories to avoid reviewing selection",
+          "rationale": "That expands access beyond the newly approved repository."
         },
         {
           "key": "C",
-          "text": "Confirm the target project and repository context",
-          "rationale": "Identifiers may require project qualification across boundaries."
+          "text": "Replace the app with an individual administrator's broad personal token",
+          "rationale": "The requested scope extension does not require shifting to broader personal credentials."
         },
         {
           "key": "D",
-          "text": "Assume all project-local identifiers mean the same task",
-          "rationale": "Identifier scope must match the target system. Identifiers may require project qualification across boundaries."
+          "text": "Make the repository public solely to avoid configuring app access",
+          "rationale": "Visibility is a separate security decision rather than a substitute for authorized integration scope."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Identifiers may require project qualification across boundaries. Identifier scope must match the target system. That can remove information needed for disambiguation. That reintroduces title ambiguity.",
+      "explanation": "Scoped onboarding extends access deliberately without replacing the governed integration. That expands access beyond the newly approved repository. The requested scope extension does not require shifting to broader personal credentials. Visibility is a separate security decision rather than a substitute for authorized integration scope.",
       "sourceIds": [
-        "S6"
+        "S2"
       ]
     },
     {
       "id": "L01-Q040",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.1.2"
+      ],
+      "difficulty": "applied",
+      "question": "A receiver acknowledged a webhook, then crashed before its background work was durably queued. GitHub shows delivery success, but no work item exists. Which design corrects this failure window?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Acknowledge the event and store it in a process-local queue",
+          "rationale": "A crash can lose the in-memory event after the sender has seen success."
+        },
+        {
+          "key": "B",
+          "text": "Persist the accepted event durably before acknowledgement and retry processing idempotently",
+          "rationale": "Durability before success closes the lost-event window, while idempotency controls duplicate retries."
+        },
+        {
+          "key": "C",
+          "text": "Acknowledge first and rely only on GitHub to retry failed HTTP deliveries",
+          "rationale": "An acknowledged delivery is not a failed HTTP delivery for the sender to retry."
+        },
+        {
+          "key": "D",
+          "text": "Persist only the issue title and reconstruct the event on restart",
+          "rationale": "The title lacks stable event identity and lifecycle details needed for correct recovery."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A crash can lose the in-memory event after the sender has seen success. Durability before success closes the lost-event window, while idempotency controls duplicate retries. An acknowledged delivery is not a failed HTTP delivery for the sender to retry. The title lacks stable event identity and lifecycle details needed for correct recovery.",
+      "sourceIds": [
+        "S7"
+      ]
+    },
+    {
+      "id": "L01-Q041",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.1.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Two projects in one Azure DevOps organization link GitHub changes to work items 600 and 601. A proposed fix renumbers items because the engineer assumes IDs are project-local. What is the correct response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep the organization-unique IDs and diagnose repository connection and supported reference placement",
+          "rationale": "Work-item IDs are unique within the organization; project-local numeric collision is not the cause to fix."
+        },
+        {
+          "key": "B",
+          "text": "Renumber both items until their IDs match their GitHub issue numbers",
+          "rationale": "Cross-product number equality is not required and does not repair integration scope."
+        },
+        {
+          "key": "C",
+          "text": "Connect the same repository to a second organization so the IDs become project-local",
+          "rationale": "Another organization can add ambiguity rather than correcting the mistaken identifier model."
+        },
+        {
+          "key": "D",
+          "text": "Replace AB references with project names only",
+          "rationale": "A project name without a work-item reference does not identify the target work item."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Work-item IDs are unique within the organization; project-local numeric collision is not the cause to fix. Cross-product number equality is not required and does not repair integration scope. Another organization can add ambiguity rather than correcting the mistaken identifier model. A project name without a work-item reference does not identify the target work item.",
+      "sourceIds": [
+        "S8",
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Organization: contoso\nProject Alpha: work item 600\nProject Beta: work item 601\nThe GitHub repository is installed for the expected organization."
+      }
+    },
+    {
+      "id": "L01-Q042",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "One GitHub pull request completes issue 18 and Azure Boards work item 913. It must close the GitHub issue but only link the Boards item for a later business review. Which description meets both requirements?",
+      "options": [
+        {
+          "key": "A",
+          "text": "AB#18; #913",
+          "rationale": "This swaps the two identifier namespaces and fails to express the requested effects."
+        },
+        {
+          "key": "B",
+          "text": "Fixes #18; implementation for AB#913",
+          "rationale": "The GitHub closing keyword and plain Boards reference express different intended lifecycle effects."
+        },
+        {
+          "key": "C",
+          "text": "Fixes #18; Fixes AB#913",
+          "rationale": "This also requests the Boards state transition the business review must postpone."
+        },
+        {
+          "key": "D",
+          "text": "Related to #18; Fixes AB#913",
+          "rationale": "This omits GitHub automatic closure and requests the wrong Boards lifecycle effect."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "This swaps the two identifier namespaces and fails to express the requested effects. The GitHub closing keyword and plain Boards reference express different intended lifecycle effects. This also requests the Boards state transition the business review must postpone. This omits GitHub automatic closure and requests the wrong Boards lifecycle effect.",
+      "sourceIds": [
+        "S1",
+        "S8"
+      ]
+    },
+    {
+      "id": "L01-Q043",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A validly signed issue event is replayed after a previous successful delivery, and the issue was subsequently reopened. The automation creates a follow-up only once per close event. What is the best handling?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Create another follow-up because a valid signature guarantees a new event",
+          "rationale": "A signature authenticates content but does not establish uniqueness."
+        },
+        {
+          "key": "B",
+          "text": "Trust the payload action alone and skip delivery tracking",
+          "rationale": "An action value does not prevent a replay from repeating the same side effect."
+        },
+        {
+          "key": "C",
+          "text": "Authenticate the request, deduplicate its delivery identity, and process lifecycle events with their current-state rules",
+          "rationale": "Authenticity, duplicate identity, and legitimate later state changes are separate checks needed for correct lifecycle handling."
+        },
+        {
+          "key": "D",
+          "text": "Ignore all future events sharing that issue number",
+          "rationale": "Issue-level suppression also discards the legitimate reopen and later close events."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A signature authenticates content but does not establish uniqueness. An action value does not prevent a replay from repeating the same side effect. Authenticity, duplicate identity, and legitimate later state changes are separate checks needed for correct lifecycle handling. Issue-level suppression also discards the legitimate reopen and later close events.",
+      "sourceIds": [
+        "S7",
+        "S10"
+      ]
+    },
+    {
+      "id": "L01-Q044",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D1.1.1"
+      ],
+      "difficulty": "advanced",
+      "question": "A Project supports close-to-Done via a built-in workflow and a custom reopen-to-In progress handler. Reopening changes the issue state but leaves Status Done. What evidence best narrows the fault?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Inspect only the issue-closed built-in rule because Done was the last visible status",
+          "rationale": "The missing update belongs to the custom reopen event path, not necessarily the working close rule."
+        },
+        {
+          "key": "B",
+          "text": "Retry the Project mutation with the issue number as the Project item ID",
+          "rationale": "The issue number and Project item identity are different identifiers."
+        },
+        {
+          "key": "C",
+          "text": "Inspect the reopen event delivery, custom handler authorization and item mutation, separately from the built-in close rule",
+          "rationale": "The failed direction belongs to the explicitly implemented custom path, so inspect its event and update chain."
+        },
+        {
+          "key": "D",
+          "text": "Verify only that the webhook request returned HTTP 200",
+          "rationale": "Acknowledgement alone does not establish authorization or completion of the Project field mutation."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The missing update belongs to the custom reopen event path, not necessarily the working close rule. The issue number and Project item identity are different identifiers. The failed direction belongs to the explicitly implemented custom path, so inspect its event and update chain. Acknowledgement alone does not establish authorization or completion of the Project field mutation.",
+      "sourceIds": [
+        "S5",
+        "S9"
+      ]
+    },
+    {
+      "id": "L01-Q045",
       "checkpointId": "CP5",
       "objectiveIds": [
         "D1.1.4"
       ],
       "difficulty": "advanced",
-      "question": "A support organization has several projects and two similarly named defects. A hotfix request specifies only “Fix customer sign-in.” The release must remain traceable even if the defect title is later edited. Which authoring policy best addresses the ambiguity?",
+      "question": "An auditor follows a work item to a pull request that merged, but the deployed artifact came from an earlier commit. The work item is marked release-verified. What should be corrected?",
       "options": [
         {
           "key": "A",
-          "text": "Require the stable target work-item identity with the correct project context, then validate that relationship in pull-request review.",
-          "rationale": "Stable identity resolves mutable-title ambiguity, while review confirms the link refers to the intended business problem."
+          "text": "Use the successful merge check as sufficient release verification",
+          "rationale": "A merge check verifies a source candidate, not inclusion in the deployed older artifact."
         },
         {
           "key": "B",
-          "text": "Require the current title and the author’s initials in every commit message.",
-          "rationale": "Both are descriptive metadata rather than a unique durable work-item relationship."
+          "text": "Link only the latest default-branch build and keep release-verified",
+          "rationale": "A moving latest run can differ from the artifact actually deployed."
         },
         {
           "key": "C",
-          "text": "Permit title-only references if an automated text search returns one result at merge time.",
-          "rationale": "A unique search result today can change later and does not establish a persistent explicit relationship."
+          "text": "Link the actual build and deployed revision, then verify the requirement against that artifact before claiming release completion",
+          "rationale": "A merged implementation is distinct from evidence that the deployed artifact contains and verifies that change."
         },
         {
           "key": "D",
-          "text": "Assign the same release label to all similar bugs so the reviewer can choose one during the audit.",
-          "rationale": "A shared label groups records but defers rather than resolves which specific defect the hotfix addresses."
+          "text": "Mark the older artifact verified because its own tests passed",
+          "rationale": "Those tests cannot establish that the artifact contains the later requirement implementation."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A merge check verifies a source candidate, not inclusion in the deployed older artifact. A moving latest run can differ from the artifact actually deployed. A merged implementation is distinct from evidence that the deployed artifact contains and verifies that change. Those tests cannot establish that the artifact contains the later requirement implementation.",
+      "sourceIds": [
+        "S6",
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Work item: release-verified\nLinked PR merge commit: bbb222\nDeployed artifact source: aaa111\nDeployment timestamp: after the PR merge"
+      }
+    },
+    {
+      "id": "L01-Q046",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A customer reports the same symptom as an existing issue, but reproduces it on a different supported version with different steps. The queue is overloaded. What is the best triage decision?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare reproduction and affected-version evidence before linking as duplicate or creating distinct work",
+          "rationale": "Similar symptoms can arise from different defects, so classification should follow technical evidence."
+        },
+        {
+          "key": "B",
+          "text": "Classify as duplicate using symptom text alone and preserve the new version only as a comment",
+          "rationale": "A symptom match is insufficient when reproduction and supported-version behavior may differ."
+        },
+        {
+          "key": "C",
+          "text": "Create separate work automatically for every report regardless of reproduction",
+          "rationale": "This avoids false merging but can duplicate a single confirmed underlying defect."
+        },
+        {
+          "key": "D",
+          "text": "Replace the old reproduction with the new steps without retaining version history",
+          "rationale": "That obscures whether one defect or distinct version-specific failures are represented."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Stable identity resolves mutable-title ambiguity, while review confirms the link refers to the intended business problem. Both are descriptive metadata rather than a unique durable work-item relationship. A unique search result today can change later and does not establish a persistent explicit relationship. A shared label groups records but defers rather than resolves which specific defect the hotfix addresses.",
+      "explanation": "Similar symptoms can arise from different defects, so classification should follow technical evidence. A symptom match is insufficient when reproduction and supported-version behavior may differ. This avoids false merging but can duplicate a single confirmed underlying defect. That obscures whether one defect or distinct version-specific failures are represented.",
       "sourceIds": [
+        "S11",
         "S6"
       ]
     },
     {
-      "id": "L01-Q041",
-      "checkpointId": "CP2",
+      "id": "L01-Q047",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "foundational",
-      "question": "State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Which change aligns the board field with the team's actual agreed completion transition?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Delete all project status fields",
-          "rationale": "That removes planning information rather than reconciling it. Issue state and project fields need coordinated rules."
-        },
-        {
-          "key": "B",
-          "text": "Align project automation with the agreed lifecycle",
-          "rationale": "Issue state and project fields need coordinated rules."
-        },
-        {
-          "key": "C",
-          "text": "Rename the field to Completed without changing automation",
-          "rationale": "A label change does not synchronize behavior. Issue state and project fields need coordinated rules."
-        },
-        {
-          "key": "D",
-          "text": "Reopen every correctly closed issue",
-          "rationale": "That reverses correct source state instead of fixing mapping. Issue state and project fields need coordinated rules."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Issue state and project fields need coordinated rules. A label change does not synchronize behavior. That reverses correct source state instead of fixing mapping. That removes planning information rather than reconciling it.",
-      "sourceIds": [
-        "S5"
-      ]
-    },
-    {
-      "id": "L01-Q042",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "foundational",
-      "question": "State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Why can the issue be closed while the custom project field remains In Progress?",
-      "options": [
-        {
-          "key": "A",
-          "text": "All custom project fields mirror issue state automatically",
-          "rationale": "Custom field automation needs explicit supported configuration. Project automation has its own configuration."
-        },
-        {
-          "key": "B",
-          "text": "The issue closure failed because the board still shows In Progress",
-          "rationale": "The two representations can diverge. Project automation has its own configuration."
-        },
-        {
-          "key": "C",
-          "text": "GitHub prevents projects from containing closed issues",
-          "rationale": "Closed issues can remain in project views. Project automation has its own configuration."
-        },
-        {
-          "key": "D",
-          "text": "Closing an issue does not guarantee every custom field updates",
-          "rationale": "Project automation has its own configuration."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Project automation has its own configuration. Custom field automation needs explicit supported configuration. The two representations can diverge. Closed issues can remain in project views.",
-      "sourceIds": [
-        "S5"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "Issue #42: CLOSED\nProject field Status: In Progress\nProject automation: item-added sets Status=Todo\nNo closed-issue automation configured"
-      }
-    },
-    {
-      "id": "L01-Q043",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "applied",
-      "question": "State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. What should an integration regression test assert after a representative merge?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The dashboard page loads without an error",
-          "rationale": "Page availability does not verify transition mapping. Both planning representations must reflect the same transition."
-        },
-        {
-          "key": "B",
-          "text": "A test merge produces the expected issue and project states",
-          "rationale": "Both planning representations must reflect the same transition."
-        },
-        {
-          "key": "C",
-          "text": "Only the pull request merged",
-          "rationale": "That omits both planning representations. Both planning representations must reflect the same transition."
-        },
-        {
-          "key": "D",
-          "text": "Only the issue closed",
-          "rationale": "That leaves the reported custom-field defect untested. Both planning representations must reflect the same transition."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Both planning representations must reflect the same transition. That omits both planning representations. That leaves the reported custom-field defect untested. Page availability does not verify transition mapping.",
-      "sourceIds": [
-        "S5"
-      ]
-    },
-    {
-      "id": "L01-Q044",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
-      ],
-      "difficulty": "applied",
-      "question": "State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. How should the team trial a rule that changes project states across many records?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Test automation on a disposable work item first",
-          "rationale": "State rules can unexpectedly modify existing planning records."
-        },
-        {
-          "key": "B",
-          "text": "Activate it immediately for every existing customer item",
-          "rationale": "That risks unintended mass updates. State rules can unexpectedly modify existing planning records."
-        },
-        {
-          "key": "C",
-          "text": "Remove the audit trail to reduce clutter",
-          "rationale": "The state change still needs reviewable evidence. State rules can unexpectedly modify existing planning records."
-        },
-        {
-          "key": "D",
-          "text": "Give the automation an unrestricted account token",
-          "rationale": "Broad authority is unnecessary for a trial. State rules can unexpectedly modify existing planning records."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "State rules can unexpectedly modify existing planning records. That risks unintended mass updates. The state change still needs reviewable evidence. Broad authority is unnecessary for a trial.",
-      "sourceIds": [
-        "S5"
-      ]
-    },
-    {
-      "id": "L01-Q045",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D1.1.3"
+        "D1.1.4"
       ],
       "difficulty": "advanced",
-      "question": "Closing an issue must set its project status to Done. Reopening it must return it to the active queue. A current automation handles only newly added items. Which change and test plan most directly establishes the two required transitions?",
+      "question": "A release contains a feature branch spanning four requirements, two passed tests, and one unresolved requirement. The team wants an auditable partial release. Which plan is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Rename the default status to Done and verify that the board loads.",
-          "rationale": "A display-name change and page availability do not implement either lifecycle transition."
+          "text": "Close the unresolved requirement and file an unlinked note after deployment",
+          "rationale": "That hides incomplete scope instead of recording an auditable release decision."
         },
         {
           "key": "B",
-          "text": "Create a one-time bulk update of every existing item and keep the item-added rule unchanged.",
-          "rationale": "A bulk correction does not handle future close or reopen events."
+          "text": "Separate the releasable changes where feasible and trace each included requirement to its implementation and acceptance result",
+          "rationale": "An explicit inclusion boundary with per-requirement evidence supports a partial release without claiming unfinished work."
         },
         {
           "key": "C",
-          "text": "Add the supported close and reopen workflow mappings, then exercise both events on a disposable item and inspect the issue and project states.",
-          "rationale": "The configuration and two-direction test cover the actual missing lifecycle behavior without mutating unrelated planning records."
+          "text": "Mark all requirements complete because at least two tests passed",
+          "rationale": "Some passing tests do not establish the unresolved requirement's acceptance."
         },
         {
           "key": "D",
-          "text": "Run only a closed-item count query and infer that project status must match it.",
-          "rationale": "A count of issue states does not prove that the separate custom project field changed correctly."
+          "text": "Use the feature branch name as the only release scope record",
+          "rationale": "A branch label does not enumerate included requirements or their verification states."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "A display-name change and page availability do not implement either lifecycle transition. A bulk correction does not handle future close or reopen events. The configuration and two-direction test cover the actual missing lifecycle behavior without mutating unrelated planning records. A count of issue states does not prove that the separate custom project field changed correctly.",
+      "explanation": "That hides incomplete scope instead of recording an auditable release decision. An explicit inclusion boundary with per-requirement evidence supports a partial release without claiming unfinished work. Some passing tests do not establish the unresolved requirement's acceptance. A branch label does not enumerate included requirements or their verification states.",
       "sourceIds": [
-        "S5"
-      ]
-    },
-    {
-      "id": "L01-Q046",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D1.3.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. Which permission change restores least privilege for this training integration?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Restrict the installation to the training repository",
-          "rationale": "The connector needs access only to participating repositories."
-        },
-        {
-          "key": "B",
-          "text": "Make every unrelated repository public",
-          "rationale": "Public exposure is not a connector-scope remedy. The connector needs access only to participating repositories."
-        },
-        {
-          "key": "C",
-          "text": "Delete the organization's private repositories",
-          "rationale": "That is destructive and unrelated to the access requirement. The connector needs access only to participating repositories."
-        },
-        {
-          "key": "D",
-          "text": "Give the connector a second account-wide credential",
-          "rationale": "Another broad identity preserves the problem. The connector needs access only to participating repositories."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The connector needs access only to participating repositories. Public exposure is not a connector-scope remedy. That is destructive and unrelated to the access requirement. Another broad identity preserves the problem.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L01-Q047",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D1.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. What explains visibility of repositories outside the lab's intended scope?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A work-item link always grants account-wide GitHub access",
-          "rationale": "A link alone does not define that installation scope. Visibility follows granted repository access rather than lab intent."
-        },
-        {
-          "key": "B",
-          "text": "Azure Boards automatically owns every GitHub repository",
-          "rationale": "The products retain separate ownership and authorization boundaries. Visibility follows granted repository access rather than lab intent."
-        },
-        {
-          "key": "C",
-          "text": "The integration installation was authorized too broadly",
-          "rationale": "Visibility follows granted repository access rather than lab intent."
-        },
-        {
-          "key": "D",
-          "text": "The connector inferred the learner's course syllabus",
-          "rationale": "Permissions come from authorization rather than educational intent. Visibility follows granted repository access rather than lab intent."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Visibility follows granted repository access rather than lab intent. Permissions come from authorization rather than educational intent. A link alone does not define that installation scope. The products retain separate ownership and authorization boundaries.",
-      "sourceIds": [
-        "S2"
+        "S3",
+        "S6"
       ]
     },
     {
       "id": "L01-Q048",
-      "checkpointId": "CP3",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D1.3.5"
+        "D1.1.1"
       ],
-      "difficulty": "applied",
-      "question": "Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. What negative test should accompany a successful link to the training repository?",
+      "difficulty": "advanced",
+      "question": "A private repository moves to a new GitHub organization. Existing local AB text remains, but new links stop appearing. A second Azure DevOps organization is proposed as a shortcut. What is the best recovery plan?",
       "options": [
         {
           "key": "A",
-          "text": "All links stop working after permissions are removed",
-          "rationale": "That fails the legitimate integration requirement. The access boundary should match the exercise scope."
+          "text": "Reconnect the moved repository to an additional Azure DevOps organization",
+          "rationale": "Adding a connection does not first repair the original authorization and can introduce AB ambiguity."
         },
         {
           "key": "B",
-          "text": "Only the training repository remains available to the connector",
-          "rationale": "The access boundary should match the exercise scope."
+          "text": "Recheck the moved repository's app installation and original connection, preserving a single connected Azure DevOps organization",
+          "rationale": "A move can change authorization and connection context; adding another organization risks additional AB ambiguity."
         },
         {
           "key": "C",
-          "text": "The connector can list another team's private repository",
-          "rationale": "That demonstrates the unwanted access still exists. The access boundary should match the exercise scope."
+          "text": "Reinstall the app with access to every repository in the new organization",
+          "rationale": "Broad access exceeds the moved repository recovery scope and still requires the correct Boards connection."
         },
         {
           "key": "D",
-          "text": "An unrelated repository can create work items in the project",
-          "rationale": "That expands rather than verifies the intended boundary. The access boundary should match the exercise scope."
+          "text": "Change all references to link-only AB syntax while leaving installation access unchanged",
+          "rationale": "Reference wording cannot restore repository access lost during a move."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The access boundary should match the exercise scope. That demonstrates the unwanted access still exists. That expands rather than verifies the intended boundary. That fails the legitimate integration requirement.",
+      "explanation": "Adding a connection does not first repair the original authorization and can introduce AB ambiguity. A move can change authorization and connection context; adding another organization risks additional AB ambiguity. Broad access exceeds the moved repository recovery scope and still requires the correct Boards connection. Reference wording cannot restore repository access lost during a move.",
       "sourceIds": [
-        "S2"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "Selected training repository: az400-01-demo\nConnector repository inventory: az400-01-demo, payroll-private\nRequired business scope: training repository only"
-      }
+        "S2",
+        "S8"
+      ]
     },
     {
       "id": "L01-Q049",
-      "checkpointId": "CP3",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.3.5"
+        "D1.1.3"
       ],
-      "difficulty": "applied",
-      "question": "Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. What must be checked before narrowing an installation already used in the organization?",
+      "difficulty": "advanced",
+      "question": "A custom queue integration has retryable API failures, expiring credentials, and occasional duplicate deliveries. It must create one Project item per source issue. Which design best meets these constraints?",
       "options": [
         {
           "key": "A",
-          "text": "Check existing integrations before removing repository permissions",
-          "rationale": "Other projects may rely on the same installation."
+          "text": "Use stable source identity, durable retry state, renewable least-privilege authentication, and idempotent create-or-update logic",
+          "rationale": "Each element addresses a distinct failure mode while preserving one logical Project item per source issue."
         },
         {
           "key": "B",
-          "text": "Only whether the training exercise is finished",
-          "rationale": "Other consumers may still rely on its access. Other projects may rely on the same installation."
+          "text": "Deduplicate by issue title and retry with a new Project item on every API failure",
+          "rationale": "Titles can collide, and retries can create multiple items for one source issue."
         },
         {
           "key": "C",
-          "text": "Whether the learner remembers the repository names",
-          "rationale": "Discovery should use actual installation and integration configuration. Other projects may rely on the same installation."
+          "text": "Use durable delivery storage but perform unconditional creates after each worker retry",
+          "rationale": "Durability prevents loss but does not by itself prevent duplicate side effects."
         },
         {
           "key": "D",
-          "text": "The total public repository count",
-          "rationale": "Public inventory does not reveal private integration dependencies. Other projects may rely on the same installation."
+          "text": "Use idempotent updates with one manually renewed broad personal token and no expiry recovery",
+          "rationale": "This handles duplicates but leaves the stated credential-expiry failure without a reliable governed recovery path."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Other projects may rely on the same installation. Other consumers may still rely on its access. Discovery should use actual installation and integration configuration. Public inventory does not reveal private integration dependencies.",
+      "explanation": "Each element addresses a distinct failure mode while preserving one logical Project item per source issue. Titles can collide, and retries can create multiple items for one source issue. Durability prevents loss but does not by itself prevent duplicate side effects. This handles duplicates but leaves the stated credential-expiry failure without a reliable governed recovery path.",
       "sourceIds": [
-        "S2"
+        "S7",
+        "S9"
       ]
     },
     {
       "id": "L01-Q050",
-      "checkpointId": "CP3",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D1.3.5"
+        "D1.1.4"
       ],
       "difficulty": "advanced",
-      "question": "A selected-repository Boards installation currently supports only the training repository. Another team wants to onboard one additional private repository while preserving least privilege and existing links. Which change is appropriate?",
+      "question": "A release export records work item 52 as accepted using test run 300. A rerun against the same source fails after a configuration change, and consumers already downloaded the export. What preserves an auditable decision history?",
       "options": [
         {
           "key": "A",
-          "text": "Switch the installation to all repositories so later onboarding requires no permission work.",
-          "rationale": "This removes the selected-repository boundary and grants access beyond the two approved consumers."
+          "text": "Leave the export unchanged because source code did not change",
+          "rationale": "Configuration can affect behavior, so matching source does not invalidate the new failure evidence."
         },
         {
           "key": "B",
-          "text": "Add the approved repository to the installation’s selected scope, review the required integration permissions, and test links for both authorized repositories.",
-          "rationale": "Deliberate scoped onboarding extends only the approved access and checks that the existing integration still works."
+          "text": "Delete the work item and replace it with a new unlinked record",
+          "rationale": "An unlinked replacement loses the decision history consumers need to understand the correction."
         },
         {
           "key": "C",
-          "text": "Create a shared unrestricted personal token and use it for both projects.",
-          "rationale": "This introduces unnecessary personal ownership and broader credential scope instead of extending the governed installation."
+          "text": "Publish a superseding decision linked to both test runs and configuration revisions, and reassess release eligibility",
+          "rationale": "Versioned correction retains what was originally claimed while clearly recording the newer contradictory verification evidence."
         },
         {
           "key": "D",
-          "text": "Copy the second repository’s issues into the training repository and avoid recording their original repository identities.",
-          "rationale": "That fragments source identity and avoids rather than implements the requested private-repository integration."
+          "text": "Overwrite test run 300's result with the rerun outcome",
+          "rationale": "That erases the distinction between two executions and their different configuration contexts."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "This removes the selected-repository boundary and grants access beyond the two approved consumers. Deliberate scoped onboarding extends only the approved access and checks that the existing integration still works. This introduces unnecessary personal ownership and broader credential scope instead of extending the governed installation. That fragments source identity and avoids rather than implements the requested private-repository integration.",
+      "explanation": "Configuration can affect behavior, so matching source does not invalidate the new failure evidence. An unlinked replacement loses the decision history consumers need to understand the correction. Versioned correction retains what was originally claimed while clearly recording the newer contradictory verification evidence. That erases the distinction between two executions and their different configuration contexts.",
       "sourceIds": [
-        "S2"
+        "S6",
+        "S8"
       ]
     }
   ]

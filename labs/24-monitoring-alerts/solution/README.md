@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The alert drift assertion reads the actual provider rule. A configured rule without incoming data remains configuration evidence and must not be presented as a delivered notification.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. All five checkpoint commands, final validators and named fault/repair passed in CourseScanMonitorSequences.Tests.ps1. Local .NET package inventory/advisory queries and Gitleaks scans are real. GitHub/Azure APIs and Docker/Trivy reports are explicit fixtures; live security integration and alert delivery have not run. Repository CI separately runs the actual application container.
 
 ## CP1 — Create the owned Log Analytics workspace
 
@@ -51,9 +51,9 @@ Retain and inspect: Alert condition/window/severity and empty action list.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: No telemetry means no proof of firing behavior; use an approved synthetic workload for the optional integration test.
 
-## CP5 — Map pipeline and platform telemetry to owned response actions
+## CP5 — Evaluate owned telemetry response decisions
 
-Application, infrastructure, and delivery signals have distinct response paths.
+Three synthetic observations yield investigate-latency, observe, and exclude-unowned decisions. No notification is sent; external alert delivery remains unverified.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
@@ -61,7 +61,7 @@ Application, infrastructure, and delivery signals have distinct response paths.
 | `D5.1.3` | explained | Compare GitHub usage/runner insights with service telemetry; no organization insight dashboard is configured. |
 | `D5.1.4` | explained | Design a delivery-event alert separately from the actual latency metric alert configured in CP4. |
 
-Retain and inspect: Signal-to-owner/action matrix and unverified integration gates.
+Retain and inspect: Response map and computed response-decisions.json for slow, healthy and foreign resource observations.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Configure VM/Container/Storage/Network Insights only for approved owned resources; avoid collecting credentials or personal request bodies.
 

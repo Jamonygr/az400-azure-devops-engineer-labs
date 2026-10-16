@@ -19,7 +19,7 @@
   "questions": [
     {
       "id": "L17-Q001",
-      "checkpointId": "CP2",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -50,14 +50,18 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Local compilation catches source mistakes without contacting Azure services. Deployment can change resources before exposing the source mistake. What-if requires Azure context rather than purely offline validation. Name inspection cannot validate the declaration's property types or syntax.",
+      "explanation": "What-if requires Azure context rather than purely offline validation. Name inspection cannot validate the declaration's property types or syntax. Local compilation catches source mistakes without contacting Azure services. Deployment can change resources before exposing the source mistake.",
       "sourceIds": [
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "bicep",
+        "code": "resource account 'Microsoft.Storage/storageAccounts@2025-01-01' = {\n  name: 'example'\n  properties: { typoProperty: true }\n}"
+      }
     },
     {
       "id": "L17-Q002",
-      "checkpointId": "CP2",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -126,14 +130,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "What-if predicts changes using the selected template, parameters and scope. Historical records do not evaluate the newly proposed infrastructure declaration. Compilation checks source rather than comparing deployed resource configuration. Applying changes first defeats review of the planned resource modifications.",
+      "explanation": "Compilation checks source rather than comparing deployed resource configuration. Applying changes first defeats review of the planned resource modifications. What-if predicts changes using the selected template, parameters and scope. Historical records do not evaluate the newly proposed infrastructure declaration.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q004",
-      "checkpointId": "CP2",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -164,7 +168,7 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Explicit outputs provide a stable reference between dependent infrastructure modules. Duplicated naming logic couples consumers to the producer's implementation details. An operation name is not the created resource's complete identifier. Prefix discovery can select unrelated resources outside the intended deployment scope.",
+      "explanation": "An operation name is not the created resource's complete identifier. Prefix discovery can select unrelated resources outside the intended deployment scope. Explicit outputs provide a stable reference between dependent infrastructure modules. Duplicated naming logic couples consumers to the producer's implementation details.",
       "sourceIds": [
         "S3"
       ]
@@ -195,24 +199,28 @@
         },
         {
           "key": "D",
-          "text": "Rename the test preview file",
-          "rationale": "Renaming a document does not evaluate the production deployment's effects."
+          "text": "Approve changed parameters after a local compile only",
+          "rationale": "Compilation checks syntax and types but does not evaluate target-specific provider changes or cost."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Approval must cover the actual artifact, target scope and parameter choices. Different parameters and scopes can materially change resources and spending. Earlier unrelated evidence cannot authorize newly selected production resource changes. Renaming a document does not evaluate the production deployment's effects.",
+      "explanation": "Approval must cover the actual artifact, target scope and parameter choices. Different parameters and scopes can materially change resources and spending. Earlier unrelated evidence cannot authorize newly selected production resource changes. Compilation checks syntax and types but does not evaluate target-specific provider changes or cost.",
       "sourceIds": [
         "S1",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "powershell",
+        "code": "az deployment group what-if --subscription $TestSub --resource-group $TestGroup --parameters sku=B1\n# Later queued operation:\naz deployment group create --subscription $ProdSub --resource-group $ProdGroup --parameters sku=S1"
+      }
     },
     {
       "id": "L17-Q006",
-      "checkpointId": "CP3",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "foundational",
       "question": "The app module supports optional private networking, and development callers have no subnet. Which input contract best supports both topologies?",
@@ -241,16 +249,16 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "An explicit optional input supports callers with and without integration infrastructure. A placeholder introduces unnecessary dependencies and can select incorrect network context. A hidden environment dependency prevents safe reuse across deployment scopes. List order cannot identify the caller's intended network integration target.",
+      "explanation": "A hidden environment dependency prevents safe reuse across deployment scopes. List order cannot identify the caller's intended network integration target. An explicit optional input supports callers with and without integration infrastructure. A placeholder introduces unnecessary dependencies and can select incorrect network context.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q007",
-      "checkpointId": "CP3",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "Refactoring left an unused Bicep parameter that no caller needs. Which change improves the public module contract?",
@@ -279,16 +287,20 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Removing obsolete inputs makes the intended deployment interface easier to understand. Global suppression hides unrelated warnings without improving the module contract. Comments cannot make an unused parameter affect the deployed resources. Changing unused values still has no effect on resource declarations.",
+      "explanation": "Comments cannot make an unused parameter affect the deployed resources. Changing unused values still has no effect on resource declarations. Removing obsolete inputs makes the intended deployment interface easier to understand. Global suppression hides unrelated warnings without improving the module contract.",
       "sourceIds": [
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "bicep",
+        "code": "param obsoleteRegion string\nparam location string = resourceGroup().location\n// All resources use location; none reference obsoleteRegion."
+      }
     },
     {
       "id": "L17-Q008",
-      "checkpointId": "CP3",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "Storage names must stay stable on retries but differ across resource groups. Which suffix input supports that requirement?",
@@ -317,29 +329,29 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A scoped stable identifier supports repeatable names across deployment retries. Time changes on retries and creates additional resource identities instead. A fixed name can collide across independently deployed resource groups. Random names prevent straightforward reconciliation with previously created owned resources.",
+      "explanation": "A fixed name can collide across independently deployed resource groups. Random names prevent straightforward reconciliation with previously created owned resources. A scoped stable identifier supports repeatable names across deployment retries. Time changes on retries and creates additional resource identities instead.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q009",
-      "checkpointId": "CP3",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "The team wants one Bicep linter finding to fail pull requests consistently. Where should its enforcement severity be set?",
       "options": [
         {
           "key": "A",
-          "text": "In an informal README note",
-          "rationale": "Documentation describes policy without making the source build fail automatically."
+          "text": "Only in an editor-local configuration",
+          "rationale": "An editor-local preference does not enforce the same rule in shared CI builds."
         },
         {
           "key": "B",
-          "text": "In the template file name",
-          "rationale": "File naming does not alter the analyzer's configured finding severity."
+          "text": "In the deployment parameter file only",
+          "rationale": "Deployment parameters select template inputs rather than the local analyzer rule severity used by repository compilation."
         },
         {
           "key": "C",
@@ -348,23 +360,23 @@
         },
         {
           "key": "D",
-          "text": "In the resource group location",
-          "rationale": "Azure location does not configure a local source analysis rule's severity."
+          "text": "In a rule-specific inline suppression at each occurrence",
+          "rationale": "Suppressing the finding removes that diagnostic rather than configuring the shared rule to reject future violations."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Repository configuration makes the selected analysis rule an enforceable build gate. Azure location does not configure a local source analysis rule's severity. Documentation describes policy without making the source build fail automatically. File naming does not alter the analyzer's configured finding severity.",
+      "explanation": "An editor-local preference does not enforce the same rule in shared CI builds. Deployment parameters select template inputs rather than the local analyzer rule severity used by repository compilation. Repository configuration makes the selected analysis rule an enforceable build gate. Suppressing the finding removes that diagnostic rather than configuring the shared rule to reject future violations.",
       "sourceIds": [
         "S2"
       ]
     },
     {
       "id": "L17-Q010",
-      "checkpointId": "CP3",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "advanced",
       "question": "Compilation succeeds, but provider validation rejects the selected regional SKU. Which interpretation and action are both justified?",
@@ -401,7 +413,7 @@
     },
     {
       "id": "L17-Q011",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -432,14 +444,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Explicit scope prevents ambient account defaults redirecting the deployment preview. Identically named groups can exist in different accessible Azure subscriptions. List ordering cannot establish the learner's intended resource ownership context. Local compilation does not validate an actual Azure deployment scope.",
+      "explanation": "List ordering cannot establish the learner's intended resource ownership context. Local compilation does not validate an actual Azure deployment scope. Explicit scope prevents ambient account defaults redirecting the deployment preview. Identically named groups can exist in different accessible Azure subscriptions.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q012",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -477,7 +489,7 @@
     },
     {
       "id": "L17-Q013",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -508,14 +520,18 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Expansion limitations can leave parts of the proposed deployment insufficiently evaluated. An unanalyzed resource is not a verified promise of unchanged behavior. Ignore describes preview evaluation rather than an executed resource deletion operation. Preview output does not mean resource deployment operations have been executed.",
+      "explanation": "An unanalyzed resource is not a verified promise of unchanged behavior. Ignore describes preview evaluation rather than an executed resource deletion operation. Preview output does not mean resource deployment operations have been executed. Expansion limitations can leave parts of the proposed deployment insufficiently evaluated.",
       "sourceIds": [
         "S1"
-      ]
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"changeType\":\"Ignore\",\"diagnostic\":\"Nested template expansion limit reached\"}"
+      }
     },
     {
       "id": "L17-Q014",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -539,21 +555,21 @@
         },
         {
           "key": "D",
-          "text": "Only the terminal window title",
-          "rationale": "A window title omits the proposed resources and selected parameter values."
+          "text": "Only the summary change counts",
+          "rationale": "Counts omit the specific property changes and their reviewed artifact and parameter linkage."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Structured changes plus revision linkage support reproducible review of deployment intent. A window title omits the proposed resources and selected parameter values. A filename cannot identify the exact version of its infrastructure contents. Duration provides no evidence about selected resources or proposed configuration changes.",
+      "explanation": "A filename cannot identify the exact version of its infrastructure contents. Duration provides no evidence about selected resources or proposed configuration changes. Structured changes plus revision linkage support reproducible review of deployment intent. Counts omit the specific property changes and their reviewed artifact and parameter linkage.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q015",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -584,16 +600,16 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "This mode checks provider configuration while validating read rather than write permissions. Template validation omits provider preflight checks and live resource availability validation. Broad permanent ownership exceeds the stated read-only provider review access requirement. An omitted check cannot prove provider compatibility or effective deployment permissions.",
+      "explanation": "Broad permanent ownership exceeds the stated read-only provider review access requirement. An omitted check cannot prove provider compatibility or effective deployment permissions. This mode checks provider configuration while validating read rather than write permissions. Template validation omits provider preflight checks and live resource availability validation.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q016",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "foundational",
       "question": "A secure deployment input is needed later by application configuration. Which output avoids exposing its secret value in deployment history?",
@@ -629,9 +645,9 @@
     },
     {
       "id": "L17-Q017",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "What-if completed successfully and no create command ran afterward. Which status accurately describes the infrastructure's execution evidence?",
@@ -667,7 +683,7 @@
     },
     {
       "id": "L17-Q018",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.5.4"
       ],
@@ -698,16 +714,16 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Stable resource identities allow retries to reconcile intended configuration without duplication. Repeated duplication indicates changing identities instead of desired-state resource convergence. Existing resources can drift and still require comparison with desired configuration. Renaming changes resource identities and obstructs straightforward idempotent configuration reconciliation.",
+      "explanation": "Repeated duplication indicates changing identities instead of desired-state resource convergence. Existing resources can drift and still require comparison with desired configuration. Renaming changes resource identities and obstructs straightforward idempotent configuration reconciliation. Stable resource identities allow retries to reconcile intended configuration without duplication.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q019",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "The selected group has a different run's ownership marker although the current identity can write there. What should execution do?",
@@ -736,29 +752,29 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Write authorization does not establish ownership under this run's lifecycle journal. Replacing another run's evidence silently adopts resources outside this lifecycle's ownership. Postdeployment metadata changes cannot establish the original resource ownership authorization. Changing local metadata does not authorize adopting the existing resource group.",
+      "explanation": "Postdeployment metadata changes cannot establish the original resource ownership authorization. Changing local metadata does not authorize adopting the existing resource group. Write authorization does not establish ownership under this run's lifecycle journal. Replacing another run's evidence silently adopts resources outside this lifecycle's ownership.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q020",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "advanced",
       "question": "Module code changed after approval while the parameter file stayed unchanged. Which control binds execution to the reviewed infrastructure rather than current branch contents?",
       "options": [
         {
           "key": "A",
-          "text": "Reuse the deployment display name",
-          "rationale": "Operation naming does not prove template contents match the approved revision."
+          "text": "Reuse approval if module parameter types are unchanged",
+          "rationale": "An unchanged interface can conceal changed resource declarations and does not preserve reviewed implementation contents."
         },
         {
           "key": "B",
-          "text": "Compare only generated file sizes",
-          "rationale": "Equal file sizes do not establish equivalent infrastructure declarations or behavior."
+          "text": "Check parameter hashes and accept any compiled module version",
+          "rationale": "Module implementation is part of the approved artifact even when parameter values are identical."
         },
         {
           "key": "C",
@@ -774,7 +790,7 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Both source and parameters determine the resource changes requiring explicit approval. Branch names move and cannot identify an immutable reviewed infrastructure artifact. Operation naming does not prove template contents match the approved revision. Equal file sizes do not establish equivalent infrastructure declarations or behavior.",
+      "explanation": "Both source and parameters determine the resource changes requiring explicit approval. An unchanged interface can conceal changed resource declarations and does not preserve reviewed implementation contents. Module implementation is part of the approved artifact even when parameter values are identical. Branch names move and cannot identify an immutable reviewed infrastructure artifact.",
       "sourceIds": [
         "S1",
         "S3"
@@ -782,7 +798,7 @@
     },
     {
       "id": "L17-Q021",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -813,14 +829,14 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Independent core practice is runnable without claiming external SQL integration succeeded. Ignoring a required data dependency misrepresents the application as fully functional. Unreviewed database provisioning adds cost and changes approved security requirements. Compilation cannot demonstrate remote identity, networking, schema or application connectivity.",
+      "explanation": "Ignoring a required data dependency misrepresents the application as fully functional. Unreviewed database provisioning adds cost and changes approved security requirements. Compilation cannot demonstrate remote identity, networking, schema or application connectivity. Independent core practice is runnable without claiming external SQL integration succeeded.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q022",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -851,16 +867,16 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "ARM resource addressing follows these components rather than deployment operation labels. Deployment history names identify operations rather than replacing resource address components. Source filenames do not independently define the created Azure resource identities. Pipeline execution identifiers do not automatically become resource identifiers in ARM.",
+      "explanation": "Pipeline execution identifiers do not automatically become resource identifiers in ARM. ARM resource addressing follows these components rather than deployment operation labels. Deployment history names identify operations rather than replacing resource address components. Source filenames do not independently define the created Azure resource identities.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q023",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.3"
+        "D3.5.4"
       ],
       "difficulty": "applied",
       "question": "Deployment failed after storage creation but before another resource completed. What should a retry inspect before assuming no state remains?",
@@ -889,14 +905,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Overall failure does not imply rollback of every previously completed resource operation. An error alone cannot establish which preceding resources were successfully created. Broad subscription discovery and deletion exceed the exact recorded ownership scope. Changing names can orphan existing resources and unnecessarily duplicate partial state.",
+      "explanation": "Broad subscription discovery and deletion exceed the exact recorded ownership scope. Changing names can orphan existing resources and unnecessarily duplicate partial state. Overall failure does not imply rollback of every previously completed resource operation. An error alone cannot establish which preceding resources were successfully created.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q024",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -927,16 +943,16 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "An existing declaration identifies a deployed resource without requesting its new creation. A newly named identity creates a different principal from the intended existing one. Implicit list selection does not preserve the caller's exact existing identity reference. An operation display name is not the identity's Azure resource reference.",
+      "explanation": "An operation display name is not the identity's Azure resource reference. An existing declaration identifies a deployed resource without requesting its new creation. A newly named identity creates a different principal from the intended existing one. Implicit list selection does not preserve the caller's exact existing identity reference.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q025",
-      "checkpointId": "CP5",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.3"
+        "D3.5.4"
       ],
       "difficulty": "advanced",
       "question": "Storage was created, but role assignment failed because the caller lacks assignment rights. How should recovery retain ownership while avoiding permanent broad privileges?",
@@ -965,17 +981,21 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Keep exact recorded IDs and obtain only justified rights for the failed operation. Discarding ownership evidence can orphan resources and obstruct safe partial recovery. Permanent subscription ownership exceeds the scoped role assignment recovery requirement. Missing required authorization can prevent runtime access despite successful resource creation.",
+      "explanation": "Discarding ownership evidence can orphan resources and obstruct safe partial recovery. Permanent subscription ownership exceeds the scoped role assignment recovery requirement. Missing required authorization can prevent runtime access despite successful resource creation. Keep exact recorded IDs and obtain only justified rights for the failed operation.",
       "sourceIds": [
         "S1",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "storage/create: Succeeded\nroleAssignments/write: AuthorizationFailed\nJournal: storage account ID retained; run ownership marker matches"
+      }
     },
     {
       "id": "L17-Q026",
       "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "foundational",
       "question": "A team varies account SKU using parameters rather than editing shared Bicep declarations. What benefit does that design provide?",
@@ -1004,7 +1024,7 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Parameters support reviewed environment variation without duplicating the module's resource definitions. Parameterization does not override provider availability or subscription quota restrictions. Parameter changes can affect resources and cost and still require review. Only explicit allowed values and governance controls restrict those parameter choices.",
+      "explanation": "Only explicit allowed values and governance controls restrict those parameter choices. Parameters support reviewed environment variation without duplicating the module's resource definitions. Parameterization does not override provider availability or subscription quota restrictions. Parameter changes can affect resources and cost and still require review.",
       "sourceIds": [
         "S3"
       ]
@@ -1013,7 +1033,7 @@
       "id": "L17-Q027",
       "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "Compilation reports a string argument where the module expects an integer parameter. Which correction directly addresses the reported defect?",
@@ -1025,13 +1045,13 @@
         },
         {
           "key": "B",
-          "text": "Rename the deployment operation",
-          "rationale": "Operation naming does not change the parameter's value or declared type."
+          "text": "Supply a quoted numeric string in the parameter file",
+          "rationale": "A quoted numeric value remains a string and does not satisfy the declared integer parameter contract."
         },
         {
           "key": "C",
-          "text": "Select a different Azure region",
-          "rationale": "Regional selection cannot convert a source argument into the required type."
+          "text": "Change the module parameter to string without reviewing its numeric consumers",
+          "rationale": "Changing the public type bypasses the existing contract and can break module expressions and other callers rather than supplying the required integer input."
         },
         {
           "key": "D",
@@ -1042,16 +1062,16 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Typed contracts let compilation reject incompatible values before any cloud execution. Source analysis suppression does not resolve an invalid parameter type assignment. Operation naming does not change the parameter's value or declared type. Regional selection cannot convert a source argument into the required type.",
+      "explanation": "Source analysis suppression does not resolve an invalid parameter type assignment. A quoted numeric value remains a string and does not satisfy the declared integer parameter contract. Changing the public type bypasses the existing contract and can break module expressions and other callers rather than supplying the required integer input. Typed contracts let compilation reject incompatible values before any cloud execution.",
       "sourceIds": [
         "S2"
       ]
     },
     {
       "id": "L17-Q028",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "Validation needs the exact storage account created by a module without searching by naming prefix. Which output best supports that requirement?",
@@ -1080,16 +1100,16 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A complete resource ID identifies the account across subscriptions and resource groups. A wildcard can match unrelated resources and cannot prove exact identity. Subscription display names do not identify the particular created storage account. A resource count does not identify which exact resource needs validation.",
+      "explanation": "Subscription display names do not identify the particular created storage account. A resource count does not identify which exact resource needs validation. A complete resource ID identifies the account across subscriptions and resource groups. A wildcard can match unrelated resources and cannot prove exact identity.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q029",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "After successful deployment, a learner needs recorded output values without changing resources again. Which operation should the automation use?",
@@ -1118,14 +1138,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Deployment history exposes recorded outputs through a read-only management operation. A resource group mutation is unrelated to reading existing deployment outputs. Removing history destroys evidence rather than returning its stored output values. What-if predicts changes rather than retrieving the prior deployment's recorded outputs.",
+      "explanation": "Removing history destroys evidence rather than returning its stored output values. What-if predicts changes rather than retrieving the prior deployment's recorded outputs. Deployment history exposes recorded outputs through a read-only management operation. A resource group mutation is unrelated to reading existing deployment outputs.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q030",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.5.4"
       ],
@@ -1149,14 +1169,14 @@
         },
         {
           "key": "D",
-          "text": "Delete all groups tagged AZ-400",
-          "rationale": "A shared course tag does not identify this exact run's managed resources."
+          "text": "Delete all target-group resources and redeploy to simplify reconciliation",
+          "rationale": "Deleting successful state can be unnecessary and requires its own ownership, impact and data-preservation review."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Stable names preserve owned partial state while creating only the missing resources. New identities duplicate successful resources and abandon the previous partial state. A shared course tag does not identify this exact run's managed resources. The declared desired state remains incomplete when the required resource is absent.",
+      "explanation": "Stable names preserve owned partial state while creating only the missing resources. The declared desired state remains incomplete when the required resource is absent. New identities duplicate successful resources and abandon the previous partial state. Deleting successful state can be unnecessary and requires its own ownership, impact and data-preservation review.",
       "sourceIds": [
         "S1",
         "S3"
@@ -1164,7 +1184,7 @@
     },
     {
       "id": "L17-Q031",
-      "checkpointId": "CP3",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1195,14 +1215,14 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "A service read observes applied configuration instead of merely repeating source intent. Declared intent alone cannot prove the current deployed resource has that setting. Operation success does not replace a targeted postdeployment property value assertion. A diagram cannot establish the current security property in the deployed service.",
+      "explanation": "Declared intent alone cannot prove the current deployed resource has that setting. Operation success does not replace a targeted postdeployment property value assertion. A diagram cannot establish the current security property in the deployed service. A service read observes applied configuration instead of merely repeating source intent.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q032",
-      "checkpointId": "CP3",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1221,8 +1241,8 @@
         },
         {
           "key": "C",
-          "text": "Inspect the Git author email",
-          "rationale": "Git author metadata is unrelated to Azure managed identity resource creation."
+          "text": "Check only that clientId is nonempty in a local plan",
+          "rationale": "A planned client identifier does not prove the referenced identity was provisioned in Azure."
         },
         {
           "key": "D",
@@ -1233,16 +1253,16 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "An exact service read validates the created identity without ambiguous name discovery. An unrelated principal does not establish that the declared resource exists. String shape alone cannot prove that Azure provisioned the intended identity. Git author metadata is unrelated to Azure managed identity resource creation.",
+      "explanation": "An unrelated principal does not establish that the declared resource exists. String shape alone cannot prove that Azure provisioned the intended identity. A planned client identifier does not prove the referenced identity was provisioned in Azure. An exact service read validates the created identity without ambiguous name discovery.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q033",
-      "checkpointId": "CP3",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.5.3"
+        "D3.5.4"
       ],
       "difficulty": "applied",
       "question": "A service read contradicts the secure public-access setting still present in source. Which result should validation report?",
@@ -1271,14 +1291,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The observed property demonstrates drift from the declared resource security configuration. Source text cannot override a contradictory observation of current live configuration. Matching resource names does not establish that security settings remain correct. A broad reset exceeds exact ownership and changes unrelated resource configuration.",
+      "explanation": "Matching resource names does not establish that security settings remain correct. A broad reset exceeds exact ownership and changes unrelated resource configuration. The observed property demonstrates drift from the declared resource security configuration. Source text cannot override a contradictory observation of current live configuration.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q034",
-      "checkpointId": "CP3",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1302,23 +1322,23 @@
         },
         {
           "key": "D",
-          "text": "A healthy deployment display name",
-          "rationale": "An operation name provides no evidence about current application runtime health."
+          "text": "Only the liveness endpoint returning success",
+          "rationale": "Liveness can remain healthy while required schema or database readiness checks still fail."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Infrastructure success does not demonstrate application identity, schema and data connectivity. Outputs identify resource properties rather than proving the application's runtime behavior. Formatting cannot exercise deployed identity permissions or actual database connectivity. An operation name provides no evidence about current application runtime health.",
+      "explanation": "Infrastructure success does not demonstrate application identity, schema and data connectivity. Outputs identify resource properties rather than proving the application's runtime behavior. Formatting cannot exercise deployed identity permissions or actual database connectivity. Liveness can remain healthy while required schema or database readiness checks still fail.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q035",
-      "checkpointId": "CP3",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.3"
+        "D3.5.4"
       ],
       "difficulty": "advanced",
       "question": "A security setting passed yesterday but today's what-if reports an unexplained modification. What should a reviewer do before approving reconciliation?",
@@ -1355,9 +1375,9 @@
     },
     {
       "id": "L17-Q036",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "foundational",
       "question": "The deployment must preserve group ownership metadata while adding exact lab-run tags. Which Bicep pattern expresses the intended tag policy?",
@@ -1393,9 +1413,9 @@
     },
     {
       "id": "L17-Q037",
-      "checkpointId": "CP1",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "Validation must establish that an output belongs to the expected subscription, owned group and resource name. Which assertion is strongest?",
@@ -1431,9 +1451,9 @@
     },
     {
       "id": "L17-Q038",
-      "checkpointId": "CP1",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "The core deploys a managed identity without assigning broad permissions. What is true immediately after that identity is created?",
@@ -1462,14 +1482,14 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Creating a principal establishes identity rather than automatically granting protected resource access. Managed identity existence does not confer universal management or data-plane permissions. A managed identity has its own principal and independently assigned effective permissions. Authentication targets and authorization scopes still require explicit design and validation.",
+      "explanation": "Authentication targets and authorization scopes still require explicit design and validation. Creating a principal establishes identity rather than automatically granting protected resource access. Managed identity existence does not confer universal management or data-plane permissions. A managed identity has its own principal and independently assigned effective permissions.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q039",
-      "checkpointId": "CP1",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.5.4"
       ],
@@ -1500,34 +1520,34 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "A missing value cannot demonstrate that the required security property is configured. Substituting desired state conceals an unverified or incompatible service response. Parsing establishes document syntax rather than the required property value's correctness. Changing targets breaks the exact resource identity established by deployment outputs.",
+      "explanation": "Substituting desired state conceals an unverified or incompatible service response. Parsing establishes document syntax rather than the required property value's correctness. Changing targets breaks the exact resource identity established by deployment outputs. A missing value cannot demonstrate that the required security property is configured.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q040",
-      "checkpointId": "CP1",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "advanced",
       "question": "The resource ID is correct but the deployed artifact predates the approved policy change. Which missing control prevents accepting this evidence?",
       "options": [
         {
           "key": "A",
-          "text": "Use a longer operation name",
-          "rationale": "Longer labels do not establish source provenance or equality with approved content."
+          "text": "Accept outputs whose names match the approved plan",
+          "rationale": "Stable target names do not prove that the new approved security configuration was deployed."
         },
         {
           "key": "B",
-          "text": "Export another unrelated resource inventory",
-          "rationale": "Additional inventory cannot identify which reviewed template produced this resource configuration."
+          "text": "Use another successful deployment from the same subscription as evidence",
+          "rationale": "Another operation cannot establish the artifact revision applied to these exact resources."
         },
         {
           "key": "C",
-          "text": "Capture the overview blade alone",
-          "rationale": "An overview screenshot does not bind deployed configuration to the reviewed artifact."
+          "text": "Compare only the deployed and approved parameter files",
+          "rationale": "The template implementation can change independently of parameters and must also match the approval."
         },
         {
           "key": "D",
@@ -1538,17 +1558,21 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Correct target identity does not prove that approved infrastructure contents were applied. Longer labels do not establish source provenance or equality with approved content. Additional inventory cannot identify which reviewed template produced this resource configuration. An overview screenshot does not bind deployed configuration to the reviewed artifact.",
+      "explanation": "Correct target identity does not prove that approved infrastructure contents were applied. Stable target names do not prove that the new approved security configuration was deployed. Another operation cannot establish the artifact revision applied to these exact resources. The template implementation can change independently of parameters and must also match the approval.",
       "sourceIds": [
         "S1",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"approvedRevision\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"appliedRevision\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"resourceScopeMatches\":true}"
+      }
     },
     {
       "id": "L17-Q041",
-      "checkpointId": "CP4",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.5.3"
+        "D3.5.4"
       ],
       "difficulty": "foundational",
       "question": "A postdeployment what-if reports no intended changes in the analyzed scope. What conclusion can the learner reasonably draw?",
@@ -1577,14 +1601,14 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "A no-change preview supports convergence while retaining documented what-if evaluation limitations. Infrastructure comparison does not exercise all runtime behavior and authorization paths. External actions can introduce configuration changes after any point-in-time state observation. A no-change comparison describes convergence rather than deletion or cleanup completion.",
+      "explanation": "Infrastructure comparison does not exercise all runtime behavior and authorization paths. External actions can introduce configuration changes after any point-in-time state observation. A no-change comparison describes convergence rather than deletion or cleanup completion. A no-change preview supports convergence while retaining documented what-if evaluation limitations.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q042",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1615,14 +1639,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A portable learner repository must contain all referenced local module implementation files. Author-specific filesystem dependencies prevent independent compilation from a fresh learner workspace. Naming a dependency does not supply its implementation to the learner. Implicit external discovery prevents a reproducible and independently usable package contract.",
+      "explanation": "Naming a dependency does not supply its implementation to the learner. Implicit external discovery prevents a reproducible and independently usable package contract. A portable learner repository must contain all referenced local module implementation files. Author-specific filesystem dependencies prevent independent compilation from a fresh learner workspace.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q043",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1653,14 +1677,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Reviewed versioned declarations and inputs expose changes without duplicating infrastructure logic. Untracked agent changes cannot provide reproducible reviewed definitions across deployment environments. Embedding credentials exposes sensitive values and makes shared logic environment dependent. Moving dependencies can change behavior after the consuming revision was approved.",
+      "explanation": "Embedding credentials exposes sensitive values and makes shared logic environment dependent. Moving dependencies can change behavior after the consuming revision was approved. Reviewed versioned declarations and inputs expose changes without duplicating infrastructure logic. Untracked agent changes cannot provide reproducible reviewed definitions across deployment environments.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q044",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.5.3"
       ],
@@ -1698,17 +1722,17 @@
     },
     {
       "id": "L17-Q045",
-      "checkpointId": "CP4",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Review approved B1, but release now requests S1 and staging resources. Which gate addresses the additional capability and spending?",
+      "question": "Approval and cost acknowledgement covered B1 without slots. A queued parameter changes to S1 and creates staging, while the source revision stays identical. Which gate must change before execution?",
       "options": [
         {
           "key": "A",
-          "text": "Fresh preview and explicit cost acknowledgement",
-          "rationale": "The changed input alters resources and cost beyond the original approved configuration."
+          "text": "Review the exact S1 preview and acknowledge its changed cost",
+          "rationale": "The source is unchanged but the selected SKU adds resources and spending beyond the original approval."
         },
         {
           "key": "B",
@@ -1717,8 +1741,8 @@
         },
         {
           "key": "C",
-          "text": "Edit README while deploying immediately",
-          "rationale": "Documentation changes cannot replace review of the actual proposed resource modifications."
+          "text": "Deploy S1 under the old approval and review its cost afterward",
+          "rationale": "Postdeployment review cannot authorize the increased spending before those additional resources exist."
         },
         {
           "key": "D",
@@ -1729,17 +1753,21 @@
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The changed input alters resources and cost beyond the original approved configuration. Allowed values establish valid inputs rather than authorization for increased spending. Documentation changes cannot replace review of the actual proposed resource modifications. The old preview does not describe the selected SKU or resulting resources.",
+      "explanation": "The source is unchanged but the selected SKU adds resources and spending beyond the original approval. Allowed values establish valid inputs rather than authorization for increased spending. Postdeployment review cannot authorize the increased spending before those additional resources exist. The old preview does not describe the selected SKU or resulting resources.",
       "sourceIds": [
         "S1",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Approved: B1; no slot; low-cost acknowledgement attached\nQueued: S1; staging slot newly created; same source revision\nPolicy: cost changes require a reviewed scoped preview"
+      }
     },
     {
       "id": "L17-Q046",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "foundational",
       "question": "Reusable definitions belong in Git, but runtime journals contain learner-specific state. Which files should the shared course version-control by default?",
@@ -1768,14 +1796,14 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Portable declarations and examples preserve intent without exposing learner runtime identifiers. Runtime journals contain learner-specific state unsuitable for the shared training repository. Generated caches do not replace authoritative reviewed infrastructure source declarations. Storing ciphertext together with its decryption key defeats secret access separation.",
+      "explanation": "Generated caches do not replace authoritative reviewed infrastructure source declarations. Storing ciphertext together with its decryption key defeats secret access separation. Portable declarations and examples preserve intent without exposing learner runtime identifiers. Runtime journals contain learner-specific state unsuitable for the shared training repository.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q047",
-      "checkpointId": "CP4",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.5.4"
       ],
@@ -1806,16 +1834,16 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Exact identity alone cannot overcome a contradiction in current ownership evidence. Historical naming cannot authorize deletion when current ownership assertions no longer match. Prefix deletion expands beyond the journal's exact managed resource ownership boundary. Rewriting evidence manufactures ownership instead of verifying actual deletion authorization context.",
+      "explanation": "Prefix deletion expands beyond the journal's exact managed resource ownership boundary. Rewriting evidence manufactures ownership instead of verifying actual deletion authorization context. Exact identity alone cannot overcome a contradiction in current ownership evidence. Historical naming cannot authorize deletion when current ownership assertions no longer match.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q048",
-      "checkpointId": "CP4",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "An additional module output is needed while existing consumers must keep working. Which change best preserves the output contract?",
@@ -1844,16 +1872,16 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "An additive contract allows adoption without silently reinterpreting existing consumer references. Changing established semantics can redirect downstream operations toward unintended resource identities. Bulk output exposes sensitive input values beyond what downstream consumers require. Implicit inference breaks declared interfaces and increases coupling to resource naming details.",
+      "explanation": "Changing established semantics can redirect downstream operations toward unintended resource identities. Bulk output exposes sensitive input values beyond what downstream consumers require. Implicit inference breaks declared interfaces and increases coupling to resource naming details. An additive contract allows adoption without silently reinterpreting existing consumer references.",
       "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q049",
-      "checkpointId": "CP4",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.5.4"
+        "D3.5.3"
       ],
       "difficulty": "applied",
       "question": "The learner only compiled locally because their Azure subscription prerequisite is unavailable. Which recorded validation status is accurate?",
@@ -1882,24 +1910,24 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Local source evidence does not prove provider responses, deployment or runtime integration. A local compiler cannot create resources or inspect live provider responses. Review cannot substitute for checkpoints requiring actual Azure service configuration observations. An unavailable prerequisite does not establish an unexecuted deployment's eventual result.",
+      "explanation": "An unavailable prerequisite does not establish an unexecuted deployment's eventual result. Local source evidence does not prove provider responses, deployment or runtime integration. A local compiler cannot create resources or inspect live provider responses. Review cannot substitute for checkpoints requiring actual Azure service configuration observations.",
       "sourceIds": [
         "S1"
       ]
     },
     {
       "id": "L17-Q050",
-      "checkpointId": "CP4",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "advanced",
-      "question": "A clean preview and retained baseline exist, but an output points outside the owned group. Which condition must block release acceptance?",
+      "question": "A retained baseline and a clean postdeployment preview exist. The declared output now resolves to shared-production, while the journal owns az400-owned-run. Which condition must block acceptance despite apparently converged infrastructure?",
       "options": [
         {
           "key": "A",
-          "text": "Only the operation display name",
-          "rationale": "An operation label cannot authorize targets outside the journal-owned resource group."
+          "text": "Only whether the baseline and current parameter hashes match",
+          "rationale": "Matching parameters cannot authorize an output that resolves outside the exact owned resource group."
         },
         {
           "key": "B",
@@ -1913,18 +1941,22 @@
         },
         {
           "key": "D",
-          "text": "Only a slow preview duration",
-          "rationale": "Execution duration cannot resolve a contradictory resource ownership scope mismatch."
+          "text": "Only whether the template compiler reported warnings",
+          "rationale": "Compiler findings do not resolve the independently observed resource ownership scope mismatch."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Convergence evidence cannot override the explicitly required resource ownership and scope boundary. Execution duration cannot resolve a contradictory resource ownership scope mismatch. An operation label cannot authorize targets outside the journal-owned resource group. A clean comparison does not supersede exact target ownership and scope checks.",
+      "explanation": "Matching parameters cannot authorize an output that resolves outside the exact owned resource group. A clean comparison does not supersede exact target ownership and scope checks. Convergence evidence cannot override the explicitly required resource ownership and scope boundary. Compiler findings do not resolve the independently observed resource ownership scope mismatch.",
       "sourceIds": [
         "S1",
         "S3"
-      ]
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"preview\":\"NoChange\",\"journalGroup\":\"az400-owned-run\",\"outputGroup\":\"shared-production\",\"baselineRetained\":true}"
+      }
     }
   ]
 }

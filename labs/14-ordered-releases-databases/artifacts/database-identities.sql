@@ -6,7 +6,8 @@ GRANT CREATE TABLE TO [REPLACE_MIGRATION_IDENTITY_DISPLAY_NAME];
 GRANT ALTER, REFERENCES ON SCHEMA::dbo TO [REPLACE_MIGRATION_IDENTITY_DISPLAY_NAME];
 GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::dbo TO [REPLACE_MIGRATION_IDENTITY_DISPLAY_NAME];
 GO
--- Stop here and apply InitialTodos using migrate.ps1 with the migration identity.
+-- Stop here and apply InitialTodos with the dedicated migration identity.
+-- Lab14: migrate.ps1. Standalone capstone: deployment/scripts/Apply-Migration.ps1.
 -- Phase 2: after the table exists, grant the runtime identity only application-table access.
 IF OBJECT_ID(N'dbo.Todos', N'U') IS NULL
     THROW 50001, 'Apply the reviewed migration before granting runtime table permissions.', 1;

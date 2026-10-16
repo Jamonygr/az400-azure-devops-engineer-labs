@@ -34,13 +34,13 @@ Interpret both the passing behavior and denied path in the README. If they disag
 
 ## CP3 — Publish a CI pipeline and dormant deployment contract
 
-The reviewed revision contains CI and an unregistered cloud deployment template.
+The reviewed revision contains CI and an unregistered cloud deployment template. Historical CI-only source revision and CI file hashes remain independently inspectable after the separate protected release activation.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
 | `D3.3.5` | practiced | Publish CI plus the dependency-complete dormant deployment bundle. |
 
-Retain and inspect: Committed SHA and CI-versus-dormant template review.
+Retain and inspect: Committed SHA and CI-versus-dormant template review. core-publication.json links the baseline commit, exact CI path, SHA256 and Git blob; current protected release evidence is separate.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Keep deployment registration separate until service connection, environment checks, SQL/network prerequisites, and costs are approved.
 

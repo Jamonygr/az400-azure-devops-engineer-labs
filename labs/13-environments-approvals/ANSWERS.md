@@ -6,700 +6,782 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 ## L13-Q001
 
-Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which next change most directly satisfies the stated requirement?
+A code change has two pull-request approvals but production requires a separate release authorization. What boundary is still needed?
 
-- **A. Configure protected environment checks outside author-controlled YAML** **Correct.** The gate needs an independent administrative boundary. This directly addresses the constraint stated in this case.
-- **B. Require an eligible independent approver** The release requires separation between requester and reviewer. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **C. Choose the gate whose trust boundary matches the requirement** Similar pauses can have different administrative controls. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
+- **A. Only a longer test timeout** Execution duration does not establish an independent release approval boundary.
+- **B. Only another compilation of identical source** A repeated build does not establish independent permission to deploy the release.
+- **C. Only a different artifact friendly name** Output naming does not authorize a production environment transition.
+- **D. A protected deployment environment approval** **Correct.** Source review and authorization to promote into an environment are separate decisions.
 
-**Explanation:** The gate needs an independent administrative boundary. The selected answer is configure protected environment checks outside author-controlled YAML.
+**Explanation:** Source review and authorization to promote into an environment are separate decisions. A repeated build does not establish independent permission to deploy the release. Output naming does not authorize a production environment transition. Execution duration does not establish an independent release approval boundary.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q002
 
-Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which explanation best accounts for the behavior or constraint described?
+The release author must not approve their own GitHub environment transition. Which protection should the provider configuration enforce?
 
-- **A. Execution pause and independent resource protection are different mechanisms** The author may control one but not the other. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **B. The author controls both deployment and its approval rule** **Correct.** An editable check cannot enforce independent review. This directly addresses the constraint stated in this case.
-- **C. Approval identity is not independent of the request** A nominal approval can still be self-authorization. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
+- **A. Prevent self-review for the required environment reviewers** **Correct.** The intended independent authorization excludes the actor requesting their own deployment approval.
+- **B. Use the author name in the environment label** A display label does not restrict who can approve the transition.
+- **C. Store the policy only in a repository comment** Prose does not enforce provider environment reviewer eligibility or independence.
+- **D. Give the author a broader deployment token** Additional authority does not provide the required independent approval decision.
 
-**Explanation:** An editable check cannot enforce independent review. The selected answer is the author controls both deployment and its approval rule.
+**Explanation:** The intended independent authorization excludes the actor requesting their own deployment approval. A display label does not restrict who can approve the transition. Prose does not enforce provider environment reviewer eligibility or independence. Additional authority does not provide the required independent approval decision.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q003
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which observation provides the strongest evidence that the requested result was achieved?
+A pipeline author can edit YAML but must not remove production approvals. Where should Azure DevOps checks be controlled?
 
-- **A. The requester cannot approve their own protected deployment** The negative test verifies reviewer independence. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **B. An author cannot edit away the required independent protection** The test should target bypass capability rather than the UI. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **C. Removing YAML steps does not bypass the environment approval** **Correct.** The protection must survive an untrusted pipeline edit. This directly addresses the constraint stated in this case.
+- **A. Only inside a script the author can replace** Editable code cannot independently prevent its own approval boundary from being removed.
+- **B. Only in an artifact filename** An output label does not configure protected resource authorization or checks.
+- **C. Only in a build number format** Run presentation does not enforce environment transition approval requirements.
+- **D. On protected resources by their authorized owners** **Correct.** Resource checks remain separate from author-editable pipeline execution source.
 
-**Explanation:** The protection must survive an untrusted pipeline edit. The selected answer is removing YAML steps does not bypass the environment approval.
+**Explanation:** Resource checks remain separate from author-editable pipeline execution source. Editable code cannot independently prevent its own approval boundary from being removed. An output label does not configure protected resource authorization or checks. Run presentation does not enforce environment transition approval requirements.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q004
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. Which execution safeguard most directly addresses the risk in this case?
+The lab copies a deployment workflow to a review directory outside active workflow discovery. What has that action established?
 
-- **A. Review who can modify each gate and pipeline definition** Permission boundaries determine actual enforcement strength. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **B. Limit environment administration to accountable owners** **Correct.** Broad administration rights can still bypass intended governance. This directly addresses the constraint stated in this case.
-- **C. Keep an available backup approver group** A single absent reviewer can block necessary releases. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
+- **A. A successful Azure deployment with production approval** No executable dispatch or provider result demonstrates the claimed live transition.
+- **B. Automatic creation of all environment reviewers** Copying a YAML file does not configure provider reviewer resource settings.
+- **C. A dormant reviewed contract rather than an executed release** **Correct.** Retaining source for inspection does not activate or prove hosted deployment behavior.
+- **D. Automatic assignment of a managed identity role** File placement does not mutate Azure identity authorization or role assignments.
 
-**Explanation:** Broad administration rights can still bypass intended governance. The selected answer is limit environment administration to accountable owners.
+**Explanation:** Retaining source for inspection does not activate or prove hosted deployment behavior. No executable dispatch or provider result demonstrates the claimed live transition. Copying a YAML file does not configure provider reviewer resource settings. File placement does not mutate Azure identity authorization or role assignments.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q005
 
-Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md)
 
-Self-modifying gate: A deployment author can remove an approval from the same YAML change being approved. The team selects this remedy: "Configure protected environment checks outside author-controlled YAML." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An environment exists, but its required reviewer policy is empty. Which validation outcome matches a required independent approval gate?
 
-- **A. Porting gates across platforms may require redesign** Equivalent intent does not imply identical configuration features. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **B. External checks need separate configuration management** **Correct.** Repository review alone cannot reproduce every resource policy. This directly addresses the constraint stated in this case.
-- **C. Independent approval adds coordination latency** The assurance benefit should match deployment risk. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
+```json
+{"environment":"release-run42","required_reviewers":[],"prevent_self_review":true}
+```
 
-**Explanation:** Repository review alone cannot reproduce every resource policy. The selected answer is external checks need separate configuration management.
+- **A. Pass because every environment name implies approval** A friendly environment label does not create independent reviewer enforcement automatically.
+- **B. Reject the missing protection despite resource existence** **Correct.** An environment identifier does not prove the intended approval requirement is configured.
+- **C. Pass if the artifact test count is large** Behavioral quality evidence does not establish environment authorization configuration.
+- **D. Pass if the source repository contains a README policy** Documentation intent cannot replace actual provider resource protection settings.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** An environment identifier does not prove the intended approval requirement is configured. A friendly environment label does not create independent reviewer enforcement automatically. Documentation intent cannot replace actual provider resource protection settings. Behavioral quality evidence does not establish environment authorization configuration.
+
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q006
 
-Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
 
-Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which next change most directly satisfies the stated requirement?
+A local release request names the author as its only approver while independent approval is required. What should the decision fixture do?
 
-- **A. Add a protected branch-control check for the environment** The target must verify the source provenance policy. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **B. Configure protected environment checks outside author-controlled YAML** The gate needs an independent administrative boundary. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **C. Require an eligible independent approver** **Correct.** The release requires separation between requester and reviewer. This directly addresses the constraint stated in this case.
+- **A. Approve because the artifact filename is correct** Output naming does not satisfy a missing independent reviewer boundary.
+- **B. Approve whenever the author also owns the branch** Source ownership does not establish the required separate deployment approval decision.
+- **C. Deny the request under the independence rule** **Correct.** The author cannot supply the independent authorization that the policy explicitly requires.
+- **D. Skip the policy because the fixture is local** A local exercise should still demonstrate its stated denial and acceptance logic.
 
-**Explanation:** The release requires separation between requester and reviewer. The selected answer is require an eligible independent approver.
+**Explanation:** The author cannot supply the independent authorization that the policy explicitly requires. Output naming does not satisfy a missing independent reviewer boundary. Source ownership does not establish the required separate deployment approval decision. A local exercise should still demonstrate its stated denial and acceptance logic.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q007
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which explanation best accounts for the behavior or constraint described?
+An Azure pipeline YAML contains environment: production. Does that declaration alone establish configured approval checks on that environment?
 
-- **A. The author controls both deployment and its approval rule** An editable check cannot enforce independent review. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **B. Approval identity is not independent of the request** **Correct.** A nominal approval can still be self-authorization. This directly addresses the constraint stated in this case.
-- **C. The gate checks success but not authorized source branch** A green feature build is not an approved release source. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
+- **A. No; approvals are impossible in YAML-based pipelines** Protected resource checks can gate YAML workloads when configured by resource owners.
+- **B. No; inspect the protected resource checks separately** **Correct.** Referencing a resource does not prove its owner configured the required protection rules.
+- **C. Yes; the word production automatically supplies independent reviewers** Environment naming does not define approver identities or enforcement requirements automatically.
+- **D. Yes; every deployment job is always manually approved** Deployment job structure does not itself guarantee a particular resource approval configuration.
 
-**Explanation:** A nominal approval can still be self-authorization. The selected answer is approval identity is not independent of the request.
+**Explanation:** Referencing a resource does not prove its owner configured the required protection rules. Environment naming does not define approver identities or enforcement requirements automatically. Deployment job structure does not itself guarantee a particular resource approval configuration. Protected resource checks can gate YAML workloads when configured by resource owners.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q008
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which observation provides the strongest evidence that the requested result was achieved?
+A private repository lacks entitlement for a requested environment protection feature. How should this checkpoint be recorded?
 
-- **A. Removing YAML steps does not bypass the environment approval** The protection must survive an untrusted pipeline edit. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **B. The requester cannot approve their own protected deployment** **Correct.** The negative test verifies reviewer independence. This directly addresses the constraint stated in this case.
-- **C. A feature-branch run is rejected while main is accepted** Both branches test the intended provenance restriction. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
+- **A. Passed because a local JSON policy looks correct** A planned payload does not prove the provider accepted or enforces the feature.
+- **B. Passed after removing reviewer checks without revising the requirement** Deleting the required protection does not satisfy the original independence contract.
+- **C. Gated until the authorized account prerequisite is satisfied** **Correct.** Unavailable licensed enforcement cannot be represented as a successfully configured passing gate.
+- **D. Automatically purchase a plan during lab execution** Billing changes require explicit owner authorization rather than an implicit repository exercise.
 
-**Explanation:** The negative test verifies reviewer independence. The selected answer is the requester cannot approve their own protected deployment.
+**Explanation:** Unavailable licensed enforcement cannot be represented as a successfully configured passing gate. A planned payload does not prove the provider accepted or enforces the feature. Deleting the required protection does not satisfy the original independence contract. Billing changes require explicit owner authorization rather than an implicit repository exercise.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q009
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.2.1](../../docs/objective-map.md)
 
-Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. Which execution safeguard most directly addresses the risk in this case?
+Tests pass, but required deployment approval is pending. What should the release state indicate before promotion?
 
-- **A. Keep an available backup approver group** **Correct.** A single absent reviewer can block necessary releases. This directly addresses the constraint stated in this case.
-- **B. Protect the permitted branch and its required validations** A permitted branch can still be unsafe if unprotected. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **C. Limit environment administration to accountable owners** Broad administration rights can still bypass intended governance. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
+- **A. Test failure because approval has not arrived yet** A pending authorization decision does not change the measured application test result.
+- **B. Cleanup completed because no deployment started** Lack of deployment does not prove that all other run resources were deleted.
+- **C. Quality passed while environment authorization remains pending** **Correct.** Behavioral validation and independent promotion permission are distinct required release gates.
+- **D. Fully deployed because tests provide every authorization** Successful assertions do not grant permission to cross a protected environment boundary.
 
-**Explanation:** A single absent reviewer can block necessary releases. The selected answer is keep an available backup approver group.
+**Explanation:** Behavioral validation and independent promotion permission are distinct required release gates. Successful assertions do not grant permission to cross a protected environment boundary. A pending authorization decision does not change the measured application test result. Lack of deployment does not prove that all other run resources were deleted.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q010
 
-Advanced · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Self-approval risk: The engineer who requests a production deployment also satisfies its only approval requirement. The team selects this remedy: "Require an eligible independent approver." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The dormant workflow references production, while the lab created release-run42. What must happen before activation uses the intended protected boundary?
 
-- **A. Branch controls depend on accurate linked-resource provenance** Complex multi-repository pipelines need careful policy review. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **B. External checks need separate configuration management** Repository review alone cannot reproduce every resource policy. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **C. Independent approval adds coordination latency** **Correct.** The assurance benefit should match deployment risk. This directly addresses the constraint stated in this case.
+- **A. Only increase pipeline log retention** Storage lifetime does not repair a mismatched environment resource reference.
+- **B. Deliberately map the workflow environment to the owned protected resource** **Correct.** An unmatched name can target a different environment without the intended protection settings.
+- **C. Assume similar names share all reviewers automatically** Friendly name similarity does not establish identical provider resource protection state.
+- **D. Only rename the downloaded application archive** Artifact naming does not change the environment referenced by the executable workflow.
 
-**Explanation:** The assurance benefit should match deployment risk. The selected answer is independent approval adds coordination latency.
+**Explanation:** An unmatched name can target a different environment without the intended protection settings. Friendly name similarity does not establish identical provider resource protection state. Artifact naming does not change the environment referenced by the executable workflow. Storage lifetime does not repair a mismatched environment resource reference.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q011
 
-Foundational · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which next change most directly satisfies the stated requirement?
+A production service connection should be available to one approved release pipeline only. What provider boundary should be configured?
 
-- **A. Require an eligible independent approver** The release requires separation between requester and reviewer. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **B. Add a protected branch-control check for the environment** **Correct.** The target must verify the source provenance policy. This directly addresses the constraint stated in this case.
-- **C. Use an exclusive lock with an intentional queue policy** Shared mutable targets need coordinated deployment ownership. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
+- **A. An artifact name matching the connection name** Output labels do not authorize consumption of protected deployment credentials.
+- **B. Specific pipeline authorization for that connection** **Correct.** Resource access should match the intended consumer instead of blanket project-wide exposure.
+- **C. A comment asking other pipelines not to use it** Documentation does not enforce provider resource authorization against other executable definitions.
+- **D. An unrestricted shared administrator credential** Broad personal authority defeats the intended narrow consumer resource boundary.
 
-**Explanation:** The target must verify the source provenance policy. The selected answer is add a protected branch-control check for the environment.
+**Explanation:** Resource access should match the intended consumer instead of blanket project-wide exposure. Documentation does not enforce provider resource authorization against other executable definitions. Output labels do not authorize consumption of protected deployment credentials. Broad personal authority defeats the intended narrow consumer resource boundary.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q012
 
-Foundational · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which explanation best accounts for the behavior or constraint described?
+A local rule evaluator denies an unapproved release request. Which claim is justified before a provider deployment job runs?
 
-- **A. Approval identity is not independent of the request** A nominal approval can still be self-authorization. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **B. The gate checks success but not authorized source branch** **Correct.** A green feature build is not an approved release source. This directly addresses the constraint stated in this case.
-- **C. Approval does not serialize concurrent execution** Two independently authorized changes can still collide. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
+- **A. The local decision logic rejected that request** **Correct.** A fixture proves its own evaluation behavior without demonstrating hosted enforcement.
+- **B. The release artifact has already been promoted successfully** A denial cannot prove that an authorized environment transition completed.
+- **C. Every organization pipeline inherits the tested local policy** A local fixture does not configure universal provider resource checks automatically.
+- **D. The production environment actually blocked a live deployment** No provider execution observation establishes that specific live enforcement event.
 
-**Explanation:** A green feature build is not an approved release source. The selected answer is the gate checks success but not authorized source branch.
+**Explanation:** A fixture proves its own evaluation behavior without demonstrating hosted enforcement. No provider execution observation establishes that specific live enforcement event. A denial cannot prove that an authorized environment transition completed. A local fixture does not configure universal provider resource checks automatically.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q013
 
-Applied · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which observation provides the strongest evidence that the requested result was achieved?
+The environment configuration request succeeds. What additional read should verify the intended independent reviewer rule persisted?
 
-- **A. Only one protected deployment changes the environment at a time** The test must include competing eligible runs. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **B. The requester cannot approve their own protected deployment** The negative test verifies reviewer independence. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **C. A feature-branch run is rejected while main is accepted** **Correct.** Both branches test the intended provenance restriction. This directly addresses the constraint stated in this case.
+- **A. Read only the environment creation timestamp** Creation time does not show whether the stored reviewer and self-review protection match the requested policy.
+- **B. Read only the YAML environment name** A source reference identifies intended selection without proving provider reviewer enforcement is actually configured.
+- **C. Read only the configured environment secrets list** Secret presence does not establish required reviewer identities or prevention of author self-approval.
+- **D. Read the actual protection rules and reviewer identities** **Correct.** Provider read-back checks stored state rather than trusting submitted configuration intent alone.
 
-**Explanation:** Both branches test the intended provenance restriction. The selected answer is a feature-branch run is rejected while main is accepted.
+**Explanation:** Creation time does not show whether the stored reviewer and self-review protection match the requested policy. A source reference identifies intended selection without proving provider reviewer enforcement is actually configured. Secret presence does not establish required reviewer identities or prevention of author self-approval. Provider read-back checks stored state rather than trusting submitted configuration intent alone.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q014
 
-Applied · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. Which execution safeguard most directly addresses the risk in this case?
+A waiting period is configured, but the requirement demands a human release decision. Why is the timer insufficient by itself?
 
-- **A. Choose cancellation or sequential behavior based on recovery safety** An interrupted deployment may leave partial work. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **B. Keep an available backup approver group** A single absent reviewer can block necessary releases. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **C. Protect the permitted branch and its required validations** **Correct.** A permitted branch can still be unsafe if unprotected. This directly addresses the constraint stated in this case.
+- **A. Elapsed time does not provide independent human authorization** **Correct.** A delay and an approval answer different release control requirements.
+- **B. A timer proves application readiness and latency** Time passage does not establish actual deployed health or measured service performance.
+- **C. Any timer automatically adds the repository administrator as reviewer** Waiting alone does not configure a specific approving identity or authorization event.
+- **D. A timer makes every artifact source revision trusted** Delay cannot establish artifact provenance or approve an arbitrary producing candidate.
 
-**Explanation:** A permitted branch can still be unsafe if unprotected. The selected answer is protect the permitted branch and its required validations.
+**Explanation:** A delay and an approval answer different release control requirements. Waiting alone does not configure a specific approving identity or authorization event. Time passage does not establish actual deployed health or measured service performance. Delay cannot establish artifact provenance or approve an arbitrary producing candidate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q015
 
-Advanced · [CP5](README.md#task-5) · [D3.3.9](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Wrong branch release: A valid pipeline run from a feature branch reaches the production environment despite main-only release policy. The team selects this remedy: "Add a protected branch-control check for the environment." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A request has an independent approver but its required tests failed. What should a combined release decision require?
 
-- **A. Independent approval adds coordination latency** The assurance benefit should match deployment risk. That addresses a different requirement: Self-approval risk. It does not directly resolve this case's stated constraint.
-- **B. Branch controls depend on accurate linked-resource provenance** **Correct.** Complex multi-repository pipelines need careful policy review. This directly addresses the constraint stated in this case.
-- **C. Serialization increases queue time** Consistency may be more valuable than maximum throughput. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
+```json
+{"testsPassed":false,"sourceAllowed":true,"independentApprover":true}
+```
 
-**Explanation:** Complex multi-repository pipelines need careful policy review. The selected answer is branch controls depend on accurate linked-resource provenance.
+- **A. Both passing mandatory quality and valid independent authorization** **Correct.** One required gate cannot compensate for failure of another separate release prerequisite.
+- **B. Test failures should erase the approver identity record** Keeping truthful evidence supports diagnosis without changing the independent authorization observation.
+- **C. Only the artifact display name should decide** A friendly label does not establish either tested quality or approval eligibility.
+- **D. Approval should override all application test failures automatically** Human authorization does not establish the absent required behavioral validation result.
+
+**Explanation:** One required gate cannot compensate for failure of another separate release prerequisite. Human authorization does not establish the absent required behavioral validation result. Keeping truthful evidence supports diagnosis without changing the independent authorization observation. A friendly label does not establish either tested quality or approval eligibility.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q016
 
-Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which next change most directly satisfies the stated requirement?
+A pipeline change removes an approval-looking script, but the resource owner configured genuine protected checks. What should still gate access?
 
-- **A. Add a protected branch-control check for the environment** The target must verify the source provenance policy. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **B. Use an exclusive lock with an intentional queue policy** **Correct.** Shared mutable targets need coordinated deployment ownership. This directly addresses the constraint stated in this case.
-- **C. Gate promotion on relevant runtime health evidence** Static and predeployment tests cannot establish live service health. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
+- **A. The provider checks attached to the protected resource** **Correct.** Author-editable YAML cannot independently remove an owner-controlled resource access requirement.
+- **B. Only the pipeline display name** A label does not enforce a required independent resource approval decision.
+- **C. Only a previously uploaded report** Historical evidence does not grant current permission to consume the protected resource.
+- **D. Only the removed script because YAML always controls every check** Resource protection exists outside the author-controlled executable source boundary.
 
-**Explanation:** Shared mutable targets need coordinated deployment ownership. The selected answer is use an exclusive lock with an intentional queue policy.
+**Explanation:** Author-editable YAML cannot independently remove an owner-controlled resource access requirement. Resource protection exists outside the author-controlled executable source boundary. A label does not enforce a required independent resource approval decision. Historical evidence does not grant current permission to consume the protected resource.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q017
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which explanation best accounts for the behavior or constraint described?
+The release job references an environment but exposes a powerful repository secret to earlier untrusted steps. What gap remains despite approval?
 
-- **A. The gate checks success but not authorized source branch** A green feature build is not an approved release source. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **B. Approval does not serialize concurrent execution** **Correct.** Two independently authorized changes can still collide. This directly addresses the constraint stated in this case.
-- **C. The release gate omits the failing operational signal** A healthy build can create an unhealthy deployment. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
+- **A. The artifact download should use a different transfer action** Changing transfer tooling does not remove the deployment credential available before the intended protection boundary.
+- **B. Every untrusted step becomes safe after a later approval** Later authorization cannot undo earlier arbitrary code access to available credentials.
+- **C. The job needs a second approval after its untrusted steps** A later review cannot undo earlier executable access to credentials that were already exposed.
+- **D. Credential exposure occurs before the intended protected boundary** **Correct.** An approval gate does not protect credentials already available to earlier executable code.
 
-**Explanation:** Two independently authorized changes can still collide. The selected answer is approval does not serialize concurrent execution.
+**Explanation:** An approval gate does not protect credentials already available to earlier executable code. A later review cannot undo earlier executable access to credentials that were already exposed. Changing transfer tooling does not remove the deployment credential available before the intended protection boundary. Later authorization cannot undo earlier arbitrary code access to available credentials.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q018
 
 Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which observation provides the strongest evidence that the requested result was achieved?
+Two approved release runs could update the same production app concurrently. Which additional control addresses resource contention?
 
-- **A. A failed health probe prevents traffic promotion** The negative outcome demonstrates the quality boundary. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **B. A feature-branch run is rejected while main is accepted** Both branches test the intended provenance restriction. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **C. Only one protected deployment changes the environment at a time** **Correct.** The test must include competing eligible runs. This directly addresses the constraint stated in this case.
+- **A. A longer friendly artifact filename** Output naming does not establish mutual exclusion on the deployed resource.
+- **B. More independent reviewers for each run only** Additional approvals do not inherently prevent both approved executions running simultaneously.
+- **C. An exclusive resource lock or explicit release concurrency boundary** **Correct.** Approval does not serialize competing deployments to shared mutable application state.
+- **D. A source comment asking jobs to be careful** Documentation alone cannot enforce the required runtime serialization boundary.
 
-**Explanation:** The test must include competing eligible runs. The selected answer is only one protected deployment changes the environment at a time.
+**Explanation:** Approval does not serialize competing deployments to shared mutable application state. Additional approvals do not inherently prevent both approved executions running simultaneously. Output naming does not establish mutual exclusion on the deployed resource. Documentation alone cannot enforce the required runtime serialization boundary.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q019
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. Which execution safeguard most directly addresses the risk in this case?
+Only main releases should reach production. Which control should accompany approval to enforce the intended source boundary?
 
-- **A. Use bounded observation periods and a defined recovery action** An indefinite wait is not a safe release strategy. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **B. Protect the permitted branch and its required validations** A permitted branch can still be unsafe if unprotected. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **C. Choose cancellation or sequential behavior based on recovery safety** **Correct.** An interrupted deployment may leave partial work. This directly addresses the constraint stated in this case.
+- **A. Only an artifact label that contains main** A friendly output name can be chosen independently of actual producing source.
+- **B. Only a build variable set by contributor code** Caller-controlled input cannot independently establish a trusted production source restriction.
+- **C. Only a reviewer selected from the contributor author list** Reviewer identity does not itself establish the source branch policy.
+- **D. A protected allowed-branch policy for the environment resource** **Correct.** Source restrictions and human approval together constrain which candidates may be promoted.
 
-**Explanation:** An interrupted deployment may leave partial work. The selected answer is choose cancellation or sequential behavior based on recovery safety.
+**Explanation:** Source restrictions and human approval together constrain which candidates may be promoted. A friendly output name can be chosen independently of actual producing source. Reviewer identity does not itself establish the source branch policy. Caller-controlled input cannot independently establish a trusted production source restriction.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q020
 
-Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Overlapping deployments: Two approved runs update one environment simultaneously and interfere with each other's resource changes. The team selects this remedy: "Use an exclusive lock with an intentional queue policy." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The author cannot supply an independent reviewer for this lab account. What result preserves the intended learning requirement?
 
-- **A. Branch controls depend on accurate linked-resource provenance** Complex multi-repository pipelines need careful policy review. That addresses a different requirement: Wrong branch release. It does not directly resolve this case's stated constraint.
-- **B. Serialization increases queue time** **Correct.** Consistency may be more valuable than maximum throughput. This directly addresses the constraint stated in this case.
-- **C. Health gates can produce false positives** Thresholds should reflect meaningful service behavior. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
+- **A. Turn off self-review prevention without revising the requirement** Removing the protection abandons the stated independent release authorization contract.
+- **B. Leave the reviewer-enforced operation visibly gated** **Correct.** Missing independent authorization is a prerequisite rather than a reason to fabricate passing evidence.
+- **C. Add the author twice and count two entries** Repeated identity does not create independence from the requesting release author.
+- **D. Treat successful local parsing as provider approval** Syntax validation cannot establish a human decision on a protected deployment environment.
 
-**Explanation:** Consistency may be more valuable than maximum throughput. The selected answer is serialization increases queue time.
+**Explanation:** Missing independent authorization is a prerequisite rather than a reason to fabricate passing evidence. Repeated identity does not create independence from the requesting release author. Removing the protection abandons the stated independent release authorization contract. Syntax validation cannot establish a human decision on a protected deployment environment.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which next change most directly satisfies the stated requirement?
+The decision fixture accepts one independent reviewer despite a failed required quality signal. What validator improvement catches this policy defect?
 
-- **A. Set an explicit approval timeout and communicate the outcome** Waiting should have a bounded operational result. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **B. Use an exclusive lock with an intentional queue policy** Shared mutable targets need coordinated deployment ownership. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **C. Gate promotion on relevant runtime health evidence** **Correct.** Static and predeployment tests cannot establish live service health. This directly addresses the constraint stated in this case.
+```text
+Required: quality AND source AND independent reviewer
+Fixture accepts: independent reviewer only
+```
 
-**Explanation:** Static and predeployment tests cannot establish live service health. The selected answer is gate promotion on relevant runtime health evidence.
+- **A. Assert denial for each unmet mandatory prerequisite** **Correct.** The evaluator must demonstrate combined policy behavior rather than only one positive condition.
+- **B. Assert only that the JSON file exists** File existence does not prove correctness of the release authorization decision.
+- **C. Assume every readable policy file enforces its prose** Intent documentation does not guarantee the implemented decision logic matches.
+- **D. Count the total number of strings in the policy** Text quantity does not establish that mandatory conditions actually control acceptance.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** The evaluator must demonstrate combined policy behavior rather than only one positive condition. File existence does not prove correctness of the release authorization decision. Text quantity does not establish that mandatory conditions actually control acceptance. Intent documentation does not guarantee the implemented decision logic matches.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which explanation best accounts for the behavior or constraint described?
+A dormant template contains azure/login but has not been activated or dispatched. What completion claim remains unsupported?
 
-- **A. Approval does not serialize concurrent execution** Two independently authorized changes can still collide. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **B. The release gate omits the failing operational signal** **Correct.** A healthy build can create an unhealthy deployment. This directly addresses the constraint stated in this case.
-- **C. The workflow lacks a defined expired-approval path** Silence cannot be treated as authorization. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
+- **A. The activation path still requires explicit review** A dormant definition can retain that separately documented prerequisite legitimately.
+- **B. A successful live workload federation exchange** **Correct.** An authentication step in source is intent rather than an observed provider token exchange.
+- **C. The source can be inspected without cloud deployment** Reading a file does not require executing its privileged deployment operations.
+- **D. The reviewed source contains a login action reference** That statement describes inspectable file content rather than an unexecuted runtime result.
 
-**Explanation:** A healthy build can create an unhealthy deployment. The selected answer is the release gate omits the failing operational signal.
+**Explanation:** An authentication step in source is intent rather than an observed provider token exchange. That statement describes inspectable file content rather than an unexecuted runtime result. A dormant definition can retain that separately documented prerequisite legitimately. Reading a file does not require executing its privileged deployment operations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which observation provides the strongest evidence that the requested result was achieved?
+The connection is authorized to a pipeline, but the environment reviewer denies its release. What should deployment do?
 
-- **A. A failed health probe prevents traffic promotion** **Correct.** The negative outcome demonstrates the quality boundary. This directly addresses the constraint stated in this case.
-- **B. An unanswered request expires with a visible failed or skipped outcome** The process should not silently deploy after timeout. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **C. Only one protected deployment changes the environment at a time** The test must include competing eligible runs. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
+- **A. Stop at the denied required environment gate** **Correct.** Permission to consume one resource does not override another required independent approval.
+- **B. Deploy because service connection authorization is sufficient alone** Credential access cannot replace a separately required environment release decision.
+- **C. Retry with an unrestricted personal credential automatically** Changing credentials to bypass a denial defeats the intended authorization boundary.
+- **D. Delete the denial from the downloaded evidence** Editing records does not change the actual protected release decision.
 
-**Explanation:** The negative outcome demonstrates the quality boundary. The selected answer is a failed health probe prevents traffic promotion.
+**Explanation:** Permission to consume one resource does not override another required independent approval. Credential access cannot replace a separately required environment release decision. Changing credentials to bypass a denial defeats the intended authorization boundary. Editing records does not change the actual protected release decision.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q024
 
-Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. Which execution safeguard most directly addresses the risk in this case?
+An environment reviewer approves candidate A, then the workflow switches to unrelated artifact B. Which boundary should review and provenance checks preserve?
 
-- **A. Document how to retry after renewed authorization** A later release still needs valid approval evidence. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **B. Choose cancellation or sequential behavior based on recovery safety** An interrupted deployment may leave partial work. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **C. Use bounded observation periods and a defined recovery action** **Correct.** An indefinite wait is not a safe release strategy. This directly addresses the constraint stated in this case.
+- **A. Approval must apply to the actual selected deployment candidate** **Correct.** Authorization is meaningful only when the promoted source and content match what was reviewed.
+- **B. Any approval authorizes all future artifacts permanently** A past decision does not create unlimited release authority over arbitrary candidates.
+- **C. A matching artifact filename proves A and B are identical** Friendly naming can be reused for independently produced different output content.
+- **D. The operator can silently change the recorded approved SHA** Changing expectations conceals the candidate mismatch instead of preserving reviewed authorization.
 
-**Explanation:** An indefinite wait is not a safe release strategy. The selected answer is use bounded observation periods and a defined recovery action.
+**Explanation:** Authorization is meaningful only when the promoted source and content match what was reviewed. A past decision does not create unlimited release authority over arbitrary candidates. Friendly naming can be reused for independently produced different output content. Changing expectations conceals the candidate mismatch instead of preserving reviewed authorization.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Unhealthy release: Required unit tests pass, but a postdeployment health probe fails and traffic promotion continues. The team selects this remedy: "Gate promotion on relevant runtime health evidence." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The database and application promotion require different owners. What environment design supports their distinct approval boundaries?
 
-- **A. Short timeouts may reject otherwise valid releases** Choose a window compatible with reviewer availability. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **B. Serialization increases queue time** Consistency may be more valuable than maximum throughput. That addresses a different requirement: Overlapping deployments. It does not directly resolve this case's stated constraint.
-- **C. Health gates can produce false positives** **Correct.** Thresholds should reflect meaningful service behavior. This directly addresses the constraint stated in this case.
+- **A. Only a longer combined deployment script** Combining commands does not establish distinct independent approvals for database and application work.
+- **B. One shared unchecked variable named Approved** An author-editable declaration does not provide separate owner-controlled authorization decisions.
+- **C. Only a shared package archive containing both outputs** Packaging related files does not create the required resource approval separation.
+- **D. Separate protected database and application environments** **Correct.** Independent resource gates can represent the different authorization responsibilities for each transition.
 
-**Explanation:** Thresholds should reflect meaningful service behavior. The selected answer is health gates can produce false positives.
+**Explanation:** Independent resource gates can represent the different authorization responsibilities for each transition. An author-editable declaration does not provide separate owner-controlled authorization decisions. Combining commands does not establish distinct independent approvals for database and application work. Packaging related files does not create the required resource approval separation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q026
 
-Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which next change most directly satisfies the stated requirement?
+A policy is stored in JSON and marked approved:true, but no evaluator reads that field. What practice is missing?
 
-- **A. Gate promotion on relevant runtime health evidence** Static and predeployment tests cannot establish live service health. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **B. Set an explicit approval timeout and communicate the outcome** **Correct.** Waiting should have a bounded operational result. This directly addresses the constraint stated in this case.
-- **C. Use a schedule or business-hours check appropriate to the platform** Approval and allowed execution time are separate constraints. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
+- **A. A successful healthy test that ignores invalid approval inputs** An unrelated positive result does not prove declared authorization fields affect accepted and denied requests.
+- **B. An additional schema check that only validates JSON field types** Parsing a Boolean declaration still does not prove the evaluator uses it to control release decisions.
+- **C. A hash of the policy with no decision-path tests** Stable policy bytes do not establish whether the implementation consumes the required approval predicate.
+- **D. Observable decisions connected to the declared policy inputs** **Correct.** A declaration alone does not prove it influences acceptance or denial behavior.
 
-**Explanation:** Waiting should have a bounded operational result. The selected answer is set an explicit approval timeout and communicate the outcome.
+**Explanation:** A declaration alone does not prove it influences acceptance or denial behavior. Parsing a Boolean declaration still does not prove the evaluator uses it to control release decisions. Stable policy bytes do not establish whether the implementation consumes the required approval predicate. An unrelated positive result does not prove declared authorization fields affect accepted and denied requests.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q027
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which explanation best accounts for the behavior or constraint described?
+A protected job receives environment-scoped secrets only after its approval boundary. What risk does this timing reduce?
 
-- **A. The release gate omits the failing operational signal** A healthy build can create an unhealthy deployment. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **B. The workflow lacks a defined expired-approval path** **Correct.** Silence cannot be treated as authorization. This directly addresses the constraint stated in this case.
-- **C. An approval alone does not enforce the calendar boundary** An early decision can precede a safe execution period. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
+- **A. Premature secret exposure before authorized environment execution** **Correct.** The protected boundary limits credential availability to the intended approved consuming job.
+- **B. All ability of the approved job to misuse its available secret** Authorized executable code still needs least privilege and trustworthy implementation.
+- **C. All future vulnerability risk in application code** Credential timing does not establish that every application dependency and behavior is safe.
+- **D. Every risk from public artifact retention** Secret availability timing does not independently govern stored artifact data classification.
 
-**Explanation:** Silence cannot be treated as authorization. The selected answer is the workflow lacks a defined expired-approval path.
+**Explanation:** The protected boundary limits credential availability to the intended approved consuming job. Credential timing does not establish that every application dependency and behavior is safe. Authorized executable code still needs least privilege and trustworthy implementation. Secret availability timing does not independently govern stored artifact data classification.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q028
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which observation provides the strongest evidence that the requested result was achieved?
+A release request passes quality, source and reviewer checks but exceeds its allowed deployment window. What should a combined mandatory policy do?
 
-- **A. The deployment waits until the permitted window** Timing evidence must match the organization's stated rule. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **B. A failed health probe prevents traffic promotion** The negative outcome demonstrates the quality boundary. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **C. An unanswered request expires with a visible failed or skipped outcome** **Correct.** The process should not silently deploy after timeout. This directly addresses the constraint stated in this case.
+- **A. Delete the window field after approval** Removing a required condition changes policy instead of meeting the reviewed requirement.
+- **B. Ignore the window because three other fields passed** Counting successes is not equivalent to satisfying every required policy predicate.
+- **C. Deny until the window requirement is satisfied** **Correct.** All mandatory constraints must hold rather than letting unrelated passing conditions compensate.
+- **D. Change the local clock to make evidence appear valid** Fabricated timing does not establish an authorized transition within the real allowed window.
 
-**Explanation:** The process should not silently deploy after timeout. The selected answer is an unanswered request expires with a visible failed or skipped outcome.
+**Explanation:** All mandatory constraints must hold rather than letting unrelated passing conditions compensate. Counting successes is not equivalent to satisfying every required policy predicate. Fabricated timing does not establish an authorized transition within the real allowed window. Removing a required condition changes policy instead of meeting the reviewed requirement.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q029
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. Which execution safeguard most directly addresses the risk in this case?
+Production checks time out before approval arrives. How should the run be reported before an explicitly authorized retry?
 
-- **A. Check timezone and window duration explicitly** Incorrect timezone assumptions can cause off-hours changes. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **B. Use bounded observation periods and a defined recovery action** An indefinite wait is not a safe release strategy. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **C. Document how to retry after renewed authorization** **Correct.** A later release still needs valid approval evidence. This directly addresses the constraint stated in this case.
+- **A. Passed because tests were successful earlier** Behavioral quality cannot replace the timed-out independent environment permission gate.
+- **B. Cleaned up because the stage did not deploy** An unexecuted deployment does not prove deletion of other run-owned resources.
+- **C. Passed because no reviewer explicitly rejected it** Absence of rejection is not affirmative authorization when approval is required.
+- **D. Incomplete or failed at the gate with retained reason** **Correct.** A timeout does not establish that the required approval was granted and executed.
 
-**Explanation:** A later release still needs valid approval evidence. The selected answer is document how to retry after renewed authorization.
+**Explanation:** A timeout does not establish that the required approval was granted and executed. Absence of rejection is not affirmative authorization when approval is required. Behavioral quality cannot replace the timed-out independent environment permission gate. An unexecuted deployment does not prove deletion of other run-owned resources.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q030
 
-Advanced · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Approval timeout: A deployment waits for a reviewer who never responds, leaving the release indefinitely unclear. The team selects this remedy: "Set an explicit approval timeout and communicate the outcome." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Activating the dormant workflow would target an environment without the intended restrictions. Which review must precede publication?
 
-- **A. Health gates can produce false positives** Thresholds should reflect meaningful service behavior. That addresses a different requirement: Unhealthy release. It does not directly resolve this case's stated constraint.
-- **B. Short timeouts may reject otherwise valid releases** **Correct.** Choose a window compatible with reviewer availability. This directly addresses the constraint stated in this case.
-- **C. Calendar gates can delay urgent remediations** A controlled exception process may be necessary. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
+- **A. Review only code indentation and ignore resource references** Valid syntax does not prove the workflow targets intended protected resources.
+- **B. Review only how many files the package includes** Package size cannot establish the deployment authorization and federation relationship.
+- **C. Review only the workflow friendly display name** A label does not establish correct environment authorization or identity subject matching.
+- **D. Verify environment names, protection settings and exact federation subject** **Correct.** Activation must connect executable source to the actual protected identity and resource boundary.
 
-**Explanation:** Choose a window compatible with reviewer availability. The selected answer is short timeouts may reject otherwise valid releases.
+**Explanation:** Activation must connect executable source to the actual protected identity and resource boundary. A label does not establish correct environment authorization or identity subject matching. Valid syntax does not prove the workflow targets intended protected resources. Package size cannot establish the deployment authorization and federation relationship.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q031
 
-Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which next change most directly satisfies the stated requirement?
+The workflow uses environment release-run42, but the federated credential trusts production. What identity prerequisite is inconsistent?
 
-- **A. Set an explicit approval timeout and communicate the outcome** Waiting should have a bounded operational result. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **B. Use a schedule or business-hours check appropriate to the platform** **Correct.** Approval and allowed execution time are separate constraints. This directly addresses the constraint stated in this case.
-- **C. Present the immutable release identity and validation evidence** An informed decision requires relevant trustworthy context. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
+```text
+Workflow environment: release-run42
+Federation subject suffix: environment:production
+```
 
-**Explanation:** Approval and allowed execution time are separate constraints. The selected answer is use a schedule or business-hours check appropriate to the platform.
+- **A. The issuer must always be the SQL database hostname** The trust issuer identifies the workload token provider rather than the downstream database server endpoint.
+- **B. Changing the audience alone repairs the environment mismatch** Audience and subject are distinct trust fields and the stated environment subject still would not match.
+- **C. The token environment subject does not match the trusted subject** **Correct.** Exact workload identity claims must agree with the configured federation trust tuple.
+- **D. The token must use a password instead of federation** The stated problem is an exact subject mismatch, not a reason to abandon short-lived workload identity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** The stated problem is an exact subject mismatch, not a reason to abandon short-lived workload identity. The trust issuer identifies the workload token provider rather than the downstream database server endpoint. Audience and subject are distinct trust fields and the stated environment subject still would not match. Exact workload identity claims must agree with the configured federation trust tuple.
+
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q032
 
-Foundational · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which explanation best accounts for the behavior or constraint described?
+Resource owners require every release run to acquire a lock in order rather than replace older waiting runs. Which explicit lock behavior fits?
 
-- **A. Approval is being treated as a ceremonial click** The reviewer cannot assess the actual candidate. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **B. The workflow lacks a defined expired-approval path** Silence cannot be treated as authorization. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **C. An approval alone does not enforce the calendar boundary** **Correct.** An early decision can precede a safe execution period. This directly addresses the constraint stated in this case.
+- **A. Require another source code comment** Documentation cannot enforce scheduler behavior on a shared protected resource.
+- **B. Use sequential behavior for the exclusive lock** **Correct.** Sequential locking preserves ordered eligible runs instead of selecting only the latest contender.
+- **C. Remove the shared resource lock entirely** Unrestricted concurrency abandons the required serialization of competing release executions.
+- **D. Set cancel-in-progress on every running deployment** Canceling active work does not implement completion of every approved run in order.
 
-**Explanation:** An early decision can precede a safe execution period. The selected answer is an approval alone does not enforce the calendar boundary.
+**Explanation:** Sequential locking preserves ordered eligible runs instead of selecting only the latest contender. Canceling active work does not implement completion of every approved run in order. Unrestricted concurrency abandons the required serialization of competing release executions. Documentation cannot enforce scheduler behavior on a shared protected resource.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q033
 
-Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which observation provides the strongest evidence that the requested result was achieved?
+The local approval fixture passes the healthy case but never exercises author self-approval. What negative test should be added?
 
-- **A. The deployment waits until the permitted window** **Correct.** Timing evidence must match the organization's stated rule. This directly addresses the constraint stated in this case.
-- **B. The request links to the exact artifact and its checks** Evidence must identify the candidate being approved. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **C. An unanswered request expires with a visible failed or skipped outcome** The process should not silently deploy after timeout. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
+- **A. Increase the healthy request artifact size** Output size does not exercise the independent reviewer eligibility predicate.
+- **B. Rename the healthy request to forbidden** A label change does not create an actual violating reviewer identity relationship.
+- **C. Submit an otherwise valid self-approved request and require denial** **Correct.** A deliberate negative case proves the independence condition influences the actual decision.
+- **D. Count only the number of policy files** File inventory does not establish whether the denied path is evaluated correctly.
 
-**Explanation:** Timing evidence must match the organization's stated rule. The selected answer is the deployment waits until the permitted window.
+**Explanation:** A deliberate negative case proves the independence condition influences the actual decision. A label change does not create an actual violating reviewer identity relationship. Output size does not exercise the independent reviewer eligibility predicate. File inventory does not establish whether the denied path is evaluated correctly.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q034
 
 Applied · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. Which execution safeguard most directly addresses the risk in this case?
+An emergency needs urgent promotion, but the existing gate requires independent approval. Which response retains accountable release control?
 
-- **A. Check timezone and window duration explicitly** **Correct.** Incorrect timezone assumptions can cause off-hours changes. This directly addresses the constraint stated in this case.
-- **B. Prevent substitution of the artifact after approval** Changing the input would invalidate the review decision. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **C. Document how to retry after renewed authorization** A later release still needs valid approval evidence. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
+- **A. Use an explicitly authorized audited emergency path with defined ownership** **Correct.** Urgency should invoke a reviewed exception mechanism rather than silent untracked policy bypass.
+- **B. Replace the artifact source SHA with the last approved SHA** False provenance does not make the new candidate part of an earlier authorization.
+- **C. Let the requesting author disable all checks without evidence** Unrecorded self-authorization defeats the stated independent protected transition boundary.
+- **D. Erase the failed gate record before queueing again** Removing evidence conceals the decision history instead of providing accountable emergency approval.
 
-**Explanation:** Incorrect timezone assumptions can cause off-hours changes. The selected answer is check timezone and window duration explicitly.
+**Explanation:** Urgency should invoke a reviewed exception mechanism rather than silent untracked policy bypass. Unrecorded self-authorization defeats the stated independent protected transition boundary. False provenance does not make the new candidate part of an earlier authorization. Removing evidence conceals the decision history instead of providing accountable emergency approval.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q035
 
-Advanced · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Calendar constraint: A risky migration must execute only during an agreed maintenance window despite being approved earlier. The team selects this remedy: "Use a schedule or business-hours check appropriate to the platform." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The provider returns reviewers and prevent_self_review correctly, but no deployment job ran. Which conclusion is supportable?
 
-- **A. Rich evidence takes effort to collect and maintain** Automation can reduce reviewer burden without replacing judgment. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **B. Short timeouts may reject otherwise valid releases** Choose a window compatible with reviewer availability. That addresses a different requirement: Approval timeout. It does not directly resolve this case's stated constraint.
-- **C. Calendar gates can delay urgent remediations** **Correct.** A controlled exception process may be necessary. This directly addresses the constraint stated in this case.
+- **A. Every future release is guaranteed to be safe** Configuration alone cannot guarantee application behavior or arbitrary future release correctness.
+- **B. The intended protection is configured; runtime enforcement remains unobserved** **Correct.** Provider state read-back establishes configuration without claiming an executed blocked or approved release.
+- **C. All Azure identities already received valid short-lived tokens** Reviewer configuration does not establish a workload federation token exchange.
+- **D. A production deployment has already passed independent approval** No hosted deployment execution provides evidence of that actual authorization event.
 
-**Explanation:** A controlled exception process may be necessary. The selected answer is calendar gates can delay urgent remediations.
+**Explanation:** Provider state read-back establishes configuration without claiming an executed blocked or approved release. No hosted deployment execution provides evidence of that actual authorization event. Configuration alone cannot guarantee application behavior or arbitrary future release correctness. Reviewer configuration does not establish a workload federation token exchange.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q036
 
-Foundational · [CP3](README.md#task-3) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which next change most directly satisfies the stated requirement?
+A central required-template check is attached to the protected resource. Why can this help against a caller removing security stages?
 
-- **A. Restrict and audit exceptional bypass use** Bypass is a powerful administrative exception. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
-- **B. Use a schedule or business-hours check appropriate to the platform** Approval and allowed execution time are separate constraints. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **C. Present the immutable release identity and validation evidence** **Correct.** An informed decision requires relevant trustworthy context. This directly addresses the constraint stated in this case.
+- **A. Resource access can require consumption of the approved template** **Correct.** The resource owner can constrain executable structure independently from caller-editable pipeline source.
+- **B. Any template filename containing secure is automatically trusted** A friendly source name does not establish an approved required-template identity.
+- **C. A local copied JSON flag is equivalent to provider enforcement** An unconsumed local declaration does not create a protected resource check.
+- **D. The template check automatically fixes every unsafe application function** Execution structure control does not repair arbitrary application code vulnerabilities.
 
-**Explanation:** An informed decision requires relevant trustworthy context. The selected answer is present the immutable release identity and validation evidence.
+**Explanation:** The resource owner can constrain executable structure independently from caller-editable pipeline source. Execution structure control does not repair arbitrary application code vulnerabilities. A friendly source name does not establish an approved required-template identity. An unconsumed local declaration does not create a protected resource check.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q037
 
-Applied · [CP3](README.md#task-3) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which explanation best accounts for the behavior or constraint described?
+The policy evaluator allows main, approved reviewer and passing tests but accidentally uses OR across predicates. What failure should a negative test expose?
 
-- **A. An approval alone does not enforce the calendar boundary** An early decision can precede a safe execution period. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **B. Approval is being treated as a ceremonial click** **Correct.** The reviewer cannot assess the actual candidate. This directly addresses the constraint stated in this case.
-- **C. Normal delivery is avoiding the required control** Frequent unexplained exceptions defeat the policy. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
+```text
+Actual evaluator: quality OR allowedBranch OR independentReviewer
+```
 
-**Explanation:** The reviewer cannot assess the actual candidate. The selected answer is approval is being treated as a ceremonial click.
+- **A. Every valid request should fail because OR is always false** OR can allow a request when only one selected condition is true.
+- **B. The source repository token becomes encrypted automatically** Boolean policy logic does not alter token confidentiality or credential storage.
+- **C. One passing condition incorrectly permits a request with another required failure** **Correct.** Mandatory release prerequisites must be combined so each required predicate remains necessary.
+- **D. Only the policy file creation timestamp changes** Boolean combination affects decision behavior rather than merely file metadata.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** Mandatory release prerequisites must be combined so each required predicate remains necessary. OR can allow a request when only one selected condition is true. Boolean combination affects decision behavior rather than merely file metadata. Boolean policy logic does not alter token confidentiality or credential storage.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q038
 
-Applied · [CP3](README.md#task-3) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which observation provides the strongest evidence that the requested result was achieved?
+The activated workflow supports manual dispatch but requires production environment approval. Does dispatch alone prove deployment authorization?
 
-- **A. The deployment waits until the permitted window** Timing evidence must match the organization's stated rule. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **B. The request links to the exact artifact and its checks** **Correct.** Evidence must identify the candidate being approved. This directly addresses the constraint stated in this case.
-- **C. Bypass events identify an owner reason and reviewed incident** The evidence should make exceptions accountable. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
+- **A. Yes; a dispatch identifier is a deployment success record** A scheduling ID does not establish completed application promotion or independent approval.
+- **B. No; manual dispatch can never run a deployment** Manual scheduling can execute authorized deployment jobs once their required gates pass.
+- **C. No; the protected job still needs its required checks** **Correct.** Requesting a run does not supply the independent environment permission required to execute promotion.
+- **D. Yes; every manual request bypasses environment protection** Manual workflow scheduling does not inherently remove required protected environment checks.
 
-**Explanation:** Evidence must identify the candidate being approved. The selected answer is the request links to the exact artifact and its checks.
+**Explanation:** Requesting a run does not supply the independent environment permission required to execute promotion. Manual workflow scheduling does not inherently remove required protected environment checks. A scheduling ID does not establish completed application promotion or independent approval. Manual scheduling can execute authorized deployment jobs once their required gates pass.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q039
 
-Applied · [CP3](README.md#task-3) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. Which execution safeguard most directly addresses the risk in this case?
+A repository administrator can bypass an environment policy under its configured rules. What must the security review record?
 
-- **A. Check timezone and window duration explicitly** Incorrect timezone assumptions can cause off-hours changes. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **B. Prevent substitution of the artifact after approval** **Correct.** Changing the input would invalidate the review decision. This directly addresses the constraint stated in this case.
-- **C. Use a narrowly defined emergency access process** Routine broad bypass should not be the release path. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
+- **A. Only the environment friendly name** Naming does not disclose privileged exception authority or its permitted use.
+- **B. Only the application test count** Behavioral validation does not establish which identities can bypass environment restrictions.
+- **C. Only a statement that required reviewers exist** Reviewer existence does not explain effective bypass permissions and accountability boundaries.
+- **D. The available bypass authority and its audit or restriction controls** **Correct.** Nominal reviewer settings alone do not describe every effective authorization exception path.
 
-**Explanation:** Changing the input would invalidate the review decision. The selected answer is prevent substitution of the artifact after approval.
+**Explanation:** Nominal reviewer settings alone do not describe every effective authorization exception path. Naming does not disclose privileged exception authority or its permitted use. Behavioral validation does not establish which identities can bypass environment restrictions. Reviewer existence does not explain effective bypass permissions and accountability boundaries.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q040
 
-Advanced · [CP3](README.md#task-3) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Evidence-free approval: Reviewers are asked to approve a release without test results, source identity, or a change summary. The team selects this remedy: "Present the immutable release identity and validation evidence." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The local evaluator accepts a valid request but retains no reason for denied ones. What evidence improvement supports safe diagnosis?
 
-- **A. Emergency access remains a residual risk** Audit and review reduce misuse rather than eliminate authority. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
-- **B. Calendar gates can delay urgent remediations** A controlled exception process may be necessary. That addresses a different requirement: Calendar constraint. It does not directly resolve this case's stated constraint.
-- **C. Rich evidence takes effort to collect and maintain** **Correct.** Automation can reduce reviewer burden without replacing judgment. This directly addresses the constraint stated in this case.
+- **A. Delete denied requests before analysis** Removing observations prevents investigation of whether the intended policy behaved correctly.
+- **B. Record the unmet predicate without exposing sensitive input** **Correct.** A precise denial reason supports remediation while preserving appropriate evidence handling boundaries.
+- **C. Convert every denial to approval after logging** Recording a failure does not satisfy the missing authorization or quality predicate.
+- **D. Print every credential to explain authorization failures** Sensitive material is unnecessary for identifying which policy prerequisite was not met.
 
-**Explanation:** Automation can reduce reviewer burden without replacing judgment. The selected answer is rich evidence takes effort to collect and maintain.
+**Explanation:** A precise denial reason supports remediation while preserving appropriate evidence handling boundaries. Sensitive material is unnecessary for identifying which policy prerequisite was not met. Recording a failure does not satisfy the missing authorization or quality predicate. Removing observations prevents investigation of whether the intended policy behaved correctly.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q041
 
-Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which next change most directly satisfies the stated requirement?
+Two individually approved schema releases target one database and can overlap. Which combined design addresses authorization and ordering separately?
 
-- **A. Present the immutable release identity and validation evidence** An informed decision requires relevant trustworthy context. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **B. Restrict and audit exceptional bypass use** **Correct.** Bypass is a powerful administrative exception. This directly addresses the constraint stated in this case.
-- **C. Choose the gate whose trust boundary matches the requirement** Similar pauses can have different administrative controls. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
+- **A. Use identical artifact names for both migrations** Friendly naming does not establish either source approval or safe execution ordering.
+- **B. Independent approval plus exclusive serialization of the shared resource** **Correct.** Human permission and mutual exclusion solve different requirements for safe database transitions.
+- **C. Serialize logs but leave the actual deployments concurrent** Output ordering does not serialize the resource mutations being protected.
+- **D. Add more approvers but permit both migrations simultaneously** More reviewers do not prevent concurrent schema operations on shared mutable state.
 
-**Explanation:** Bypass is a powerful administrative exception. The selected answer is restrict and audit exceptional bypass use.
+**Explanation:** Human permission and mutual exclusion solve different requirements for safe database transitions. More reviewers do not prevent concurrent schema operations on shared mutable state. Output ordering does not serialize the resource mutations being protected. Friendly naming does not establish either source approval or safe execution ordering.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q042
 
-Foundational · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which explanation best accounts for the behavior or constraint described?
+A reviewed production job references an environment typo that creates an unprotected target. What should pre-execution review verify to avoid this gap?
 
-- **A. Approval is being treated as a ceremonial click** The reviewer cannot assess the actual candidate. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
-- **B. Normal delivery is avoiding the required control** **Correct.** Frequent unexplained exceptions defeat the policy. This directly addresses the constraint stated in this case.
-- **C. Execution pause and independent resource protection are different mechanisms** The author may control one but not the other. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
+- **A. Only that the workflow contains azure/login** An authentication step does not identify or enforce the intended deployment approval boundary.
+- **B. Exact resource identity and stored protection rather than name intent alone** **Correct.** A syntactically valid environment reference may not select the independently protected resource expected.
+- **C. Only that the environment string is nonempty** Nonempty input does not establish the intended resource identity or configured reviewers.
+- **D. Only that the artifact hash has sixty-four characters** Digest shape does not validate an environment resource reference or protection policy.
 
-**Explanation:** Frequent unexplained exceptions defeat the policy. The selected answer is normal delivery is avoiding the required control.
+**Explanation:** A syntactically valid environment reference may not select the independently protected resource expected. Nonempty input does not establish the intended resource identity or configured reviewers. An authentication step does not identify or enforce the intended deployment approval boundary. Digest shape does not validate an environment resource reference or protection policy.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q043
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which observation provides the strongest evidence that the requested result was achieved?
+A release request has passing quality, approved source and a reviewer who is the author under a different display name. What identity comparison is required?
 
-- **A. Bypass events identify an owner reason and reviewed incident** **Correct.** The evidence should make exceptions accountable. This directly addresses the constraint stated in this case.
-- **B. An author cannot edit away the required independent protection** The test should target bypass capability rather than the UI. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **C. The request links to the exact artifact and its checks** Evidence must identify the candidate being approved. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
+```json
+{"authorId":"42","authorName":"Jamon","reviewerId":"42","reviewerName":"Release approver"}
+```
 
-**Explanation:** The evidence should make exceptions accountable. The selected answer is bypass events identify an owner reason and reviewed incident.
+- **A. Count distinct display names as distinct authorized people** Presentation changes can create multiple labels for one underlying requesting identity.
+- **B. Accept when reviewer and author have different login display strings** Multiple display labels can refer to the same underlying principal and do not establish independent approval.
+- **C. Compare stable identities rather than friendly name strings** **Correct.** A changed display label does not make the same actor an independent reviewer.
+- **D. Infer independence from the reviewer having a higher repository role** A broader role does not make the same requesting principal a different independently approving identity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** Multiple display labels can refer to the same underlying principal and do not establish independent approval. A broader role does not make the same requesting principal a different independently approving identity. A changed display label does not make the same actor an independent reviewer. Presentation changes can create multiple labels for one underlying requesting identity.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q044
 
-Applied · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. Which execution safeguard most directly addresses the risk in this case?
+A protected resource checks main as an allowed branch while YAML is fetched from an unreviewed repository resource. What additional review is needed?
 
-- **A. Use a narrowly defined emergency access process** **Correct.** Routine broad bypass should not be the release path. This directly addresses the constraint stated in this case.
-- **B. Review who can modify each gate and pipeline definition** Permission boundaries determine actual enforcement strength. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **C. Prevent substitution of the artifact after approval** Changing the input would invalidate the review decision. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
+- **A. Only the display name of the main branch** Naming does not identify the other repository source or its granted execution authority.
+- **B. Only whether the primary application artifact has the expected checksum** Artifact integrity does not establish trust or authorization of separately supplied executable repository resources.
+- **C. The source and authorization boundary of every executable resource** **Correct.** Checking one branch reference cannot automatically trust other independently supplied executable inputs.
+- **D. Only whether all YAML files share one extension** File type does not establish source provenance or protected resource authorization.
 
-**Explanation:** Routine broad bypass should not be the release path. The selected answer is use a narrowly defined emergency access process.
+**Explanation:** Checking one branch reference cannot automatically trust other independently supplied executable inputs. Naming does not identify the other repository source or its granted execution authority. File type does not establish source provenance or protected resource authorization. Artifact integrity does not establish trust or authorization of separately supplied executable repository resources.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q045
 
-Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.3.9](../../docs/objective-map.md)
 
-Bypass misuse: An administrator routinely bypasses failed environment checks for convenience and no reason is recorded. The team selects this remedy: "Restrict and audit exceptional bypass use." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The database migration and app deployment use one approver and one powerful identity despite separate ownership requirements. What redesign preserves the requested boundaries?
 
-- **A. Emergency access remains a residual risk** **Correct.** Audit and review reduce misuse rather than eliminate authority. This directly addresses the constraint stated in this case.
-- **B. Porting gates across platforms may require redesign** Equivalent intent does not imply identical configuration features. That addresses a different requirement: Platform confusion. It does not directly resolve this case's stated constraint.
-- **C. Rich evidence takes effort to collect and maintain** Automation can reduce reviewer burden without replacing judgment. That addresses a different requirement: Evidence-free approval. It does not directly resolve this case's stated constraint.
+- **A. Separate protected transitions and narrowly scoped execution identities** **Correct.** Independent ownership should be reflected in both authorization gates and actual resource permissions.
+- **B. Add a delay between two unchecked scripts** Time separation does not provide independent authorization or least-privilege execution identities.
+- **C. Use two friendly names for the same unrestricted credential** Renaming does not create distinct principals or constrain their effective resource authority.
+- **D. Store one approved:true flag in both output folders** Repeated declarations do not establish separate reviewed decisions or enforced privilege boundaries.
 
-**Explanation:** Audit and review reduce misuse rather than eliminate authority. The selected answer is emergency access remains a residual risk.
+**Explanation:** Independent ownership should be reflected in both authorization gates and actual resource permissions. Renaming does not create distinct principals or constrain their effective resource authority. Time separation does not provide independent authorization or least-privilege execution identities. Repeated declarations do not establish separate reviewed decisions or enforced privilege boundaries.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q046
 
-Foundational · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md), [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which next change most directly satisfies the stated requirement?
+A negative test expects approval denial, but passes because a mock provider is unavailable and throws. Why is that insufficient evidence?
 
-- **A. Restrict and audit exceptional bypass use** Bypass is a powerful administrative exception. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
-- **B. Choose the gate whose trust boundary matches the requirement** **Correct.** Similar pauses can have different administrative controls. This directly addresses the constraint stated in this case.
-- **C. Configure protected environment checks outside author-controlled YAML** The gate needs an independent administrative boundary. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
+- **A. The failure must result from the intended policy predicate** **Correct.** An unrelated exception cannot prove the evaluator rejected the deliberately invalid release request.
+- **B. A missing provider automatically supplies an independent approver** Unavailable tooling cannot establish any identity or authorization decision.
+- **C. The healthy fixture can be removed once any failure occurs** The contract needs both accepted valid behavior and the specific denied invalid path.
+- **D. Every exception proves independent approval policy is enforced** Tool unavailability and policy denial represent different behavioral observations and causes.
 
-**Explanation:** Similar pauses can have different administrative controls. The selected answer is choose the gate whose trust boundary matches the requirement.
+**Explanation:** An unrelated exception cannot prove the evaluator rejected the deliberately invalid release request. Tool unavailability and policy denial represent different behavioral observations and causes. Unavailable tooling cannot establish any identity or authorization decision. The contract needs both accepted valid behavior and the specific denied invalid path.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q047
 
-Applied · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md), [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.9](../../docs/objective-map.md)
 
-Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which explanation best accounts for the behavior or constraint described?
+A protected release waits for approval while its selected artifact expires. After approval, what additional gate must still be satisfied?
 
-- **A. Execution pause and independent resource protection are different mechanisms** **Correct.** The author may control one but not the other. This directly addresses the constraint stated in this case.
-- **B. The author controls both deployment and its approval rule** An editable check cannot enforce independent review. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **C. Normal delivery is avoiding the required control** Frequent unexplained exceptions defeat the policy. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
+- **A. A matching friendly filename is sufficient replacement evidence** Output names do not prove identical content or producing source provenance.
+- **B. The operator may silently substitute another successful run** Another run needs its own verified correspondence to the reviewed approved candidate.
+- **C. Approval alone permits rebuilding any current source** A later rebuild can differ from the originally reviewed immutable candidate.
+- **D. The approved immutable artifact remains available with valid provenance** **Correct.** Authorization does not recreate missing bytes or prove a replacement archive is the same candidate.
 
-**Explanation:** The author may control one but not the other. The selected answer is execution pause and independent resource protection are different mechanisms.
+**Explanation:** Authorization does not recreate missing bytes or prove a replacement archive is the same candidate. A later rebuild can differ from the originally reviewed immutable candidate. Output names do not prove identical content or producing source provenance. Another run needs its own verified correspondence to the reviewed approved candidate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Sources:** [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q048
 
-Applied · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md), [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.9](../../docs/objective-map.md)
 
-Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which observation provides the strongest evidence that the requested result was achieved?
+A sequential lock protects production, but migration runs before acquiring that lock on the same database. What boundary still needs correction?
 
-- **A. An author cannot edit away the required independent protection** **Correct.** The test should target bypass capability rather than the UI. This directly addresses the constraint stated in this case.
-- **B. Removing YAML steps does not bypass the environment approval** The protection must survive an untrusted pipeline edit. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **C. Bypass events identify an owner reason and reviewed incident** The evidence should make exceptions accountable. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
+```text
+Migrate shared database
+Acquire production lock
+Deploy application
+```
 
-**Explanation:** The test should target bypass capability rather than the UI. The selected answer is an author cannot edit away the required independent protection.
+- **A. The lock name should be made shorter** Friendly resource naming does not change which operations acquire mutual exclusion.
+- **B. The shared-state mutation must occur inside the intended serialization boundary** **Correct.** Locking only later application work does not prevent concurrent earlier database changes.
+- **C. Only the final artifact publication needs a lock** Artifact output serialization does not protect the earlier shared database mutation.
+- **D. The migration should skip its test evidence** Removing validation does not address unprotected concurrent shared-state operations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+**Explanation:** Locking only later application work does not prevent concurrent earlier database changes. Artifact output serialization does not protect the earlier shared database mutation. Friendly resource naming does not change which operations acquire mutual exclusion. Removing validation does not address unprotected concurrent shared-state operations.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops)
 
 ## L13-Q049
 
-Applied · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md), [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.3.9](../../docs/objective-map.md)
 
-Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. Which execution safeguard most directly addresses the risk in this case?
+A deployment template is dormant, source-identified and locally parsed, but no federation or checks exist. What completion report is accurate?
 
-- **A. Use a narrowly defined emergency access process** Routine broad bypass should not be the release path. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
-- **B. Review who can modify each gate and pipeline definition** **Correct.** Permission boundaries determine actual enforcement strength. This directly addresses the constraint stated in this case.
-- **C. Limit environment administration to accountable owners** Broad administration rights can still bypass intended governance. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
+- **A. A denied live release proved by local file placement** Dormancy is not evidence that a provider actually evaluated and denied a request.
+- **B. Reviewed local contract with protected integration explicitly pending** **Correct.** Source review cannot substitute for missing identity authorization and observed provider release behavior.
+- **C. Fully completed secure production release** No live execution or required protected authorization establishes that outcome.
+- **D. Universal environment protection across both providers** A local artifact does not configure remote resource checks for every delivery platform.
 
-**Explanation:** Permission boundaries determine actual enforcement strength. The selected answer is review who can modify each gate and pipeline definition.
+**Explanation:** Source review cannot substitute for missing identity authorization and observed provider release behavior. No live execution or required protected authorization establishes that outcome. Dormancy is not evidence that a provider actually evaluated and denied a request. A local artifact does not configure remote resource checks for every delivery platform.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
 
 ## L13-Q050
 
-Advanced · [CP2](README.md#task-2) · [D3.2.1](../../docs/objective-map.md), [D3.3.9](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.2.1](../../docs/objective-map.md)
 
-Platform confusion: A YAML manual-validation task is assumed to provide exactly the same protection as an independently administered environment check. The team selects this remedy: "Choose the gate whose trust boundary matches the requirement." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release passed all gates, then the selected artifact changed before deployment. Which invariant should a final promotion check enforce?
 
-- **A. External checks need separate configuration management** Repository review alone cannot reproduce every resource policy. That addresses a different requirement: Self-modifying gate. It does not directly resolve this case's stated constraint.
-- **B. Emergency access remains a residual risk** Audit and review reduce misuse rather than eliminate authority. That addresses a different requirement: Bypass misuse. It does not directly resolve this case's stated constraint.
-- **C. Porting gates across platforms may require redesign** **Correct.** Equivalent intent does not imply identical configuration features. This directly addresses the constraint stated in this case.
+- **A. Only the deployment requester must remain the same person** Operator identity does not establish integrity of the approved candidate being promoted.
+- **B. Only the application display version must remain unchanged** A friendly version can be reused while underlying bytes or source differ.
+- **C. Any later artifact is acceptable after one successful approval** A decision about one candidate does not authorize arbitrary replacement output content.
+- **D. The executed candidate matches the approved source and content identity** **Correct.** Approval and quality evidence must stay bound to the actual promoted immutable artifact.
 
-**Explanation:** Equivalent intent does not imply identical configuration features. The selected answer is porting gates across platforms may require redesign.
+**Explanation:** Approval and quality evidence must stay bound to the actual promoted immutable artifact. A decision about one candidate does not authorize arbitrary replacement output content. A friendly version can be reused while underlying bytes or source differ. Operator identity does not establish integrity of the approved candidate being promoted.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals?view=azure-devops); [S2](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)

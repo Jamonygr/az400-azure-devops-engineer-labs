@@ -112,11 +112,12 @@ stages:
                     scriptType: pscore
                     scriptLocation: inlineScript
                     inlineScript: |
-                      & ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
+                      & ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -OwnerToken $env:OWNERSHIP_MARKER -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
                   env:
                     SUBSCRIPTION_ID: $(AzureSubscriptionId)
                     RESOURCE_GROUP: $(AzureResourceGroup)
                     LAB_RUN_ID: $(LabRunId)
+                    OWNERSHIP_MARKER: $(LabOwnershipMarker)
                     APP_NAME: ${{ parameters.appName }}
                     WORKSPACE_ID: $(LogAnalyticsWorkspaceId)
                 - task: AzureWebApp@1

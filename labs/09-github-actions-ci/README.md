@@ -15,8 +15,8 @@ Learner role: **GitHub automation engineer**. Outcome: Build the sample with Git
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -111,8 +111,8 @@ if(Test-Path (Join-Path $p '.git')){
 }else{gh repo clone $GhRepo $p}
 
  git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'
- $source=Join-Path $RepoRoot 'samples'
- Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\/](bin|obj)[\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }
+ # Copy tracked source only; ignored runtime evidence and build output stay private.
+ git -C $RepoRoot ls-files -- samples|ForEach-Object { $rel=$_;$sourceFile=Join-Path $RepoRoot $rel;$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item -LiteralPath $sourceFile -Destination $dest }
  foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }
  @('**/bin/','**/obj/','.state/')|Set-Content (Join-Path $p '.gitignore')
 ```

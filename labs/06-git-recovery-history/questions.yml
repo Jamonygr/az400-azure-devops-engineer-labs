@@ -34,6 +34,14 @@
     {
       "id": "S8",
       "url": "https://git-scm.com/docs/git-status"
+    },
+    {
+      "id": "S9",
+      "url": "https://git-scm.com/docs/git-rm"
+    },
+    {
+      "id": "S10",
+      "url": "https://git-scm.com/docs/gitignore"
     }
   ],
   "questions": [
@@ -76,163 +84,11 @@
       ],
       "exhibit": {
         "language": "text",
-        "code": "HEAD@{0}:reset:moving to HEAD~1\nHEAD@{1}:commit:validated local correction\nCurrent branch no longer reaches the correction"
+        "code": "HEAD@{0}: reset: moving to HEAD~1\nHEAD@{1}: commit: validated local correction\nCurrent branch no longer reaches the correction"
       }
     },
     {
       "id": "L06-Q002",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Why can a commit disappear from the current branch history without being immediately erased from local storage?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Every reset encrypts the previous commit automatically",
-          "rationale": "Reset changes repository state rather than encrypting old commits."
-        },
-        {
-          "key": "B",
-          "text": "A missing branch name proves the commit was never created",
-          "rationale": "A reference can be deleted or moved after its commit existed."
-        },
-        {
-          "key": "C",
-          "text": "Git stores only one commit object per branch at a time",
-          "rationale": "Branches normally refer into histories containing many commit objects."
-        },
-        {
-          "key": "D",
-          "text": "The branch reference moved while the commit object may still exist",
-          "rationale": "Reachability through a name and physical object retention are different conditions."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Reachability through a name and physical object retention are different conditions. Reset changes repository state rather than encrypting old commits. A reference can be deleted or moved after its commit existed. Branches normally refer into histories containing many commit objects.",
-      "sourceIds": [
-        "S1"
-      ]
-    },
-    {
-      "id": "L06-Q003",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "After locating the desired commit in reflog, what is a safe first recovery step?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Create a new recovery branch at that commit",
-          "rationale": "A new reference preserves the found work before further investigation."
-        },
-        {
-          "key": "B",
-          "text": "Force-push the current mistaken branch to every remote",
-          "rationale": "That can publish the wrong state and affect other collaborators."
-        },
-        {
-          "key": "C",
-          "text": "Delete unreachable objects to simplify the repository",
-          "rationale": "That can remove the very content being recovered."
-        },
-        {
-          "key": "D",
-          "text": "Run another hard reset without recording the found identity",
-          "rationale": "Another destructive movement can make the investigation harder."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "A new reference preserves the found work before further investigation. That can publish the wrong state and affect other collaborators. That can remove the very content being recovered. Another destructive movement can make the investigation harder.",
-      "sourceIds": [
-        "S1"
-      ]
-    },
-    {
-      "id": "L06-Q004",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "A teammate cannot find a developer's private local reset in their own reflog. What explains the difference?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The repository must have been converted into a shallow clone",
-          "rationale": "Different local reflogs can occur without shallow history."
-        },
-        {
-          "key": "B",
-          "text": "Only repository administrators can retain reflog entries",
-          "rationale": "Local reflog availability is not defined by remote administrative role."
-        },
-        {
-          "key": "C",
-          "text": "Every clone synchronizes all local branch movements on each fetch",
-          "rationale": "Fetch does not copy every other clone's private operation history."
-        },
-        {
-          "key": "D",
-          "text": "Reflogs describe local reference updates rather than one universal shared operation history",
-          "rationale": "Different clones do not automatically contain every other's local movements."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Different clones do not automatically contain every other's local movements. Different local reflogs can occur without shallow history. Local reflog availability is not defined by remote administrative role. Fetch does not copy every other clone's private operation history.",
-      "sourceIds": [
-        "S1"
-      ]
-    },
-    {
-      "id": "L06-Q005",
-      "checkpointId": "CP4",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "advanced",
-      "question": "A recovery guide promises any reset commit can always be restored through reflog. The repository has run cleanup for months since the mistake. What correction is necessary?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A commit message alone is sufficient to regenerate the exact source tree",
-          "rationale": "Descriptive text does not contain the complete missing object graph."
-        },
-        {
-          "key": "B",
-          "text": "Recovery depends on retained reflog entries and objects, so preserve a found reference promptly and avoid guaranteeing expired data recovery",
-          "rationale": "Local retention and garbage collection can remove the evidence or unreachable content needed by the method."
-        },
-        {
-          "key": "C",
-          "text": "Reflog is a permanent remote backup independent of local garbage collection",
-          "rationale": "Its local retention does not provide that unconditional backup guarantee."
-        },
-        {
-          "key": "D",
-          "text": "Running more hard resets recreates the missing earlier objects",
-          "rationale": "New reference movements cannot reconstruct deleted content."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Local retention and garbage collection can remove the evidence or unreachable content needed by the method. Its local retention does not provide that unconditional backup guarantee. New reference movements cannot reconstruct deleted content. Descriptive text does not contain the complete missing object graph.",
-      "sourceIds": [
-        "S1"
-      ]
-    },
-    {
-      "id": "L06-Q006",
       "checkpointId": "CP3",
       "objectiveIds": [
         "D2.2.5"
@@ -270,12 +126,88 @@
       ]
     },
     {
-      "id": "L06-Q007",
+      "id": "L06-Q003",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "One tracked file is accidentally deleted from the working tree while unrelated files contain valuable edits. Which approach is most targeted?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reset the entire repository hard as the first step",
+          "rationale": "A repository-wide discard exceeds the stated one-file recovery scope."
+        },
+        {
+          "key": "B",
+          "text": "Run git clean on every untracked file",
+          "rationale": "Cleaning untracked files does not restore the missing tracked content."
+        },
+        {
+          "key": "C",
+          "text": "Reclone over the working directory without preserving edits",
+          "rationale": "That can discard the unrelated work the scenario requires retaining."
+        },
+        {
+          "key": "D",
+          "text": "Restore only the selected path from the intended revision",
+          "rationale": "Path-scoped restoration can repair the file without resetting unrelated work."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A repository-wide discard exceeds the stated one-file recovery scope. Cleaning untracked files does not restore the missing tracked content. That can discard the unrelated work the scenario requires retaining. Path-scoped restoration can repair the file without resetting unrelated work.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L06-Q004",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Why can a commit disappear from the current branch history without being immediately erased from local storage?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Every reset encrypts the previous commit automatically",
+          "rationale": "Reset changes repository state rather than encrypting old commits."
+        },
+        {
+          "key": "B",
+          "text": "A missing branch name proves the commit was never created",
+          "rationale": "A reference can be deleted or moved after its commit existed."
+        },
+        {
+          "key": "C",
+          "text": "Git stores only one commit object per branch at a time",
+          "rationale": "Branches normally refer into histories containing many commit objects."
+        },
+        {
+          "key": "D",
+          "text": "The branch reference moved while the commit object may still exist",
+          "rationale": "Reachability through a name and physical object retention are different conditions."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Reset changes repository state rather than encrypting old commits. A reference can be deleted or moved after its commit existed. Branches normally refer into histories containing many commit objects. Reachability through a name and physical object retention are different conditions.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L06-Q005",
       "checkpointId": "CP3",
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "applied",
+      "difficulty": "foundational",
       "question": "What does git revert normally produce when undoing an ordinary earlier commit on the current branch?",
       "options": [
         {
@@ -308,159 +240,7 @@
       ]
     },
     {
-      "id": "L06-Q008",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "What should a reviewer expect when a revert of an older commit conflicts with later changes?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Assume a conflicting revert is impossible because the original commit was valid",
-          "rationale": "Validity does not prevent later incompatible modifications."
-        },
-        {
-          "key": "B",
-          "text": "Ignore conflicts and report that the rollback completed",
-          "rationale": "An unresolved operation has not established the intended corrective content."
-        },
-        {
-          "key": "C",
-          "text": "Force-push the older tree immediately without checking subsequent valid work",
-          "rationale": "That can remove unrelated accepted changes instead of a targeted reversal."
-        },
-        {
-          "key": "D",
-          "text": "Resolve the inverse change against the current source and test the result",
-          "rationale": "Later work can overlap or depend on the content being reversed."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Later work can overlap or depend on the content being reversed. Validity does not prevent later incompatible modifications. An unresolved operation has not established the intended corrective content. That can remove unrelated accepted changes instead of a targeted reversal.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L06-Q009",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "Which evidence demonstrates that a shared-history rollback repaired the regression while preserving auditability?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The local working tree has unstaged modifications after a failed revert",
-          "rationale": "Uncommitted partial changes are not a completed reviewed repair."
-        },
-        {
-          "key": "B",
-          "text": "A new reviewed commit reverses the faulty behavior and the earlier history remains inspectable",
-          "rationale": "The corrective behavior and retained source history are both relevant requirements."
-        },
-        {
-          "key": "C",
-          "text": "The bad commit disappears from the source history entirely",
-          "rationale": "That is not the normal evidence of a history-preserving revert."
-        },
-        {
-          "key": "D",
-          "text": "Only the branch name changes from main to recovered",
-          "rationale": "A name change does not prove corrected code."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The corrective behavior and retained source history are both relevant requirements. That is not the normal evidence of a history-preserving revert. A name change does not prove corrected code. Uncommitted partial changes are not a completed reviewed repair.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L06-Q010",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "advanced",
-      "question": "A published commit introduced a configuration bug, and later valid commits depend on parts of its refactoring. What is the safest recovery plan?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Force main back before the original commit and assume dependent changes will reappear automatically",
-          "rationale": "Reference rewinding removes later history from that branch and does not reconstruct its valid changes."
-        },
-        {
-          "key": "B",
-          "text": "Run an unresolved revert and treat its nonzero exit as an acceptable deployed rollback",
-          "rationale": "A stopped operation has not established a usable corrected revision."
-        },
-        {
-          "key": "C",
-          "text": "Revert all later commits indiscriminately because one earlier change was defective",
-          "rationale": "That expands the damage scope without evaluating which accepted work remains valid."
-        },
-        {
-          "key": "D",
-          "text": "Review and implement a targeted inverse or corrective change against current main, resolving dependencies and testing the resulting behavior",
-          "rationale": "The repair must undo the defect without discarding valid later work."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "The repair must undo the defect without discarding valid later work. Reference rewinding removes later history from that branch and does not reconstruct its valid changes. A stopped operation has not established a usable corrected revision. That expands the damage scope without evaluating which accepted work remains valid.",
-      "sourceIds": [
-        "S2"
-      ]
-    },
-    {
-      "id": "L06-Q011",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "foundational",
-      "question": "One tracked file is accidentally deleted from the working tree while unrelated files contain valuable edits. Which approach is most targeted?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Reset the entire repository hard as the first step",
-          "rationale": "A repository-wide discard exceeds the stated one-file recovery scope."
-        },
-        {
-          "key": "B",
-          "text": "Run git clean on every untracked file",
-          "rationale": "Cleaning untracked files does not restore the missing tracked content."
-        },
-        {
-          "key": "C",
-          "text": "Reclone over the working directory without preserving edits",
-          "rationale": "That can discard the unrelated work the scenario requires retaining."
-        },
-        {
-          "key": "D",
-          "text": "Restore only the selected path from the intended revision",
-          "rationale": "Path-scoped restoration can repair the file without resetting unrelated work."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Path-scoped restoration can repair the file without resetting unrelated work. A repository-wide discard exceeds the stated one-file recovery scope. Cleaning untracked files does not restore the missing tracked content. That can discard the unrelated work the scenario requires retaining.",
-      "sourceIds": [
-        "S4"
-      ]
-    },
-    {
-      "id": "L06-Q012",
+      "id": "L06-Q006",
       "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
@@ -492,7 +272,7 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The command specifies the source revision and only the selected working-tree path. Restore is not a command to move all branch names. The shown command restores local state rather than publishing a remote update. The selected path is restored from the specified tracked source revision.",
+      "explanation": "The shown command restores local state rather than publishing a remote update. The selected path is restored from the specified tracked source revision. The command specifies the source revision and only the selected working-tree path. Restore is not a command to move all branch names.",
       "sourceIds": [
         "S4"
       ],
@@ -502,12 +282,88 @@
       }
     },
     {
-      "id": "L06-Q013",
+      "id": "L06-Q007",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "After locating the desired commit in reflog, what is a safe first recovery step?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Create a new recovery branch at that commit",
+          "rationale": "A new reference preserves the found work before further investigation."
+        },
+        {
+          "key": "B",
+          "text": "Force-push the current mistaken branch to every remote",
+          "rationale": "That can publish the wrong state and affect other collaborators."
+        },
+        {
+          "key": "C",
+          "text": "Delete unreachable objects to simplify the repository",
+          "rationale": "That can remove the very content being recovered."
+        },
+        {
+          "key": "D",
+          "text": "Run another hard reset without recording the found identity",
+          "rationale": "Another destructive movement can make the investigation harder."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A new reference preserves the found work before further investigation. That can publish the wrong state and affect other collaborators. That can remove the very content being recovered. Another destructive movement can make the investigation harder.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L06-Q008",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "What should a reviewer expect when a revert of an older commit conflicts with later changes?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assume a conflicting revert is impossible because the original commit was valid",
+          "rationale": "Validity does not prevent later incompatible modifications."
+        },
+        {
+          "key": "B",
+          "text": "Ignore conflicts and report that the rollback completed",
+          "rationale": "An unresolved operation has not established the intended corrective content."
+        },
+        {
+          "key": "C",
+          "text": "Force-push the older tree immediately without checking subsequent valid work",
+          "rationale": "That can remove unrelated accepted changes instead of a targeted reversal."
+        },
+        {
+          "key": "D",
+          "text": "Resolve the inverse change against the current source and test the result",
+          "rationale": "Later work can overlap or depend on the content being reversed."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Validity does not prevent later incompatible modifications. An unresolved operation has not established the intended corrective content. That can remove unrelated accepted changes instead of a targeted reversal. Later work can overlap or depend on the content being reversed.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L06-Q009",
       "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "applied",
+      "difficulty": "foundational",
       "question": "Why should a developer inspect git status and a path diff before restoring a deleted file?",
       "options": [
         {
@@ -540,12 +396,88 @@
       ]
     },
     {
-      "id": "L06-Q014",
+      "id": "L06-Q010",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "A teammate cannot find a developer's private local reset in their own reflog. What explains the difference?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The repository must have been converted into a shallow clone",
+          "rationale": "Different local reflogs can occur without shallow history."
+        },
+        {
+          "key": "B",
+          "text": "Only repository administrators can retain reflog entries",
+          "rationale": "Local reflog availability is not defined by remote administrative role."
+        },
+        {
+          "key": "C",
+          "text": "Every clone synchronizes all local branch movements on each fetch",
+          "rationale": "Fetch does not copy every other clone's private operation history."
+        },
+        {
+          "key": "D",
+          "text": "Reflogs describe local reference updates rather than one universal shared operation history",
+          "rationale": "Different clones do not automatically contain every other's local movements."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Different local reflogs can occur without shallow history. Local reflog availability is not defined by remote administrative role. Fetch does not copy every other clone's private operation history. Different clones do not automatically contain every other's local movements.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L06-Q011",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "Which evidence demonstrates that a shared-history rollback repaired the regression while preserving auditability?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The local working tree has unstaged modifications after a failed revert",
+          "rationale": "Uncommitted partial changes are not a completed reviewed repair."
+        },
+        {
+          "key": "B",
+          "text": "A new reviewed commit reverses the faulty behavior and the earlier history remains inspectable",
+          "rationale": "The corrective behavior and retained source history are both relevant requirements."
+        },
+        {
+          "key": "C",
+          "text": "The bad commit disappears from the source history entirely",
+          "rationale": "That is not the normal evidence of a history-preserving revert."
+        },
+        {
+          "key": "D",
+          "text": "Only the branch name changes from main to recovered",
+          "rationale": "A name change does not prove corrected code."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Uncommitted partial changes are not a completed reviewed repair. The corrective behavior and retained source history are both relevant requirements. That is not the normal evidence of a history-preserving revert. A name change does not prove corrected code.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L06-Q012",
       "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "applied",
+      "difficulty": "foundational",
       "question": "Which check confirms a targeted file recovery respected the request to preserve unrelated edits?",
       "options": [
         {
@@ -572,9 +504,85 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Both the repair and the preservation constraint must be verified. That can indicate unrelated edits were discarded. Existence does not establish the correct content or preservation of other work. A message does not prove the actual path state.",
+      "explanation": "Existence does not establish the correct content or preservation of other work. A message does not prove the actual path state. Both the repair and the preservation constraint must be verified. That can indicate unrelated edits were discarded.",
       "sourceIds": [
         "S4"
+      ]
+    },
+    {
+      "id": "L06-Q013",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "A recovery guide promises any reset commit can always be restored through reflog. The repository has run cleanup for months since the mistake. What correction is necessary?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A commit message alone is sufficient to regenerate the exact source tree",
+          "rationale": "Descriptive text does not contain the complete missing object graph."
+        },
+        {
+          "key": "B",
+          "text": "Recovery depends on retained reflog entries and objects, so preserve a found reference promptly and avoid guaranteeing expired data recovery",
+          "rationale": "Local retention and garbage collection can remove the evidence or unreachable content needed by the method."
+        },
+        {
+          "key": "C",
+          "text": "Reflog is a permanent remote backup independent of local garbage collection",
+          "rationale": "Its local retention does not provide that unconditional backup guarantee."
+        },
+        {
+          "key": "D",
+          "text": "Running more hard resets recreates the missing earlier objects",
+          "rationale": "New reference movements cannot reconstruct deleted content."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Descriptive text does not contain the complete missing object graph. Local retention and garbage collection can remove the evidence or unreachable content needed by the method. Its local retention does not provide that unconditional backup guarantee. New reference movements cannot reconstruct deleted content.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L06-Q014",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "A published commit introduced a configuration bug, and later valid commits depend on parts of its refactoring. What is the safest recovery plan?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Force main back before the original commit and assume dependent changes will reappear automatically",
+          "rationale": "Reference rewinding removes later history from that branch and does not reconstruct its valid changes."
+        },
+        {
+          "key": "B",
+          "text": "Run an unresolved revert and treat its nonzero exit as an acceptable deployed rollback",
+          "rationale": "A stopped operation has not established a usable corrected revision."
+        },
+        {
+          "key": "C",
+          "text": "Revert all later commits indiscriminately because one earlier change was defective",
+          "rationale": "That expands the damage scope without evaluating which accepted work remains valid."
+        },
+        {
+          "key": "D",
+          "text": "Review and implement a targeted inverse or corrective change against current main, resolving dependencies and testing the resulting behavior",
+          "rationale": "The repair must undo the defect without discarding valid later work."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Reference rewinding removes later history from that branch and does not reconstruct its valid changes. A stopped operation has not established a usable corrected revision. That expands the damage scope without evaluating which accepted work remains valid. The repair must undo the defect without discarding valid later work.",
+      "sourceIds": [
+        "S2"
       ]
     },
     {
@@ -583,7 +591,7 @@
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "advanced",
+      "difficulty": "foundational",
       "question": "A configuration file is deleted only from the working tree, another file has staged edits, and a third has unstaged edits. The developer needs the configuration from HEAD without losing either other change. Which plan fits?",
       "options": [
         {
@@ -618,11 +626,11 @@
     },
     {
       "id": "L06-Q016",
-      "checkpointId": "CP1",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "foundational",
+      "difficulty": "applied",
       "question": "A supported release needs one fix from main without its unrelated next-version changes. Which Git operation is commonly appropriate?",
       "options": [
         {
@@ -649,174 +657,22 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Selective application can transfer the patch without merging all newer development. That broadens the patch scope and complicates supported-release validation. Changing the reference does not preserve the supported baseline. A message does not apply the corrective source changes.",
+      "explanation": "That broadens the patch scope and complicates supported-release validation. Changing the reference does not preserve the supported baseline. A message does not apply the corrective source changes. Selective application can transfer the patch without merging all newer development.",
       "sourceIds": [
         "S6"
       ],
       "exhibit": {
         "language": "text",
-        "code": "release/v1: A---B---C\nmain:       A---B---C---D---E---F\nRequired patch:E\nD and F contain incompatible next-version work"
+        "code": "release/v1: A---B---C\nmain:       A---B---C---D---E---F\nRequired patch: E\nD and F contain incompatible next-version work"
       }
     },
     {
       "id": "L06-Q017",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "Why does a cherry-picked fix usually have a different commit identity on the target branch?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Cherry-picking always changes the author's original source files arbitrarily",
-          "rationale": "A new identity does not imply arbitrary semantic changes."
-        },
-        {
-          "key": "B",
-          "text": "A commit hash depends only on its human-readable message",
-          "rationale": "The message is only part of a commit's object content."
-        },
-        {
-          "key": "C",
-          "text": "The new commit has its own ancestry and commit metadata",
-          "rationale": "Equivalent patch content does not imply an identical commit object."
-        },
-        {
-          "key": "D",
-          "text": "Git randomly encrypts all copied commit hashes",
-          "rationale": "Commit identity is derived from object content rather than random encryption."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Equivalent patch content does not imply an identical commit object. Commit identity is derived from object content rather than random encryption. A new identity does not imply arbitrary semantic changes. The message is only part of a commit's object content.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q018",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "What should be checked before accepting a cherry-picked fix on an older release branch?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Only that the original main build was green",
-          "rationale": "That run can contain prerequisites absent from the older release."
-        },
-        {
-          "key": "B",
-          "text": "Only that the source and destination branch names look similar",
-          "rationale": "Naming does not establish code compatibility."
-        },
-        {
-          "key": "C",
-          "text": "Only that the new commit has the same number of lines",
-          "rationale": "Diff size does not prove the surrounding contracts match."
-        },
-        {
-          "key": "D",
-          "text": "Dependencies and behavior against that older branch's actual baseline",
-          "rationale": "The transferred patch may rely on changes not selected with it."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "The transferred patch may rely on changes not selected with it. That run can contain prerequisites absent from the older release. Naming does not establish code compatibility. Diff size does not prove the surrounding contracts match.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q019",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "A cherry-pick conflicts. What state indicates that the operation still requires attention rather than having completed successfully?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The target branch has fewer local commits than main",
-          "rationale": "Relative history length does not establish completion of the selected operation."
-        },
-        {
-          "key": "B",
-          "text": "Git reports unresolved paths and an in-progress cherry-pick",
-          "rationale": "The candidate change is awaiting resolution or deliberate cancellation."
-        },
-        {
-          "key": "C",
-          "text": "A new remote tag appears with the original commit message",
-          "rationale": "Tag creation does not resolve an active local patch operation."
-        },
-        {
-          "key": "D",
-          "text": "The author closes the terminal window",
-          "rationale": "Closing the shell does not necessarily clear the repository's operation state."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The candidate change is awaiting resolution or deliberate cancellation. Tag creation does not resolve an active local patch operation. Closing the shell does not necessarily clear the repository's operation state. Relative history length does not establish completion of the selected operation.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q020",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "advanced",
-      "question": "A security fix from main depends on a refactor unavailable on the supported release. The release must keep its old API. Which approach is strongest?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Adapt or backport the minimal correction for the old contract, test it there, and record the relationship to the original fix",
-          "rationale": "The desired behavior matters, while blindly importing newer dependencies can violate support compatibility."
-        },
-        {
-          "key": "B",
-          "text": "Cherry-pick the fix and suppress the missing-symbol compilation errors",
-          "rationale": "The resulting source does not become valid by hiding the error."
-        },
-        {
-          "key": "C",
-          "text": "Merge the entire refactor and remove the supported API tests",
-          "rationale": "That abandons the stated compatibility requirement."
-        },
-        {
-          "key": "D",
-          "text": "Assume a conflict-free cherry-pick proves the runtime dependencies are present",
-          "rationale": "Textual applicability is weaker evidence than building and testing the target baseline."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The desired behavior matters, while blindly importing newer dependencies can violate support compatibility. The resulting source does not become valid by hiding the error. That abandons the stated compatibility requirement. Textual applicability is weaker evidence than building and testing the target baseline.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q021",
       "checkpointId": "CP5",
       "objectiveIds": [
         "D2.2.6"
       ],
-      "difficulty": "foundational",
+      "difficulty": "applied",
       "question": "A real token was committed publicly and then deleted from the latest file. What should happen first in the response?",
       "options": [
         {
@@ -849,12 +705,168 @@
       ]
     },
     {
+      "id": "L06-Q018",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "After history cleanup, a collaborator pushes an old branch and the removed file reappears. What caused the regression?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The signing key regenerated the deleted file",
+          "rationale": "Signing does not recreate source objects from removed files."
+        },
+        {
+          "key": "B",
+          "text": "The new branch name forced the server to restore a backup",
+          "rationale": "A branch name alone does not imply automatic historical restoration."
+        },
+        {
+          "key": "C",
+          "text": "The collaborator reintroduced references to the old content graph",
+          "rationale": "Cleaning one remote history does not automatically clean every existing clone."
+        },
+        {
+          "key": "D",
+          "text": "Gitignore automatically recreated the old file",
+          "rationale": "Ignore configuration does not reconstruct historical content."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Signing does not recreate source objects from removed files. A branch name alone does not imply automatic historical restoration. Cleaning one remote history does not automatically clean every existing clone. Ignore configuration does not reconstruct historical content.",
+      "sourceIds": [
+        "S3"
+      ]
+    },
+    {
+      "id": "L06-Q019",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "A tracked configuration file was deleted several commits ago. Which inspection can locate the deletion and prior version?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only the filesystem creation date of the repository folder",
+          "rationale": "That timestamp does not identify a source-level deletion commit."
+        },
+        {
+          "key": "B",
+          "text": "Only the names of currently open pull requests",
+          "rationale": "An older accepted change may no longer have an open request."
+        },
+        {
+          "key": "C",
+          "text": "The file's Git path history",
+          "rationale": "The relevant commit sequence can identify when that tracked path changed or disappeared."
+        },
+        {
+          "key": "D",
+          "text": "Only git status on the current clean checkout",
+          "rationale": "Status does not list every committed historical deletion."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "That timestamp does not identify a source-level deletion commit. An older accepted change may no longer have an open request. The relevant commit sequence can identify when that tracked path changed or disappeared. Status does not list every committed historical deletion.",
+      "sourceIds": [
+        "S7"
+      ]
+    },
+    {
+      "id": "L06-Q020",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "A conflicted cherry-pick should be abandoned, and the developer does not need its resolution edits. Which supported operation is relevant?",
+      "options": [
+        {
+          "key": "A",
+          "text": "git fetch --prune",
+          "rationale": "Fetching remote references does not cancel a local cherry-pick operation."
+        },
+        {
+          "key": "B",
+          "text": "git cherry-pick --abort",
+          "rationale": "The operation cancels the in-progress cherry-pick and restores its prior state where supported."
+        },
+        {
+          "key": "C",
+          "text": "git cherry-pick --continue",
+          "rationale": "Continue attempts to complete the operation after resolution rather than abandon it."
+        },
+        {
+          "key": "D",
+          "text": "git cherry-pick --skip",
+          "rationale": "Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Fetching remote references does not cancel a local cherry-pick operation. The operation cancels the in-progress cherry-pick and restores its prior state where supported. Continue attempts to complete the operation after resolution rather than abandon it. Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work.",
+      "sourceIds": [
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "On branch release/v1\nYou are currently cherry-picking commit <patch>\nUnmerged paths: config/app.json\nDecision: abandon the entire cherry-pick attempt"
+      }
+    },
+    {
+      "id": "L06-Q021",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "Why does a cherry-picked fix usually have a different commit identity on the target branch?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Cherry-picking always changes the author's original source files arbitrarily",
+          "rationale": "A new identity does not imply arbitrary semantic changes."
+        },
+        {
+          "key": "B",
+          "text": "A commit hash depends only on its human-readable message",
+          "rationale": "The message is only part of a commit's object content."
+        },
+        {
+          "key": "C",
+          "text": "The new commit has its own ancestry and commit metadata",
+          "rationale": "Equivalent patch content does not imply an identical commit object."
+        },
+        {
+          "key": "D",
+          "text": "Git randomly encrypts all copied commit hashes",
+          "rationale": "Commit identity is derived from object content rather than random encryption."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A new identity does not imply arbitrary semantic changes. The message is only part of a commit's object content. Equivalent patch content does not imply an identical commit object. Commit identity is derived from object content rather than random encryption.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
       "id": "L06-Q022",
       "checkpointId": "CP5",
       "objectiveIds": [
         "D2.2.6"
       ],
-      "difficulty": "foundational",
+      "difficulty": "applied",
       "question": "Why does a later commit deleting a secret fail to remove the earlier exposure?",
       "options": [
         {
@@ -887,163 +899,11 @@
       ],
       "exhibit": {
         "language": "text",
-        "code": "CommitA:adds service-token.txt\nCommitB:deletes service-token.txt\nPublic clone containing CommitA already exists"
+        "code": "Commit A: adds service-token.txt\nCommit B: deletes service-token.txt\nPublic clone containing Commit A already exists"
       }
     },
     {
       "id": "L06-Q023",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "What outcome is needed in addition to coordinated history cleanup after credential exposure?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The original commit author changes their Git email",
-          "rationale": "Commit attribution does not revoke the external credential."
-        },
-        {
-          "key": "B",
-          "text": "The old credential no longer authorizes access",
-          "rationale": "Security response must invalidate the leaked capability, not merely its visible file."
-        },
-        {
-          "key": "C",
-          "text": "The current branch has a shorter display name",
-          "rationale": "A reference name does not affect the credential's validity."
-        },
-        {
-          "key": "D",
-          "text": "The token is copied into a new private issue for safekeeping",
-          "rationale": "That expands unnecessary secret distribution rather than resolving compromise."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Security response must invalidate the leaked capability, not merely its visible file. A reference name does not affect the credential's validity. That expands unnecessary secret distribution rather than resolving compromise. Commit attribution does not revoke the external credential.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q024",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "Why must forks clones and downstream references be considered during sensitive-history cleanup?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The unwanted content can remain outside the rewritten primary reference",
-          "rationale": "A central rewrite does not automatically alter every existing copy."
-        },
-        {
-          "key": "B",
-          "text": "Every fork is automatically deleted when the source branch changes",
-          "rationale": "Forks and clones have independent content and lifecycle."
-        },
-        {
-          "key": "C",
-          "text": "A collaborator's old branch can never reintroduce removed history",
-          "rationale": "A push can restore references to an old graph if not coordinated."
-        },
-        {
-          "key": "D",
-          "text": "The newest commit's clean diff proves no copy contains the value",
-          "rationale": "A current diff cannot establish absence from historical or external storage."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "A central rewrite does not automatically alter every existing copy. Forks and clones have independent content and lifecycle. A push can restore references to an old graph if not coordinated. A current diff cannot establish absence from historical or external storage.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q025",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "advanced",
-      "question": "An attacker could already have copied a public token before revocation. The team wants to claim the incident is erased after rewriting history. Which report is accurate?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Report only that the current file lacks the token without mentioning revocation or historical exposure",
-          "rationale": "That omits the central security consequences and response evidence."
-        },
-        {
-          "key": "B",
-          "text": "State that the credential was invalidated and known repository exposure was cleaned, while acknowledging that prior public copies cannot be guaranteed erased",
-          "rationale": "Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible."
-        },
-        {
-          "key": "C",
-          "text": "State that a rewritten default branch proves every observer deleted their copy",
-          "rationale": "A repository operation cannot control unknown external retention."
-        },
-        {
-          "key": "D",
-          "text": "Keep the original token active to avoid disrupting integrations and call the rewrite sufficient",
-          "rationale": "Avoiding rotation leaves the compromised capability usable."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible. A repository operation cannot control unknown external retention. Avoiding rotation leaves the compromised capability usable. That omits the central security consequences and response evidence.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q026",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "foundational",
-      "question": "After history cleanup, a collaborator pushes an old branch and the removed file reappears. What caused the regression?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The signing key regenerated the deleted file",
-          "rationale": "Signing does not recreate source objects from removed files."
-        },
-        {
-          "key": "B",
-          "text": "The new branch name forced the server to restore a backup",
-          "rationale": "A branch name alone does not imply automatic historical restoration."
-        },
-        {
-          "key": "C",
-          "text": "The collaborator reintroduced references to the old content graph",
-          "rationale": "Cleaning one remote history does not automatically clean every existing clone."
-        },
-        {
-          "key": "D",
-          "text": "Gitignore automatically recreated the old file",
-          "rationale": "Ignore configuration does not reconstruct historical content."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Cleaning one remote history does not automatically clean every existing clone. Ignore configuration does not reconstruct historical content. Signing does not recreate source objects from removed files. A branch name alone does not imply automatic historical restoration.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q027",
       "checkpointId": "CP5",
       "objectiveIds": [
         "D2.2.6"
@@ -1076,6 +936,158 @@
         "A"
       ],
       "explanation": "Their local references must not reintroduce the old graph. The same old commits can remain under the new name. That preserves references to the content intended for removal. Documentation content is not the historical graph being reintroduced.",
+      "sourceIds": [
+        "S3"
+      ]
+    },
+    {
+      "id": "L06-Q024",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "Why is a clean current working tree insufficient to explain a file missing from an older commit?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Clean status proves that every historical version contains identical files",
+          "rationale": "Cleanliness does not imply unchanged past source trees."
+        },
+        {
+          "key": "B",
+          "text": "Git status includes a full chronological file-deletion report",
+          "rationale": "It is not a substitute for historical log inspection."
+        },
+        {
+          "key": "C",
+          "text": "A missing file must be untracked if status is clean",
+          "rationale": "The file may have been tracked and later removed in committed history."
+        },
+        {
+          "key": "D",
+          "text": "Clean status concerns current index and working-tree differences",
+          "rationale": "Committed history requires a separate historical inspection."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Cleanliness does not imply unchanged past source trees. It is not a substitute for historical log inspection. The file may have been tracked and later removed in committed history. Committed history requires a separate historical inspection.",
+      "sourceIds": [
+        "S7"
+      ]
+    },
+    {
+      "id": "L06-Q025",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "What should git status be checked for after cancelling a conflicted cherry-pick?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No unintended in-progress operation and the expected branch state",
+          "rationale": "The cancellation result should match the intended pre-operation baseline."
+        },
+        {
+          "key": "B",
+          "text": "Only whether conflict markers disappeared from the editor",
+          "rationale": "An editor view does not establish that the repository operation ended or that the expected branch state was restored."
+        },
+        {
+          "key": "C",
+          "text": "Only whether the original source commit still exists",
+          "rationale": "Source commit existence does not show whether the local cherry-pick remains in progress."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the staged diff is empty, without checking operation state",
+          "rationale": "An empty index alone does not establish the intended branch and in-progress operation state."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The cancellation result should match the intended pre-operation baseline. An editor view does not establish that the repository operation ended or that the expected branch state was restored. Source commit existence does not show whether the local cherry-pick remains in progress. An empty index alone does not establish the intended branch and in-progress operation state.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L06-Q026",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "What should be checked before accepting a cherry-picked fix on an older release branch?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only that the original main build was green",
+          "rationale": "That run can contain prerequisites absent from the older release."
+        },
+        {
+          "key": "B",
+          "text": "Only that the source and destination branch names look similar",
+          "rationale": "Naming does not establish code compatibility."
+        },
+        {
+          "key": "C",
+          "text": "Only that the new commit has the same number of lines",
+          "rationale": "Diff size does not prove the surrounding contracts match."
+        },
+        {
+          "key": "D",
+          "text": "Dependencies and behavior against that older branch's actual baseline",
+          "rationale": "The transferred patch may rely on changes not selected with it."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That run can contain prerequisites absent from the older release. Naming does not establish code compatibility. Diff size does not prove the surrounding contracts match. The transferred patch may rely on changes not selected with it.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L06-Q027",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "What outcome is needed in addition to coordinated history cleanup after credential exposure?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The secret file is absent from the default-branch tip",
+          "rationale": "Current-tree removal does not invalidate the credential retained in earlier copies."
+        },
+        {
+          "key": "B",
+          "text": "The old credential no longer authorizes access",
+          "rationale": "Security response must invalidate the leaked capability, not merely its visible file."
+        },
+        {
+          "key": "C",
+          "text": "The credential is deleted from the local environment file only",
+          "rationale": "Local removal does not revoke the external capability already exposed."
+        },
+        {
+          "key": "D",
+          "text": "The repository scan no longer reports the historical token string",
+          "rationale": "A clean scanner result is not independent proof that the external credential stopped authorizing access."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Current-tree removal does not invalidate the credential retained in earlier copies. Security response must invalidate the leaked capability, not merely its visible file. Local removal does not revoke the external capability already exposed. A clean scanner result is not independent proof that the external credential stopped authorizing access.",
       "sourceIds": [
         "S3"
       ]
@@ -1120,158 +1132,6 @@
     },
     {
       "id": "L06-Q029",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "Why should pushes be coordinated or temporarily constrained during a shared-history rewrite?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Every simultaneous read request corrupts the repository",
-          "rationale": "Read activity is not the write-race problem described."
-        },
-        {
-          "key": "B",
-          "text": "A temporary coordination window permanently removes future review needs",
-          "rationale": "The migration does not replace ordinary source governance."
-        },
-        {
-          "key": "C",
-          "text": "Concurrent old-history writes can undermine the cleaned reference boundary",
-          "rationale": "The transition needs a consistent agreement about which history is authoritative."
-        },
-        {
-          "key": "D",
-          "text": "Git cannot perform a rewrite unless every user deletes their account",
-          "rationale": "Account deletion is unrelated to coordinated reference management."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The transition needs a consistent agreement about which history is authoritative. Account deletion is unrelated to coordinated reference management. Read activity is not the write-race problem described. The migration does not replace ordinary source governance.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q030",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "advanced",
-      "question": "A sensitive file exists in multiple maintained branches and a fork. The team has authority over the primary repository but not the fork. Which response is appropriate?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Leave the token live until the external fork responds",
-          "rationale": "Revocation should not wait for complete control over every historical copy."
-        },
-        {
-          "key": "B",
-          "text": "Invalidate the secret, coordinate cleanup of owned affected refs, contact the relevant fork owner through the approved process, and avoid claiming universal erasure",
-          "rationale": "The response must respect ownership while distinguishing controlled cleanup from external copies."
-        },
-        {
-          "key": "C",
-          "text": "Delete the entire external fork using the primary repository's administrative role",
-          "rationale": "Authority over one repository does not imply ownership of another."
-        },
-        {
-          "key": "D",
-          "text": "Rewrite only main and report every maintained branch and fork clean",
-          "rationale": "That claim exceeds the evidence and scope of the operation."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The response must respect ownership while distinguishing controlled cleanup from external copies. Authority over one repository does not imply ownership of another. That claim exceeds the evidence and scope of the operation. Revocation should not wait for complete control over every historical copy.",
-      "sourceIds": [
-        "S3"
-      ]
-    },
-    {
-      "id": "L06-Q031",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "foundational",
-      "question": "A tracked configuration file was deleted several commits ago. Which inspection can locate the deletion and prior version?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Only the filesystem creation date of the repository folder",
-          "rationale": "That timestamp does not identify a source-level deletion commit."
-        },
-        {
-          "key": "B",
-          "text": "Only the names of currently open pull requests",
-          "rationale": "An older accepted change may no longer have an open request."
-        },
-        {
-          "key": "C",
-          "text": "The file's Git path history",
-          "rationale": "The relevant commit sequence can identify when that tracked path changed or disappeared."
-        },
-        {
-          "key": "D",
-          "text": "Only git status on the current clean checkout",
-          "rationale": "Status does not list every committed historical deletion."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The relevant commit sequence can identify when that tracked path changed or disappeared. Status does not list every committed historical deletion. That timestamp does not identify a source-level deletion commit. An older accepted change may no longer have an open request.",
-      "sourceIds": [
-        "S7"
-      ]
-    },
-    {
-      "id": "L06-Q032",
-      "checkpointId": "CP2",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "foundational",
-      "question": "Why is a clean current working tree insufficient to explain a file missing from an older commit?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Clean status proves that every historical version contains identical files",
-          "rationale": "Cleanliness does not imply unchanged past source trees."
-        },
-        {
-          "key": "B",
-          "text": "Git status includes a full chronological file-deletion report",
-          "rationale": "It is not a substitute for historical log inspection."
-        },
-        {
-          "key": "C",
-          "text": "A missing file must be untracked if status is clean",
-          "rationale": "The file may have been tracked and later removed in committed history."
-        },
-        {
-          "key": "D",
-          "text": "Clean status concerns current index and working-tree differences",
-          "rationale": "Committed history requires a separate historical inspection."
-        }
-      ],
-      "correctAnswers": [
-        "D"
-      ],
-      "explanation": "Committed history requires a separate historical inspection. Cleanliness does not imply unchanged past source trees. It is not a substitute for historical log inspection. The file may have been tracked and later removed in committed history.",
-      "sourceIds": [
-        "S7"
-      ]
-    },
-    {
-      "id": "L06-Q033",
       "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
@@ -1303,7 +1163,7 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Recovery needs a deliberate content version rather than whichever file is easiest to find. Similar type does not identify the correct configuration. An arbitrary old version can be incompatible with today's code. The requested repair may concern only one specific path.",
+      "explanation": "Similar type does not identify the correct configuration. An arbitrary old version can be incompatible with today's code. The requested repair may concern only one specific path. Recovery needs a deliberate content version rather than whichever file is easiest to find.",
       "sourceIds": [
         "S4",
         "S7"
@@ -1312,6 +1172,158 @@
         "language": "bash",
         "code": "git log -- config/app.json\ngit show <intended-commit>:config/app.json"
       }
+    },
+    {
+      "id": "L06-Q030",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "A developer resolved several conflicts but now wants to abort and may need that work later. What should happen first?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Force-push the unresolved index as a commit",
+          "rationale": "An unresolved operation is not a reviewed valid source state to publish."
+        },
+        {
+          "key": "B",
+          "text": "Delete the branch and assume reflog contains every unstaged edit",
+          "rationale": "Reference logs are not a universal backup of arbitrary uncommitted content."
+        },
+        {
+          "key": "C",
+          "text": "Preserve the valuable resolution changes in an appropriate separate record before discarding them",
+          "rationale": "Cancellation can remove work performed during the unresolved operation."
+        },
+        {
+          "key": "D",
+          "text": "Run abort repeatedly until the edits reappear",
+          "rationale": "Repeating cancellation does not create a backup of discarded resolution work."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "An unresolved operation is not a reviewed valid source state to publish. Reference logs are not a universal backup of arbitrary uncommitted content. Cancellation can remove work performed during the unresolved operation. Repeating cancellation does not create a backup of discarded resolution work.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L06-Q031",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "A cherry-pick conflicts. What state indicates that the operation still requires attention rather than having completed successfully?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The target branch has fewer local commits than main",
+          "rationale": "Relative history length does not establish completion of the selected operation."
+        },
+        {
+          "key": "B",
+          "text": "Git reports unresolved paths and an in-progress cherry-pick",
+          "rationale": "The candidate change is awaiting resolution or deliberate cancellation."
+        },
+        {
+          "key": "C",
+          "text": "A new remote tag appears with the original commit message",
+          "rationale": "Tag creation does not resolve an active local patch operation."
+        },
+        {
+          "key": "D",
+          "text": "The author closes the terminal window",
+          "rationale": "Closing the shell does not necessarily clear the repository's operation state."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Relative history length does not establish completion of the selected operation. The candidate change is awaiting resolution or deliberate cancellation. Tag creation does not resolve an active local patch operation. Closing the shell does not necessarily clear the repository's operation state.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L06-Q032",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "Why must forks clones and downstream references be considered during sensitive-history cleanup?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The unwanted content can remain outside the rewritten primary reference",
+          "rationale": "A central rewrite does not automatically alter every existing copy."
+        },
+        {
+          "key": "B",
+          "text": "Every fork is automatically deleted when the source branch changes",
+          "rationale": "Forks and clones have independent content and lifecycle."
+        },
+        {
+          "key": "C",
+          "text": "A collaborator's old branch can never reintroduce removed history",
+          "rationale": "A push can restore references to an old graph if not coordinated."
+        },
+        {
+          "key": "D",
+          "text": "The newest commit's clean diff proves no copy contains the value",
+          "rationale": "A current diff cannot establish absence from historical or external storage."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A central rewrite does not automatically alter every existing copy. Forks and clones have independent content and lifecycle. A push can restore references to an old graph if not coordinated. A current diff cannot establish absence from historical or external storage.",
+      "sourceIds": [
+        "S3"
+      ]
+    },
+    {
+      "id": "L06-Q033",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "Why should pushes be coordinated or temporarily constrained during a shared-history rewrite?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Every simultaneous read request corrupts the repository",
+          "rationale": "Read activity is not the write-race problem described."
+        },
+        {
+          "key": "B",
+          "text": "A temporary coordination window permanently removes future review needs",
+          "rationale": "The migration does not replace ordinary source governance."
+        },
+        {
+          "key": "C",
+          "text": "Concurrent old-history writes can undermine the cleaned reference boundary",
+          "rationale": "The transition needs a consistent agreement about which history is authoritative."
+        },
+        {
+          "key": "D",
+          "text": "Git cannot perform a rewrite unless every user deletes their account",
+          "rationale": "Account deletion is unrelated to coordinated reference management."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Read activity is not the write-race problem described. The migration does not replace ordinary source governance. The transition needs a consistent agreement about which history is authoritative. Account deletion is unrelated to coordinated reference management.",
+      "sourceIds": [
+        "S3"
+      ]
     },
     {
       "id": "L06-Q034",
@@ -1346,7 +1358,7 @@
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Historical existence does not guarantee present-day correctness. Source branching does not migrate application schemas. A reviewed restoration can eventually become an accepted mainline change. A new reference ordinarily preserves rather than erases source history.",
+      "explanation": "Source branching does not migrate application schemas. A reviewed restoration can eventually become an accepted mainline change. A new reference ordinarily preserves rather than erases source history. Historical existence does not guarantee present-day correctness.",
       "sourceIds": [
         "S4"
       ]
@@ -1354,163 +1366,6 @@
     {
       "id": "L06-Q035",
       "checkpointId": "CP2",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "advanced",
-      "question": "An old configuration file is recovered, but the application now expects a different schema and secrets must come from a vault. What should the engineer do?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Restore the entire old application to avoid reading the configuration diff",
-          "rationale": "That broadens scope beyond the required configuration recovery."
-        },
-        {
-          "key": "B",
-          "text": "Copy the old secret values into the new file and rely on repository privacy",
-          "rationale": "Reintroducing historical credentials does not satisfy the current external-secret design."
-        },
-        {
-          "key": "C",
-          "text": "Review and adapt the needed nonsensitive configuration to the current contract, then test the repair",
-          "rationale": "Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed."
-        },
-        {
-          "key": "D",
-          "text": "Deploy the recovered file unchanged because it once worked",
-          "rationale": "Earlier success does not establish compatibility or safe secret handling today."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed. Earlier success does not establish compatibility or safe secret handling today. That broadens scope beyond the required configuration recovery. Reintroducing historical credentials does not satisfy the current external-secret design.",
-      "sourceIds": [
-        "S4",
-        "S7"
-      ]
-    },
-    {
-      "id": "L06-Q036",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "foundational",
-      "question": "A conflicted cherry-pick should be abandoned, and the developer does not need its resolution edits. Which supported operation is relevant?",
-      "options": [
-        {
-          "key": "A",
-          "text": "git fetch --prune",
-          "rationale": "Fetching remote references does not cancel a local cherry-pick operation."
-        },
-        {
-          "key": "B",
-          "text": "git cherry-pick --abort",
-          "rationale": "The operation cancels the in-progress cherry-pick and restores its prior state where supported."
-        },
-        {
-          "key": "C",
-          "text": "git cherry-pick --continue",
-          "rationale": "Continue attempts to complete the operation after resolution rather than abandon it."
-        },
-        {
-          "key": "D",
-          "text": "git cherry-pick --skip",
-          "rationale": "Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The operation cancels the in-progress cherry-pick and restores its prior state where supported. Continue attempts to complete the operation after resolution rather than abandon it. Skip discards the current selected commit and proceeds through a sequence, not necessarily aborting all work. Fetching remote references does not cancel a local cherry-pick operation.",
-      "sourceIds": [
-        "S6"
-      ],
-      "exhibit": {
-        "language": "text",
-        "code": "On branch release/v1\nYou are currently cherry-picking commit <patch>\nUnmerged paths:config/app.json\nDecision:abandon the entire cherry-pick attempt"
-      }
-    },
-    {
-      "id": "L06-Q037",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "What should git status be checked for after cancelling a conflicted cherry-pick?",
-      "options": [
-        {
-          "key": "A",
-          "text": "No unintended in-progress operation and the expected branch state",
-          "rationale": "The cancellation result should match the intended pre-operation baseline."
-        },
-        {
-          "key": "B",
-          "text": "Only whether the terminal prompt changed color",
-          "rationale": "Prompt appearance is not reliable repository-state evidence."
-        },
-        {
-          "key": "C",
-          "text": "Only whether the source branch still exists remotely",
-          "rationale": "That does not establish the local operation state."
-        },
-        {
-          "key": "D",
-          "text": "Whether a new release tag was created automatically",
-          "rationale": "Aborting a cherry-pick does not require automatic release tagging."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The cancellation result should match the intended pre-operation baseline. Prompt appearance is not reliable repository-state evidence. That does not establish the local operation state. Aborting a cherry-pick does not require automatic release tagging.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q038",
-      "checkpointId": "CP1",
-      "objectiveIds": [
-        "D2.2.5"
-      ],
-      "difficulty": "applied",
-      "question": "A developer resolved several conflicts but now wants to abort and may need that work later. What should happen first?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Force-push the unresolved index as a commit",
-          "rationale": "An unresolved operation is not a reviewed valid source state to publish."
-        },
-        {
-          "key": "B",
-          "text": "Delete the branch and assume reflog contains every unstaged edit",
-          "rationale": "Reference logs are not a universal backup of arbitrary uncommitted content."
-        },
-        {
-          "key": "C",
-          "text": "Preserve the valuable resolution changes in an appropriate separate record before discarding them",
-          "rationale": "Cancellation can remove work performed during the unresolved operation."
-        },
-        {
-          "key": "D",
-          "text": "Run abort repeatedly until the edits reappear",
-          "rationale": "Repeating cancellation does not create a backup of discarded resolution work."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Cancellation can remove work performed during the unresolved operation. Repeating cancellation does not create a backup of discarded resolution work. An unresolved operation is not a reviewed valid source state to publish. Reference logs are not a universal backup of arbitrary uncommitted content.",
-      "sourceIds": [
-        "S6"
-      ]
-    },
-    {
-      "id": "L06-Q039",
-      "checkpointId": "CP1",
       "objectiveIds": [
         "D2.2.5"
       ],
@@ -1541,18 +1396,171 @@
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The intended continuation determines which supported recovery action fits. Their handling of the remaining sequence is materially different. Continuing requires the operation's expected resolution state. Remote retrieval does not decide a local sequence's conflict outcome.",
+      "explanation": "Continuing requires the operation's expected resolution state. Remote retrieval does not decide a local sequence's conflict outcome. The intended continuation determines which supported recovery action fits. Their handling of the remaining sequence is materially different.",
       "sourceIds": [
         "S6"
       ]
     },
     {
-      "id": "L06-Q040",
-      "checkpointId": "CP1",
+      "id": "L06-Q036",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D2.2.5"
       ],
-      "difficulty": "advanced",
+      "difficulty": "applied",
+      "question": "A security fix from main depends on a refactor unavailable on the supported release. The release must keep its old API. Which approach is strongest?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Adapt or backport the minimal correction for the old contract, test it there, and record the relationship to the original fix",
+          "rationale": "The desired behavior matters, while blindly importing newer dependencies can violate support compatibility."
+        },
+        {
+          "key": "B",
+          "text": "Cherry-pick the fix and suppress the missing-symbol compilation errors",
+          "rationale": "The resulting source does not become valid by hiding the error."
+        },
+        {
+          "key": "C",
+          "text": "Merge the entire refactor and remove the supported API tests",
+          "rationale": "That abandons the stated compatibility requirement."
+        },
+        {
+          "key": "D",
+          "text": "Assume a conflict-free cherry-pick proves the runtime dependencies are present",
+          "rationale": "Textual applicability is weaker evidence than building and testing the target baseline."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The desired behavior matters, while blindly importing newer dependencies can violate support compatibility. The resulting source does not become valid by hiding the error. That abandons the stated compatibility requirement. Textual applicability is weaker evidence than building and testing the target baseline.",
+      "sourceIds": [
+        "S6"
+      ]
+    },
+    {
+      "id": "L06-Q037",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "An attacker could already have copied a public token before revocation. The team wants to claim the incident is erased after rewriting history. Which report is accurate?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Report only that the current file lacks the token without mentioning revocation or historical exposure",
+          "rationale": "That omits the central security consequences and response evidence."
+        },
+        {
+          "key": "B",
+          "text": "State that the credential was invalidated and known repository exposure was cleaned, while acknowledging that prior public copies cannot be guaranteed erased",
+          "rationale": "Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible."
+        },
+        {
+          "key": "C",
+          "text": "State that a rewritten default branch proves every observer deleted their copy",
+          "rationale": "A repository operation cannot control unknown external retention."
+        },
+        {
+          "key": "D",
+          "text": "Keep the original token active to avoid disrupting integrations and call the rewrite sufficient",
+          "rationale": "Avoiding rotation leaves the compromised capability usable."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "That omits the central security consequences and response evidence. Containment and cleanup are real outcomes, but public disclosure cannot be retroactively made impossible. A repository operation cannot control unknown external retention. Avoiding rotation leaves the compromised capability usable.",
+      "sourceIds": [
+        "S3"
+      ]
+    },
+    {
+      "id": "L06-Q038",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "applied",
+      "question": "A sensitive file exists in multiple maintained branches and a fork. The team has authority over the primary repository but not the fork. Which response is appropriate?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Leave the token live until the external fork responds",
+          "rationale": "Revocation should not wait for complete control over every historical copy."
+        },
+        {
+          "key": "B",
+          "text": "Invalidate the secret, coordinate cleanup of owned affected refs, contact the relevant fork owner through the approved process, and avoid claiming universal erasure",
+          "rationale": "The response must respect ownership while distinguishing controlled cleanup from external copies."
+        },
+        {
+          "key": "C",
+          "text": "Delete the entire external fork using the primary repository's administrative role",
+          "rationale": "Authority over one repository does not imply ownership of another."
+        },
+        {
+          "key": "D",
+          "text": "Rewrite only main and report every maintained branch and fork clean",
+          "rationale": "That claim exceeds the evidence and scope of the operation."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Revocation should not wait for complete control over every historical copy. The response must respect ownership while distinguishing controlled cleanup from external copies. Authority over one repository does not imply ownership of another. That claim exceeds the evidence and scope of the operation.",
+      "sourceIds": [
+        "S3"
+      ]
+    },
+    {
+      "id": "L06-Q039",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "An old configuration file is recovered, but the application now expects a different schema and secrets must come from a vault. What should the engineer do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Restore the entire old application to avoid reading the configuration diff",
+          "rationale": "That broadens scope beyond the required configuration recovery."
+        },
+        {
+          "key": "B",
+          "text": "Copy the old secret values into the new file and rely on repository privacy",
+          "rationale": "Reintroducing historical credentials does not satisfy the current external-secret design."
+        },
+        {
+          "key": "C",
+          "text": "Review and adapt the needed nonsensitive configuration to the current contract, then test the repair",
+          "rationale": "Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed."
+        },
+        {
+          "key": "D",
+          "text": "Deploy the recovered file unchanged because it once worked",
+          "rationale": "Earlier success does not establish compatibility or safe secret handling today."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "That broadens scope beyond the required configuration recovery. Reintroducing historical credentials does not satisfy the current external-secret design. Recovery supplies historical evidence, not a guarantee that all old settings should be redeployed. Earlier success does not establish compatibility or safe secret handling today.",
+      "sourceIds": [
+        "S4",
+        "S7"
+      ]
+    },
+    {
+      "id": "L06-Q040",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "applied",
       "question": "The developer needs to abandon a failed cherry-pick but retain valuable new conflict-resolution work and unrelated local edits. Which sequence is safest?",
       "options": [
         {
@@ -1579,7 +1587,7 @@
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Cancellation safety depends on explicitly protecting changes rather than assuming all uncommitted work is journaled. Reflog does not guarantee recovery of arbitrary working-tree edits. An unresolved operation does not establish a valid desired commit. The remote may not contain the valuable local state being preserved.",
+      "explanation": "The remote may not contain the valuable local state being preserved. Cancellation safety depends on explicitly protecting changes rather than assuming all uncommitted work is journaled. Reflog does not guarantee recovery of arbitrary working-tree edits. An unresolved operation does not establish a valid desired commit.",
       "sourceIds": [
         "S6",
         "S5"
@@ -1591,154 +1599,153 @@
       "objectiveIds": [
         "D2.2.6"
       ],
-      "difficulty": "foundational",
-      "question": "A secret-bearing file is already tracked, and the author adds it to .gitignore. What happens to its existing committed history?",
+      "difficulty": "advanced",
+      "question": "A live credential was committed, shared, then removed from the current tree and added to gitignore. A teammate says the incident is closed. Which response addresses the remaining exposure?",
       "options": [
         {
           "key": "A",
-          "text": "The credential is revoked in its external service",
-          "rationale": "Source ignore configuration does not change service authorization."
+          "text": "Change only the file name so scanners no longer match it",
+          "rationale": "Renaming does not invalidate the exposed credential or establish that historical exposure is resolved."
         },
         {
           "key": "B",
-          "text": "Every existing clone deletes the file instantly",
-          "rationale": "Clones do not universally synchronize such local state changes automatically."
+          "text": "Revoke or rotate the credential, investigate use, and coordinate any required historical cleanup and downstream copies",
+          "rationale": "Ignoring and current-tree removal do not invalidate an exposed credential or remove existing historical copies."
         },
         {
           "key": "C",
-          "text": "The historical tracked content remains",
-          "rationale": "Ignore rules do not remove objects already committed to source history."
+          "text": "Accept closure because gitignore prevents the old commit from being fetched",
+          "rationale": "Gitignore does not remove tracked history or access to earlier commits."
         },
         {
           "key": "D",
-          "text": "All earlier commits are rewritten automatically",
-          "rationale": "Adding an ignore pattern is not a history-rewrite command."
+          "text": "Rewrite history first and keep the credential active until every clone is updated",
+          "rationale": "History cleanup does not revoke access, so containment should not wait for all copies to be reconciled."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Ignore rules do not remove objects already committed to source history. Adding an ignore pattern is not a history-rewrite command. Source ignore configuration does not change service authorization. Clones do not universally synchronize such local state changes automatically.",
+      "explanation": "Renaming does not invalidate the exposed credential or establish that historical exposure is resolved. Ignoring and current-tree removal do not invalidate an exposed credential or remove existing historical copies. Gitignore does not remove tracked history or access to earlier commits. History cleanup does not revoke access, so containment should not wait for all copies to be reconciled.",
       "sourceIds": [
-        "S3"
+        "S3",
+        "S10"
       ]
     },
     {
       "id": "L06-Q042",
-      "checkpointId": "CP5",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D2.2.6"
+        "D2.2.5"
       ],
-      "difficulty": "foundational",
-      "question": "The team wants to stop tracking a local configuration file while retaining its working copy. Which operation is relevant before committing the change?",
+      "difficulty": "advanced",
+      "question": "A shared main branch has a bad commit followed by two valid releases. Other developers have fetched it. Which repair best preserves public history and the valid later work?",
       "options": [
         {
           "key": "A",
-          "text": "git rm for the whole repository",
-          "rationale": "That scope and working-file deletion do not match the request."
+          "text": "Apply the inverse patch without testing whether later commits changed the same behavior",
+          "rationale": "A textual inverse still needs review against the current source and relevant tests."
         },
         {
           "key": "B",
-          "text": "git reset --hard on every branch",
-          "rationale": "A broad reset is not the targeted untracking operation."
+          "text": "Create a reviewed revert or targeted corrective commit and validate the current branch",
+          "rationale": "A forward correction preserves shared history and can address the regression without discarding subsequent work."
         },
         {
           "key": "C",
-          "text": "git clean on the tracked path",
-          "rationale": "Clean primarily addresses untracked content rather than untracking committed paths."
+          "text": "Reset main to before the bad commit and force-push as the default repair",
+          "rationale": "That rewrites history already consumed by others and can discard the later valid releases."
         },
         {
           "key": "D",
-          "text": "git rm --cached for the intended tracked path",
-          "rationale": "Removing from the index can stop tracking without the ordinary working-file removal."
+          "text": "Delete the two later release tags and stop the investigation",
+          "rationale": "Tag deletion does not implement the needed source repair and harms traceability."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A textual inverse still needs review against the current source and relevant tests. A forward correction preserves shared history and can address the regression without discarding subsequent work. That rewrites history already consumed by others and can discard the later valid releases. Tag deletion does not implement the needed source repair and harms traceability.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L06-Q043",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "advanced",
+      "question": "A responder needs one configuration file from a known-good commit, but the working tree contains unrelated uncommitted fixes. Which repair minimizes the intended change scope?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run reset --hard to the old commit before checking status",
+          "rationale": "This can discard unrelated tracked edits and move the whole branch unnecessarily."
+        },
+        {
+          "key": "B",
+          "text": "Revert every commit since the known-good version",
+          "rationale": "That changes unrelated accepted work rather than only the requested configuration."
+        },
+        {
+          "key": "C",
+          "text": "Copy the entire old tree over the current checkout",
+          "rationale": "A whole-tree replacement expands the recovery beyond the single intended file."
+        },
+        {
+          "key": "D",
+          "text": "Inspect status, preserve unrelated work, restore the target path from the chosen revision, and review the resulting diff",
+          "rationale": "A targeted restore can recover the desired file without resetting all tracked work, provided the overwrite scope is reviewed."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Removing from the index can stop tracking without the ordinary working-file removal. That scope and working-file deletion do not match the request. A broad reset is not the targeted untracking operation. Clean primarily addresses untracked content rather than untracking committed paths.",
+      "explanation": "This can discard unrelated tracked edits and move the whole branch unnecessarily. That changes unrelated accepted work rather than only the requested configuration. A whole-tree replacement expands the recovery beyond the single intended file. A targeted restore can recover the desired file without resetting all tracked work, provided the overwrite scope is reviewed.",
       "sourceIds": [
-        "S4"
-      ],
-      "exhibit": {
-        "language": "bash",
-        "code": "git rm --cached -- config/local.settings.json\n#Review the staged removal and keep the required local file."
-      }
-    },
-    {
-      "id": "L06-Q043",
-      "checkpointId": "CP5",
-      "objectiveIds": [
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "What protection does gitignore actually provide in this workflow?",
-      "options": [
-        {
-          "key": "A",
-          "text": "It helps prevent matching untracked files from being added through normal workflows",
-          "rationale": "It is a preventive tracking convenience rather than historical erasure or credential revocation."
-        },
-        {
-          "key": "B",
-          "text": "It cryptographically encrypts ignored content in old commits",
-          "rationale": "Ignore patterns do not transform existing repository objects."
-        },
-        {
-          "key": "C",
-          "text": "It prevents every possible forced add of the file",
-          "rationale": "An explicit override can still add otherwise ignored content."
-        },
-        {
-          "key": "D",
-          "text": "It proves a file was never present in any fork",
-          "rationale": "Local pattern rules cannot establish universal historical absence."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "It is a preventive tracking convenience rather than historical erasure or credential revocation. Ignore patterns do not transform existing repository objects. An explicit override can still add otherwise ignored content. Local pattern rules cannot establish universal historical absence.",
-      "sourceIds": [
-        "S3"
+        "S4",
+        "S5",
+        "S8"
       ]
     },
     {
       "id": "L06-Q044",
-      "checkpointId": "CP5",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D2.2.6"
+        "D2.2.5"
       ],
-      "difficulty": "applied",
-      "question": "A token is discovered in a tracked local-settings file. Which check prevents treating untracking as complete incident response?",
+      "difficulty": "advanced",
+      "question": "A branch reset made a useful commit unreachable from named branches. Reflog still lists it, but maintenance expiry is approaching. What sequence best protects the recovery investigation?",
       "options": [
         {
           "key": "A",
-          "text": "Determine whether it was exposed and invalidate the credential when compromised",
-          "rationale": "Removing tracking does not remove the external capability or earlier disclosure."
+          "text": "Reset shared main immediately to the candidate before checking its contents",
+          "rationale": "That changes shared state before confirming the recovered commit and its compatibility."
         },
         {
           "key": "B",
-          "text": "Check only whether the current filename is hidden by the editor",
-          "rationale": "Editor visibility is unrelated to exposure and authorization."
+          "text": "Inspect the candidate and create a rescue reference before continuing analysis",
+          "rationale": "A new reference preserves reachability while the investigator verifies whether this is the desired work."
         },
         {
           "key": "C",
-          "text": "Assume a private repository means the credential can never leak",
-          "rationale": "Accessed copies and later publication can still expose sensitive content."
+          "text": "Wait for the next garbage collection and then inspect the same reflog entry",
+          "rationale": "Expiry and pruning can remove the recovery opportunity rather than stabilize it."
         },
         {
           "key": "D",
-          "text": "Rename the file and keep the same secret under another tracked path",
-          "rationale": "A name change preserves the compromised value and its tracking risk."
+          "text": "Assume another developer's reflog contains this local reset",
+          "rationale": "Reflogs are local and need not record another checkout's reference movement."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Removing tracking does not remove the external capability or earlier disclosure. Editor visibility is unrelated to exposure and authorization. Accessed copies and later publication can still expose sensitive content. A name change preserves the compromised value and its tracking risk.",
+      "explanation": "That changes shared state before confirming the recovered commit and its compatibility. A new reference preserves reachability while the investigator verifies whether this is the desired work. Expiry and pruning can remove the recovery opportunity rather than stabilize it. Reflogs are local and need not record another checkout's reference movement.",
       "sourceIds": [
-        "S3"
+        "S1"
       ]
     },
     {
@@ -1748,230 +1755,232 @@
         "D2.2.6"
       ],
       "difficulty": "advanced",
-      "question": "A developer commits a live token, adds an ignore pattern, and untracks the current file. The repository has already been shared. What plan covers the remaining risk?",
+      "question": "A tracked local-settings file should leave version control while each developer keeps a local copy. History contains no secret. Which reviewed change best fits?",
       "options": [
         {
           "key": "A",
-          "text": "Revoke or rotate the token, assess affected history and copies, coordinate necessary cleanup, and retain the preventive ignore rule",
-          "rationale": "Future prevention and response to the existing disclosure are separate responsibilities."
+          "text": "Rewrite all repository history to remove the nonsecret path",
+          "rationale": "A full history rewrite is unnecessary for the stated future-tracking requirement and adds disruption."
         },
         {
           "key": "B",
-          "text": "Treat the ignore rule as proof that every old copy is now safe",
-          "rationale": "The rule has no retroactive effect on historical or external contents."
+          "text": "Untrack the path with the cached removal option, add the ignore rule, and verify the committed diff and local file",
+          "rationale": "This changes future tracking while retaining the working copy and does not pretend to erase history."
         },
         {
           "key": "C",
-          "text": "Re-add the file under a different ignored name without changing its token",
-          "rationale": "That does not invalidate the disclosed capability."
+          "text": "Add only a gitignore rule and leave the tracked file unchanged",
+          "rationale": "Ignore rules do not automatically stop tracking a file already in the index."
         },
         {
           "key": "D",
-          "text": "Delete only the developer's local clone and assume the shared source is cleaned",
-          "rationale": "Other copies and the remote history remain outside that local deletion."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Future prevention and response to the existing disclosure are separate responsibilities. The rule has no retroactive effect on historical or external contents. That does not invalidate the disclosed capability. Other copies and the remote history remain outside that local deletion.",
-      "sourceIds": [
-        "S3",
-        "S4"
-      ]
-    },
-    {
-      "id": "L06-Q046",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5",
-        "D2.2.6"
-      ],
-      "difficulty": "foundational",
-      "question": "Shared main lost one valid configuration value in an accepted commit. Which repair ordinarily avoids discarding unrelated later work?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A small reviewed corrective commit restoring the intended value",
-          "rationale": "The change matches the narrow defect while retaining shared history."
-        },
-        {
-          "key": "B",
-          "text": "A hard reset of shared main to before all subsequent changes",
-          "rationale": "That can remove valid accepted work unrelated to the value."
-        },
-        {
-          "key": "C",
-          "text": "A force-push of a private old branch without comparison",
-          "rationale": "That replaces the shared state rather than reviewing the targeted difference."
-        },
-        {
-          "key": "D",
-          "text": "A new tag on the defective commit without modifying content",
-          "rationale": "A reference label does not restore the missing value."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The change matches the narrow defect while retaining shared history. That can remove valid accepted work unrelated to the value. That replaces the shared state rather than reviewing the targeted difference. A reference label does not restore the missing value.",
-      "sourceIds": [
-        "S2",
-        "S4"
-      ]
-    },
-    {
-      "id": "L06-Q047",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5",
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "What risk makes git reset --hard unsuitable as an unexamined one-file recovery shortcut when tracked edits exist?",
-      "options": [
-        {
-          "key": "A",
-          "text": "It can discard tracked index and working-tree changes beyond the requested file",
-          "rationale": "The operation has broader state effects than a selected-path restoration."
-        },
-        {
-          "key": "B",
-          "text": "It always deletes every remote repository immediately",
-          "rationale": "Reset is a local operation unless separate publication follows."
-        },
-        {
-          "key": "C",
-          "text": "It guarantees a new reviewed corrective commit",
-          "rationale": "Reset does not inherently create such a commit."
-        },
-        {
-          "key": "D",
-          "text": "It backs up every unstaged edit as a named branch",
-          "rationale": "The command does not promise that working-tree backup behavior."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "The operation has broader state effects than a selected-path restoration. Reset is a local operation unless separate publication follows. Reset does not inherently create such a commit. The command does not promise that working-tree backup behavior.",
-      "sourceIds": [
-        "S5"
-      ]
-    },
-    {
-      "id": "L06-Q048",
-      "checkpointId": "CP3",
-      "objectiveIds": [
-        "D2.2.5",
-        "D2.2.6"
-      ],
-      "difficulty": "applied",
-      "question": "Which review evidence best supports a targeted configuration restoration?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Only the branch author's display name",
-          "rationale": "Attribution does not establish what state was restored."
-        },
-        {
-          "key": "B",
-          "text": "A minimal diff against the intended source and preserved unrelated modifications",
-          "rationale": "The proof should cover both the corrected value and the required limited scope."
-        },
-        {
-          "key": "C",
-          "text": "Only the command's execution time",
-          "rationale": "Duration does not establish correct content or preservation."
-        },
-        {
-          "key": "D",
-          "text": "Only a screenshot of the editor's filename tab",
-          "rationale": "The tab does not show the actual changed configuration."
+          "text": "Use a normal file deletion and commit it without documenting local replacement",
+          "rationale": "That removes the local file rather than preserving the requested local configuration copy."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The proof should cover both the corrected value and the required limited scope. Duration does not establish correct content or preservation. The tab does not show the actual changed configuration. Attribution does not establish what state was restored.",
+      "explanation": "A full history rewrite is unnecessary for the stated future-tracking requirement and adds disruption. This changes future tracking while retaining the working copy and does not pretend to erase history. Ignore rules do not automatically stop tracking a file already in the index. That removes the local file rather than preserving the requested local configuration copy.",
       "sourceIds": [
-        "S4"
+        "S9",
+        "S10"
       ]
     },
     {
-      "id": "L06-Q049",
-      "checkpointId": "CP3",
+      "id": "L06-Q046",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D2.2.5",
-        "D2.2.6"
+        "D2.2.5"
       ],
-      "difficulty": "applied",
-      "question": "A responder finds an unreachable commit containing needed work and wants to keep it available during investigation. What should be done?",
+      "difficulty": "advanced",
+      "question": "The exhibit shows staged changes in config.json and unstaged changes in service.cs. An operator wants to discard only the unstaged service.cs edit while keeping the index intact. Which action fits?",
       "options": [
         {
           "key": "A",
-          "text": "Record only the first word of its commit message",
-          "rationale": "A vague description does not retain the actual object graph."
+          "text": "Commit every current file before discarding service.cs",
+          "rationale": "That accepts the undesired edit into history instead of applying the requested selective discard."
         },
         {
           "key": "B",
-          "text": "Delete every recovery branch after copying the commit ID into chat",
-          "rationale": "A string alone does not prevent unreferenced object cleanup."
+          "text": "Restore only service.cs in the working tree and confirm both status and staged diff afterward",
+          "rationale": "Path-scoped working-tree restoration can preserve the staged configuration change while removing the selected unstaged edit."
         },
         {
           "key": "C",
-          "text": "Create an appropriate reference to the commit before retention cleanup can remove it",
-          "rationale": "Reachability under a retained name protects the found work during subsequent analysis."
+          "text": "Reset --hard HEAD for the whole repository",
+          "rationale": "That also discards staged tracked work outside the requested path."
         },
         {
           "key": "D",
-          "text": "Run aggressive pruning first to make history simpler",
-          "rationale": "Pruning can remove unreachable content needed for recovery."
+          "text": "Restore config.json from HEAD with the staged option",
+          "rationale": "That targets the configuration index entry the operator wants to keep."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "That accepts the undesired edit into history instead of applying the requested selective discard. Path-scoped working-tree restoration can preserve the staged configuration change while removing the selected unstaged edit. That also discards staged tracked work outside the requested path. That targets the configuration index entry the operator wants to keep.",
+      "sourceIds": [
+        "S4",
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "git status --short\nM  config.json\n M service.cs\n\ngit diff --cached --stat\nconfig.json | 2 +-"
+      }
+    },
+    {
+      "id": "L06-Q047",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "advanced",
+      "question": "A hotfix commit from main is cherry-picked into release/1.x, but it depends on a schema change absent there. The pick reports success. What should determine readiness?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Merge all of main so the dependency appears automatically",
+          "rationale": "That can import unrelated next-version changes forbidden by the supported release boundary."
+        },
+        {
+          "key": "B",
+          "text": "Treat the source branch's old passing build as the target's acceptance result",
+          "rationale": "The target branch has different inputs and needs relevant validation."
+        },
+        {
+          "key": "C",
+          "text": "Review dependencies and test the resulting behavior against release/1.x before accepting the transferred fix",
+          "rationale": "A mechanically successful cherry-pick does not establish compatibility with the target branch's runtime contract."
+        },
+        {
+          "key": "D",
+          "text": "Accept it because no textual conflict means no behavioral dependency exists",
+          "rationale": "Git conflict detection does not evaluate schema or semantic compatibility."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Reachability under a retained name protects the found work during subsequent analysis. Pruning can remove unreachable content needed for recovery. A vague description does not retain the actual object graph. A string alone does not prevent unreferenced object cleanup.",
+      "explanation": "That can import unrelated next-version changes forbidden by the supported release boundary. The target branch has different inputs and needs relevant validation. A mechanically successful cherry-pick does not establish compatibility with the target branch's runtime contract. Git conflict detection does not evaluate schema or semantic compatibility.",
       "sourceIds": [
-        "S1"
+        "S6",
+        "S7"
+      ]
+    },
+    {
+      "id": "L06-Q048",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Two reflog entries contain similar configuration fixes; only one includes a later security change. The release must retain that security correction. Which evidence should choose the rescue commit?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Choose the oldest candidate because it predates the regression",
+          "rationale": "The oldest candidate may also omit the later required security correction."
+        },
+        {
+          "key": "B",
+          "text": "Choose the candidate with the shorter commit message",
+          "rationale": "Message length has no relationship to the required code contents."
+        },
+        {
+          "key": "C",
+          "text": "Inspect each candidate's tree, ancestry, and relevant diff against the required release behavior",
+          "rationale": "Reflog chronology alone does not establish that a candidate contains every required correction."
+        },
+        {
+          "key": "D",
+          "text": "Choose whichever reflog message mentions configuration first",
+          "rationale": "A message keyword does not establish the candidate's full content or ancestry."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The oldest candidate may also omit the later required security correction. Message length has no relationship to the required code contents. Reflog chronology alone does not establish that a candidate contains every required correction. A message keyword does not establish the candidate's full content or ancestry.",
+      "sourceIds": [
+        "S1",
+        "S7"
+      ]
+    },
+    {
+      "id": "L06-Q049",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.2.6"
+      ],
+      "difficulty": "advanced",
+      "question": "A removed token remains in fork history and cached artifacts. The team has rotated it, but a proposed history rewrite is being described as complete erasure. What should the recovery report say?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No useful mitigation occurred until every external byte is erased",
+          "rationale": "Verified revocation is meaningful containment even while copy-removal work remains."
+        },
+        {
+          "key": "B",
+          "text": "Containment is complete only to the extent verified; history rewriting cannot guarantee removal from all external copies",
+          "rationale": "Rotation addresses credential validity, while copied content and retention need separately scoped follow-up and honest limits."
+        },
+        {
+          "key": "C",
+          "text": "The rotated token never existed because its current validity is false",
+          "rationale": "Invalidation does not erase the original exposure or investigation evidence."
+        },
+        {
+          "key": "D",
+          "text": "A forced rewrite proves all forks and caches were purged",
+          "rationale": "The local rewrite cannot establish that every external copy has disappeared."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Verified revocation is meaningful containment even while copy-removal work remains. Rotation addresses credential validity, while copied content and retention need separately scoped follow-up and honest limits. Invalidation does not erase the original exposure or investigation evidence. The local rewrite cannot establish that every external copy has disappeared.",
+      "sourceIds": [
+        "S3"
       ]
     },
     {
       "id": "L06-Q050",
-      "checkpointId": "CP3",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D2.2.5",
         "D2.2.6"
       ],
       "difficulty": "advanced",
-      "question": "A shared repository contains both a normal configuration regression and an earlier leaked credential. Which recovery policy correctly distinguishes the two problems?",
+      "question": "A shared branch has a normal configuration regression and an earlier leaked credential. The team wants the least disruptive complete recovery. Which policy distinguishes the problems correctly?",
       "options": [
         {
           "key": "A",
-          "text": "Use only revert for both and assume the secret disappears from every older revision",
-          "rationale": "Revert does not erase the historical credential or revoke it."
+          "text": "Revert both commits and consider the credential secure because its addition is reversed",
+          "rationale": "A revert preserves historical exposure and does not invalidate the secret."
         },
         {
           "key": "B",
-          "text": "Rewrite all history for every small bug and never rotate credentials",
-          "rationale": "That creates unnecessary collaboration disruption while leaving the leaked capability usable."
+          "text": "Rewrite the whole shared branch for both issues without considering consumers",
+          "rationale": "History rewriting adds disruption and is not the default requirement for an ordinary regression."
         },
         {
           "key": "C",
-          "text": "Add both filenames to gitignore and report the two incidents resolved",
-          "rationale": "Ignore rules neither fix committed behavior nor remediate existing disclosure."
+          "text": "Rotate the credential and leave the configuration regression because security is higher priority",
+          "rationale": "Containment does not eliminate the separate requirement to restore correct application behavior."
         },
         {
           "key": "D",
-          "text": "Use a reviewed corrective or revert commit for the ordinary defect, but invalidate the credential and coordinate sensitive-history cleanup separately",
-          "rationale": "Preserving shared history is appropriate for normal correction, while disclosure requires capability revocation and exposure management."
+          "text": "Use a forward source correction for the regression, immediately revoke the credential, and separately review necessary coordinated sensitive-history cleanup",
+          "rationale": "Ordinary code recovery and credential exposure have different containment and history requirements."
         }
       ],
       "correctAnswers": [
         "D"
       ],
-      "explanation": "Preserving shared history is appropriate for normal correction, while disclosure requires capability revocation and exposure management. Revert does not erase the historical credential or revoke it. That creates unnecessary collaboration disruption while leaving the leaked capability usable. Ignore rules neither fix committed behavior nor remediate existing disclosure.",
+      "explanation": "A revert preserves historical exposure and does not invalidate the secret. History rewriting adds disruption and is not the default requirement for an ordinary regression. Containment does not eliminate the separate requirement to restore correct application behavior. Ordinary code recovery and credential exposure have different containment and history requirements.",
       "sourceIds": [
         "S2",
         "S3"

@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 A reachable owned high finding must retain a blocking remediation decision. A false-positive status requires supporting evidence and reviewer/expiry context, not a convenient severity override.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. All five checkpoint commands, final validators and named fault/repair passed in CourseScanMonitorSequences.Tests.ps1. Local .NET package inventory/advisory queries and Gitleaks scans are real. GitHub/Azure APIs and Docker/Trivy reports are explicit fixtures; live security integration and alert delivery have not run. Repository CI separately runs the actual application container.
 
 ## CP1 — Inspect repository security capability metadata
 

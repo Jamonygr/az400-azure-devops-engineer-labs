@@ -43,3 +43,50 @@ Describe 'Measured release gate evidence' {
         $report.telemetry.p95Ms | Should -Be 1500
     }
 }
+
+Describe 'Exact workload ownership contract' {
+    BeforeAll {
+        $script:scopeGate=Join-Path $PSScriptRoot '../labs/26-capstone-github/artifacts/deployment/scripts/Assert-OwnedWorkload.ps1'
+        $script:scopeParameters=@{SubscriptionId='11111111-1111-4111-8111-111111111111';ResourceGroup='owned-group';RunId='fixture-run';OwnerToken=('a'*32);AppName='owned-api';WorkspaceId='22222222-2222-4222-8222-222222222222'}
+    }
+    BeforeEach {
+        $global:Az400OwnershipFixtureCase='healthy'
+        Mock az {
+            $line=$args -join ' '
+            $tags=@{'az400-owner'=if($global:Az400OwnershipFixtureCase -eq 'group'){'f'*32}else{'a'*32};'az400-run'='fixture-run';'az400-lab'='26'}
+            if($line -match '^account show '){return '{"id":"11111111-1111-4111-8111-111111111111"}'}
+            if($line -match '^group show '){return (@{tags=$tags}|ConvertTo-Json)}
+            if($line -match '^webapp show '){
+                $tags['az400-owner']=if($global:Az400OwnershipFixtureCase -eq 'app'){'f'*32}else{'a'*32}
+                $group=if($global:Az400OwnershipFixtureCase -eq 'scope'){'outside-group'}else{'owned-group'}
+                return (@{id="/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/$group/providers/Microsoft.Web/sites/owned-api";tags=$tags}|ConvertTo-Json)
+            }
+            if($line -match '^monitor log-analytics workspace list '){
+                $tags['az400-owner']=if($global:Az400OwnershipFixtureCase -eq 'workspace'){'f'*32}else{'a'*32}
+                return (ConvertTo-Json -InputObject @(@{customerId='22222222-2222-4222-8222-222222222222';tags=$tags}))
+            }
+            throw 'The scope fixture refuses every unexpected or mutating Azure operation.'
+        }
+    }
+    It 'accepts actual lifecycle tags without inventing a group managedBy prerequisite' {
+        { & $script:scopeGate @script:scopeParameters }|Should -Not -Throw
+    }
+    It 'refuses an incorrect owner marker on the group' {
+        $global:Az400OwnershipFixtureCase='group'
+        { & $script:scopeGate @script:scopeParameters }|Should -Throw '*ownership tags differ*'
+    }
+    It 'refuses an incorrect owner marker on the application' {
+        $global:Az400OwnershipFixtureCase='app'
+        { & $script:scopeGate @script:scopeParameters }|Should -Throw '*outside the exact owned workload*'
+    }
+    It 'refuses an application ID outside the exact owned group' {
+        $global:Az400OwnershipFixtureCase='scope'
+        { & $script:scopeGate @script:scopeParameters }|Should -Throw '*outside the exact owned workload*'
+    }
+    It 'refuses an incorrect owner marker on the telemetry workspace' {
+        $global:Az400OwnershipFixtureCase='workspace'
+        { & $script:scopeGate @script:scopeParameters }|Should -Throw '*workspace is outside*'
+    }
+}
+
+AfterAll { Remove-Variable Az400OwnershipFixtureCase -Scope Global -ErrorAction SilentlyContinue }

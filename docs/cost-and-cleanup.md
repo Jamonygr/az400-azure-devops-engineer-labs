@@ -12,7 +12,7 @@ Paid Advanced Security/Defender prerequisites require deliberate opt-in.
 
 ## Lifecycle contract
 
-`Preflight.ps1` is read-only. `Setup.ps1` and `Cleanup.ps1` preview unless passed
+`Preflight.ps1` is read-only. `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1`, and `Cleanup.ps1` preview unless passed
 `-Execute`; nonzero cost labs require `-AcknowledgeCost` for setup. Identity labs
 also require `-AcknowledgeTenantChange`. `-ProvisionOnly` prepares ownership
 boundaries without executing the five learning checkpoints.
@@ -22,6 +22,22 @@ GitHub branch protection requires an appropriate paid plan; required environment
 reviewers on private repositories require Enterprise. These gated checkpoints
 remain skipped/partial when the prerequisite is unavailable. Acknowledgement
 does not purchase or enable a plan.
+
+After an authorized paid checkpoint executes, its entitlement acknowledgement is
+retained in the private run journal. Later read-only validation uses that record;
+it does not require another opt-in or relabel completed work as skipped. A skipped
+checkpoint remains partial and cannot acquire this evidence by validation alone.
+
+`BreakFix.ps1 -Execute` first requires healthy checkpoints. It records the expected
+failure after injecting the lab's named fault, repairs it, and requires healthy
+validation again. Completion needs this full sequence under the current fault
+contract. A fault that does not fail its assertion cannot pass the exercise.
+
+Capstones require `Integration.ps1 -Execute -AcknowledgeCost` after their separate
+identity, private runner, database, connection and protected-environment bootstrap.
+Follow the lab's exact context and additional identity gates. A successful CI run
+alone remains a partial capstone; measured deploy, health, telemetry and rollback
+evidence is required before cleanup and completion.
 
 Use the complete automated lane or the guided lane for a given run ID. Inspect
 the source before executing; preview reports intended targets, while the README

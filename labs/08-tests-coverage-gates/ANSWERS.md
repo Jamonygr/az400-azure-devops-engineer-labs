@@ -8,698 +8,815 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which next change most directly satisfies the stated requirement?
+A deterministic price-calculation function needs feedback before any cloud environment exists. Which test layer is the best first fit?
 
-- **A. Propagate the failed test exit code to the job result** The execution status must reflect the actual test outcome. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Add focused local unit tests for the calculation contract** **Correct.** Pure behavior can be checked cheaply without deployment. This directly addresses the constraint stated in this case.
-- **C. Add an integration test against a representative database** The failure occurs at an external system boundary. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
+- **A. A manual release approval with no executed assertion** Approval does not evaluate whether the calculation returns the required result.
+- **B. A database migration smoke test only** Schema behavior does not directly test the price-calculation contract.
+- **C. Focused local unit tests with explicit expected results** **Correct.** The isolated calculation can be checked quickly without deploying external dependencies.
+- **D. A full production load test as the only validation** That is expensive indirect feedback for an isolated pure function.
 
-**Explanation:** Pure behavior can be checked cheaply without deployment. The selected answer is add focused local unit tests for the calculation contract.
+**Explanation:** Approval does not evaluate whether the calculation returns the required result. Schema behavior does not directly test the price-calculation contract. The isolated calculation can be checked quickly without deploying external dependencies. That is expensive indirect feedback for an isolated pure function.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q002
 
 Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which explanation best accounts for the behavior or constraint described?
+Unit tests use a database mock and pass, but the actual deployed schema lacks a required column. What missing test layer addresses the failure?
 
-- **A. The wrapper script swallowed the failing command status** Result files cannot compensate for an incorrect success state. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. The defect can be isolated below the integration boundary** **Correct.** Cloud deployment adds unnecessary feedback latency. This directly addresses the constraint stated in this case.
-- **C. Mocks do not exercise actual database compatibility** The isolated test replaced the failing dependency. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
+- **A. An integration test against a representative database schema** **Correct.** The failure occurs at a real dependency contract omitted by the mock.
+- **B. More repetitions of the same database mock** Repeated isolated behavior does not create real schema interaction.
+- **C. A test that checks only repository branch naming** A source workflow property does not exercise the database boundary.
+- **D. A release-note spelling check** Documentation correctness does not validate the runtime schema.
 
-**Explanation:** Cloud deployment adds unnecessary feedback latency. The selected answer is the defect can be isolated below the integration boundary.
+**Explanation:** The failure occurs at a real dependency contract omitted by the mock. Repeated isolated behavior does not create real schema interaction. A source workflow property does not exercise the database boundary. Documentation correctness does not validate the runtime schema.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q003
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which observation provides the strongest evidence that the requested result was achieved?
+The API passes functional checks for one user but slows sharply with hundreds of concurrent requests. Which test addresses the unresolved risk?
 
-- **A. A wrong calculation fails the local test suite** **Correct.** The test must detect an actual incorrect result. This directly addresses the constraint stated in this case.
-- **B. A schema-incompatible service fails the integration test** The test should reproduce the missing boundary behavior. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
-- **C. A known failing assertion makes the job fail** A controlled negative probe verifies status propagation. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
+- **A. Only a database migration dry run** Schema planning does not establish end-to-end service capacity.
+- **B. A representative load test with response-time and error acceptance criteria** **Correct.** The question concerns behavior under concurrent demand rather than single-request correctness.
+- **C. Only a unit test of one controller's return type** That does not exercise contention and capacity at the required workload.
+- **D. Only another static analysis pass of method names** Naming analysis does not measure runtime concurrency behavior.
 
-**Explanation:** The test must detect an actual incorrect result. The selected answer is a wrong calculation fails the local test suite.
+**Explanation:** Schema planning does not establish end-to-end service capacity. The question concerns behavior under concurrent demand rather than single-request correctness. That does not exercise contention and capacity at the required workload. Naming analysis does not measure runtime concurrency behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q004
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which execution safeguard most directly addresses the risk in this case?
+Which unit-test dependency design makes an isolated calculation test deterministic?
 
-- **A. Keep diagnostic publication separate from success conditions** Useful failure reports should remain available after rejection. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Use deterministic inputs and assert meaningful outcomes** **Correct.** Nondeterministic tests weaken trust in fast feedback. This directly addresses the constraint stated in this case.
-- **C. Use disposable test data and isolated credentials** Integration execution must not modify production records. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
+- **A. Depend on whichever records happen to exist in the shared production database** Uncontrolled data couples the result to unrelated activity.
+- **B. Order all tests alphabetically so one test prepares another's hidden state** A deterministic suite should not rely on accidental test ordering.
+- **C. Supply controlled inputs and replace unrelated external dependencies through suitable boundaries** **Correct.** The test should exercise the intended behavior without uncontrolled network or clock effects.
+- **D. Use the current production exchange rate from the internet in every assertion** A changing external input can alter results independently of the code under test.
 
-**Explanation:** Nondeterministic tests weaken trust in fast feedback. The selected answer is use deterministic inputs and assert meaningful outcomes.
+**Explanation:** Uncontrolled data couples the result to unrelated activity. A deterministic suite should not rely on accidental test ordering. The test should exercise the intended behavior without uncontrolled network or clock effects. A changing external input can alter results independently of the code under test.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q005
 
-Advanced · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. The team selects this remedy: "Add focused local unit tests for the calculation contract." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What must a representative integration database provide for a meaningful schema-compatibility test?
 
-- **A. Integration tests cost more time and infrastructure** Use them where boundary risks justify the overhead. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
-- **B. Correct failure propagation can reveal previously hidden defects** A newly red pipeline may indicate stronger reporting. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **C. Unit tests do not prove external integration behavior** **Correct.** A complete strategy needs additional test layers. This directly addresses the constraint stated in this case.
+- **A. The relevant schema and behavior needed by the application contract** **Correct.** The test environment must exercise the boundary at risk, not merely any database connection.
+- **B. Exactly the same unrelated customer records as production** Sensitive production data is not inherently required to validate this schema relationship.
+- **C. The cheapest storage option regardless of unsupported behavior** A nonrepresentative dependency can hide the very contract failure being tested.
+- **D. Only an open TCP port with no database operations** Connectivity alone does not establish the application's schema behavior.
 
-**Explanation:** A complete strategy needs additional test layers. The selected answer is unit tests do not prove external integration behavior.
+**Explanation:** The test environment must exercise the boundary at risk, not merely any database connection. Sensitive production data is not inherently required to validate this schema relationship. A nonrepresentative dependency can hide the very contract failure being tested. Connectivity alone does not establish the application's schema behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q006
 
 Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which next change most directly satisfies the stated requirement?
+Which workload input matters when using a load test to support a capacity claim?
 
-- **A. Run representative load tests with latency and error thresholds** Concurrency changes resource behavior beyond functional correctness. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **B. Add focused local unit tests for the calculation contract** Pure behavior can be checked cheaply without deployment. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **C. Add an integration test against a representative database** **Correct.** The failure occurs at an external system boundary. This directly addresses the constraint stated in this case.
+- **A. Only the latest release tag's text** A label does not describe traffic mix or demand timing.
+- **B. Only the number of assertions in unit tests** Unit-suite size does not define production concurrency.
+- **C. A request mix arrival pattern and concurrency representative of the intended users** **Correct.** Capacity evidence depends on the actual shape of demand being simulated.
+- **D. Only the number of source files in the repository** Repository size is not a request workload model.
 
-**Explanation:** The failure occurs at an external system boundary. The selected answer is add an integration test against a representative database.
+**Explanation:** A label does not describe traffic mix or demand timing. Unit-suite size does not define production concurrency. Capacity evidence depends on the actual shape of demand being simulated. Repository size is not a request workload model.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q007
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which explanation best accounts for the behavior or constraint described?
+A calculation test executes the code but never checks the returned total. What confidence is missing?
 
-- **A. The defect can be isolated below the integration boundary** Cloud deployment adds unnecessary feedback latency. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **B. Mocks do not exercise actual database compatibility** **Correct.** The isolated test replaced the failing dependency. This directly addresses the constraint stated in this case.
-- **C. Functional success under light traffic does not prove capacity** The missing signal is behavior under realistic demand. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
+```csharp
+[Fact]
+public void Calculates_total()
+{
+    var actual = Price.Calculate(100m, 0.20m);
+    // No assertion checks actual.
+}
+```
 
-**Explanation:** The isolated test replaced the failing dependency. The selected answer is mocks do not exercise actual database compatibility.
+- **A. Evidence that the calculation method can be invoked without throwing** Successful invocation does not establish that a wrong returned value would fail this test.
+- **B. Evidence that the method returns a value of the expected type** Type correctness alone does not verify the required numeric total.
+- **C. Evidence that the test is discovered and counted by the runner** Discovery and execution count do not establish a meaningful correctness assertion.
+- **D. Evidence that an incorrect result would cause the test to fail** **Correct.** Execution alone does not establish a meaningful behavioral assertion.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** Successful invocation does not establish that a wrong returned value would fail this test. Type correctness alone does not verify the required numeric total. Discovery and execution count do not establish a meaningful correctness assertion. Execution alone does not establish a meaningful behavioral assertion.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q008
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which observation provides the strongest evidence that the requested result was achieved?
+Which outcome demonstrates the new integration test covers the previously missed database contract?
 
-- **A. Latency and error rates satisfy thresholds at target load** The result must cover the expected workload shape. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **B. A wrong calculation fails the local test suite** The test must detect an actual incorrect result. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **C. A schema-incompatible service fails the integration test** **Correct.** The test should reproduce the missing boundary behavior. This directly addresses the constraint stated in this case.
+- **A. A deliberately incompatible schema causes an actionable test failure before promotion** **Correct.** The negative case exercises the exact boundary whose absence caused the escape.
+- **B. The test still passes when the required column is removed** That suggests it is not checking the intended compatibility risk.
+- **C. The database server's display name matches the application name** Naming does not prove operational schema compatibility.
+- **D. The test runner reports more skipped tests** Skipped cases do not demonstrate the required defect was detected.
 
-**Explanation:** The test should reproduce the missing boundary behavior. The selected answer is a schema-incompatible service fails the integration test.
+**Explanation:** The negative case exercises the exact boundary whose absence caused the escape. That suggests it is not checking the intended compatibility risk. Naming does not prove operational schema compatibility. Skipped cases do not demonstrate the required defect was detected.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q009
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which execution safeguard most directly addresses the risk in this case?
+A load test must satisfy P95 latency under 500 ms and error rate under 1 percent at the target demand. Which result meets both stated thresholds?
 
-- **A. Run controlled load against an authorized environment** Unbounded tests can disrupt services and create costs. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **B. Use deterministic inputs and assert meaningful outcomes** Nondeterministic tests weaken trust in fast feedback. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **C. Use disposable test data and isolated credentials** **Correct.** Integration execution must not modify production records. This directly addresses the constraint stated in this case.
+```text
+Required demand: 200 concurrent users
+Acceptance: P95<500ms and errors<1 percent
+CandidateA: P95420ms,errors0.4 percent at 200 users
+```
 
-**Explanation:** Integration execution must not modify production records. The selected answer is use disposable test data and isolated credentials.
+- **A. P95 of 420 ms with 0.4 percent errors at the target demand** **Correct.** Both the tail latency and error proportion satisfy the declared workload-specific limits.
+- **B. Mean latency 200 ms with P95 of 900 ms and 0.2 percent errors** A fast mean does not satisfy the stated P95 limit.
+- **C. P95 of 350 ms with 3 percent errors** The latency passes while the error-rate requirement fails.
+- **D. P95 of 400 ms with 0.3 percent errors at one tenth of target demand** Passing under a different much lighter workload does not establish the requested capacity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** Both the tail latency and error proportion satisfy the declared workload-specific limits. A fast mean does not satisfy the stated P95 limit. The latency passes while the error-rate requirement fails. Passing under a different much lighter workload does not establish the requested capacity.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q010
 
-Advanced · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. The team selects this remedy: "Add an integration test against a representative database." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Which controlled negative check best validates a unit test for a tax rule?
 
-- **A. Integration tests cost more time and infrastructure** **Correct.** Use them where boundary risks justify the overhead. This directly addresses the constraint stated in this case.
-- **B. A synthetic workload may differ from real traffic** Capacity conclusions depend on representative test design. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **C. Unit tests do not prove external integration behavior** A complete strategy needs additional test layers. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
+- **A. Run the unchanged test repeatedly until its duration decreases** Timing does not demonstrate defect-detection strength.
+- **B. Introduce a safe deliberate wrong result in the test exercise and confirm the assertion fails** **Correct.** A targeted defect demonstrates that the assertion detects the behavior it claims to protect.
+- **C. Add another passing assertion that true equals true** That increases test count without testing the tax result.
+- **D. Rename the test method to include the expected tax** A name alone does not make a false result fail.
 
-**Explanation:** Use them where boundary risks justify the overhead. The selected answer is integration tests cost more time and infrastructure.
+**Explanation:** Timing does not demonstrate defect-detection strength. A targeted defect demonstrates that the assertion detects the behavior it claims to protect. That increases test count without testing the tax result. A name alone does not make a false result fail.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q011
 
 Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which next change most directly satisfies the stated requirement?
+How should integration-test data be handled in a shared training environment?
 
-- **A. Add an integration test against a representative database** The failure occurs at an external system boundary. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
-- **B. Run representative load tests with latency and error thresholds** **Correct.** Concurrency changes resource behavior beyond functional correctness. This directly addresses the constraint stated in this case.
-- **C. Publish structured test results even when test execution fails** Failure details need an accessible reporting path. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
+- **A. Let every parallel test overwrite the same shared row without coordination** Uncontrolled shared mutation can create flakes and corrupt test assumptions.
+- **B. Disable cleanup and reuse every previous run's unknown state** Accumulated state makes later results harder to reproduce and attribute.
+- **C. Use isolated controlled fixtures and clean up only the test-owned data** **Correct.** The test should avoid modifying unrelated or sensitive production records.
+- **D. Use live customer records so no fixture preparation is needed** That creates avoidable privacy and modification risks.
 
-**Explanation:** Concurrency changes resource behavior beyond functional correctness. The selected answer is run representative load tests with latency and error thresholds.
+**Explanation:** Uncontrolled shared mutation can create flakes and corrupt test assumptions. Accumulated state makes later results harder to reproduce and attribute. The test should avoid modifying unrelated or sensitive production records. That creates avoidable privacy and modification risks.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q012
 
 Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which explanation best accounts for the behavior or constraint described?
+Which prerequisite should be established before running a substantial load test against an endpoint?
 
-- **A. Execution failure and result publication are separate steps** A stopped job may skip ordinary success-only publishing. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **B. Mocks do not exercise actual database compatibility** The isolated test replaced the failing dependency. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
-- **C. Functional success under light traffic does not prove capacity** **Correct.** The missing signal is behavior under realistic demand. This directly addresses the constraint stated in this case.
+- **A. Authorization scope resource limits and an agreed safe test window** **Correct.** Synthetic demand can affect availability and incur costs beyond a local test process.
+- **B. Only one successful functional probe against the endpoint** Reachability does not authorize significant artificial demand or establish safe resource limits.
+- **C. Only source-repository read permission for the load-test author** Source access does not authorize stressing a deployed service.
+- **D. Only a production-like request mix with no agreed workload ceiling** A realistic workload still needs authorized scope and operational bounds before execution.
 
-**Explanation:** The missing signal is behavior under realistic demand. The selected answer is functional success under light traffic does not prove capacity.
+**Explanation:** Synthetic demand can affect availability and incur costs beyond a local test process. Reachability does not authorize significant artificial demand or establish safe resource limits. Source access does not authorize stressing a deployed service. A realistic workload still needs authorized scope and operational bounds before execution.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q013
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which observation provides the strongest evidence that the requested result was achieved?
+The checkout code has pure pricing rules and a database boundary. The team needs fast local feedback plus protection against schema incompatibility. Which strategy fits?
 
-- **A. Latency and error rates satisfy thresholds at target load** **Correct.** The result must cover the expected workload shape. This directly addresses the constraint stated in this case.
-- **B. The run displays the failing tests and diagnostic details** Actionable reports make failures reviewable and traceable. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **C. A schema-incompatible service fails the integration test** The test should reproduce the missing boundary behavior. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
+- **A. Mock every database call and declare integration compatibility proven** A mock does not exercise the actual external schema contract.
+- **B. Run only a slow full-system test for every arithmetic edit and omit local assertions** That loses useful fast feedback and makes diagnosis less focused.
+- **C. Use code coverage as the only acceptance condition for both layers** Execution percentage does not prove either the asserted rule or real boundary compatibility.
+- **D. Use focused unit tests for isolated rules and representative integration tests for the database contract** **Correct.** Different layers address different risks without making every check depend on full deployment.
 
-**Explanation:** The result must cover the expected workload shape. The selected answer is latency and error rates satisfy thresholds at target load.
+**Explanation:** A mock does not exercise the actual external schema contract. That loses useful fast feedback and makes diagnosis less focused. Execution percentage does not prove either the asserted rule or real boundary compatibility. Different layers address different risks without making every check depend on full deployment.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q014
 
-Applied · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which execution safeguard most directly addresses the risk in this case?
+A realistic database test costs minutes while pricing unit tests cost milliseconds. Which pipeline allocation best balances feedback speed and boundary risk?
 
-- **A. Preserve failure status while collecting diagnostic output** Publishing results should not convert a failed test to success. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **B. Use disposable test data and isolated credentials** Integration execution must not modify production records. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
-- **C. Run controlled load against an authorized environment** **Correct.** Unbounded tests can disrupt services and create costs. This directly addresses the constraint stated in this case.
+- **A. Run all integration tests only after every production release has fully completed** That detects compatibility problems too late to serve the intended prepromotion gate.
+- **B. Replace all unit tests with integration tests even for pure calculation changes** The additional dependency cost is unnecessary for every isolated behavior check.
+- **C. Run fast isolated checks early and gate relevant promotion with representative integration tests** **Correct.** The strategy preserves quick feedback while retaining the important external-contract evidence.
+- **D. Remove integration tests because they are slower than unit tests** That discards the missing boundary assurance rather than optimizing its placement.
 
-**Explanation:** Unbounded tests can disrupt services and create costs. The selected answer is run controlled load against an authorized environment.
+**Explanation:** That detects compatibility problems too late to serve the intended prepromotion gate. The additional dependency cost is unnecessary for every isolated behavior check. The strategy preserves quick feedback while retaining the important external-contract evidence. That discards the missing boundary assurance rather than optimizing its placement.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q015
 
-Advanced · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.2](../../docs/objective-map.md)
 
-Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. The team selects this remedy: "Run representative load tests with latency and error thresholds." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A load test passes on a small synthetic dataset with warm caches, but the claimed deployment must handle larger cold-start traffic. What is the defensible next step?
 
-- **A. A synthetic workload may differ from real traffic** **Correct.** Capacity conclusions depend on representative test design. This directly addresses the constraint stated in this case.
-- **B. Detailed reports can expose sensitive test data** Sanitize inputs and control report access. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **C. Integration tests cost more time and infrastructure** Use them where boundary risks justify the overhead. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint.
+- **A. Multiply the observed throughput by the production server count without further checks** Scaling can be limited by shared bottlenecks and workload differences.
+- **B. Ignore latency tails because the overall request count was high** Volume alone does not satisfy a user-facing response-time requirement.
+- **C. State the tested conditions and extend representative scenarios before claiming the broader capacity** **Correct.** The current evidence does not cover important demand and data conditions in the proposed claim.
+- **D. Declare the same result valid for every dataset and startup condition** Capacity depends on the workload and environment actually exercised.
 
-**Explanation:** Capacity conclusions depend on representative test design. The selected answer is a synthetic workload may differ from real traffic.
+**Explanation:** Scaling can be limited by shared bottlenecks and workload differences. Volume alone does not satisfy a user-facing response-time requirement. The current evidence does not cover important demand and data conditions in the proposed claim. Capacity depends on the workload and environment actually exercised.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q016
 
-Foundational · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which next change most directly satisfies the stated requirement?
+The test runner creates a TRX file, but Azure Pipelines shows no test cases. Which step connects that file to the run's test reporting?
 
-- **A. Run representative load tests with latency and error thresholds** Concurrency changes resource behavior beyond functional correctness. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **B. Publish structured test results even when test execution fails** **Correct.** Failure details need an accessible reporting path. This directly addresses the constraint stated in this case.
-- **C. Review coverage scope and add behavioral tests for changed logic** A percentage must be interpreted against meaningful behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
+- **A. Upload the TRX file only as a generic pipeline artifact** File retention helps diagnostics but does not itself ingest structured test cases into the test view.
+- **B. Publish code coverage while omitting the test-result task** Coverage and test-case outcome publication are distinct reporting operations.
+- **C. Set a pipeline variable to the number of passed tests** An aggregate variable does not provide the structured result file and format needed for case ingestion.
+- **D. Publish the supported test result file using the correct format and path** **Correct.** Execution and structured result ingestion are separate pipeline operations.
 
-**Explanation:** Failure details need an accessible reporting path. The selected answer is publish structured test results even when test execution fails.
+**Explanation:** File retention helps diagnostics but does not itself ingest structured test cases into the test view. Coverage and test-case outcome publication are distinct reporting operations. An aggregate variable does not provide the structured result file and format needed for case ingestion. Execution and structured result ingestion are separate pipeline operations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines)
 
 ## L08-Q017
 
-Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which explanation best accounts for the behavior or constraint described?
+A coverage report says 80 of 100 included lines executed. What does the 80 percent line coverage value establish?
 
-- **A. Functional success under light traffic does not prove capacity** The missing signal is behavior under realistic demand. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **B. Execution failure and result publication are separate steps** **Correct.** A stopped job may skip ordinary success-only publishing. This directly addresses the constraint stated in this case.
-- **C. Coverage measures execution rather than assertion quality** High execution coverage can coexist with weak validation. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
+```text
+Included source lines: 100
+Executed included lines: 80
+Line coverage: 80 percent
+Assertion strength: not measured by this counter
+```
 
-**Explanation:** A stopped job may skip ordinary success-only publishing. The selected answer is execution failure and result publication are separate steps.
+- **A. Every possible branch condition was exercised** Line coverage does not necessarily establish branch coverage.
+- **B. Those included lines were exercised during the measured tests** **Correct.** Execution coverage does not by itself establish strong assertions or complete correctness.
+- **C. Every included line has an assertion proving its business behavior** Executed lines need not have meaningful assertions about every outcome.
+- **D. The application has only a 20 percentchance of a production defect** Coverage is not a calibrated probability of failure.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** Line coverage does not necessarily establish branch coverage. Execution coverage does not by itself establish strong assertions or complete correctness. Executed lines need not have meaningful assertions about every outcome. Coverage is not a calibrated probability of failure.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q018
 
-Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which observation provides the strongest evidence that the requested result was achieved?
+Security and test reports are generated, but deployment proceeds after a required validation fails. What condition is missing?
 
-- **A. A deliberate business-logic defect causes a test failure** Mutation-like evidence checks whether assertions detect incorrect behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **B. Latency and error rates satisfy thresholds at target load** The result must cover the expected workload shape. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **C. The run displays the failing tests and diagnostic details** **Correct.** Actionable reports make failures reviewable and traceable. This directly addresses the constraint stated in this case.
+- **A. A more detailed deployment-step display name** Naming does not change the stage's execution condition.
+- **B. An enforced release dependency on the required successful validation** **Correct.** Reporting a result does not automatically make promotion conditional on it.
+- **C. A longer retention window for successful reports** Storage duration does not control whether the candidate can deploy.
+- **D. A second dashboard displaying the same optional failure** Duplicating visibility does not enforce an acceptance rule.
 
-**Explanation:** Actionable reports make failures reviewable and traceable. The selected answer is the run displays the failing tests and diagnostic details.
+**Explanation:** Naming does not change the stage's execution condition. Reporting a result does not automatically make promotion conditional on it. Storage duration does not control whether the candidate can deploy. Duplicating visibility does not enforce an acceptance rule.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q019
 
 Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which execution safeguard most directly addresses the risk in this case?
+Tests pass locally but fail on the hosted runner because their expected date format depends on the current locale. What should be fixed?
 
-- **A. Document exclusions and avoid hiding high-risk code** Changing the denominator can create misleading improvements. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **B. Run controlled load against an authorized environment** Unbounded tests can disrupt services and create costs. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
-- **C. Preserve failure status while collecting diagnostic output** **Correct.** Publishing results should not convert a failed test to success. This directly addresses the constraint stated in this case.
+- **A. Copy the local test output into the hosted result directory** That would misrepresent what the hosted execution actually observed.
+- **B. Make the intended formatting contract explicit and control the test environment inputs** **Correct.** An unrecorded locale assumption can create environment-dependent results.
+- **C. Run retries until the hosted locale happens to match** Retries do not deliberately establish the required formatting behavior.
+- **D. Remove all assertions involving dates** That discards behavior coverage rather than clarifying the contract.
 
-**Explanation:** Publishing results should not convert a failed test to success. The selected answer is preserve failure status while collecting diagnostic output.
+**Explanation:** That would misrepresent what the hosted execution actually observed. An unrecorded locale assumption can create environment-dependent results. Retries do not deliberately establish the required formatting behavior. That discards behavior coverage rather than clarifying the contract.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing); [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
 
 ## L08-Q020
 
-Advanced · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. The team selects this remedy: "Publish structured test results even when test execution fails." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An integration test fails intermittently and passes on retry without a source change. What evidence should remain visible?
 
-- **A. Detailed reports can expose sensitive test data** **Correct.** Sanitize inputs and control report access. This directly addresses the constraint stated in this case.
-- **B. Coverage thresholds can encourage metric gaming** Treat coverage as one signal within the testing strategy. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **C. A synthetic workload may differ from real traffic** Capacity conclusions depend on representative test design. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint.
+- **A. Only the final passing result** That hides the first failure and the repeated work.
+- **B. Only the fastest successful execution time** A best-case duration conceals the unstable behavior.
+- **C. Only the total test count regardless of attempts** The count does not explain why the result changes.
+- **D. Initial failures retries and the identified flake classification** **Correct.** The final green attempt does not erase the delivery cost or underlying instability.
 
-**Explanation:** Sanitize inputs and control report access. The selected answer is detailed reports can expose sensitive test data.
+**Explanation:** That hides the first failure and the repeated work. A best-case duration conceals the unstable behavior. The count does not explain why the result changes. The final green attempt does not erase the delivery cost or underlying instability.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops)
 
 ## L08-Q021
 
-Foundational · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which next change most directly satisfies the stated requirement?
+Which task input must match a runner producing VSTest TRX results?
 
-- **A. Publish structured test results even when test execution fails** Failure details need an accessible reporting path. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **B. Review coverage scope and add behavioral tests for changed logic** **Correct.** A percentage must be interpreted against meaningful behavior. This directly addresses the constraint stated in this case.
-- **C. Make critical quality results required deployment conditions** Informational reports do not enforce release safety. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
+- **A. Only the target branch's name** Branch naming does not define the report parser or file location.
+- **B. Only the number of CPUs on the build agent** Capacity does not tell the publisher which structured files to read.
+- **C. Only the release environment's approver list** Deployment approval does not configure test-report ingestion.
+- **D. The result format and file selection identifying the TRX output** **Correct.** The publisher needs to interpret and locate the actual emitted report.
 
-**Explanation:** A percentage must be interpreted against meaningful behavior. The selected answer is review coverage scope and add behavioral tests for changed logic.
+**Explanation:** Branch naming does not define the report parser or file location. Capacity does not tell the publisher which structured files to read. Deployment approval does not configure test-report ingestion. The publisher needs to interpret and locate the actual emitted report.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines)
 
 ## L08-Q022
 
-Foundational · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which explanation best accounts for the behavior or constraint described?
+A suite reports 95 percent line coverage yet accepts a deliberately wrong business result. What weakness does this expose?
 
-- **A. The release condition ignores failed validation outcomes** Visibility alone cannot stop an unsafe promotion. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
-- **B. Execution failure and result publication are separate steps** A stopped job may skip ordinary success-only publishing. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
-- **C. Coverage measures execution rather than assertion quality** **Correct.** High execution coverage can coexist with weak validation. This directly addresses the constraint stated in this case.
+- **A. The application cannot have reached the incorrect method** Execution and acceptance of a wrong value can occur together.
+- **B. High execution coverage can coexist with inadequate assertions** **Correct.** Coverage and behavioral defect detection are different signals.
+- **C. The coverage tool must be unable to count any executed lines** The reported execution can be real even if its assertions are weak.
+- **D. Every high-coverage test is necessarily a load test** Coverage does not determine the test layer.
 
-**Explanation:** High execution coverage can coexist with weak validation. The selected answer is coverage measures execution rather than assertion quality.
+**Explanation:** Execution and acceptance of a wrong value can occur together. Coverage and behavioral defect detection are different signals. The reported execution can be real even if its assertions are weak. Coverage does not determine the test layer.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q023
 
-Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which observation provides the strongest evidence that the requested result was achieved?
+A deployment job uses a custom condition that ignores failed prerequisite jobs. What must the author review?
 
-- **A. A deliberate business-logic defect causes a test failure** **Correct.** Mutation-like evidence checks whether assertions detect incorrect behavior. This directly addresses the constraint stated in this case.
-- **B. A deliberately failed critical check blocks deployment** A negative test demonstrates actual gating behavior. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
-- **C. The run displays the failing tests and diagnostic details** Actionable reports make failures reviewable and traceable. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
+- **A. Whether the custom expression preserves the required success dependency** **Correct.** Custom conditions can alter the default acceptance behavior.
+- **B. Only whether the YAML file has an application version comment** Comments do not establish execution semantics.
+- **C. Only the order jobs appear in the text** A graph and its conditions, not visual text order alone, control scheduling.
+- **D. Only how long the agent takes to download the source** Checkout duration does not determine whether failed validation gates deployment.
 
-**Explanation:** Mutation-like evidence checks whether assertions detect incorrect behavior. The selected answer is a deliberate business-logic defect causes a test failure.
+**Explanation:** Custom conditions can alter the default acceptance behavior. Comments do not establish execution semantics. A graph and its conditions, not visual text order alone, control scheduling. Checkout duration does not determine whether failed validation gates deployment.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q024
 
-Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
 
-Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which execution safeguard most directly addresses the risk in this case?
+A workflow relies on whichever .NET SDK is preinstalled on its hosted image. What improves toolchain repeatability?
 
-- **A. Document exclusions and avoid hiding high-risk code** **Correct.** Changing the denominator can create misleading improvements. This directly addresses the constraint stated in this case.
-- **B. Provide an accountable exception path for exceptional cases** Unreviewed bypass would defeat the required control. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
-- **C. Preserve failure status while collecting diagnostic output** Publishing results should not convert a failed test to success. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
+```json
+{"sdk":{"version":"10.0.100","rollForward":"latestPatch"}}
+```
 
-**Explanation:** Changing the denominator can create misleading improvements. The selected answer is document exclusions and avoid hiding high-risk code.
+- **A. Rename the solution without changing its runtime requirements** File naming does not select a deterministic SDK.
+- **B. Increase the timeout while leaving the toolchain implicit** More time does not resolve an incompatible default runtime.
+- **C. Always use the latest preview SDK without validating compatibility** A moving preview is not the intended stable supported toolchain.
+- **D. Select and install the supported SDK explicitly using the repository's version policy** **Correct.** The build environment should not depend on an uncontrolled image default.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** File naming does not select a deterministic SDK. More time does not resolve an incompatible default runtime. A moving preview is not the intended stable supported toolchain. The build environment should not depend on an uncontrolled image default.
+
+**Sources:** [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
 
 ## L08-Q025
 
-Advanced · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. The team selects this remedy: "Review coverage scope and add behavioral tests for changed logic." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+What is the first useful question when investigating an intermittently failing test?
 
-- **A. Coverage thresholds can encourage metric gaming** **Correct.** Treat coverage as one signal within the testing strategy. This directly addresses the constraint stated in this case.
-- **B. Strict gates can block releases during tool outages** The exception policy should preserve evidence and ownership. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
-- **C. Detailed reports can expose sensitive test data** Sanitize inputs and control report access. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint.
+- **A. How to increase retries without recording which attempts failed** Retries can hide changing conditions rather than identify the cause of instability.
+- **B. Which uncontrolled timing shared state infrastructure or input differs between attempts** **Correct.** A causal investigation needs the changing condition behind the outcome.
+- **C. How to raise every timeout before inspecting the failing step** Broad timeout changes can mask a race or shared-state problem without locating it.
+- **D. How to classify every transient failure as a product defect immediately** Classification should follow evidence about the changing test, environment, or product condition.
 
-**Explanation:** Treat coverage as one signal within the testing strategy. The selected answer is coverage thresholds can encourage metric gaming.
+**Explanation:** Retries can hide changing conditions rather than identify the cause of instability. A causal investigation needs the changing condition behind the outcome. Broad timeout changes can mask a race or shared-state problem without locating it. Classification should follow evidence about the changing test, environment, or product condition.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q026
 
-Foundational · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which next change most directly satisfies the stated requirement?
+Tests fail and a success-only reporting step is skipped. How should failure diagnostics be retained without turning the build green?
 
-- **A. Make critical quality results required deployment conditions** **Correct.** Informational reports do not enforce release safety. This directly addresses the constraint stated in this case.
-- **B. Align test environment dependencies and remove unintended locale assumptions** Reproducibility needs explicit environmental inputs. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **C. Review coverage scope and add behavioral tests for changed logic** A percentage must be interpreted against meaningful behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
+```yaml
+- script: dotnet test --logger trx --results-directory TestResults
+- task: PublishTestResults@2
+  #Default success-only condition; no explicit failure-aware condition.
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: TestResults/*.trx
+```
 
-**Explanation:** Informational reports do not enforce release safety. The selected answer is make critical quality results required deployment conditions.
+- **A. Set the entire test job to continue successfully on every error** That can conceal the gate failure while publishing the report.
+- **B. Skip result publication whenever any assertion fails** That removes the evidence most needed to diagnose a failing run.
+- **C. Replace the failed result with an empty successful report** That misstates the actual execution rather than preserving it.
+- **D. Use an appropriate failure-aware publishing condition while preserving the failed test outcome** **Correct.** Diagnostics should remain available even when the required execution correctly rejects the candidate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** That can conceal the gate failure while publishing the report. That removes the evidence most needed to diagnose a failing run. That misstates the actual execution rather than preserving it. Diagnostics should remain available even when the required execution correctly rejects the candidate.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines); [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q027
 
-Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which explanation best accounts for the behavior or constraint described?
+What should be inspected when a coverage percentage jumps after exclusions are expanded?
 
-- **A. Coverage measures execution rather than assertion quality** High execution coverage can coexist with weak validation. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **B. The release condition ignores failed validation outcomes** **Correct.** Visibility alone cannot stop an unsafe promotion. This directly addresses the constraint stated in this case.
-- **C. The test depends on an unrecorded local environment** Different agents expose the hidden assumption. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
+- **A. Which code left the denominator and whether important risk paths were hidden** **Correct.** A smaller included population can improve the percentage without adding protective tests.
+- **B. Only whether the coverage report filename changed** Report naming does not establish which source code left the measured population.
+- **C. Only whether the exclusion rules use valid syntax** Valid rules can still exclude important behavior and distort the policy evidence.
+- **D. Only whether the resulting number exceeds the old threshold** The same threshold can represent weaker protection after the denominator changes.
 
-**Explanation:** Visibility alone cannot stop an unsafe promotion. The selected answer is the release condition ignores failed validation outcomes.
+**Explanation:** A smaller included population can improve the percentage without adding protective tests. Report naming does not establish which source code left the measured population. Valid rules can still exclude important behavior and distort the policy evidence. The same threshold can represent weaker protection after the denominator changes.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q028
 
 Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which observation provides the strongest evidence that the requested result was achieved?
+What negative probe demonstrates that a quality gate actually protects release promotion?
 
-- **A. A clean agent reproduces the intended deterministic result** The validation must occur outside the developer machine. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **B. A deliberate business-logic defect causes a test failure** Mutation-like evidence checks whether assertions detect incorrect behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **C. A deliberately failed critical check blocks deployment** **Correct.** A negative test demonstrates actual gating behavior. This directly addresses the constraint stated in this case.
+- **A. Count all jobs with test in their names** A naming count cannot prove their outcomes constrain promotion.
+- **B. Introduce a controlled disallowed validation outcome and verify deployment does not start** **Correct.** The test exercises the denied path rather than only a successful run.
+- **C. Run the healthy path twice and compare green badges** Repeated success does not show how the gate handles failure.
+- **D. Inspect a statement in the README saying tests are required** Documentation intent is weaker than actual execution enforcement.
 
-**Explanation:** A negative test demonstrates actual gating behavior. The selected answer is a deliberately failed critical check blocks deployment.
+**Explanation:** A naming count cannot prove their outcomes constrain promotion. The test exercises the denied path rather than only a successful run. Repeated success does not show how the gate handles failure. Documentation intent is weaker than actual execution enforcement.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q029
 
-Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which execution safeguard most directly addresses the risk in this case?
+Which test most directly reveals a hidden dependency on one developer's machine?
 
-- **A. Document exclusions and avoid hiding high-risk code** Changing the denominator can create misleading improvements. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **B. Provide an accountable exception path for exceptional cases** **Correct.** Unreviewed bypass would defeat the required control. This directly addresses the constraint stated in this case.
-- **C. Pin supported runtimes and record relevant test configuration** Implicit defaults can change when images update. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
+- **A. Execute the documented build and tests in a clean representative environment** **Correct.** A clean run exposes missing inputs or settings masked by local state.
+- **B. Run the tests repeatedly in the same unchanged local workspace** That can preserve the hidden state that makes them pass.
+- **C. Ask the developer whether the dependency exists** Self-report is less direct than exercising the clean environment.
+- **D. Copy the previous build outputs into the test folder before running** That can conceal missing or stale build inputs.
 
-**Explanation:** Unreviewed bypass would defeat the required control. The selected answer is provide an accountable exception path for exceptional cases.
+**Explanation:** A clean run exposes missing inputs or settings masked by local state. That can preserve the hidden state that makes them pass. Self-report is less direct than exercising the clean environment. That can conceal missing or stale build inputs.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q030
 
-Advanced · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. The team selects this remedy: "Make critical quality results required deployment conditions." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A test is temporarily quarantined while its timing defect is repaired. What makes this accountable?
 
-- **A. Coverage thresholds can encourage metric gaming** Treat coverage as one signal within the testing strategy. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint.
-- **B. Strict gates can block releases during tool outages** **Correct.** The exception policy should preserve evidence and ownership. This directly addresses the constraint stated in this case.
-- **C. Overpinning dependencies increases upgrade maintenance** Controlled updates are still required for support and security. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
+- **A. A documented owner reason scope and deadline to restore reliable coverage** **Correct.** Temporary exclusion should not become permanent unowned loss of protection.
+- **B. No record because quarantine means the test is irrelevant** The test may protect important behavior despite its implementation defect.
+- **C. Automatically quarantine every future failure of any test** That would progressively remove assurance without investigation.
+- **D. Keep reporting the skipped test as an executed pass** That misstates the remaining coverage and execution evidence.
 
-**Explanation:** The exception policy should preserve evidence and ownership. The selected answer is strict gates can block releases during tool outages.
+**Explanation:** Temporary exclusion should not become permanent unowned loss of protection. The test may protect important behavior despite its implementation defect. That would progressively remove assurance without investigation. That misstates the remaining coverage and execution evidence.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q031
 
-Foundational · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which next change most directly satisfies the stated requirement?
+Which verification distinguishes a published test report from a merely existing file on the agent?
 
-- **A. Align test environment dependencies and remove unintended locale assumptions** **Correct.** Reproducibility needs explicit environmental inputs. This directly addresses the constraint stated in this case.
-- **B. Classify and fix the flake while retaining failure visibility** Repeated retries can conceal reliability problems. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Make critical quality results required deployment conditions** Informational reports do not enforce release safety. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
+- **A. The run's test view contains the expected cases and recorded failures** **Correct.** The structured output must reach the intended review surface.
+- **B. The temporary directory contains a file with a test-like name** Local existence does not prove ingestion.
+- **C. The build log prints the intended report path** A printed path does not prove the publisher matched and parsed the file.
+- **D. The pipeline artifact list contains an unrelated ZIP file** Artifact storage is separate from structured test reporting.
 
-**Explanation:** Reproducibility needs explicit environmental inputs. The selected answer is align test environment dependencies and remove unintended locale assumptions.
+**Explanation:** The structured output must reach the intended review surface. Local existence does not prove ingestion. A printed path does not prove the publisher matched and parsed the file. Artifact storage is separate from structured test reporting.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines)
 
 ## L08-Q032
 
-Foundational · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which explanation best accounts for the behavior or constraint described?
+A pipeline publishes coverage but has no numeric quality policy. What is needed to enforce a required minimum?
 
-- **A. The release condition ignores failed validation outcomes** Visibility alone cannot stop an unsafe promotion. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
-- **B. The test depends on an unrecorded local environment** **Correct.** Different agents expose the hidden assumption. This directly addresses the constraint stated in this case.
-- **C. Intermittent infrastructure or timing assumptions contaminate the result** A later pass does not explain the original failure. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
+- **A. Only a larger coverage chart on the dashboard** Visibility does not turn a metric into a required acceptance condition.
+- **B. A comment in YAML saying coverage should be high** A comment does not execute a threshold decision.
+- **C. A package version label containing the target percentage** A label does not evaluate actual measured coverage.
+- **D. A deliberate threshold check whose failure affects the acceptance path** **Correct.** Report publication alone is not necessarily a policy-enforcement gate.
 
-**Explanation:** Different agents expose the hidden assumption. The selected answer is the test depends on an unrecorded local environment.
+**Explanation:** Visibility does not turn a metric into a required acceptance condition. A comment does not execute a threshold decision. A label does not evaluate actual measured coverage. Report publication alone is not necessarily a policy-enforcement gate.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q033
 
-Applied · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which observation provides the strongest evidence that the requested result was achieved?
+The test service is unavailable during an emergency release. What makes an exception process accountable?
 
-- **A. A clean agent reproduces the intended deterministic result** **Correct.** The validation must occur outside the developer machine. This directly addresses the constraint stated in this case.
-- **B. Failure frequency and root cause improve after the targeted fix** The evidence should show reduced flakiness rather than hidden retries. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. A deliberately failed critical check blocks deployment** A negative test demonstrates actual gating behavior. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
+- **A. Automatically mark every unavailable check successful** That changes missing assurance into false positive evidence.
+- **B. Remove the gate permanently whenever an outage occurs** A temporary failure does not justify indefinite loss of protection.
+- **C. Let the requesting author approve their own exception without recording it** That removes independent accountability for the changed risk decision.
+- **D. A restricted authorized decision with recorded reason scope and follow-up validation** **Correct.** An exception should remain deliberate and auditable rather than becoming silent routine bypass.
 
-**Explanation:** The validation must occur outside the developer machine. The selected answer is a clean agent reproduces the intended deterministic result.
+**Explanation:** That changes missing assurance into false positive evidence. A temporary failure does not justify indefinite loss of protection. That removes independent accountability for the changed risk decision. An exception should remain deliberate and auditable rather than becoming silent routine bypass.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q034
 
 Applied · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
 
-Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which execution safeguard most directly addresses the risk in this case?
+What must be recorded when pinning a test toolchain to make reproducibility sustainable?
 
-- **A. Pin supported runtimes and record relevant test configuration** **Correct.** Implicit defaults can change when images update. This directly addresses the constraint stated in this case.
-- **B. Quarantine only with an owner and recovery deadline** Unowned quarantine can permanently remove important coverage. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Provide an accountable exception path for exceptional cases** Unreviewed bypass would defeat the required control. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
+- **A. A commitment never to update any component again** Permanent stasis can retain vulnerabilities or unsupported toolchain versions.
+- **B. Only the successful test count from the latest run** A count does not identify the software inputs or their future maintenance policy.
+- **C. Only a download link that always resolves to the latest SDK** A moving download does not preserve the selected version or establish reviewed updates.
+- **D. An owner and reviewed update process for supported versions** **Correct.** A deliberate pin still needs security compatibility and support maintenance.
 
-**Explanation:** Implicit defaults can change when images update. The selected answer is pin supported runtimes and record relevant test configuration.
+**Explanation:** Permanent stasis can retain vulnerabilities or unsupported toolchain versions. A count does not identify the software inputs or their future maintenance policy. A moving download does not preserve the selected version or establish reviewed updates. A deliberate pin still needs security compatibility and support maintenance.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing); [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
 
 ## L08-Q035
 
-Advanced · [CP1](README.md#task-1) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. The team selects this remedy: "Align test environment dependencies and remove unintended locale assumptions." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Why can bounded retries be useful yet insufficient as the complete flakiness strategy?
 
-- **A. Overpinning dependencies increases upgrade maintenance** **Correct.** Controlled updates are still required for support and security. This directly addresses the constraint stated in this case.
-- **B. Retries may improve resilience but increase latency** They should be bounded and reported transparently. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Strict gates can block releases during tool outages** The exception policy should preserve evidence and ownership. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint.
+- **A. Retries never consume extra execution capacity** Repeated attempts use runner time and resources.
+- **B. Every flaky test should be retried forever until it eventually passes** Unbounded repetition can turn persistent defects into delayed misleading success.
+- **C. They may recover transient execution but can hide failures and add time unless classified and investigated** **Correct.** Retry behavior and root-cause remediation have different purposes.
+- **D. A retry guarantees the original failure was not a product defect** A later pass alone does not establish what caused the first failure.
 
-**Explanation:** Controlled updates are still required for support and security. The selected answer is overpinning dependencies increases upgrade maintenance.
+**Explanation:** Repeated attempts use runner time and resources. Unbounded repetition can turn persistent defects into delayed misleading success. Retry behavior and root-cause remediation have different purposes. A later pass alone does not establish what caused the first failure.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q036
 
-Foundational · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which next change most directly satisfies the stated requirement?
+A required test fails. The team needs the gate to stay red, the TRX report available, and diagnostic files free of credentials. Which design fits?
 
-- **A. Inspect changed-code coverage and branch-risk scenarios** Overall aggregates can dilute untested new behavior. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **B. Align test environment dependencies and remove unintended locale assumptions** Reproducibility needs explicit environmental inputs. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **C. Classify and fix the flake while retaining failure visibility** **Correct.** Repeated retries can conceal reliability problems. This directly addresses the constraint stated in this case.
+- **A. Ignore the test exit code and rely on reviewers to find a failure in the uploaded logs** That loses the required automated rejection boundary.
+- **B. Publish results only after every test succeeds and omit all failed-run artifacts** That preserves redness but fails the diagnostic-availability requirement.
+- **C. Upload the entire runner environment and workspace whenever tests fail** That can distribute secrets and unrelated data with the useful report.
+- **D. Propagate the test failure, publish supported results under a failure-aware condition, and upload only sanitized diagnostics** **Correct.** Failure semantics, structured reporting, and content hygiene are separate requirements the design addresses.
 
-**Explanation:** Repeated retries can conceal reliability problems. The selected answer is classify and fix the flake while retaining failure visibility.
+**Explanation:** That loses the required automated rejection boundary. That preserves redness but fails the diagnostic-availability requirement. That can distribute secrets and unrelated data with the useful report. Failure semantics, structured reporting, and content hygiene are separate requirements the design addresses.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines); [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q037
 
-Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which explanation best accounts for the behavior or constraint described?
+Two measured modules contain 100 and 900 included lines. They cover 100 and 450 lines respectively. Which combined line-coverage figure correctly weights the included source population?
 
-- **A. Existing well-tested code masks the new coverage gap** A stable average does not imply safe change coverage. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **B. The test depends on an unrecorded local environment** Different agents expose the hidden assumption. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **C. Intermittent infrastructure or timing assumptions contaminate the result** **Correct.** A later pass does not explain the original failure. This directly addresses the constraint stated in this case.
+```text
+Module A: included=100; covered=100
+Module B: included=900; covered=450
+```
 
-**Explanation:** A later pass does not explain the original failure. The selected answer is intermittent infrastructure or timing assumptions contaminate the result.
+- **A. 55 percent** **Correct.** The combined ratio is 550 covered lines divided by 1000 included lines.
+- **B. 75 percent** Averaging the module percentages gives equal weight to modules with very different line counts.
+- **C. 50 percent** This uses only the larger module and omits the fully covered smaller module.
+- **D. 100 percent** Complete coverage of one module does not establish complete coverage of the other.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** The combined ratio is 550 covered lines divided by 1000 included lines. Averaging the module percentages gives equal weight to modules with very different line counts. This uses only the larger module and omits the fully covered smaller module. Complete coverage of one module does not establish complete coverage of the other.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q038
 
-Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which observation provides the strongest evidence that the requested result was achieved?
+A pipeline needs strict rejection for failed tests but diagnostic publication after failures and an approved emergency exception path. Which design meets those distinct purposes?
 
-- **A. New branches have assertions for relevant success and failure paths** The proof must address the newly introduced risk. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **B. A clean agent reproduces the intended deterministic result** The validation must occur outside the developer machine. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **C. Failure frequency and root cause improve after the targeted fix** **Correct.** The evidence should show reduced flakiness rather than hidden retries. This directly addresses the constraint stated in this case.
+- **A. Use continue-on-error for every task so diagnostic steps always run** That can turn required failures into a nonblocking path.
+- **B. Block diagnostic publication whenever a gate rejects the candidate** That makes failures harder to investigate without strengthening rejection.
+- **C. Treat the existence of any approval as proof that the tests passed** Authorization to accept risk is different from an actual successful test result.
+- **D. Keep failure propagation and required dependencies, use failure-aware diagnostic steps, and govern exceptions separately** **Correct.** Observability should not weaken the normal gate, while exceptional authority remains explicit.
 
-**Explanation:** The evidence should show reduced flakiness rather than hidden retries. The selected answer is failure frequency and root cause improve after the targeted fix.
+**Explanation:** That can turn required failures into a nonblocking path. That makes failures harder to investigate without strengthening rejection. Authorization to accept risk is different from an actual successful test result. Observability should not weaken the normal gate, while exceptional authority remains explicit.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q039
 
-Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which execution safeguard most directly addresses the risk in this case?
+A locale-dependent test and an implicit SDK both fail after moving to hosted CI. The team also needs supported upgrades over time. Which repair plan is strongest?
 
-- **A. Avoid using coverage alone as the release decision** Assertions and business-critical scenarios still require review. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **B. Pin supported runtimes and record relevant test configuration** Implicit defaults can change when images update. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **C. Quarantine only with an owner and recovery deadline** **Correct.** Unowned quarantine can permanently remove important coverage. This directly addresses the constraint stated in this case.
+- **A. Force every hosted job to reuse an old local output directory** That imports uncontrolled state and can hide whether the current source builds.
+- **B. Retry failures indefinitely while keeping runtime and locale implicit** Unbounded retries do not establish the intended execution contract.
+- **C. Remove the failing cases and label the hosted environment unsupported** That avoids the required hosted validation instead of resolving its assumptions.
+- **D. Specify the behavior and environment inputs, run clean representative tests, and maintain the pinned toolchain through reviewed upgrades** **Correct.** The plan addresses deterministic behavior and ongoing support rather than freezing an accidental local setup.
 
-**Explanation:** Unowned quarantine can permanently remove important coverage. The selected answer is quarantine only with an owner and recovery deadline.
+**Explanation:** That imports uncontrolled state and can hide whether the current source builds. Unbounded retries do not establish the intended execution contract. That avoids the required hosted validation instead of resolving its assumptions. The plan addresses deterministic behavior and ongoing support rather than freezing an accidental local setup.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing); [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
 
 ## L08-Q040
 
-Advanced · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. The team selects this remedy: "Classify and fix the flake while retaining failure visibility." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The integration test starts an asynchronous write, then reads immediately; timing varies across runs. Which repair best removes the race while preserving the intended write/read contract?
 
-- **A. Overpinning dependencies increases upgrade maintenance** Controlled updates are still required for support and security. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint.
-- **B. Retries may improve resilience but increase latency** **Correct.** They should be bounded and reported transparently. This directly addresses the constraint stated in this case.
-- **C. Changed-code metrics depend on the comparison baseline** Incorrect base revisions can misclassify the affected code. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
+```csharp
+var pending = repository.WriteAsync(item);
+var actual = await repository.ReadAsync(item.Id);
+Assert.Equal(item, actual);
+```
 
-**Explanation:** They should be bounded and reported transparently. The selected answer is retries may improve resilience but increase latency.
+- **A. Await the write completion, isolate the test data, and use a bounded observable readiness condition if the boundary is eventually consistent** **Correct.** Synchronization should follow the operation contract rather than a guessed fixed delay.
+- **B. Add the same 30-second sleep before every assertion and keep shared data** A fixed delay is slow and still timing-dependent, while shared data can add interference.
+- **C. Retry the whole suite until every test eventually passes without recording the first failure** This hides the race rather than making the individual contract test deterministic.
+- **D. Replace the read assertion with a check that the write task was allocated** Task creation does not establish the completed write or the read behavior being tested.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** Synchronization should follow the operation contract rather than a guessed fixed delay. A fixed delay is slow and still timing-dependent, while shared data can add interference. This hides the race rather than making the individual contract test deterministic. Task creation does not establish the completed write or the read behavior being tested.
+
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing); [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops)
 
 ## L08-Q041
 
-Foundational · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
 
-Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which next change most directly satisfies the stated requirement?
+Overall line coverage is 92 percent, but a new payment branch executes only during startup and accepts a deliberately wrong total. The CI time budget is fixed. Which acceptance change is strongest?
 
-- **A. Propagate the failed test exit code to the job result** The execution status must reflect the actual test outcome. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Classify and fix the flake while retaining failure visibility** Repeated retries can conceal reliability problems. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Inspect changed-code coverage and branch-risk scenarios** **Correct.** Overall aggregates can dilute untested new behavior. This directly addresses the constraint stated in this case.
+- **A. Raise the overall threshold to 93 percent using more startup tests** That can increase execution coverage while leaving the wrong payment behavior undetected.
+- **B. Exclude the payment module so its new branches do not affect the denominator** Exclusion hides the risk rather than verifying the required behavior.
+- **C. Accept the module because 92 percent exceeds the repository target** A passing aggregate threshold does not resolve the demonstrated assertion failure.
+- **D. Add focused assertions for the payment behavior and inspect changed-risk coverage against the correct baseline** **Correct.** Execution coverage and behavioral detection are different evidence, so target the high-risk gap without padding unrelated tests.
 
-**Explanation:** Overall aggregates can dilute untested new behavior. The selected answer is inspect changed-code coverage and branch-risk scenarios.
+**Explanation:** That can increase execution coverage while leaving the wrong payment behavior undetected. Exclusion hides the risk rather than verifying the required behavior. A passing aggregate threshold does not resolve the demonstrated assertion failure. Execution coverage and behavioral detection are different evidence, so target the high-risk gap without padding unrelated tests.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q042
 
-Foundational · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which explanation best accounts for the behavior or constraint described?
+The Bash step in the exhibit runs failed tests, then prints a message; deployment proceeds. Diagnostics must remain available after failure. Which repair satisfies both requirements?
 
-- **A. The wrapper script swallowed the failing command status** Result files cannot compensate for an incorrect success state. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Intermittent infrastructure or timing assumptions contaminate the result** A later pass does not explain the original failure. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Existing well-tested code masks the new coverage gap** **Correct.** A stable average does not imply safe change coverage. This directly addresses the constraint stated in this case.
+```bash
+dotnet test --logger trx
+printf "test step complete\n"
+```
 
-**Explanation:** A stable average does not imply safe change coverage. The selected answer is existing well-tested code masks the new coverage gap.
+- **A. Keep the wrapper and make the message say tests failed** Text output does not change the successful shell exit status masking the failure.
+- **B. Remove report publication so the last command becomes the failed test** That can expose failure but abandons the required structured diagnostic retention.
+- **C. Allow deployment and open an issue whenever the report contains failures** That changes a required pre-deployment rejection into a post-deployment follow-up.
+- **D. Propagate the test failure and publish results in a separate failure-aware step, with deployment requiring the validation outcome** **Correct.** The test status must remain authoritative while diagnostic publication is independently allowed after failure.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** Text output does not change the successful shell exit status masking the failure. That can expose failure but abandons the required structured diagnostic retention. That changes a required pre-deployment rejection into a post-deployment follow-up. The test status must remain authoritative while diagnostic publication is independently allowed after failure.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops); [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)
 
 ## L08-Q043
 
-Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which observation provides the strongest evidence that the requested result was achieved?
+A pull request changes ten risky lines, but changed-code coverage is computed against last month's release and includes 500 unrelated lines. The threshold passes. What correction makes the gate meaningful?
 
-- **A. Failure frequency and root cause improve after the targeted fix** The evidence should show reduced flakiness rather than hidden retries. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **B. New branches have assertions for relevant success and failure paths** **Correct.** The proof must address the newly introduced risk. This directly addresses the constraint stated in this case.
-- **C. A known failing assertion makes the job fail** A controlled negative probe verifies status propagation. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
+- **A. Exclude all preexisting files regardless of which lines the request changes** A changed line in an existing file can still carry the exact risk the gate should assess.
+- **B. Use the intended comparison revision and verify relevant scenarios and exclusions for the actual change** **Correct.** The base determines what counts as changed, and numeric coverage still needs behavioral interpretation.
+- **C. Keep the broad base because more measured lines always means stronger protection** Unrelated lines can dilute the specific change's untested behavior.
+- **D. Replace the threshold with the number of test files changed** File counts do not establish coverage or assertions for the risky behavior.
 
-**Explanation:** The proof must address the newly introduced risk. The selected answer is new branches have assertions for relevant success and failure paths.
+**Explanation:** A changed line in an existing file can still carry the exact risk the gate should assess. The base determines what counts as changed, and numeric coverage still needs behavioral interpretation. Unrelated lines can dilute the specific change's untested behavior. File counts do not establish coverage or assertions for the risky behavior.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q044
 
-Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which execution safeguard most directly addresses the risk in this case?
+Tests return a failure status, but the PublishTestResults task has its default success-only condition. No cases appear for failing runs. What should change without making failed tests pass?
 
-- **A. Keep diagnostic publication separate from success conditions** Useful failure reports should remain available after rejection. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Quarantine only with an owner and recovery deadline** Unowned quarantine can permanently remove important coverage. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Avoid using coverage alone as the release decision** **Correct.** Assertions and business-critical scenarios still require review. This directly addresses the constraint stated in this case.
+```yaml
+- script: dotnet test --logger "trx;LogFileName=tests.trx"
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: "**/tests.trx"
+```
 
-**Explanation:** Assertions and business-critical scenarios still require review. The selected answer is avoid using coverage alone as the release decision.
+- **A. Run only the passing tests before publication** That hides the failing execution rather than reporting the actual required suite.
+- **B. Use a failure-aware publication condition, correct TRX format/path, and retain the original failed job outcome** **Correct.** Publication and acceptance are distinct concerns; diagnostics should survive the failure they explain.
+- **C. Set the entire test job to continueOnError and use its resulting success as deployment approval** That can weaken the required failure boundary instead of independently publishing diagnostics.
+- **D. Publish the source directory as test results without parsing the runner format** An arbitrary directory upload does not establish structured case reporting.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** That hides the failing execution rather than reporting the actual required suite. Publication and acceptance are distinct concerns; diagnostics should survive the failure they explain. That can weaken the required failure boundary instead of independently publishing diagnostics. An arbitrary directory upload does not establish structured case reporting.
+
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines); [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q045
 
-Advanced · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.2.2](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. The team selects this remedy: "Inspect changed-code coverage and branch-risk scenarios." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Database mocks pass, but the real schema rejects a required column write. Full end-to-end tests take an hour. Which test allocation offers useful early protection under a short CI budget?
 
-- **A. Correct failure propagation can reveal previously hidden defects** A newly red pipeline may indicate stronger reporting. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint.
-- **B. Retries may improve resilience but increase latency** They should be bounded and reported transparently. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint.
-- **C. Changed-code metrics depend on the comparison baseline** **Correct.** Incorrect base revisions can misclassify the affected code. This directly addresses the constraint stated in this case.
+- **A. Keep focused unit checks and add a representative targeted integration test for the schema contract before promotion** **Correct.** A narrow real-boundary test addresses the observed gap without requiring every change to wait for the full suite.
+- **B. Replace all unit tests with the entire hour-long suite for every local edit** That may increase feedback delay without being necessary to target this specific boundary failure.
+- **C. Make the mock accept every write so it matches the successful unit outcome** Relaxing the mock does not validate the actual schema compatibility.
+- **D. Treat a clean application build as equivalent to a database integration test** Compilation does not establish that the deployed schema accepts the application's write contract.
 
-**Explanation:** Incorrect base revisions can misclassify the affected code. The selected answer is changed-code metrics depend on the comparison baseline.
+**Explanation:** A narrow real-boundary test addresses the observed gap without requiring every change to wait for the full suite. That may increase feedback delay without being necessary to target this specific boundary failure. Relaxing the mock does not validate the actual schema compatibility. Compilation does not establish that the deployed schema accepts the application's write contract.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops); [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing)
 
 ## L08-Q046
 
-Foundational · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which next change most directly satisfies the stated requirement?
+A critical integration test fails on five percent of unchanged runs and passes on retry. Release needs its coverage; hiding retries makes the dashboard look green. Which strategy is strongest?
 
-- **A. Propagate the failed test exit code to the job result** **Correct.** The execution status must reflect the actual test outcome. This directly addresses the constraint stated in this case.
-- **B. Add focused local unit tests for the calculation contract** Pure behavior can be checked cheaply without deployment. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **C. Inspect changed-code coverage and branch-risk scenarios** Overall aggregates can dilute untested new behavior. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
+- **A. Retry until success and publish only the last attempt** That conceals the observed reliability problem and can add unbounded delay.
+- **B. Delete the test permanently because a flaky test cannot provide any useful signal** The critical behavior still needs reliable coverage rather than permanent abandonment.
+- **C. Treat every intermittent failure as a product regression without investigating cause** A useful disposition must distinguish product behavior from environment or test nondeterminism.
+- **D. Expose initial failures and retries, investigate shared state or timing, and govern any quarantine with owner, deadline, and replacement protection** **Correct.** Retries can aid execution recovery but do not replace diagnosis or transparent risk management.
 
-**Explanation:** The execution status must reflect the actual test outcome. The selected answer is propagate the failed test exit code to the job result.
+**Explanation:** That conceals the observed reliability problem and can add unbounded delay. The critical behavior still needs reliable coverage rather than permanent abandonment. A useful disposition must distinguish product behavior from environment or test nondeterminism. Retries can aid execution recovery but do not replace diagnosis or transparent risk management.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing); [S6](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops)
 
 ## L08-Q047
 
-Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.2.4](../../docs/objective-map.md)
 
-False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which explanation best accounts for the behavior or constraint described?
+Coverage rose after generated and legacy paths were excluded. A critical hand-written error path was included in the new exclusions. What should the reviewer do?
 
-- **A. The defect can be isolated below the integration boundary** Cloud deployment adds unnecessary feedback latency. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **B. Existing well-tested code masks the new coverage gap** A stable average does not imply safe change coverage. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **C. The wrapper script swallowed the failing command status** **Correct.** Result files cannot compensate for an incorrect success state. This directly addresses the constraint stated in this case.
+- **A. Compare only the new percentage with the old target and ignore scope changes** The same threshold can mean different evidence when the measured population changes.
+- **B. Review the excluded paths and restore risk-relevant measurement and assertions before interpreting the percentage** **Correct.** A changed denominator can improve the number while hiding behavior the policy intended to protect.
+- **C. Approve because any exclusion of legacy code is automatically harmless** The critical hand-written path's risk is not removed by labeling it legacy.
+- **D. Require zero exclusions even for generated code without considering policy purpose** The issue is justified risk-aware scope, not an indiscriminate ban on every exclusion.
 
-**Explanation:** Result files cannot compensate for an incorrect success state. The selected answer is the wrapper script swallowed the failing command status.
+**Explanation:** The same threshold can mean different evidence when the measured population changes. A changed denominator can improve the number while hiding behavior the policy intended to protect. The critical hand-written path's risk is not removed by labeling it legacy. The issue is justified risk-aware scope, not an indiscriminate ban on every exclusion.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q048
 
-Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md)
 
-False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which observation provides the strongest evidence that the requested result was achieved?
+A deployment job uses the shown custom Azure Pipelines condition. The unit-test job failed, but a branch check is true. Which correction preserves the required dependency?
 
-- **A. A wrong calculation fails the local test suite** The test must detect an actual incorrect result. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **B. New branches have assertions for relevant success and failure paths** The proof must address the newly introduced risk. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **C. A known failing assertion makes the job fail** **Correct.** A controlled negative probe verifies status propagation. This directly addresses the constraint stated in this case.
+```yaml
+- job: Deploy
+  dependsOn: UnitTests
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+  steps:
+    - script: ./deploy.sh
+```
 
-**Explanation:** A controlled negative probe verifies status propagation. The selected answer is a known failing assertion makes the job fail.
+- **A. Remove dependsOn and rely only on the branch name** That removes explicit sequencing and still does not require successful validation.
+- **B. Run deployment first and inspect the test job result afterward** That reverses the required protection boundary rather than enforcing it.
+- **C. Combine the branch condition with the required success condition and verify a controlled failed prerequisite blocks deployment** **Correct.** A custom condition can override default success behavior, so both the branch and dependency result must be expressed.
+- **D. Keep the condition because dependsOn alone always prevents execution after failures** Custom conditions determine execution and can permit a job despite a failed dependency.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Explanation:** That removes explicit sequencing and still does not require successful validation. That reverses the required protection boundary rather than enforcing it. A custom condition can override default success behavior, so both the branch and dependency result must be expressed. Custom conditions determine execution and can permit a job despite a failed dependency.
+
+**Sources:** [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops)
 
 ## L08-Q049
 
-Applied · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md), [D3.2.4](../../docs/objective-map.md)
 
-False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which execution safeguard most directly addresses the risk in this case?
+A team must preserve its overall coverage policy, verify a new validation branch, and avoid extending CI beyond ten minutes. Which plan best balances these constraints?
 
-- **A. Avoid using coverage alone as the release decision** Assertions and business-critical scenarios still require review. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **B. Keep diagnostic publication separate from success conditions** **Correct.** Useful failure reports should remain available after rejection. This directly addresses the constraint stated in this case.
-- **C. Use deterministic inputs and assert meaningful outcomes** Nondeterministic tests weaken trust in fast feedback. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
+- **A. Raise coverage by repeatedly running the same startup test** Repeated execution of the same lines does not add the missing behavioral evidence.
+- **B. Disable the coverage gate and rely only on the historical defect count** Past defects do not establish acceptance of the new branch or preserve the required policy.
+- **C. Keep the policy, add targeted positive and rejection assertions, and review redundant test cost and coverage scope** **Correct.** The plan protects the new risk while optimizing low-value execution rather than hiding gaps.
+- **D. Remove the rejection test because successful-path execution counts as line coverage** Executing success behavior does not verify that invalid input is rejected.
 
-**Explanation:** Useful failure reports should remain available after rejection. The selected answer is keep diagnostic publication separate from success conditions.
+**Explanation:** Repeated execution of the same lines does not add the missing behavioral evidence. Past defects do not establish acceptance of the new branch or preserve the required policy. The plan protects the new risk while optimizing low-value execution rather than hiding gaps. Executing success behavior does not verify that invalid input is rejected.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S5](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)
 
 ## L08-Q050
 
 Advanced · [CP4](README.md#task-4) · [D3.2.1](../../docs/objective-map.md), [D3.2.3](../../docs/objective-map.md)
 
-False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. The team selects this remedy: "Propagate the failed test exit code to the job result." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release pipeline masks dotnet test failure, skips reports on failed jobs, and has a deployment condition that checks only main. Which end-to-end acceptance test best verifies the repair?
 
-- **A. Unit tests do not prove external integration behavior** A complete strategy needs additional test layers. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint.
-- **B. Changed-code metrics depend on the comparison baseline** Incorrect base revisions can misclassify the affected code. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint.
-- **C. Correct failure propagation can reveal previously hidden defects** **Correct.** A newly red pipeline may indicate stronger reporting. This directly addresses the constraint stated in this case.
+- **A. Run the healthy test suite once and confirm deployment succeeds** A healthy path cannot demonstrate that required failure rejection works.
+- **B. Inspect only the YAML for the word succeeded** Text inspection cannot establish actual script exit handling or published result contents.
+- **C. Confirm a TRX file exists locally and approve the release** Local file presence does not prove structured publication or deployment gating.
+- **D. Inject a controlled failing assertion, confirm the validation stays failed, inspect the published cases, and prove deployment never starts; then verify the repaired healthy path** **Correct.** The combined contract includes failure propagation, retained structured diagnostics, and enforced promotion dependency in both directions.
 
-**Explanation:** A newly red pipeline may indicate stronger reporting. The selected answer is correct failure propagation can reveal previously hidden defects.
+**Explanation:** A healthy path cannot demonstrate that required failure rejection works. Text inspection cannot establish actual script exit handling or published result contents. Local file presence does not prove structured publication or deployment gating. The combined contract includes failure propagation, retained structured diagnostics, and enforced promotion dependency in both directions.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results?view=azure-devops); [S2](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops)
+**Sources:** [S4](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines); [S7](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops); [S8](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test)

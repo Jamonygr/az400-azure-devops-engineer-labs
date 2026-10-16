@@ -43,7 +43,7 @@
     {
       "id": "CP2",
       "title": "Stage the sample and YAML definition",
-      "commands": "$p=Join-Path $WorkRoot 'azure-ci'\n $source=Join-Path $RepoRoot 'samples'\n Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\\/](bin|obj)[\\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n Copy-Item (Join-Path $LabRoot 'artifacts/azure-pipelines.yml') (Join-Path $p 'azure-pipelines.yml')\n @('**/bin/','**/obj/')|Set-Content (Join-Path $p '.gitignore')\n",
+      "commands": "$p=Join-Path $WorkRoot 'azure-ci'\n # Copy tracked source only; ignored runtime evidence and build output stay private.\n git -C $RepoRoot ls-files -- samples|ForEach-Object { $rel=$_;$sourceFile=Join-Path $RepoRoot $rel;$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item -LiteralPath $sourceFile -Destination $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n Copy-Item (Join-Path $LabRoot 'artifacts/azure-pipelines.yml') (Join-Path $p 'azure-pipelines.yml')\n @('**/bin/','**/obj/')|Set-Content (Join-Path $p '.gitignore')\n",
       "expected": "The sample and Azure Pipelines YAML exist in the sandbox clone.",
       "positive": "$p=Join-Path $WorkRoot 'azure-ci'\n if (-not (Test-Path (Join-Path $p 'samples/DevOps.slnx'))) { throw 'Sample source missing.' }\n",
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Raw\n if ($t -match 'AzureCLI@|az deployment|clientSecret') { throw 'CI definition unexpectedly deploys or embeds credentials.' }\n",
@@ -118,10 +118,10 @@
     }
   ],
   "breakFix": {
-    "trigger": "$p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/DevOps.slnx','samples/Missing.slnx')|Set-Content $p\n",
-    "diagnose": "Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing.slnx'\n",
+    "trigger": "$p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/Build-Release.ps1','samples/Missing-Release.ps1')|Set-Content $p\n",
+    "diagnose": "Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing-Release.ps1'\n",
     "repair": "$p=Join-Path $WorkRoot 'azure-ci';git -C $p restore azure-pipelines.yml\n",
-    "assert": "$p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw\n$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\\.slnx')|ForEach-Object Value)\nif($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}\n",
+    "assert": "$p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw\n$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\\.ps1')|ForEach-Object Value)\nif($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}\n",
     "expectedFailure": "AZ400-L10-FAULT"
   },
   "challenge": "Connect a disposable GitHub repository as the source through an explicitly approved GitHub App/service connection, and compare provenance and permissions.",
@@ -212,8 +212,8 @@
     "topology": "An exact Azure Repos repository and YAML path define the sandbox pipeline. An available hosted or explicitly approved agent executes the .NET build/test workload and publishes results/artifacts. Build sourceVersion must match the reviewed revision; pipeline registration, queued capacity, and successful completion are separate states."
   },
   "verification": {
-    "status": "not-run",
-    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+    "status": "offline-tested",
+    "scope": "The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live."
   },
   "solutionNotes": "The invalid solution path should fail an actual referenced-path assertion. A queued, in-progress or partially successful build cannot satisfy the final provenance gate."
 }

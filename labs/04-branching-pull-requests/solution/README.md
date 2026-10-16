@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The deterministic fault reduces the actual required-review count. Its named assertion must reject that provider state, and repair must restore the original requirement.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Create a local trunk and short-lived feature branch
 

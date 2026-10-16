@@ -15,8 +15,8 @@ Learner role: **Build engineer**. Outcome: Version packages and manage feeds.
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -51,7 +51,7 @@ Official objective topic IDs: `D2.2.4`, `D3.1.1`, `D3.1.2`, `D3.1.3`, `D3.1.4`
 | [CP2](#task-2) | Inspect package metadata without executing package code |
 | [CP3](#task-3) | Consume the local feed with a pinned dependency |
 | [CP4](#task-4) | Produce a distinct prerelease artifact |
-| [CP5](#task-5) | Compare GitHub Packages and Azure Artifacts publication contracts |
+| [CP5](#task-5) | Promote verified package bytes and evaluate upstream trust |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -155,7 +155,7 @@ Positive validation:
 
 ```powershell
 $n=Get-Content (Join-Path $WorkRoot 'package-files.txt')
- if ($n -notmatch '\.nuspec$' -or $n -notmatch 'lib/net10.0/') { throw 'Package metadata/framework missing.' }
+ if (-not ($n -match '\.nuspec$') -or -not ($n -match '^lib/net10.0/')) { throw 'Package metadata/framework missing.' }
 ```
 
 Negative validation:
@@ -254,7 +254,7 @@ Common failure and safe retry: Promote the same package to a feed view; avoid re
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Compare GitHub Packages and Azure Artifacts publication contracts
+## Task 5 — Promote verified package bytes and evaluate upstream trust
 
 <a id="task-5"></a>
 
@@ -268,15 +268,27 @@ Checkpoint: `CP5`
 ```powershell
 $plan=[ordered]@{github=@{registry='https://nuget.pkg.github.com/OWNER/index.json';permission='packages:write'};azureArtifacts=@{feed='az400-disposable';views=@('@Local','@Prerelease','@Release');upstreamPolicy='approved-only'};releaseVersion='1.2.0';published=$false}
  $plan|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'feed-plan.json')
+$source=Join-Path $WorkRoot 'feed/Versioned.Library.1.2.0.nupkg'
+$release=Join-Path $WorkRoot 'feed-views/Release';New-Item -ItemType Directory -Path $release -Force|Out-Null
+Copy-Item -LiteralPath $source -Destination $release
+$digest=(Get-FileHash $source -Algorithm SHA256).Hash
+$destination=Join-Path $release 'Versioned.Library.1.2.0.nupkg'
+if((Get-FileHash $destination -Algorithm SHA256).Hash -ne $digest){throw 'Promotion changed the approved package bytes.'}
+$approved=@('https://api.nuget.org/v3/index.json')
+$decisions=@('https://api.nuget.org/v3/index.json','https://unreviewed.example.invalid/v3/index.json')|ForEach-Object {@{source=$_;allowed=$_ -cin $approved}}
+@{fixtureOnly=$true;sourceHash=$digest;promotedHash=(Get-FileHash $destination).Hash;decisions=@($decisions);remotePublished=$false}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'promotion-evidence.json')
 ```
 
-Expected state: A publish contract separates registries, scopes, views, and upstream trust; it sends no package.
+Expected state: The approved stable package is copied unchanged into a local Release view and a source allowlist accepts the reviewed upstream while rejecting an unreviewed one. Hosted feed publication remains separate.
 
 Positive validation:
 
 ```powershell
 $p=Get-Content (Join-Path $WorkRoot 'feed-plan.json') -Raw|ConvertFrom-Json
  if ($p.github.permission -ne 'packages:write' -or '@Release' -notin $p.azureArtifacts.views) { throw 'Feed contract incomplete.' }
+$p=Get-Content (Join-Path $WorkRoot 'promotion-evidence.json') -Raw|ConvertFrom-Json
+if($p.sourceHash -cne $p.promotedHash -or @($p.decisions|Where-Object allowed).Count -ne 1){throw 'Package promotion or upstream allowlist failed.'}
+if((Get-FileHash (Join-Path $WorkRoot 'feed-views/Release/Versioned.Library.1.2.0.nupkg')).Hash -cne $p.sourceHash){throw 'Promoted package was changed after approval.'}
 ```
 
 Negative validation:
@@ -284,9 +296,11 @@ Negative validation:
 ```powershell
 $p=Get-Content (Join-Path $WorkRoot 'feed-plan.json') -Raw|ConvertFrom-Json
  if ($p.published -or $p.azureArtifacts.upstreamPolicy -ne 'approved-only') { throw 'Publication/upstream gate violated.' }
+$p=Get-Content (Join-Path $WorkRoot 'promotion-evidence.json') -Raw|ConvertFrom-Json
+if($p.remotePublished -or @($p.decisions|Where-Object {$_.source -like '*unreviewed*' -and $_.allowed}).Count){throw 'Unapproved upstream or unverified remote publication.'}
 ```
 
-Evidence to retain: Feed plan; registry credentials remain outside Git.
+Evidence to retain: Before/after SHA256, promoted local package and two evaluated upstream cases; no registry credential.
 
 Common failure and safe retry: Complete feed creation/permissions bootstrap before an explicitly authorized publication.
 

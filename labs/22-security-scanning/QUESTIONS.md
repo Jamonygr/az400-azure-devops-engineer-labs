@@ -10,498 +10,599 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 Foundational · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which next change most directly satisfies the stated requirement?
+The team inventories NuGet dependencies but currently sees only direct references. Which command option includes packages introduced by other packages?
 
-- **A.** Require scan evidence for the exact release digest
-- **B.** Add dependency vulnerability analysis to the scan strategy
-- **C.** Configure the desired update workflow and review proposed fixes
+- **A.** no-restore alone
+- **B.** include-transitive
+- **C.** outdated alone
+- **D.** include-prerelease alone
 
 ## L22-Q002
 
 Foundational · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which explanation best accounts for the behavior or constraint described?
+An inventory report lists Requested and Resolved versions for the same package. Which value identifies the exact version used by the restored project?
 
-- **A.** Secret detection does not inspect dependency advisories
-- **B.** An alert is not an automatically accepted remediation
-- **C.** A reused tag hides the change in image identity
+- **A.** Resolved
+- **B.** Requested
+- **C.** Latest available
+- **D.** The source branch name
 
 ## L22-Q003
 
 Applied · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which observation provides the strongest evidence that the requested result was achieved?
+A CI gate needs to inspect package results programmatically without parsing formatted console tables. Which output form should it request?
 
-- **A.** A known vulnerable test dependency produces the expected alert
-- **B.** An affected dependency receives a reviewed tested update
-- **C.** The release digest matches the scanned digest
+- **A.** The package author's display page
+- **B.** Only the command duration
+- **C.** JSON with a supported output version
+- **D.** Colored console output only
 
 ## L22-Q004
 
 Applied · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which execution safeguard most directly addresses the risk in this case?
+The solution contains multiple projects with different dependency graphs. Which inventory scope best describes the application's complete restored package inputs?
 
-- **A.** Prevent substitution after the security decision
-- **B.** Use a controlled fixture rather than a live exploitable deployment
-- **C.** Retain required tests before accepting dependency updates
+- **A.** Inspect only packages named Microsoft
+- **B.** Inventory only cached package directory names
+- **C.** Inventory the intended solution and its transitive packages
+- **D.** Inspect only the first csproj filename
 
 ## L22-Q005
 
 Advanced · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. The team selects this remedy: "Add dependency vulnerability analysis to the scan strategy." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A direct package is patched, but its transitive cryptography dependency remains vulnerable under the current lockfile. Which next step verifies a real remediation?
 
-- **A.** Digest-specific evidence increases metadata management
-- **B.** More scanners add triage and maintenance work
-- **C.** Not every advisory has an available fix
+```json
+{"direct":{"name":"Example.SqlClient","old":"1.0.0","new":"1.1.0"},"resolvedTransitive":{"name":"Example.Crypto","version":"2.0.0","knownVulnerable":true}}
+```
+
+- **A.** Review the resolved graph and update the affected dependency safely
+- **B.** Close the alert because the direct version increased
+- **C.** Delete the vulnerability report while retaining the lockfile
+- **D.** Exclude all transitive packages from future inventory
 
 ## L22-Q006
 
-Foundational · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which next change most directly satisfies the stated requirement?
+A fresh agent lacks assets required for package reporting, while a previous workstation had completed restore. Which approach yields comparable inventory evidence?
 
-- **A.** Configure the desired update workflow and review proposed fixes
-- **B.** Scan the final container image for package vulnerabilities
-- **C.** Add dependency vulnerability analysis to the scan strategy
+- **A.** Copy the workstation's console screenshot
+- **B.** List every folder in the user cache
+- **C.** Remove version pins before inventory
+- **D.** Restore reproducibly before relying on the resolved dependency graph
 
 ## L22-Q007
 
-Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which explanation best accounts for the behavior or constraint described?
+A developer believes a package absent from direct references cannot affect application supply-chain risk. Which evidence should the review request?
 
-- **A.** An alert is not an automatically accepted remediation
-- **B.** Code analysis does not inventory every image component
-- **C.** Secret detection does not inspect dependency advisories
+- **A.** Only the project's top-level package names
+- **B.** Only the container's human-readable image tag
+- **C.** Only the most recent commit message
+- **D.** The resolved transitive dependency graph
 
 ## L22-Q008
 
-Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which observation provides the strongest evidence that the requested result was achieved?
+A lockfile is committed, but local inventory includes a different resolved version after an unreviewed restore. What should the pipeline require?
 
-- **A.** An affected dependency receives a reviewed tested update
-- **B.** The built image produces findings tied to its immutable digest
-- **C.** A known vulnerable test dependency produces the expected alert
+- **A.** Ignore the lockfile whenever restore succeeds
+- **B.** Replace every package with latest automatically
+- **C.** Treat the local package cache as authoritative
+- **D.** Locked restoration and review of intentional dependency changes
 
 ## L22-Q009
 
-Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which execution safeguard most directly addresses the risk in this case?
+The dependency inventory command exits unsuccessfully because its source is unreachable. What should a required inventory gate report?
 
-- **A.** Use a controlled fixture rather than a live exploitable deployment
-- **B.** Retain required tests before accepting dependency updates
-- **C.** Rescan and rebuild when base-image advisories change
+- **A.** Zero dependencies and a passing result
+- **B.** A successful pass from yesterday's file
+- **C.** All packages vulnerable without any advisory data
+- **D.** Incomplete evidence with a visible failure
 
 ## L22-Q010
 
-Advanced · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D4.3.1](../../docs/objective-map.md)
 
-Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. The team selects this remedy: "Configure the desired update workflow and review proposed fixes." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A scan uses a cached inventory from a different commit while current lockfiles changed. It reports no findings. Which evidence is required before release?
 
-- **A.** Not every advisory has an available fix
-- **B.** Image scanning cannot prove exploitability in every deployment
-- **C.** More scanners add triage and maintenance work
+```text
+Current lockfile hash: bbbb
+Cached inventory lockfile hash: aaaa
+Scan result from cached inventory: no findings
+Current graph restored: not yet
+```
+
+- **A.** Only the package cache hit flag
+- **B.** A current restored graph scanned against available advisory data
+- **C.** Only the old no-findings summary
+- **D.** Only a valid JSON schema for the stale file
 
 ## L22-Q011
 
-Foundational · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which next change most directly satisfies the stated requirement?
+The team wants known vulnerability advisories for the project's resolved NuGet packages. Which reporting option should be used?
 
-- **A.** Install or configure the supported CodeQL analysis workflow explicitly
-- **B.** Configure the desired update workflow and review proposed fixes
-- **C.** Scan the final container image for package vulnerabilities
+- **A.** outdated only
+- **B.** deprecated only
+- **C.** include-prerelease only
+- **D.** vulnerable
 
 ## L22-Q012
 
-Foundational · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which explanation best accounts for the behavior or constraint described?
+A Dependabot alert identifies an affected package and a patched version. What is the most complete remediation workflow?
 
-- **A.** Code analysis does not inventory every image component
-- **B.** Container execution does not automatically create a CodeQL database
-- **C.** An alert is not an automatically accepted remediation
+- **A.** Dismiss the alert because a patch exists
+- **B.** Merge any version change without tests
+- **C.** Rename the dependency in documentation
+- **D.** Review the upgrade, test it and verify the alert's resolution
 
 ## L22-Q013
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which observation provides the strongest evidence that the requested result was achieved?
+The scanner reports no known advisories for the current dependency graph. What limitation should the release report state?
 
-- **A.** The built image produces findings tied to its immutable digest
-- **B.** The run uploads valid analysis results for the intended code
-- **C.** An affected dependency receives a reviewed tested update
+- **A.** Every dependency license is approved automatically
+- **B.** Runtime authorization and private networking are verified
+- **C.** No known findings within this scan's coverage and advisory data
+- **D.** The application is guaranteed free of vulnerabilities
 
 ## L22-Q014
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which execution safeguard most directly addresses the risk in this case?
+A security finding affects a package used only by a test tool. What should triage consider before deciding urgency and scope?
 
-- **A.** Use a trusted analysis image and supported tool versions
-- **B.** Retain required tests before accepting dependency updates
-- **C.** Rescan and rebuild when base-image advisories change
+- **A.** Only whether the dependency is direct rather than transitive
+- **B.** Only whether a newer major version exists
+- **C.** Usage, exposure, advisory details and affected versions
+- **D.** Only the advisory severity without component usage
 
 ## L22-Q015
 
-Advanced · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. The team selects this remedy: "Scan the final container image for package vulnerabilities." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The patched package requires a breaking major upgrade, the vulnerable feature is disabled, and release is urgent. Which decision is defensible?
 
-- **A.** Image scanning cannot prove exploitability in every deployment
-- **B.** Containerized analysis still needs correct build context
-- **C.** Not every advisory has an available fix
+```json
+{"finding":"known vulnerable feature","featureEnabled":false,"patchedUpgrade":"breaking major","releaseUrgent":true,"exceptionOwner":null}
+```
+
+- **A.** Disable advisory access so the pipeline appears green
+- **B.** Document evidence, mitigation and time-limited risk ownership while planning tested remediation
+- **C.** Permanently dismiss every alert for that package
+- **D.** Upgrade immediately without compatibility testing
 
 ## L22-Q016
 
-Foundational · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which next change most directly satisfies the stated requirement?
+The advisory data source cannot be reached, but a wrapper converts every scanner error into an empty findings list. What is the defect?
 
-- **A.** Scan the final container image for package vulnerabilities
-- **B.** Install or configure the supported CodeQL analysis workflow explicitly
-- **C.** Add license inventory and policy review
+- **A.** The wrapper fails open on unavailable security evidence
+- **B.** It checks transitive packages too carefully
+- **C.** It retains package versions too precisely
+- **D.** It emits machine-readable JSON
 
 ## L22-Q017
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which explanation best accounts for the behavior or constraint described?
+A dependency update pull request passes compilation but changes behavior tested by integration cases. Which gate should still be required before acceptance?
 
-- **A.** Container execution does not automatically create a CodeQL database
-- **B.** Vulnerability detection does not determine license compatibility
-- **C.** Code analysis does not inventory every image component
+- **A.** Only a successful clean dependency restore
+- **B.** Only closure of the original security issue
+- **C.** Only a smaller package download size
+- **D.** Relevant application and integration tests
 
 ## L22-Q018
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which observation provides the strongest evidence that the requested result was achieved?
+An alert was dismissed as not affected using a concrete reachability analysis. What should the record include for future review?
 
-- **A.** The built image produces findings tied to its immutable digest
-- **B.** The run uploads valid analysis results for the intended code
-- **C.** The dependency inventory exposes the disallowed license for review
+- **A.** Only a generic false-positive label
+- **B.** Only the developer's preference to avoid upgrades
+- **C.** Only the alert count after dismissal
+- **D.** The justification, evidence, owner and reassessment trigger
 
 ## L22-Q019
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which execution safeguard most directly addresses the risk in this case?
+The vulnerability command returns structured findings despite a successful process exit. What should a policy gate evaluate?
 
-- **A.** Use a trusted analysis image and supported tool versions
-- **B.** Escalate ambiguous license interpretation to the responsible policy owner
-- **C.** Rescan and rebuild when base-image advisories change
+- **A.** Only the generated file's timestamp
+- **B.** Finding content against the required severity policy
+- **C.** Only exit status zero
+- **D.** Only whether stdout is nonempty
 
 ## L22-Q020
 
-Advanced · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D4.3.6](../../docs/objective-map.md)
 
-CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. The team selects this remedy: "Install or configure the supported CodeQL analysis workflow explicitly." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The scan completed and found a critical transitive advisory, but its log upload failed. Which status should block release and remain visible?
 
-- **A.** Image scanning cannot prove exploitability in every deployment
-- **B.** Containerized analysis still needs correct build context
-- **C.** License policy can restrict otherwise useful dependencies
+```json
+{"scanExitCode":0,"criticalTransitiveFindings":1,"reportUpload":"failed","releasePolicy":"block critical findings"}
+```
+
+- **A.** A pass because logs were not uploaded
+- **B.** A permanent scanner exclusion for that dependency
+- **C.** The critical finding and incomplete evidence publication
+- **D.** A pass because the scan command returned zero
 
 ## L22-Q021
 
-Foundational · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which next change most directly satisfies the stated requirement?
+The lesson needs to prove that a secret scanner detects a leaked credential pattern without using real credentials. What input is appropriate?
 
-- **A.** Install or configure the supported CodeQL analysis workflow explicitly
-- **B.** Add license inventory and policy review
-- **C.** Use a documented synthetic detection fixture in an isolated exercise
+- **A.** An empty source fixture only
+- **B.** A comment claiming a secret existed
+- **C.** A deterministic harmless synthetic marker
+- **D.** A live production access token
 
 ## L22-Q022
 
-Foundational · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which explanation best accounts for the behavior or constraint described?
+A secret scan detects a valid credential in a repository's history. Which action is needed beyond deleting the current line?
 
-- **A.** Vulnerability detection does not determine license compatibility
-- **B.** A live secret is unnecessary to validate the workflow
-- **C.** Container execution does not automatically create a CodeQL database
+- **A.** Add a future gitignore rule only
+- **B.** Change the secret's comment label
+- **C.** Revoke or rotate the exposed credential
+- **D.** Rename the source file only
 
 ## L22-Q023
 
-Applied · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which observation provides the strongest evidence that the requested result was achieved?
+The fixture contains the expected synthetic leakage marker but the scan still passes. Which response makes the negative test meaningful?
 
-- **A.** The expected test finding appears without an active credential
-- **B.** The run uploads valid analysis results for the intended code
-- **C.** The dependency inventory exposes the disallowed license for review
+- **A.** Fail the test and correct detection or fixture wiring
+- **B.** Accept the pass because no real secret was used
+- **C.** Force every scan to fail unconditionally
+- **D.** Remove the fixture and keep the passing status
 
 ## L22-Q024
 
-Applied · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which execution safeguard most directly addresses the risk in this case?
+A scanner suppresses one approved fake test value but should continue detecting other secret patterns. Which exception scope is safest?
 
-- **A.** Escalate ambiguous license interpretation to the responsible policy owner
-- **B.** Clearly label and clean up deliberate training findings
-- **C.** Use a trusted analysis image and supported tool versions
+- **A.** Limit the exception to that documented fixture value or path
+- **B.** Ignore every file under source
+- **C.** Disable the full scanner for pull requests
+- **D.** Ignore every token-like string globally
 
 ## L22-Q025
 
-Advanced · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. The team selects this remedy: "Add license inventory and policy review." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The synthetic marker is detected, but its raw value is copied into public logs and screenshots. Which change preserves useful evidence while reducing disclosure habits?
 
-- **A.** License policy can restrict otherwise useful dependencies
-- **B.** A fixture may not cover every real secret format
-- **C.** Containerized analysis still needs correct build context
+```text
+Synthetic finding detected: yes
+Evidence includes: raw token-like fixture value
+Requested practice: redact sensitive values and retain useful detection metadata
+```
+
+- **A.** Retain redacted finding metadata and deterministic detection assertions
+- **B.** Retain raw findings in every report because this value is synthetic
+- **C.** Remove failure reports and retain only a clean-scan screenshot
+- **D.** Mark the scanner passed without retaining any outcome
 
 ## L22-Q026
 
-Foundational · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which next change most directly satisfies the stated requirement?
+A scan covers only current files while policy also requires inspection of committed history. Which gap should the release report identify?
 
-- **A.** Propagate policy-relevant scan outcomes into the release gate
-- **B.** Add license inventory and policy review
-- **C.** Use a documented synthetic detection fixture in an isolated exercise
+- **A.** Every detected secret is automatically revoked
+- **B.** Historical credential coverage remains unverified
+- **C.** All history is clean because current files are clean
+- **D.** Dependency vulnerabilities are automatically absent
 
 ## L22-Q027
 
-Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which explanation best accounts for the behavior or constraint described?
+A scanner returns a network error and no findings file. Which state should the required gate distinguish from a clean scan?
 
-- **A.** The pipeline converts a failing security decision into success
-- **B.** Vulnerability detection does not determine license compatibility
-- **C.** A live secret is unnecessary to validate the workflow
+- **A.** Execution failure with unavailable assessment evidence
+- **B.** Clean because the findings array is absent
+- **C.** Fixed because the command retried once
+- **D.** Dismissed because a fixture was synthetic
 
 ## L22-Q028
 
-Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which observation provides the strongest evidence that the requested result was achieved?
+A precommit secret check passes but CI finds a token in another tracked path. Which coverage correction should be made?
 
-- **A.** The dependency inventory exposes the disallowed license for review
-- **B.** The expected test finding appears without an active credential
-- **C.** A controlled disallowed finding stops the protected release
+- **A.** Treat precommit installation as proof of complete enforcement
+- **B.** Align checked paths and retain the CI gate
+- **C.** Disable CI because local checks already passed
+- **D.** Ignore every generated directory without checking tracked contents
 
 ## L22-Q029
 
-Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which execution safeguard most directly addresses the risk in this case?
+The team intentionally injects a fake secret, expects a blocked scan, repairs it and expects success. What should evidence demonstrate?
 
-- **A.** Separate tool failure from vulnerability-policy failure
-- **B.** Escalate ambiguous license interpretation to the responsible policy owner
-- **C.** Clearly label and clean up deliberate training findings
+- **A.** Only a final successful scan
+- **B.** Only an injected fixture filename
+- **C.** Only an unconditional nonzero wrapper exit
+- **D.** Healthy, failing and repaired outcomes for the same detector
 
 ## L22-Q030
 
-Advanced · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D4.2.4](../../docs/objective-map.md)
 
-Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. The team selects this remedy: "Use a documented synthetic detection fixture in an isolated exercise." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The negative fixture is outside scanner scope, while the wrapper fails due to a missing executable. Which change is required before claiming break/fix success?
 
-- **A.** A fixture may not cover every real secret format
-- **B.** Strict gating can interrupt delivery for false positives
-- **C.** License policy can restrict otherwise useful dependencies
+```text
+Configured scan scope: src/**
+Negative fixture: test-fixtures/leaked.txt
+Failure reason: scanner executable missing
+Claimed outcome: expected secret detected
+```
+
+- **A.** Suppress the error and mark the repaired phase passed
+- **B.** Use an in-scope fixture and assert the expected detection reason
+- **C.** Accept any nonzero status as a detected secret
+- **D.** Delete the scanner dependency and keep the failure
 
 ## L22-Q031
 
-Foundational · [CP2](README.md#task-2) · [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which next change most directly satisfies the stated requirement?
+The team wants source-code analysis for security weaknesses in the ASP.NET API. Which scan category addresses that layer?
 
-- **A.** Propagate policy-relevant scan outcomes into the release gate
-- **B.** Inspect the resolved graph and update the affected dependency chain
-- **C.** Use a documented synthetic detection fixture in an isolated exercise
+- **A.** Dependency license inventory alone
+- **B.** Container tag naming review alone
+- **C.** Artifact retention auditing alone
+- **D.** Static code security analysis
 
 ## L22-Q032
 
-Foundational · [CP2](README.md#task-2) · [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
 
-Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which explanation best accounts for the behavior or constraint described?
+The application packages clean source into an image whose operating-system base is vulnerable. Which additional scan category is needed?
 
-- **A.** A live secret is unnecessary to validate the workflow
-- **B.** The pipeline converts a failing security decision into success
-- **C.** Direct manifests alone do not describe all resolved packages
+- **A.** Container image vulnerability assessment
+- **B.** Only a source formatter pass
+- **C.** Only a repository issue-label check
+- **D.** Only another local URI parser test
 
 ## L22-Q033
 
-Applied · [CP2](README.md#task-2) · [D4.3.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which observation provides the strongest evidence that the requested result was achieved?
+A CodeQL example is present in a lab artifact folder but no provider analysis has run. Which verification claim is appropriate?
 
-- **A.** A controlled disallowed finding stops the protected release
-- **B.** The resolved lock graph no longer includes the affected version
-- **C.** The expected test finding appears without an active credential
+- **A.** The repository is free of exploitable code defects
+- **B.** Workflow contract reviewed; hosted analysis remains unverified
+- **C.** Source analysis completed automatically by file presence
+- **D.** Every finding has been uploaded to GitHub
 
 ## L22-Q034
 
-Applied · [CP2](README.md#task-2) · [D4.3.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which execution safeguard most directly addresses the risk in this case?
+Security scanning for untrusted pull requests currently uses the same persistent private deployment agent. Which execution boundary should be changed?
 
-- **A.** Separate tool failure from vulnerability-policy failure
-- **B.** Review compatibility and rerun representative tests
-- **C.** Clearly label and clean up deliberate training findings
+- **A.** Keep the runner and hide deployment variables by name
+- **B.** Grant the scan administrator credentials to prevent failures
+- **C.** Run deployment first so its credentials are cached
+- **D.** Run untrusted analysis on isolated nondeployment workers
 
 ## L22-Q035
 
-Advanced · [CP2](README.md#task-2) · [D4.3.1](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
 
-Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. The team selects this remedy: "Propagate policy-relevant scan outcomes into the release gate." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Source scanning passes, but the deployed image digest differs from the scanned tag's current content. Which provenance and scanning correction is needed?
 
-- **A.** A fix may depend on an upstream maintainer release
-- **B.** A fixture may not cover every real secret format
-- **C.** Strict gating can interrupt delivery for false positives
+```text
+Scanned tag: todo:release
+Scanned digest: sha256:aaaa
+Deployed same tag now resolves: sha256:bbbb
+Application source scan: passed
+```
+
+- **A.** Rename the tag to approved after deployment
+- **B.** Scan and deploy the same immutable image digest
+- **C.** Trust the old tag's clean report indefinitely
+- **D.** Rescan only source and ignore the image
 
 ## L22-Q036
 
-Foundational · [CP1](README.md#task-1) · [D4.3.6](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which next change most directly satisfies the stated requirement?
+A policy requires security findings above a threshold to block merging. Which configuration must accompany analysis execution?
 
-- **A.** Propagate policy-relevant scan outcomes into the release gate
-- **B.** Inspect the resolved graph and update the affected dependency chain
-- **C.** Require justified dispositions and verify remediation evidence
+- **A.** Only an informational job without branch requirements
+- **B.** Only a README statement that scanning is mandatory
+- **C.** Only a nightly report after releases
+- **D.** A required enforced result with explicit finding policy
 
 ## L22-Q037
 
-Applied · [CP1](README.md#task-1) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
 
-Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which explanation best accounts for the behavior or constraint described?
+A container assessment's cloud prerequisites are unavailable and the learner has only reviewed a local scan plan. Which status is honest?
 
-- **A.** Direct manifests alone do not describe all resolved packages
-- **B.** Bulk dismissal changes reporting without fixing exposure
-- **C.** The pipeline converts a failing security decision into success
+- **A.** All security products were enabled automatically
+- **B.** The cloud image assessment remains unexecuted
+- **C.** Cloud scan passed because the plan parses
+- **D.** No vulnerabilities exist because no results arrived
 
 ## L22-Q038
 
-Applied · [CP1](README.md#task-1) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which observation provides the strongest evidence that the requested result was achieved?
+A SARIF report was generated but upload failed, and branch policy expects the provider's code-scanning result. What needs investigation?
 
-- **A.** A controlled disallowed finding stops the protected release
-- **B.** The resolved lock graph no longer includes the affected version
-- **C.** Each critical finding has a fix or approved documented exception
+- **A.** Only whether the source file was formatted
+- **B.** Only whether the SARIF document parses locally
+- **C.** Only whether the scanner process exited successfully
+- **D.** Result publication permissions and the required check outcome
 
 ## L22-Q039
 
-Applied · [CP1](README.md#task-1) · [D4.3.6](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
 
-Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which execution safeguard most directly addresses the risk in this case?
+Scanning uses a pinned action commit, but its database is stale and the scanner lacks access to the intended image. What does pinning establish and what remains missing?
 
-- **A.** Separate tool failure from vulnerability-policy failure
-- **B.** Review compatibility and rerun representative tests
-- **C.** Audit dismissal permissions and reasons
+- **A.** A stale database proves the image is clean
+- **B.** Tool-source identity; current data and image assessment remain needed
+- **C.** All scan inputs and findings are automatically trustworthy
+- **D.** Image access is unnecessary once an action is pinned
 
 ## L22-Q040
 
-Advanced · [CP1](README.md#task-1) · [D4.3.6](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D4.3.1](../../docs/objective-map.md)
 
-Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. The team selects this remedy: "Inspect the resolved graph and update the affected dependency chain." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The scan reports zero findings after analyzing JavaScript only, while the release API is C# and its generated build sources were omitted. Which acceptance correction addresses both coverage gaps?
 
-- **A.** Strict gating can interrupt delivery for false positives
-- **B.** A fix may depend on an upstream maintainer release
-- **C.** Accepted risks remain risks until resolved
+```json
+{"applicationLanguage":"csharp","analyzedLanguages":["javascript"],"generatedBuildSourcesIncluded":false,"findings":0,"scannerCompleted":true}
+```
+
+- **A.** Analyze the intended C# build and verify expected source coverage
+- **B.** Accept zero findings because the scanner completed
+- **C.** Suppress the language mismatch as an artifact naming issue
+- **D.** Run dependency advisory scanning instead of code analysis
 
 ## L22-Q041
 
-Foundational · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which next change most directly satisfies the stated requirement?
+The dependency inventory reports an unknown license expression for one component. Which next step fits an evidence-based license policy?
 
-- **A.** Require scan evidence for the exact release digest
-- **B.** Inspect the resolved graph and update the affected dependency chain
-- **C.** Require justified dispositions and verify remediation evidence
+- **A.** Delete the package name from the report
+- **B.** Queue a component-specific review before approval
+- **C.** Treat unknown as automatically allowed
+- **D.** Treat the vulnerability score as its license
 
 ## L22-Q042
 
-Foundational · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which explanation best accounts for the behavior or constraint described?
+A security advisory scan is clean, but a new dependency has a disallowed license under company policy. What should the license gate do?
 
-- **A.** Direct manifests alone do not describe all resolved packages
-- **B.** Bulk dismissal changes reporting without fixing exposure
-- **C.** A reused tag hides the change in image identity
+- **A.** Pass because no vulnerability was found
+- **B.** Classify the dependency using only the application's own license
+- **C.** Disable license inventory for this pull request
+- **D.** Block or require the defined reviewed exception
 
 ## L22-Q043
 
-Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which observation provides the strongest evidence that the requested result was achieved?
+A license review queue needs enough evidence for an owner to assess one newly introduced package. Which record is most useful?
 
-- **A.** Each critical finding has a fix or approved documented exception
-- **B.** The release digest matches the scanned digest
-- **C.** The resolved lock graph no longer includes the affected version
+- **A.** Only the parent package's license expression
+- **B.** Package identity, version, license expression and source evidence
+- **C.** Only the total dependency count
+- **D.** Only the scanner's elapsed time
 
 ## L22-Q044
 
-Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which execution safeguard most directly addresses the risk in this case?
+A dependency's license metadata changes between versions while the package name stays the same. Which scope should approval distinguish?
 
-- **A.** Audit dismissal permissions and reasons
-- **B.** Prevent substitution after the security decision
-- **C.** Review compatibility and rerun representative tests
+- **A.** Only whether the package compiles successfully
+- **B.** The actual package version and applicable license evidence
+- **C.** Only the unchanged package name
+- **D.** Only the top-level project's MIT license
 
 ## L22-Q045
 
-Advanced · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md), [D4.3.1](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. The team selects this remedy: "Require justified dispositions and verify remediation evidence." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A transitive component has an unknown license and a patched upgrade is required urgently for security. Which decision handles both assurance tracks?
 
-- **A.** Accepted risks remain risks until resolved
-- **B.** Digest-specific evidence increases metadata management
-- **C.** A fix may depend on an upstream maintainer release
+```json
+{"component":"Example.Transitive","license":"UNKNOWN","securityUpgradeRequired":true,"newVersionTested":false,"reviewOwners":["security","license-policy"]}
+```
+
+- **A.** Assign the parent project's license to every transitive component
+- **B.** Review the upgrade's security fix and unresolved license with accountable owners
+- **C.** Ignore license review because the patch fixes security
+- **D.** Delay all security remediation permanently until the queue empties
 
 ## L22-Q046
 
-Foundational · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which next change most directly satisfies the stated requirement?
+The local exercise generates a license review queue but no reviewer has decided on its unknown entries. Which completion statement is accurate?
 
-- **A.** Require scan evidence for the exact release digest
-- **B.** Add dependency vulnerability analysis to the scan strategy
-- **C.** Require justified dispositions and verify remediation evidence
+- **A.** All unknown packages are legally unusable
+- **B.** Every transitive dependency was removed from the application
+- **C.** Inventory and queue created; policy decisions pending
+- **D.** All dependency licenses approved automatically
 
 ## L22-Q047
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which explanation best accounts for the behavior or constraint described?
+A workflow compares dependency changes in pull requests and should reject license expressions outside an approved list. Which configuration addresses that policy?
 
-- **A.** Bulk dismissal changes reporting without fixing exposure
-- **B.** A reused tag hides the change in image identity
-- **C.** Secret detection does not inspect dependency advisories
+- **A.** Only a vulnerability severity threshold
+- **B.** Only a package cache key
+- **C.** Only a global MIT badge in README
+- **D.** An explicit allowlist or deny policy in dependency review
 
 ## L22-Q048
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which observation provides the strongest evidence that the requested result was achieved?
+The report includes direct packages only, but policy applies to distributed transitive components too. What should license inventory change?
 
-- **A.** A known vulnerable test dependency produces the expected alert
-- **B.** Each critical finding has a fix or approved documented exception
-- **C.** The release digest matches the scanned digest
+- **A.** Approve based only on package download counts
+- **B.** Include the resolved transitive dependency set
+- **C.** Infer every indirect license from its parent
+- **D.** Ignore indirect packages that lack source imports
 
 ## L22-Q049
 
-Applied · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.5](../../docs/objective-map.md)
 
-Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which execution safeguard most directly addresses the risk in this case?
+An approved temporary license exception applies to one version until a named expiry date. Which update should trigger reassessment?
 
-- **A.** Audit dismissal permissions and reasons
-- **B.** Prevent substitution after the security decision
-- **C.** Use a controlled fixture rather than a live exploitable deployment
+- **A.** Only a renamed pipeline job
+- **B.** A component version or license-evidence change
+- **C.** Only an unchanged package name despite a version upgrade
+- **D.** Only a faster dependency restore
 
 ## L22-Q050
 
-Advanced · [CP4](README.md#task-4) · [D4.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D4.3.1](../../docs/objective-map.md), [D4.3.6](../../docs/objective-map.md), [D4.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md)
 
-Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. The team selects this remedy: "Require scan evidence for the exact release digest." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The release has clean source results, an unresolved critical transitive advisory, one unknown license and a successful synthetic secret test. What should the gate conclude?
 
-- **A.** More scanners add triage and maintenance work
-- **B.** Accepted risks remain risks until resolved
-- **C.** Digest-specific evidence increases metadata management
+```json
+{"sourceAnalysis":"clean","criticalTransitiveAdvisory":"unresolved","newDependencyLicense":"UNKNOWN","syntheticSecretFixture":"detected and repaired"}
+```
+
+- **A.** The source scan implicitly approves package licenses
+- **B.** Release remains blocked by unresolved required assurance decisions
+- **C.** Release passes because most categories succeeded
+- **D.** The synthetic test proves all real credentials are absent

@@ -15,8 +15,8 @@ Learner role: **Azure Pipelines engineer**. Outcome: Build the sample with Azure
 | Platforms | local, azure-devops |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -152,8 +152,8 @@ Checkpoint: `CP2`
 
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci'
- $source=Join-Path $RepoRoot 'samples'
- Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\/](bin|obj)[\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }
+ # Copy tracked source only; ignored runtime evidence and build output stay private.
+ git -C $RepoRoot ls-files -- samples|ForEach-Object { $rel=$_;$sourceFile=Join-Path $RepoRoot $rel;$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item -LiteralPath $sourceFile -Destination $dest }
  foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }
  Copy-Item (Join-Path $LabRoot 'artifacts/azure-pipelines.yml') (Join-Path $p 'azure-pipelines.yml')
  @('**/bin/','**/obj/')|Set-Content (Join-Path $p '.gitignore')
@@ -329,20 +329,20 @@ Inspect the independent assertion:
 
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw
-$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\.slnx')|ForEach-Object Value)
+$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\.ps1')|ForEach-Object Value)
 if($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}
 ```
 
 Fault trigger (executed by BreakFix):
 
 ```powershell
-$p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/DevOps.slnx','samples/Missing.slnx')|Set-Content $p
+$p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/Build-Release.ps1','samples/Missing-Release.ps1')|Set-Content $p
 ```
 
 Diagnose the precise difference:
 
 ```powershell
-Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing.slnx'
+Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing-Release.ps1'
 ```
 
 Repair (executed by BreakFix):

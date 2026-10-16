@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The invalid solution path should fail an actual referenced-path assertion. A queued, in-progress or partially successful build cannot satisfy the final provenance gate.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Resolve the disposable Azure Repos repository
 
@@ -74,7 +74,7 @@ Expected failure marker: `AZ400-L10-FAULT`. Prove the assertion rejects the trig
 
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw
-$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\.slnx')|ForEach-Object Value)
+$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\.ps1')|ForEach-Object Value)
 if($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}
 ```
 

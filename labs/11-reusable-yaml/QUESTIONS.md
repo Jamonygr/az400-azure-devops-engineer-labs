@@ -8,500 +8,586 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 ## L11-Q001
 
-Foundational · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which next change most directly satisfies the stated requirement?
+A caller wants to reuse an entire GitHub workflow rather than one action step. Where should the uses reference appear?
 
-- **A.** Extract a governed reusable template
-- **B.** Replace free-form executable input with constrained parameters
-- **C.** Remove unnecessary dependencies while retaining required data ordering
+- **A.** Only in a repository Markdown link
+- **B.** At the calling job level
+- **C.** Inside a composite action run step without a calling job
+- **D.** Inside an arbitrary shell command string
 
 ## L11-Q002
 
-Foundational · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which explanation best accounts for the behavior or constraint described?
+A template accepts configuration values Debug and Release. A caller supplies Production. What should parameter validation do?
 
-- **A.** The template delegates privileged code execution
-- **B.** Artificial edges prevent eligible parallel execution
-- **C.** Copies have independent maintenance lifecycles
+```yaml
+parameters:
+- name: configuration
+  type: string
+  values: [Debug, Release]
+# caller: Production
+```
+
+- **A.** Ignore every parameter and use machine defaults
+- **B.** Reject the unsupported configuration value
+- **C.** Treat it as Release without reporting substitution
+- **D.** Broaden the service connection permission set
 
 ## L11-Q003
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which observation provides the strongest evidence that the requested result was achieved?
+A pipeline needs a Boolean parameter to include an optional job before execution. Which input type fits this structural decision?
 
-- **A.** Unsupported parameter values are rejected before deployment
-- **B.** Independent tests overlap without missing required outputs
-- **C.** Consumers execute the approved template revision
+- **A.** An artifact filename chosen after packaging
+- **B.** A shell variable from the final job
+- **C.** A text message in the test report
+- **D.** A typed compile-time Boolean parameter
 
 ## L11-Q004
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. Which execution safeguard most directly addresses the risk in this case?
+BuildConfiguration is explicitly nonsecret shared build data. Which Azure DevOps resource can expose it to approved consuming pipelines?
 
-- **A.** Keep publication and deployment dependent on required test results
-- **B.** Review central changes with representative consumers
-- **C.** Separate trusted implementation from caller-controlled values
+- **A.** A local-only shell variable on the author workstation
+- **B.** A narrowly authorized variable group
+- **C.** A production database password field
+- **D.** An organization administrator personal token
 
 ## L11-Q005
 
-Advanced · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Copied pipelines: Twelve services duplicate identical security steps, and fixing one copy leaves eleven services exposed. The team selects this remedy: "Extract a governed reusable template." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The package job depends on test, which depends on build. Which valid execution order respects those prerequisite relationships?
 
-- **A.** Shared templates create coordinated upgrade work
-- **B.** Constrained interfaces reduce caller flexibility
-- **C.** More parallel jobs consume more execution capacity
+- **A.** Any order because YAML is declarative
+- **B.** Test then package then build
+- **C.** Package then test then build
+- **D.** Build then test then package
 
 ## L11-Q006
 
-Foundational · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which next change most directly satisfies the stated requirement?
+A reusable workflow declares workflow_call inputs but the consumer passes a misspelled input name. What is the appropriate fix?
 
-- **A.** Extract a governed reusable template
-- **B.** Replace free-form executable input with constrained parameters
-- **C.** Use the appropriate template parameter and expression phase
+- **A.** Correct the consumer to the declared interface
+- **B.** Add repository write permission for every job
+- **C.** Disable all test assertions in the callee
+- **D.** Rename the artifact to the misspelled input
 
 ## L11-Q007
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which explanation best accounts for the behavior or constraint described?
+A caller must choose a build configuration before YAML expansion. How does a parameter differ from an ordinary runtime variable?
 
-- **A.** The template delegates privileged code execution
-- **B.** The value is unavailable during template expansion
-- **C.** Copies have independent maintenance lifecycles
+- **A.** Every parameter is automatically encrypted secret material
+- **B.** The parameter is produced only after its job completes
+- **C.** A parameter grants permissions to the source repository
+- **D.** The parameter participates in compile-time template expansion
 
 ## L11-Q008
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which observation provides the strongest evidence that the requested result was achieved?
+The graph contains build depending on package and package depending on build. Why must scheduling reject it?
 
-- **A.** Consumers execute the approved template revision
-- **B.** Unsupported parameter values are rejected before deployment
-- **C.** The expanded pipeline contains the intended stage graph
+- **A.** No job can satisfy the cyclic prerequisites
+- **B.** The job names use unsupported lowercase letters
+- **C.** The package needs more artifact storage
+- **D.** A longer task timeout will eventually break the cycle
 
 ## L11-Q009
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. Which execution safeguard most directly addresses the risk in this case?
+The lab creates a variable group with authorize false. What provider property should validation inspect afterward?
 
-- **A.** Review central changes with representative consumers
-- **B.** Separate trusted implementation from caller-controlled values
-- **C.** Keep secrets out of compile-time parameter values
+- **A.** It is not authorized for every pipeline
+- **B.** Its creation command returned any nonempty output
+- **C.** Its friendly name contains the word build
+- **D.** Its numeric ID contains the current date
 
 ## L11-Q010
 
-Advanced · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
 
-Unsafe template input: A caller passes arbitrary shell text to a reusable pipeline that has privileged deployment access. The team selects this remedy: "Replace free-form executable input with constrained parameters." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The shared template changes after a reviewed digest is recorded. What should the independent local drift check report?
 
-- **A.** Constrained interfaces reduce caller flexibility
-- **B.** Compile-time choices cannot use later job results
-- **C.** Shared templates create coordinated upgrade work
+- **A.** The content hash differs from the reviewed template
+- **B.** No change because the filename stayed the same
+- **C.** Automatic compatibility because every YAML file is equivalent
+- **D.** A successful hosted template expansion without running the provider
 
 ## L11-Q011
 
-Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which next change most directly satisfies the stated requirement?
+A consumer calls a reusable workflow but also wants its own independent job after it. Which design expresses that relationship?
 
-- **A.** Replace free-form executable input with constrained parameters
-- **B.** Use the appropriate template parameter and expression phase
-- **C.** Declare and reference a supported cross-job output
+- **A.** Append ordinary steps to the reusable calling job
+- **B.** Put the downstream commands in the workflow filename
+- **C.** Use only a prose note describing expected order
+- **D.** Add a separate dependent job using needs
 
 ## L11-Q012
 
 Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which explanation best accounts for the behavior or constraint described?
+The local exercise accepts Release and executes dotnet tests with that configuration. What does this observation actually prove?
 
-- **A.** The template delegates privileged code execution
-- **B.** The value is unavailable during template expansion
-- **C.** A process environment does not span independent jobs
+- **A.** The selected local parameter behavior and tests ran
+- **B.** Every Azure hosted agent expanded the template successfully
+- **C.** The variable group is available to all organizations
+- **D.** The production environment approved the same release
 
 ## L11-Q013
 
-Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which observation provides the strongest evidence that the requested result was achieved?
+A dependency graph references a job named analyse, but no such job exists. What should its validator do?
 
-- **A.** The dependent job receives the expected output value
-- **B.** Unsupported parameter values are rejected before deployment
-- **C.** The expanded pipeline contains the intended stage graph
+- **A.** Use the artifact archive name instead of the job ID
+- **B.** Invent the missing job as automatically successful
+- **C.** Reject the unknown dependency before execution
+- **D.** Ignore the edge because other jobs are valid
 
 ## L11-Q014
 
-Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. Which execution safeguard most directly addresses the risk in this case?
+A nonsecret variable group returns BuildConfiguration Debug, while the agreed lab contract requires Release. What result is appropriate?
 
-- **A.** Separate trusted implementation from caller-controlled values
-- **B.** Keep secrets out of compile-time parameter values
-- **C.** Declare the dependency and avoid transferring secrets casually
+- **A.** Pass after renaming the group to Release
+- **B.** Pass because the variable group has an ID
+- **C.** Reject the actual configuration mismatch
+- **D.** Pass because nonsecret values never affect behavior
 
 ## L11-Q015
 
-Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Compile-time surprise: A runtime variable is expected to decide whether a YAML template inserts an entire stage. The team selects this remedy: "Use the appropriate template parameter and expression phase." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A reusable workflow needs contents read but a caller requests broad inherited secrets unnecessarily. What is the better interface default?
 
-- **A.** Constrained interfaces reduce caller flexibility
-- **B.** Compile-time choices cannot use later job results
-- **C.** Outputs are metadata rather than bulk artifact transport
+- **A.** Grant repository administration whenever reuse is enabled
+- **B.** Declare only specific required secrets and minimum permissions
+- **C.** Always inherit every caller secret for convenience
+- **D.** Store secrets as plain typed workflow inputs
 
 ## L11-Q016
 
-Foundational · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which next change most directly satisfies the stated requirement?
+The graph includes build→test→package→build with no direct self-edge. Why does a self-reference-only validator miss the fault?
 
-- **A.** Authorize that pipeline to use the group
-- **B.** Use the appropriate template parameter and expression phase
-- **C.** Declare and reference a supported cross-job output
+```json
+[{"job":"build","needs":["package"]},{"job":"test","needs":["build"]},{"job":"package","needs":["test"]}]
+```
+
+- **A.** Only direct self-edges affect job execution order
+- **B.** A repeated artifact label creates the cycle
+- **C.** An indirect cycle still prevents a complete topological ordering
+- **D.** The graph is valid whenever every job name is unique
 
 ## L11-Q017
 
 Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which explanation best accounts for the behavior or constraint described?
+Build completes, then independent lint and test jobs may run together before packaging. What should package require?
 
-- **A.** The shared configuration resource is protected separately
-- **B.** The value is unavailable during template expansion
-- **C.** A process environment does not span independent jobs
+- **A.** Only the build job because source already compiled
+- **B.** Both lint and test job completion
+- **C.** Only whichever validation job finishes first
+- **D.** No dependencies because the document lists package last
 
 ## L11-Q018
 
-Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which observation provides the strongest evidence that the requested result was achieved?
+A central reusable workflow is referenced by a moving main branch. What change supports review of an exact reusable implementation?
 
-- **A.** The expanded pipeline contains the intended stage graph
-- **B.** The dependent job receives the expected output value
-- **C.** The authorized pipeline reads the required values
+- **A.** Pin only the calling application source while leaving the shared workflow on main
+- **B.** Rename the caller job to stable-template
+- **C.** Pin the reference to a reviewed commit SHA
+- **D.** Add a timestamp comment beside the moving reference
 
 ## L11-Q019
 
-Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Missing output: A downstream job reads a value created in another job as though both shared one process environment. Which execution safeguard most directly addresses the risk in this case?
+A template accepts a stepList so approved consumers can add build steps. What review is important before exposing that extension point?
 
-- **A.** Avoid enabling blanket access for all pipelines
-- **B.** Keep secrets out of compile-time parameter values
-- **C.** Declare the dependency and avoid transferring secrets casually
+- **A.** Assume typed lists cannot contain executable behavior
+- **B.** Assess what authority the injected executable steps receive
+- **C.** Check only whether the injected steps parse successfully
+- **D.** Grant more secrets whenever the list grows longer
 
 ## L11-Q020
 
-Advanced · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Missing output: A downstream job reads a value created in another job as though both shared one process environment. The team selects this remedy: "Declare and reference a supported cross-job output." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A runtime variable is changed in one task, but a template condition already selected jobs earlier. Why does the graph remain unchanged?
 
-- **A.** Outputs are metadata rather than bulk artifact transport
-- **B.** Central variables create shared operational dependencies
-- **C.** Compile-time choices cannot use later job results
+- **A.** The changed variable requires a different task output name
+- **B.** The graph always updates dynamically after every shell assignment
+- **C.** The template engine must reread every shell assignment as a parameter
+- **D.** Runtime mutation cannot retroactively change compiled template structure
 
 ## L11-Q021
 
-Foundational · [CP3](README.md#task-3) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
 
-Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which next change most directly satisfies the stated requirement?
+A local build passes after a reusable template is parsed. What additional evidence is needed to claim hosted template execution?
 
-- **A.** Authorize that pipeline to use the group
-- **B.** Pin the shared template to a reviewed immutable revision
-- **C.** Declare and reference a supported cross-job output
+- **A.** Only the consumer and template passing a YAML syntax parser
+- **B.** Only a correct new template content digest
+- **C.** A provider run using the actual consumer and selected template
+- **D.** Only a successful run of the template author local script
 
 ## L11-Q022
 
-Foundational · [CP3](README.md#task-3) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which explanation best accounts for the behavior or constraint described?
+A caller supplies the string false where a Boolean template input is required. Why should the interface avoid casual string substitution?
 
-- **A.** The dependency changed independently of consumer code
-- **B.** A process environment does not span independent jobs
-- **C.** The shared configuration resource is protected separately
+- **A.** Typed values and strings can have different evaluation semantics
+- **B.** Every nonempty string is an encrypted pipeline secret
+- **C.** A Boolean input automatically grants resource permissions
+- **D.** The caller can correct typing through an artifact display name
 
 ## L11-Q023
 
-Applied · [CP3](README.md#task-3) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which observation provides the strongest evidence that the requested result was achieved?
+A build variable stores Release but the script hardcodes Debug. Which execution contract should the reviewer flag?
 
-- **A.** The dependent job receives the expected output value
-- **B.** The authorized pipeline reads the required values
-- **C.** The run resolves the documented template commit
+- **A.** The template must restrict configuration to a single allowed value
+- **B.** The variable group should be deleted because nonsecrets are forbidden
+- **C.** The script must become a production deployment
+- **D.** The configured input is not connected to actual build behavior
 
 ## L11-Q024
 
-Applied · [CP3](README.md#task-3) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. Which execution safeguard most directly addresses the risk in this case?
+The callee adds a new required input without a default. Existing callers do not send it. What compatibility issue follows?
 
-- **A.** Declare the dependency and avoid transferring secrets casually
-- **B.** Avoid enabling blanket access for all pipelines
-- **C.** Advance pins through tested reviewed updates
+- **A.** Every caller automatically receives a correct inferred value
+- **B.** Artifact hashing silently supplies any missing required input
+- **C.** Existing consumers can fail the changed interface contract
+- **D.** No change matters unless the template filename changes
 
 ## L11-Q025
 
-Advanced · [CP3](README.md#task-3) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Variable group access: A pipeline references an existing variable group but is rejected before its deployment stage starts. The team selects this remedy: "Authorize that pipeline to use the group." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A graph validator finishes after processing only two of three declared jobs and reports success. What invariant is missing?
 
-- **A.** Outputs are metadata rather than bulk artifact transport
-- **B.** Central variables create shared operational dependencies
-- **C.** Pinning shifts freshness to a maintenance workflow
+```text
+Declared jobs: build, test, package
+Visited jobs: build, test
+Validator result: passed
+```
+
+- **A.** Every node must run on the same hosted image
+- **B.** All declared nodes must be included in the topological result
+- **C.** Every task must upload the same artifact filename
+- **D.** Only the first job must have a readable name
 
 ## L11-Q026
 
-Foundational · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which next change most directly satisfies the stated requirement?
+The template accepts Release, but its local wrapper always tests Debug. Which verification would catch this broken consumer contract?
 
-- **A.** Pin the shared template to a reviewed immutable revision
-- **B.** Expose a reusable workflow with an explicit caller contract
-- **C.** Authorize that pipeline to use the group
+- **A.** Check only that the template is syntactically valid YAML
+- **B.** Compare selected input with the actual executed command configuration
+- **C.** Check only that a TRX file exists somewhere
+- **D.** Check only that Production is rejected
 
 ## L11-Q027
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which explanation best accounts for the behavior or constraint described?
+A variable group should be shared with one approved pipeline while other project pipelines remain denied. What proves that boundary?
 
-- **A.** Copying workflow files loses shared implementation ownership
-- **B.** The shared configuration resource is protected separately
-- **C.** The dependency changed independently of consumer code
+- **A.** A group friendly name containing private
+- **B.** A project-wide unrestricted connection for convenience
+- **C.** Specific pipeline authorization plus absence of blanket authorization
+- **D.** A successful local echo of the desired configuration
 
 ## L11-Q028
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which observation provides the strongest evidence that the requested result was achieved?
+A nested reusable workflow needs a secret that only its direct caller received. What must the calling chain provide?
 
-- **A.** The run resolves the documented template commit
-- **B.** A caller invokes the shared workflow with validated inputs
-- **C.** The authorized pipeline reads the required values
+- **A.** Explicit secret forwarding at each required reuse boundary
+- **B.** Only the outermost caller repository write permission
+- **C.** A matching display name across all nested jobs
+- **D.** An artifact whose filename equals the secret name
 
 ## L11-Q029
 
-Applied · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
 
-Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. Which execution safeguard most directly addresses the risk in this case?
+The template digest matches, but tests fail because the sample behavior changed. How should the result be interpreted?
 
-- **A.** Advance pins through tested reviewed updates
-- **B.** Declare only required secret and permission access
-- **C.** Avoid enabling blanket access for all pipelines
+- **A.** The test report should be replaced with the earlier success
+- **B.** The digest proves tests must have passed
+- **C.** The template reference should be renamed to make tests valid
+- **D.** Template integrity passed while application behavior failed
 
 ## L11-Q030
 
-Advanced · [CP2](README.md#task-2) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Moving shared reference: A pipeline imports a template from a branch that changes daily and breaks an unchanged consumer. The team selects this remedy: "Pin the shared template to a reviewed immutable revision." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The consumer supplies configuration Release and the template allows it, but references a nonexistent solution path. What should validation distinguish?
 
-- **A.** Reusable workflows have documented nesting and permission constraints
-- **B.** Central variables create shared operational dependencies
-- **C.** Pinning shifts freshness to a maintenance workflow
+- **A.** Valid parameter binding from invalid executable file references
+- **B.** A nonexistent path is harmless if the artifact name is correct
+- **C.** Every accepted input guarantees all generated paths exist
+- **D.** Only a production environment can validate source file existence
 
 ## L11-Q031
 
-Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which next change most directly satisfies the stated requirement?
+The local fault adds package as a build prerequisite while package already depends on test→build. What evidence should establish successful detection?
 
-- **A.** Pin the shared template to a reviewed immutable revision
-- **B.** Expose a reusable workflow with an explicit caller contract
-- **C.** Inspect scope precedence and remove ambiguous duplicate definitions
+```text
+Before: build -> test -> package
+Fault adds: package -> build
+```
+
+- **A.** Any exception from an unavailable provider CLI
+- **B.** A pass recorded before the fault was introduced
+- **C.** Only the JSON file modification timestamp
+- **D.** The named assertion fails because no complete ordering exists
 
 ## L11-Q032
 
-Foundational · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which explanation best accounts for the behavior or constraint described?
+The caller grants contents read and the callee requests contents write. What limitation must the shared workflow author honor?
 
-- **A.** The dependency changed independently of consumer code
-- **B.** Copying workflow files loses shared implementation ownership
-- **C.** A narrower definition overrides the expected broader value
+- **A.** The callee filename determines its token role
+- **B.** Every called workflow automatically receives write permission
+- **C.** The callee cannot elevate the caller permission boundary
+- **D.** The author personal GitHub role overrides workflow token restrictions
 
 ## L11-Q033
 
-Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which observation provides the strongest evidence that the requested result was achieved?
+A reusable build accepts configuration but hardcodes the artifact output path required by consumers. What interface change is breaking?
 
-- **A.** The resolved nonsecret target matches the reviewed configuration
-- **B.** The run resolves the documented template commit
-- **C.** A caller invokes the shared workflow with validated inputs
+- **A.** Retaining the same paths and permitted configuration values
+- **B.** Adding explanatory comments without executable changes
+- **C.** Changing that required output location without consumer migration
+- **D.** Improving local assertion messages while retaining behavior
 
 ## L11-Q034
 
-Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. Which execution safeguard most directly addresses the risk in this case?
+A task writes a variable using task.setvariable. Why should a later separate job not assume ordinary variable access automatically works?
 
-- **A.** Advance pins through tested reviewed updates
-- **B.** Declare only required secret and permission access
-- **C.** Use distinct names and explicit environment configuration
+- **A.** Cross-job values need explicit output and dependency mapping
+- **B.** The project must grant organization-wide administrative authority first
+- **C.** All pipeline variables are immutable encrypted secrets
+- **D.** Changing the variable group friendly name forwards the value
 
 ## L11-Q035
 
-Advanced · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
 
-GitHub workflow reuse: Teams need a whole reusable CI workflow with declared inputs rather than another copy of all jobs. The team selects this remedy: "Expose a reusable workflow with an explicit caller contract." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A reviewer sees a passing local build and unchanged template SHA but no hosted consumer run. Which statement is supportable?
 
-- **A.** Centralization does not eliminate precedence rules
-- **B.** Pinning shifts freshness to a maintenance workflow
-- **C.** Reusable workflows have documented nesting and permission constraints
+- **A.** The template is automatically safe for all possible callers
+- **B.** Local behavior and template integrity passed; hosted expansion remains unverified
+- **C.** Every hosted service validated the exact template successfully
+- **D.** All remote deployment environments have approved the template
 
 ## L11-Q036
 
-Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which next change most directly satisfies the stated requirement?
+The team wants central build consistency but permits arbitrary caller shell steps under a publishing credential. What design risk requires review?
 
-- **A.** Expose a reusable workflow with an explicit caller contract
-- **B.** Inspect scope precedence and remove ambiguous duplicate definitions
-- **C.** Translate repeated tasks into supported YAML templates
+- **A.** Only whether publishing credentials are masked in logs
+- **B.** The extension point can execute untrusted code with privileged authority
+- **C.** Only whether injected scripts return successful exit codes
+- **D.** Only whether the central template is pinned to a SHA
 
 ## L11-Q037
 
-Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which explanation best accounts for the behavior or constraint described?
+Two graph nodes share the same job identifier. Why should validation reject them before topological sorting?
 
-- **A.** Classic UI definitions are not directly interchangeable with YAML
-- **B.** Copying workflow files loses shared implementation ownership
-- **C.** A narrower definition overrides the expected broader value
+- **A.** Duplicate identities make dependency targets ambiguous
+- **B.** The file size is necessarily above the provider limit
+- **C.** Duplicate names always improve concurrent execution speed
+- **D.** Unique artifact names would repair duplicate job identities
 
 ## L11-Q038
 
-Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which observation provides the strongest evidence that the requested result was achieved?
+The reusable workflow exists at a reviewed SHA, but a caller repository lacks access to its private source. What prerequisite is missing?
 
-- **A.** The YAML consumer expands and executes the shared steps
-- **B.** A caller invokes the shared workflow with validated inputs
-- **C.** The resolved nonsecret target matches the reviewed configuration
+- **A.** Authorized access to the private reusable workflow source
+- **B.** An additional .NET coverage collector
+- **C.** A locally valid input contract with no repository access grant
+- **D.** A more descriptive local directory name
 
 ## L11-Q039
 
-Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. Which execution safeguard most directly addresses the risk in this case?
+A parameter should accept only two configurations and reject arbitrary deployment targets. Which interface provides enforceable accepted choices?
 
-- **A.** Use distinct names and explicit environment configuration
-- **B.** Preserve task inputs and security controls during translation
-- **C.** Declare only required secret and permission access
+- **A.** An artifact name that contains both expected values
+- **B.** A typed string parameter with explicit allowed values
+- **C.** A comment listing preferred spellings beside an unconstrained input
+- **D.** A runtime log stating all inputs are safe
 
 ## L11-Q040
 
-Advanced · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Shadowed configuration: A pipeline defines the same variable at several scopes and deploys to an unexpected environment. The team selects this remedy: "Inspect scope precedence and remove ambiguous duplicate definitions." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A repaired DAG passes its graph assertion but execution-order.txt still lists the old wrong sequence. What should final validation do?
 
-- **A.** Centralization does not eliminate precedence rules
-- **B.** Migration may require redesign rather than text conversion
-- **C.** Reusable workflows have documented nesting and permission constraints
+- **A.** Delete the order file and infer the intended order
+- **B.** Pass because one of several assertions succeeded
+- **C.** Rename the package job without updating dependencies
+- **D.** Reject the inconsistent retained execution evidence
 
 ## L11-Q041
 
-Foundational · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which next change most directly satisfies the stated requirement?
+A central workflow update removes a required artifact while preserving input names and test success. How should compatibility review assess it?
 
-- **A.** Translate repeated tasks into supported YAML templates
-- **B.** Remove unnecessary dependencies while retaining required data ordering
-- **C.** Inspect scope precedence and remove ambiguous duplicate definitions
+- **A.** Let every consumer silently rebuild different artifacts instead
+- **B.** Increase token permissions to recreate the missing interface
+- **C.** Assume unchanged inputs guarantee full backwards compatibility
+- **D.** Treat the consumed output removal as a breaking contract change
 
 ## L11-Q042
 
-Foundational · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which explanation best accounts for the behavior or constraint described?
+A compile-time parameter selects a service connection name under caller control. The central template runs privileged tasks. What additional boundary must enforce authorization?
 
-- **A.** Classic UI definitions are not directly interchangeable with YAML
-- **B.** Artificial edges prevent eligible parallel execution
-- **C.** A narrower definition overrides the expected broader value
+- **A.** Only a successful local template parse
+- **B.** Only the caller chosen display name for the connection
+- **C.** Only a nonempty string check on the parameter
+- **D.** Provider resource permissions and checks outside caller-editable YAML
 
 ## L11-Q043
 
-Applied · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which observation provides the strongest evidence that the requested result was achieved?
+Build feeds both lint and tests, while package requires both. Which computation determines the theoretical duration under sufficient agents?
 
-- **A.** Independent tests overlap without missing required outputs
-- **B.** The resolved nonsecret target matches the reviewed configuration
-- **C.** The YAML consumer expands and executes the shared steps
+```text
+build=40s
+lint=20s after build
+test=30s after build
+package=10s after lint+test
+```
+
+- **A.** The sum of every duration regardless of parallel edges
+- **B.** Only the duration of the final package task
+- **C.** The longest dependency path rather than all durations summed
+- **D.** The number of YAML lines multiplied by agent count
 
 ## L11-Q044
 
-Applied · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. Which execution safeguard most directly addresses the risk in this case?
+A template migration changes a runtime variable to a compile-time parameter. Existing callers compute it from test results. What must migration address?
 
-- **A.** Preserve task inputs and security controls during translation
-- **B.** Keep publication and deployment dependent on required test results
-- **C.** Use distinct names and explicit environment configuration
+- **A.** Only whether the template accepts the existing variable name
+- **B.** Only whether every consumer explicitly declares the new parameter
+- **C.** The value is unavailable when the new parameter must be expanded
+- **D.** Only whether both old and new declarations use string values
 
 ## L11-Q045
 
-Advanced · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Classic migration: A classic task group is copied verbatim into a YAML file and the service rejects the definition. The team selects this remedy: "Translate repeated tasks into supported YAML templates." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A nested reusable chain retains a moving branch reference deep inside despite the top caller being pinned. What remains mutable?
 
-- **A.** Migration may require redesign rather than text conversion
-- **B.** More parallel jobs consume more execution capacity
-- **C.** Centralization does not eliminate precedence rules
+- **A.** The nested executable dependency selected by that moving reference
+- **B.** The source SHA stored for earlier completed runs changes retroactively
+- **C.** The caller permission automatically expands to administrator
+- **D.** Every previously produced immutable artifact automatically changes bytes
 
 ## L11-Q046
 
-Foundational · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
 
-Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which next change most directly satisfies the stated requirement?
+A centrally managed group holds a secret, while callers can execute arbitrary jobs. Which design reduces unnecessary secret exposure?
 
-- **A.** Remove unnecessary dependencies while retaining required data ordering
-- **B.** Extract a governed reusable template
-- **C.** Translate repeated tasks into supported YAML templates
+- **A.** Expose the group to every pipeline because masking is enabled
+- **B.** Authorize only intended consumers and map secrets to the consuming task
+- **C.** Convert the secret into an ordinary compile-time parameter
+- **D.** Copy the secret into the retained template digest file
 
 ## L11-Q047
 
-Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md)
 
-Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which explanation best accounts for the behavior or constraint described?
+A validator accepts one valid component but ignores a disconnected cyclic component. Which complete invariant would catch this defect?
 
-- **A.** Artificial edges prevent eligible parallel execution
-- **B.** Copies have independent maintenance lifecycles
-- **C.** Classic UI definitions are not directly interchangeable with YAML
+```text
+Component A: build -> test
+Component B: x -> y -> x
+Visited: build,test
+```
+
+- **A.** Only the component containing the build label matters
+- **B.** Only edges drawn left-to-right can represent real dependencies
+- **C.** Only artifact-producing nodes need ordering validation
+- **D.** Every declared node must be processed without unresolved dependencies
 
 ## L11-Q048
 
-Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.3.8](../../docs/objective-map.md)
 
-Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which observation provides the strongest evidence that the requested result was achieved?
+A shared template is pinned and locally tested, but its caller can inject unrestricted privileged steps and production lacks checks. Which release claim is defensible?
 
-- **A.** Independent tests overlap without missing required outputs
-- **B.** Consumers execute the approved template revision
-- **C.** The YAML consumer expands and executes the shared steps
+- **A.** Local test success proves independent production approval occurred
+- **B.** The template hash automatically revokes every exposed credential
+- **C.** Reuse is repeatable but its execution and approval boundaries remain unsafe
+- **D.** Pinning alone proves any injected caller code is trusted
 
 ## L11-Q049
 
-Applied · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. Which execution safeguard most directly addresses the risk in this case?
+Release and Debug consumers both pass contract tests, but a new optional field changes the default for omitted inputs. What compatibility question matters?
 
-- **A.** Review central changes with representative consumers
-- **B.** Preserve task inputs and security controls during translation
-- **C.** Keep publication and deployment dependent on required test results
+- **A.** Whether existing callers relying on omission retain their expected behavior
+- **B.** Whether tests cover only callers that explicitly pass Release or Debug
+- **C.** Whether the new YAML remains syntactically valid
+- **D.** Whether a caller using only explicit arguments still succeeds
 
 ## L11-Q050
 
-Advanced · [CP4](README.md#task-4) · [D3.3.6](../../docs/objective-map.md), [D3.3.8](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D3.3.8](../../docs/objective-map.md)
 
-Accidental serialization: Independent test jobs inherit a chain of dependencies and run one after another despite available agents. The team selects this remedy: "Remove unnecessary dependencies while retaining required data ordering." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A caller pins one shared workflow SHA and a consumer contract records its outputs. What evidence best supports a controlled shared upgrade?
 
-- **A.** Shared templates create coordinated upgrade work
-- **B.** Migration may require redesign rather than text conversion
-- **C.** More parallel jobs consume more execution capacity
+- **A.** Compare only the new template allowed input names
+- **B.** Review the new SHA diff and run representative input/output consumer tests
+- **C.** Delete the earlier consumer contract after changing the reference
+- **D.** Move every caller to latest without checking consumed output changes

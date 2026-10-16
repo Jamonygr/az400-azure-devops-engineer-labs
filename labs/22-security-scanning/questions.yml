@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "22",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -14,1918 +14,1973 @@
     {
       "id": "S3",
       "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/agentless-vulnerability-assessment-azure"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-list"
+    },
+    {
+      "id": "S5",
+      "url": "https://github.com/actions/dependency-review-action"
+    },
+    {
+      "id": "S6",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning"
     }
   ],
   "questions": [
     {
       "id": "L22-Q001",
       "checkpointId": "CP1",
-      "caseId": "L22-C01",
-      "task": "remedy",
-      "caseContext": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well.",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "foundational",
-      "question": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which next change most directly satisfies the stated requirement?",
+      "question": "The team inventories NuGet dependencies but currently sees only direct references. Which command option includes packages introduced by other packages?",
       "options": [
         {
           "key": "A",
-          "text": "Require scan evidence for the exact release digest",
-          "rationale": "Security evidence must match the delivered bytes. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "no-restore alone",
+          "rationale": "Skipping restoration changes execution behavior rather than expanding inventory to transitive references."
         },
         {
           "key": "B",
-          "text": "Add dependency vulnerability analysis to the scan strategy",
-          "rationale": "Different risk classes need different scanning capabilities. This directly addresses the constraint stated in this case."
+          "text": "include-transitive",
+          "rationale": "Transitive dependency inventory includes packages resolved through the project's direct package references."
         },
         {
           "key": "C",
-          "text": "Configure the desired update workflow and review proposed fixes",
-          "rationale": "Detection and automated update behavior are separate capabilities. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "outdated alone",
+          "rationale": "Outdated reporting finds newer versions rather than requesting complete transitive dependency visibility."
+        },
+        {
+          "key": "D",
+          "text": "include-prerelease alone",
+          "rationale": "Prerelease selection does not independently include dependencies introduced by other packages."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Different risk classes need different scanning capabilities. The selected answer is add dependency vulnerability analysis to the scan strategy.",
+      "explanation": "Skipping restoration changes execution behavior rather than expanding inventory to transitive references. Transitive dependency inventory includes packages resolved through the project's direct package references. Outdated reporting finds newer versions rather than requesting complete transitive dependency visibility. Prerelease selection does not independently include dependencies introduced by other packages.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q002",
       "checkpointId": "CP1",
-      "caseId": "L22-C01",
-      "task": "diagnosis",
-      "caseContext": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well.",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "foundational",
-      "question": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which explanation best accounts for the behavior or constraint described?",
+      "question": "An inventory report lists Requested and Resolved versions for the same package. Which value identifies the exact version used by the restored project?",
       "options": [
         {
           "key": "A",
-          "text": "Secret detection does not inspect dependency advisories",
-          "rationale": "One security tool does not cover every threat category. This directly addresses the constraint stated in this case."
+          "text": "Resolved",
+          "rationale": "Resolved reports the specific package version selected for the current restored project."
         },
         {
           "key": "B",
-          "text": "An alert is not an automatically accepted remediation",
-          "rationale": "Update configuration and review policy still matter. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "Requested",
+          "rationale": "Requested can be a range rather than the exact version actually selected."
         },
         {
           "key": "C",
-          "text": "A reused tag hides the change in image identity",
-          "rationale": "An earlier result cannot validate a different image. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Latest available",
+          "rationale": "A newer available package version is not necessarily the one restored by this project."
+        },
+        {
+          "key": "D",
+          "text": "The source branch name",
+          "rationale": "A branch identifier does not establish the package version selected by dependency resolution."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "One security tool does not cover every threat category. The selected answer is secret detection does not inspect dependency advisories.",
+      "explanation": "Resolved reports the specific package version selected for the current restored project. Requested can be a range rather than the exact version actually selected. A newer available package version is not necessarily the one restored by this project. A branch identifier does not establish the package version selected by dependency resolution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q003",
       "checkpointId": "CP1",
-      "caseId": "L22-C01",
-      "task": "verification",
-      "caseContext": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well.",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A CI gate needs to inspect package results programmatically without parsing formatted console tables. Which output form should it request?",
       "options": [
         {
           "key": "A",
-          "text": "A known vulnerable test dependency produces the expected alert",
-          "rationale": "The probe should target the previously missing scan class. This directly addresses the constraint stated in this case."
+          "text": "The package author's display page",
+          "rationale": "A descriptive web page is not the command's machine-readable resolved dependency result."
         },
         {
           "key": "B",
-          "text": "An affected dependency receives a reviewed tested update",
-          "rationale": "The evidence must show actual risk treatment. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "Only the command duration",
+          "rationale": "Elapsed time does not contain package identifiers, versions or vulnerability details."
         },
         {
           "key": "C",
-          "text": "The release digest matches the scanned digest",
-          "rationale": "Content identity connects the scan to deployment. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "JSON with a supported output version",
+          "rationale": "Structured versioned output provides explicit fields for reliable policy checks and retained evidence."
+        },
+        {
+          "key": "D",
+          "text": "Colored console output only",
+          "rationale": "Presentation-oriented tables and colors are less suitable than structured fields for robust automation."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "The probe should target the previously missing scan class. The selected answer is a known vulnerable test dependency produces the expected alert.",
+      "explanation": "A descriptive web page is not the command's machine-readable resolved dependency result. Elapsed time does not contain package identifiers, versions or vulnerability details. Structured versioned output provides explicit fields for reliable policy checks and retained evidence. Presentation-oriented tables and colors are less suitable than structured fields for robust automation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q004",
       "checkpointId": "CP1",
-      "caseId": "L22-C01",
-      "task": "safeguard",
-      "caseContext": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well.",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The solution contains multiple projects with different dependency graphs. Which inventory scope best describes the application's complete restored package inputs?",
       "options": [
         {
           "key": "A",
-          "text": "Prevent substitution after the security decision",
-          "rationale": "Mutable release selection can invalidate approval evidence. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Inspect only packages named Microsoft",
+          "rationale": "Package naming does not establish whether a component belongs in the dependency graph."
         },
         {
           "key": "B",
-          "text": "Use a controlled fixture rather than a live exploitable deployment",
-          "rationale": "Validation should not create unnecessary exposure. This directly addresses the constraint stated in this case."
+          "text": "Inventory only cached package directory names",
+          "rationale": "A shared cache can contain unrelated versions not selected by this solution's restore."
         },
         {
           "key": "C",
-          "text": "Retain required tests before accepting dependency updates",
-          "rationale": "A version bump can introduce compatibility changes. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "Inventory the intended solution and its transitive packages",
+          "rationale": "Solution-wide transitive inventory exposes direct and indirect packages across the relevant projects."
+        },
+        {
+          "key": "D",
+          "text": "Inspect only the first csproj filename",
+          "rationale": "One project's direct references can omit dependencies used by other solution projects."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Validation should not create unnecessary exposure. The selected answer is use a controlled fixture rather than a live exploitable deployment.",
+      "explanation": "Package naming does not establish whether a component belongs in the dependency graph. A shared cache can contain unrelated versions not selected by this solution's restore. Solution-wide transitive inventory exposes direct and indirect packages across the relevant projects. One project's direct references can omit dependencies used by other solution projects.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q005",
       "checkpointId": "CP1",
-      "caseId": "L22-C01",
-      "task": "tradeoff",
-      "caseContext": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well.",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "advanced",
-      "question": "Scan gap: A pipeline only searches for leaked secrets, but stakeholders expect it to identify vulnerable dependency versions as well. The team selects this remedy: \"Add dependency vulnerability analysis to the scan strategy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A direct package is patched, but its transitive cryptography dependency remains vulnerable under the current lockfile. Which next step verifies a real remediation?",
       "options": [
         {
           "key": "A",
-          "text": "Digest-specific evidence increases metadata management",
-          "rationale": "The benefit is trustworthy release traceability. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Review the resolved graph and update the affected dependency safely",
+          "rationale": "A direct version change must be checked against the actual vulnerable transitive version selected."
         },
         {
           "key": "B",
-          "text": "More scanners add triage and maintenance work",
-          "rationale": "Coverage should match the repository's actual risks. This directly addresses the constraint stated in this case."
+          "text": "Close the alert because the direct version increased",
+          "rationale": "A newer parent version does not guarantee that the affected transitive package changed."
         },
         {
           "key": "C",
-          "text": "Not every advisory has an available fix",
-          "rationale": "Some findings need mitigation or documented risk decisions. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Coverage should match the repository's actual risks. The selected answer is more scanners add triage and maintenance work.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q006",
-      "checkpointId": "CP2",
-      "caseId": "L22-C02",
-      "task": "remedy",
-      "caseContext": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix.",
-      "objectiveIds": [
-        "D4.3.6"
-      ],
-      "difficulty": "foundational",
-      "question": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Configure the desired update workflow and review proposed fixes",
-          "rationale": "Detection and automated update behavior are separate capabilities. This directly addresses the constraint stated in this case."
+          "text": "Delete the vulnerability report while retaining the lockfile",
+          "rationale": "Removing evidence leaves the vulnerable resolved dependency and its associated risk unchanged."
         },
         {
-          "key": "B",
-          "text": "Scan the final container image for package vulnerabilities",
-          "rationale": "Source analysis and image-package analysis cover different layers. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Add dependency vulnerability analysis to the scan strategy",
-          "rationale": "Different risk classes need different scanning capabilities. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Exclude all transitive packages from future inventory",
+          "rationale": "Hiding indirect components prevents observing the affected dependency rather than remediating it."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Detection and automated update behavior are separate capabilities. The selected answer is configure the desired update workflow and review proposed fixes.",
+      "explanation": "A direct version change must be checked against the actual vulnerable transitive version selected. A newer parent version does not guarantee that the affected transitive package changed. Removing evidence leaves the vulnerable resolved dependency and its associated risk unchanged. Hiding indirect components prevents observing the affected dependency rather than remediating it.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
+        "S4"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"direct\":{\"name\":\"Example.SqlClient\",\"old\":\"1.0.0\",\"new\":\"1.1.0\"},\"resolvedTransitive\":{\"name\":\"Example.Crypto\",\"version\":\"2.0.0\",\"knownVulnerable\":true}}"
+      }
+    },
+    {
+      "id": "L22-Q006",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D4.3.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A fresh agent lacks assets required for package reporting, while a previous workstation had completed restore. Which approach yields comparable inventory evidence?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Copy the workstation's console screenshot",
+          "rationale": "Another environment's screenshot cannot establish this clean agent's selected dependency inputs."
+        },
+        {
+          "key": "B",
+          "text": "List every folder in the user cache",
+          "rationale": "A global cache includes packages unrelated to the current solution's resolved graph."
+        },
+        {
+          "key": "C",
+          "text": "Remove version pins before inventory",
+          "rationale": "Unbounded resolution changes dependency inputs instead of preserving a comparable reproducible inventory."
+        },
+        {
+          "key": "D",
+          "text": "Restore reproducibly before relying on the resolved dependency graph",
+          "rationale": "Resolved package evidence depends on the intended project's actual restored dependency selection."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Another environment's screenshot cannot establish this clean agent's selected dependency inputs. A global cache includes packages unrelated to the current solution's resolved graph. Unbounded resolution changes dependency inputs instead of preserving a comparable reproducible inventory. Resolved package evidence depends on the intended project's actual restored dependency selection.",
+      "sourceIds": [
+        "S4"
       ]
     },
     {
       "id": "L22-Q007",
-      "checkpointId": "CP2",
-      "caseId": "L22-C02",
-      "task": "diagnosis",
-      "caseContext": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A developer believes a package absent from direct references cannot affect application supply-chain risk. Which evidence should the review request?",
       "options": [
         {
           "key": "A",
-          "text": "An alert is not an automatically accepted remediation",
-          "rationale": "Update configuration and review policy still matter. This directly addresses the constraint stated in this case."
+          "text": "Only the project's top-level package names",
+          "rationale": "A top-level-only list omits the indirect components relevant to this risk claim."
         },
         {
           "key": "B",
-          "text": "Code analysis does not inventory every image component",
-          "rationale": "The base image can add vulnerabilities independent of source. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Only the container's human-readable image tag",
+          "rationale": "An image tag does not enumerate the application's complete resolved package dependency graph."
         },
         {
           "key": "C",
-          "text": "Secret detection does not inspect dependency advisories",
-          "rationale": "One security tool does not cover every threat category. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Only the most recent commit message",
+          "rationale": "Commit text cannot establish which indirect packages the current project actually consumes."
+        },
+        {
+          "key": "D",
+          "text": "The resolved transitive dependency graph",
+          "rationale": "Indirect dependencies can be part of the application even without direct source references."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Update configuration and review policy still matter. The selected answer is an alert is not an automatically accepted remediation.",
+      "explanation": "A top-level-only list omits the indirect components relevant to this risk claim. An image tag does not enumerate the application's complete resolved package dependency graph. Commit text cannot establish which indirect packages the current project actually consumes. Indirect dependencies can be part of the application even without direct source references.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q008",
-      "checkpointId": "CP2",
-      "caseId": "L22-C02",
-      "task": "verification",
-      "caseContext": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A lockfile is committed, but local inventory includes a different resolved version after an unreviewed restore. What should the pipeline require?",
       "options": [
         {
           "key": "A",
-          "text": "An affected dependency receives a reviewed tested update",
-          "rationale": "The evidence must show actual risk treatment. This directly addresses the constraint stated in this case."
+          "text": "Ignore the lockfile whenever restore succeeds",
+          "rationale": "Successful unbounded restoration does not preserve the reviewed dependency version contract."
         },
         {
           "key": "B",
-          "text": "The built image produces findings tied to its immutable digest",
-          "rationale": "The result should identify the actual deployable image. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Replace every package with latest automatically",
+          "rationale": "Unreviewed upgrades introduce compatibility changes and do not prove a controlled remediation."
         },
         {
           "key": "C",
-          "text": "A known vulnerable test dependency produces the expected alert",
-          "rationale": "The probe should target the previously missing scan class. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Treat the local package cache as authoritative",
+          "rationale": "Cached availability does not define which versions the reviewed project should resolve."
+        },
+        {
+          "key": "D",
+          "text": "Locked restoration and review of intentional dependency changes",
+          "rationale": "A locked restore detects dependency drift instead of silently accepting a changed resolved graph."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The evidence must show actual risk treatment. The selected answer is an affected dependency receives a reviewed tested update.",
+      "explanation": "Successful unbounded restoration does not preserve the reviewed dependency version contract. Unreviewed upgrades introduce compatibility changes and do not prove a controlled remediation. Cached availability does not define which versions the reviewed project should resolve. A locked restore detects dependency drift instead of silently accepting a changed resolved graph.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q009",
-      "checkpointId": "CP2",
-      "caseId": "L22-C02",
-      "task": "safeguard",
-      "caseContext": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The dependency inventory command exits unsuccessfully because its source is unreachable. What should a required inventory gate report?",
       "options": [
         {
           "key": "A",
-          "text": "Use a controlled fixture rather than a live exploitable deployment",
-          "rationale": "Validation should not create unnecessary exposure. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Zero dependencies and a passing result",
+          "rationale": "An unavailable result does not prove that the application has no dependency inputs."
         },
         {
           "key": "B",
-          "text": "Retain required tests before accepting dependency updates",
-          "rationale": "A version bump can introduce compatibility changes. This directly addresses the constraint stated in this case."
+          "text": "A successful pass from yesterday's file",
+          "rationale": "Stale evidence cannot silently replace the required current execution and dependency observation."
         },
         {
           "key": "C",
-          "text": "Rescan and rebuild when base-image advisories change",
-          "rationale": "An unchanged application can inherit new known risks. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "All packages vulnerable without any advisory data",
+          "rationale": "Tool failure does not establish actual vulnerability status for each dependency."
+        },
+        {
+          "key": "D",
+          "text": "Incomplete evidence with a visible failure",
+          "rationale": "A failed inventory cannot establish a complete or clean resolved dependency assessment."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "A version bump can introduce compatibility changes. The selected answer is retain required tests before accepting dependency updates.",
+      "explanation": "An unavailable result does not prove that the application has no dependency inputs. Stale evidence cannot silently replace the required current execution and dependency observation. Tool failure does not establish actual vulnerability status for each dependency. A failed inventory cannot establish a complete or clean resolved dependency assessment.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q010",
-      "checkpointId": "CP2",
-      "caseId": "L22-C02",
-      "task": "tradeoff",
-      "caseContext": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "advanced",
-      "question": "Dependabot ambiguity: Dependabot alerts identify an affected package, and the team assumes every alert automatically opens and merges a fix. The team selects this remedy: \"Configure the desired update workflow and review proposed fixes.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A scan uses a cached inventory from a different commit while current lockfiles changed. It reports no findings. Which evidence is required before release?",
       "options": [
         {
           "key": "A",
-          "text": "Not every advisory has an available fix",
-          "rationale": "Some findings need mitigation or documented risk decisions. This directly addresses the constraint stated in this case."
+          "text": "Only the package cache hit flag",
+          "rationale": "A cache hit does not prove advisory evaluation covered the intended release graph."
         },
         {
           "key": "B",
-          "text": "Image scanning cannot prove exploitability in every deployment",
-          "rationale": "Findings still need contextual prioritization. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "A current restored graph scanned against available advisory data",
+          "rationale": "The assessment must correspond to the actual release inputs rather than unrelated cached dependency metadata."
         },
         {
           "key": "C",
-          "text": "More scanners add triage and maintenance work",
-          "rationale": "Coverage should match the repository's actual risks. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Only the old no-findings summary",
+          "rationale": "A clean result from another dependency graph cannot establish this release's status."
+        },
+        {
+          "key": "D",
+          "text": "Only a valid JSON schema for the stale file",
+          "rationale": "Document shape does not bind the report to the current resolved package versions."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Some findings need mitigation or documented risk decisions. The selected answer is not every advisory has an available fix.",
+      "explanation": "A cache hit does not prove advisory evaluation covered the intended release graph. The assessment must correspond to the actual release inputs rather than unrelated cached dependency metadata. A clean result from another dependency graph cannot establish this release's status. Document shape does not bind the report to the current resolved package versions.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Current lockfile hash: bbbb\nCached inventory lockfile hash: aaaa\nScan result from cached inventory: no findings\nCurrent graph restored: not yet"
+      }
     },
     {
       "id": "L22-Q011",
-      "checkpointId": "CP4",
-      "caseId": "L22-C03",
-      "task": "remedy",
-      "caseContext": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "foundational",
-      "question": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which next change most directly satisfies the stated requirement?",
+      "question": "The team wants known vulnerability advisories for the project's resolved NuGet packages. Which reporting option should be used?",
       "options": [
         {
           "key": "A",
-          "text": "Install or configure the supported CodeQL analysis workflow explicitly",
-          "rationale": "A container is an execution environment rather than a scanner. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "outdated only",
+          "rationale": "A newer available version does not itself establish whether the installed version is vulnerable."
         },
         {
           "key": "B",
-          "text": "Configure the desired update workflow and review proposed fixes",
-          "rationale": "Detection and automated update behavior are separate capabilities. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "deprecated only",
+          "rationale": "Deprecation status is distinct from advisory reporting for known security vulnerabilities."
         },
         {
           "key": "C",
-          "text": "Scan the final container image for package vulnerabilities",
-          "rationale": "Source analysis and image-package analysis cover different layers. This directly addresses the constraint stated in this case."
+          "text": "include-prerelease only",
+          "rationale": "Considering prerelease versions does not request a vulnerability advisory assessment."
+        },
+        {
+          "key": "D",
+          "text": "vulnerable",
+          "rationale": "The vulnerability option evaluates known advisory information for the selected resolved packages."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Source analysis and image-package analysis cover different layers. The selected answer is scan the final container image for package vulnerabilities.",
+      "explanation": "A newer available version does not itself establish whether the installed version is vulnerable. Deprecation status is distinct from advisory reporting for known security vulnerabilities. Considering prerelease versions does not request a vulnerability advisory assessment. The vulnerability option evaluates known advisory information for the selected resolved packages.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q012",
-      "checkpointId": "CP4",
-      "caseId": "L22-C03",
-      "task": "diagnosis",
-      "caseContext": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "foundational",
-      "question": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A Dependabot alert identifies an affected package and a patched version. What is the most complete remediation workflow?",
       "options": [
         {
           "key": "A",
-          "text": "Code analysis does not inventory every image component",
-          "rationale": "The base image can add vulnerabilities independent of source. This directly addresses the constraint stated in this case."
+          "text": "Dismiss the alert because a patch exists",
+          "rationale": "Patch availability does not mean the application has adopted or validated that fixed version."
         },
         {
           "key": "B",
-          "text": "Container execution does not automatically create a CodeQL database",
-          "rationale": "Analysis needs its supported setup and language handling. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Merge any version change without tests",
+          "rationale": "Dependency changes can affect behavior and need validation of the selected remediation."
         },
         {
           "key": "C",
-          "text": "An alert is not an automatically accepted remediation",
-          "rationale": "Update configuration and review policy still matter. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "Rename the dependency in documentation",
+          "rationale": "A documentation label does not modify the package version used by the application."
+        },
+        {
+          "key": "D",
+          "text": "Review the upgrade, test it and verify the alert's resolution",
+          "rationale": "Remediation needs a safe dependency change and validation rather than a merely proposed update."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The base image can add vulnerabilities independent of source. The selected answer is code analysis does not inventory every image component.",
+      "explanation": "Patch availability does not mean the application has adopted or validated that fixed version. Dependency changes can affect behavior and need validation of the selected remediation. A documentation label does not modify the package version used by the application. Remediation needs a safe dependency change and validation rather than a merely proposed update.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q013",
-      "checkpointId": "CP4",
-      "caseId": "L22-C03",
-      "task": "verification",
-      "caseContext": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "applied",
-      "question": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The scanner reports no known advisories for the current dependency graph. What limitation should the release report state?",
       "options": [
         {
           "key": "A",
-          "text": "The built image produces findings tied to its immutable digest",
-          "rationale": "The result should identify the actual deployable image. This directly addresses the constraint stated in this case."
+          "text": "Every dependency license is approved automatically",
+          "rationale": "Security advisory results do not determine compliance with the organization's license policy."
         },
         {
           "key": "B",
-          "text": "The run uploads valid analysis results for the intended code",
-          "rationale": "The proof must include completed analysis rather than container startup. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Runtime authorization and private networking are verified",
+          "rationale": "Dependency advisory analysis does not exercise deployed identity or network integration behavior."
         },
         {
           "key": "C",
-          "text": "An affected dependency receives a reviewed tested update",
-          "rationale": "The evidence must show actual risk treatment. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "No known findings within this scan's coverage and advisory data",
+          "rationale": "A clean result is bounded by observed inputs and available vulnerability knowledge."
+        },
+        {
+          "key": "D",
+          "text": "The application is guaranteed free of vulnerabilities",
+          "rationale": "Known-advisory scanning cannot prove the absence of all possible security defects."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "The result should identify the actual deployable image. The selected answer is the built image produces findings tied to its immutable digest.",
+      "explanation": "Security advisory results do not determine compliance with the organization's license policy. Dependency advisory analysis does not exercise deployed identity or network integration behavior. A clean result is bounded by observed inputs and available vulnerability knowledge. Known-advisory scanning cannot prove the absence of all possible security defects.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q014",
-      "checkpointId": "CP4",
-      "caseId": "L22-C03",
-      "task": "safeguard",
-      "caseContext": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "applied",
-      "question": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A security finding affects a package used only by a test tool. What should triage consider before deciding urgency and scope?",
       "options": [
         {
           "key": "A",
-          "text": "Use a trusted analysis image and supported tool versions",
-          "rationale": "The scanner environment is an executable dependency. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the dependency is direct rather than transitive",
+          "rationale": "Indirect components can still be exploitable, so dependency depth alone does not establish urgency."
         },
         {
           "key": "B",
-          "text": "Retain required tests before accepting dependency updates",
-          "rationale": "A version bump can introduce compatibility changes. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
+          "text": "Only whether a newer major version exists",
+          "rationale": "A major upgrade's existence does not explain the actual advisory or safe remediation scope."
         },
         {
           "key": "C",
-          "text": "Rescan and rebuild when base-image advisories change",
-          "rationale": "An unchanged application can inherit new known risks. This directly addresses the constraint stated in this case."
+          "text": "Usage, exposure, advisory details and affected versions",
+          "rationale": "Dependency context informs risk without assuming every package has identical production exposure."
+        },
+        {
+          "key": "D",
+          "text": "Only the advisory severity without component usage",
+          "rationale": "Severity matters but usage and actual exposure also inform a justified component-specific triage decision."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "An unchanged application can inherit new known risks. The selected answer is rescan and rebuild when base-image advisories change.",
+      "explanation": "Indirect components can still be exploitable, so dependency depth alone does not establish urgency. A major upgrade's existence does not explain the actual advisory or safe remediation scope. Dependency context informs risk without assuming every package has identical production exposure. Severity matters but usage and actual exposure also inform a justified component-specific triage decision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q015",
-      "checkpointId": "CP4",
-      "caseId": "L22-C03",
-      "task": "tradeoff",
-      "caseContext": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "advanced",
-      "question": "Container blind spot: CodeQL passes for the application, but the container includes vulnerable operating-system packages. The team selects this remedy: \"Scan the final container image for package vulnerabilities.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The patched package requires a breaking major upgrade, the vulnerable feature is disabled, and release is urgent. Which decision is defensible?",
       "options": [
         {
           "key": "A",
-          "text": "Image scanning cannot prove exploitability in every deployment",
-          "rationale": "Findings still need contextual prioritization. This directly addresses the constraint stated in this case."
+          "text": "Disable advisory access so the pipeline appears green",
+          "rationale": "Removing detection conceals known risk rather than implementing a reviewed mitigation and remediation plan."
         },
         {
           "key": "B",
-          "text": "Containerized analysis still needs correct build context",
-          "rationale": "Missing sources or toolchains can invalidate the intended analysis. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Document evidence, mitigation and time-limited risk ownership while planning tested remediation",
+          "rationale": "A reviewed exception needs specific exposure evidence, accountable ownership and an expiry rather than silent acceptance."
         },
         {
           "key": "C",
-          "text": "Not every advisory has an available fix",
-          "rationale": "Some findings need mitigation or documented risk decisions. That addresses a different requirement: Dependabot ambiguity. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Findings still need contextual prioritization. The selected answer is image scanning cannot prove exploitability in every deployment.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q016",
-      "checkpointId": "CP4",
-      "caseId": "L22-C04",
-      "task": "remedy",
-      "caseContext": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis.",
-      "objectiveIds": [
-        "D4.3.5"
-      ],
-      "difficulty": "foundational",
-      "question": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Scan the final container image for package vulnerabilities",
-          "rationale": "Source analysis and image-package analysis cover different layers. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Permanently dismiss every alert for that package",
+          "rationale": "A broad indefinite dismissal hides future vulnerabilities and exceeds the specific temporary risk decision."
         },
         {
-          "key": "B",
-          "text": "Install or configure the supported CodeQL analysis workflow explicitly",
-          "rationale": "A container is an execution environment rather than a scanner. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Add license inventory and policy review",
-          "rationale": "Legal usage constraints differ from security advisories. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Upgrade immediately without compatibility testing",
+          "rationale": "An untested breaking change can create operational failures and does not provide safe remediation evidence."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A container is an execution environment rather than a scanner. The selected answer is install or configure the supported CodeQL analysis workflow explicitly.",
+      "explanation": "Removing detection conceals known risk rather than implementing a reviewed mitigation and remediation plan. A reviewed exception needs specific exposure evidence, accountable ownership and an expiry rather than silent acceptance. A broad indefinite dismissal hides future vulnerabilities and exceeds the specific temporary risk decision. An untested breaking change can create operational failures and does not provide safe remediation evidence.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
+        "S4"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"finding\":\"known vulnerable feature\",\"featureEnabled\":false,\"patchedUpgrade\":\"breaking major\",\"releaseUrgent\":true,\"exceptionOwner\":null}"
+      }
+    },
+    {
+      "id": "L22-Q016",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D4.3.6"
+      ],
+      "difficulty": "foundational",
+      "question": "The advisory data source cannot be reached, but a wrapper converts every scanner error into an empty findings list. What is the defect?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The wrapper fails open on unavailable security evidence",
+          "rationale": "A required scan must distinguish no findings from failure to obtain advisory results."
+        },
+        {
+          "key": "B",
+          "text": "It checks transitive packages too carefully",
+          "rationale": "Transitive visibility does not explain treating unavailable advisory data as a clean result."
+        },
+        {
+          "key": "C",
+          "text": "It retains package versions too precisely",
+          "rationale": "Precise resolved versions support assessment and do not cause the fail-open logic."
+        },
+        {
+          "key": "D",
+          "text": "It emits machine-readable JSON",
+          "rationale": "Structured output is useful; the defect is incorrectly interpreting an unsuccessful scan outcome."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A required scan must distinguish no findings from failure to obtain advisory results. Transitive visibility does not explain treating unavailable advisory data as a clean result. Precise resolved versions support assessment and do not cause the fail-open logic. Structured output is useful; the defect is incorrectly interpreting an unsuccessful scan outcome.",
+      "sourceIds": [
+        "S4"
       ]
     },
     {
       "id": "L22-Q017",
-      "checkpointId": "CP4",
-      "caseId": "L22-C04",
-      "task": "diagnosis",
-      "caseContext": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "applied",
-      "question": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A dependency update pull request passes compilation but changes behavior tested by integration cases. Which gate should still be required before acceptance?",
       "options": [
         {
           "key": "A",
-          "text": "Container execution does not automatically create a CodeQL database",
-          "rationale": "Analysis needs its supported setup and language handling. This directly addresses the constraint stated in this case."
+          "text": "Only a successful clean dependency restore",
+          "rationale": "Restore can resolve packages without demonstrating that their updated behavior remains compatible."
         },
         {
           "key": "B",
-          "text": "Vulnerability detection does not determine license compatibility",
-          "rationale": "A secure package can still violate usage policy. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Only closure of the original security issue",
+          "rationale": "Closing an issue is an administrative action rather than compatibility validation evidence."
         },
         {
           "key": "C",
-          "text": "Code analysis does not inventory every image component",
-          "rationale": "The base image can add vulnerabilities independent of source. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Only a smaller package download size",
+          "rationale": "Package size does not prove that the updated dependency preserves required behavior."
+        },
+        {
+          "key": "D",
+          "text": "Relevant application and integration tests",
+          "rationale": "Compilation alone cannot establish behavioral compatibility after a dependency upgrade."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Analysis needs its supported setup and language handling. The selected answer is container execution does not automatically create a CodeQL database.",
+      "explanation": "Restore can resolve packages without demonstrating that their updated behavior remains compatible. Closing an issue is an administrative action rather than compatibility validation evidence. Package size does not prove that the updated dependency preserves required behavior. Compilation alone cannot establish behavioral compatibility after a dependency upgrade.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q018",
-      "checkpointId": "CP4",
-      "caseId": "L22-C04",
-      "task": "verification",
-      "caseContext": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "applied",
-      "question": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "An alert was dismissed as not affected using a concrete reachability analysis. What should the record include for future review?",
       "options": [
         {
           "key": "A",
-          "text": "The built image produces findings tied to its immutable digest",
-          "rationale": "The result should identify the actual deployable image. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Only a generic false-positive label",
+          "rationale": "A label without supporting evidence cannot explain why the affected advisory does not apply."
         },
         {
           "key": "B",
-          "text": "The run uploads valid analysis results for the intended code",
-          "rationale": "The proof must include completed analysis rather than container startup. This directly addresses the constraint stated in this case."
+          "text": "Only the developer's preference to avoid upgrades",
+          "rationale": "Convenience is not an evidence-based assessment of vulnerability applicability or mitigation."
         },
         {
           "key": "C",
-          "text": "The dependency inventory exposes the disallowed license for review",
-          "rationale": "The evidence should identify package and applicable terms. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Only the alert count after dismissal",
+          "rationale": "A reduced count does not substantiate the technical rationale for accepting the finding."
+        },
+        {
+          "key": "D",
+          "text": "The justification, evidence, owner and reassessment trigger",
+          "rationale": "A documented decision remains inspectable and can be revisited when exposure or code changes."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The proof must include completed analysis rather than container startup. The selected answer is the run uploads valid analysis results for the intended code.",
+      "explanation": "A label without supporting evidence cannot explain why the affected advisory does not apply. Convenience is not an evidence-based assessment of vulnerability applicability or mitigation. A reduced count does not substantiate the technical rationale for accepting the finding. A documented decision remains inspectable and can be revisited when exposure or code changes.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L22-Q019",
-      "checkpointId": "CP4",
-      "caseId": "L22-C04",
-      "task": "safeguard",
-      "caseContext": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "applied",
-      "question": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The vulnerability command returns structured findings despite a successful process exit. What should a policy gate evaluate?",
       "options": [
         {
           "key": "A",
-          "text": "Use a trusted analysis image and supported tool versions",
-          "rationale": "The scanner environment is an executable dependency. This directly addresses the constraint stated in this case."
+          "text": "Only the generated file's timestamp",
+          "rationale": "Freshness is useful but does not determine whether findings meet the security policy."
         },
         {
           "key": "B",
-          "text": "Escalate ambiguous license interpretation to the responsible policy owner",
-          "rationale": "Automated labels may not capture every legal obligation. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Finding content against the required severity policy",
+          "rationale": "Process success can mean the scan completed rather than that its findings satisfy release policy."
         },
         {
           "key": "C",
-          "text": "Rescan and rebuild when base-image advisories change",
-          "rationale": "An unchanged application can inherit new known risks. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Only exit status zero",
+          "rationale": "A completed scan may still contain vulnerabilities that violate the organization's acceptance threshold."
+        },
+        {
+          "key": "D",
+          "text": "Only whether stdout is nonempty",
+          "rationale": "Nonempty output does not distinguish acceptable results from policy-breaking vulnerability findings."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The scanner environment is an executable dependency. The selected answer is use a trusted analysis image and supported tool versions.",
+      "explanation": "Freshness is useful but does not determine whether findings meet the security policy. Process success can mean the scan completed rather than that its findings satisfy release policy. A completed scan may still contain vulnerabilities that violate the organization's acceptance threshold. Nonempty output does not distinguish acceptable results from policy-breaking vulnerability findings.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L22-Q020",
-      "checkpointId": "CP4",
-      "caseId": "L22-C04",
-      "task": "tradeoff",
-      "caseContext": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.6"
       ],
       "difficulty": "advanced",
-      "question": "CodeQL in container: A workflow runs inside a container and the team expects that fact alone to perform code analysis. The team selects this remedy: \"Install or configure the supported CodeQL analysis workflow explicitly.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The scan completed and found a critical transitive advisory, but its log upload failed. Which status should block release and remain visible?",
       "options": [
         {
           "key": "A",
-          "text": "Image scanning cannot prove exploitability in every deployment",
-          "rationale": "Findings still need contextual prioritization. That addresses a different requirement: Container blind spot. It does not directly resolve this case's stated constraint."
+          "text": "A pass because logs were not uploaded",
+          "rationale": "Missing evidence is not evidence that the scan found no vulnerabilities."
         },
         {
           "key": "B",
-          "text": "Containerized analysis still needs correct build context",
-          "rationale": "Missing sources or toolchains can invalidate the intended analysis. This directly addresses the constraint stated in this case."
+          "text": "A permanent scanner exclusion for that dependency",
+          "rationale": "A blanket exclusion conceals the finding rather than addressing remediation or controlled exception review."
         },
         {
           "key": "C",
-          "text": "License policy can restrict otherwise useful dependencies",
-          "rationale": "Exceptions require deliberate accountable decisions. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "The critical finding and incomplete evidence publication",
+          "rationale": "Successful process execution does not negate a policy-breaking result or missing required evidence."
+        },
+        {
+          "key": "D",
+          "text": "A pass because the scan command returned zero",
+          "rationale": "Exit success does not convert a reported critical vulnerability into an acceptable policy result."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Missing sources or toolchains can invalidate the intended analysis. The selected answer is containerized analysis still needs correct build context.",
+      "explanation": "Missing evidence is not evidence that the scan found no vulnerabilities. A blanket exclusion conceals the finding rather than addressing remediation or controlled exception review. Successful process execution does not negate a policy-breaking result or missing required evidence. Exit success does not convert a reported critical vulnerability into an acceptable policy result.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"scanExitCode\":0,\"criticalTransitiveFindings\":1,\"reportUpload\":\"failed\",\"releasePolicy\":\"block critical findings\"}"
+      }
     },
     {
       "id": "L22-Q021",
-      "checkpointId": "CP5",
-      "caseId": "L22-C05",
-      "task": "remedy",
-      "caseContext": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "foundational",
-      "question": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which next change most directly satisfies the stated requirement?",
+      "question": "The lesson needs to prove that a secret scanner detects a leaked credential pattern without using real credentials. What input is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Install or configure the supported CodeQL analysis workflow explicitly",
-          "rationale": "A container is an execution environment rather than a scanner. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "An empty source fixture only",
+          "rationale": "Clean input alone cannot establish that the scanner recognizes the intended leakage defect."
         },
         {
           "key": "B",
-          "text": "Add license inventory and policy review",
-          "rationale": "Legal usage constraints differ from security advisories. This directly addresses the constraint stated in this case."
+          "text": "A comment claiming a secret existed",
+          "rationale": "A claim without matching fixture content does not exercise the scanner's detection path."
         },
         {
           "key": "C",
-          "text": "Use a documented synthetic detection fixture in an isolated exercise",
-          "rationale": "Testing should avoid real credential exposure. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
+          "text": "A deterministic harmless synthetic marker",
+          "rationale": "A known fake pattern demonstrates detection without introducing a usable authentication secret."
+        },
+        {
+          "key": "D",
+          "text": "A live production access token",
+          "rationale": "A real credential adds avoidable exposure to an exercise intended to test detection behavior."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Legal usage constraints differ from security advisories. The selected answer is add license inventory and policy review.",
+      "explanation": "Clean input alone cannot establish that the scanner recognizes the intended leakage defect. A claim without matching fixture content does not exercise the scanner's detection path. A known fake pattern demonstrates detection without introducing a usable authentication secret. A real credential adds avoidable exposure to an exercise intended to test detection behavior.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q022",
-      "checkpointId": "CP5",
-      "caseId": "L22-C05",
-      "task": "diagnosis",
-      "caseContext": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "foundational",
-      "question": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A secret scan detects a valid credential in a repository's history. Which action is needed beyond deleting the current line?",
       "options": [
         {
           "key": "A",
-          "text": "Vulnerability detection does not determine license compatibility",
-          "rationale": "A secure package can still violate usage policy. This directly addresses the constraint stated in this case."
+          "text": "Add a future gitignore rule only",
+          "rationale": "Ignore rules do not erase tracked history or revoke an exposed usable credential."
         },
         {
           "key": "B",
-          "text": "A live secret is unnecessary to validate the workflow",
-          "rationale": "The educational goal is detection behavior. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
+          "text": "Change the secret's comment label",
+          "rationale": "Changing documentation text leaves the actual credential and its effective access unchanged."
         },
         {
           "key": "C",
-          "text": "Container execution does not automatically create a CodeQL database",
-          "rationale": "Analysis needs its supported setup and language handling. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Revoke or rotate the exposed credential",
+          "rationale": "Copies in history or other systems can remain usable after the current line is removed."
+        },
+        {
+          "key": "D",
+          "text": "Rename the source file only",
+          "rationale": "A name change does not invalidate credential values already copied from repository history."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A secure package can still violate usage policy. The selected answer is vulnerability detection does not determine license compatibility.",
+      "explanation": "Ignore rules do not erase tracked history or revoke an exposed usable credential. Changing documentation text leaves the actual credential and its effective access unchanged. Copies in history or other systems can remain usable after the current line is removed. A name change does not invalidate credential values already copied from repository history.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q023",
-      "checkpointId": "CP5",
-      "caseId": "L22-C05",
-      "task": "verification",
-      "caseContext": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The fixture contains the expected synthetic leakage marker but the scan still passes. Which response makes the negative test meaningful?",
       "options": [
         {
           "key": "A",
-          "text": "The expected test finding appears without an active credential",
-          "rationale": "The evidence should prove scanner execution safely. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
+          "text": "Fail the test and correct detection or fixture wiring",
+          "rationale": "A negative case must demonstrate the intended defect is actually observed by the scanner."
         },
         {
           "key": "B",
-          "text": "The run uploads valid analysis results for the intended code",
-          "rationale": "The proof must include completed analysis rather than container startup. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Accept the pass because no real secret was used",
+          "rationale": "Synthetic safety does not make a missed expected detection into a successful assertion."
         },
         {
           "key": "C",
-          "text": "The dependency inventory exposes the disallowed license for review",
-          "rationale": "The evidence should identify package and applicable terms. This directly addresses the constraint stated in this case."
+          "text": "Force every scan to fail unconditionally",
+          "rationale": "An unconditional failure cannot distinguish true leakage detection from broken scanner behavior."
+        },
+        {
+          "key": "D",
+          "text": "Remove the fixture and keep the passing status",
+          "rationale": "Deleting the negative input avoids testing detection rather than validating the scanner's actual capability."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The evidence should identify package and applicable terms. The selected answer is the dependency inventory exposes the disallowed license for review.",
+      "explanation": "A negative case must demonstrate the intended defect is actually observed by the scanner. Synthetic safety does not make a missed expected detection into a successful assertion. An unconditional failure cannot distinguish true leakage detection from broken scanner behavior. Deleting the negative input avoids testing detection rather than validating the scanner's actual capability.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q024",
-      "checkpointId": "CP5",
-      "caseId": "L22-C05",
-      "task": "safeguard",
-      "caseContext": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A scanner suppresses one approved fake test value but should continue detecting other secret patterns. Which exception scope is safest?",
       "options": [
         {
           "key": "A",
-          "text": "Escalate ambiguous license interpretation to the responsible policy owner",
-          "rationale": "Automated labels may not capture every legal obligation. This directly addresses the constraint stated in this case."
+          "text": "Limit the exception to that documented fixture value or path",
+          "rationale": "A narrow reviewed exception avoids suppressing unrelated real secret findings throughout the repository."
         },
         {
           "key": "B",
-          "text": "Clearly label and clean up deliberate training findings",
-          "rationale": "Synthetic alerts can otherwise confuse operational triage. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
+          "text": "Ignore every file under source",
+          "rationale": "Broad source exclusion hides the very application code the scanner is intended to inspect."
         },
         {
           "key": "C",
-          "text": "Use a trusted analysis image and supported tool versions",
-          "rationale": "The scanner environment is an executable dependency. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Disable the full scanner for pull requests",
+          "rationale": "Removing validation loses coverage beyond the single harmless fixture's justified exception."
+        },
+        {
+          "key": "D",
+          "text": "Ignore every token-like string globally",
+          "rationale": "A universal pattern exclusion prevents detection of unrelated genuine credential exposure."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Automated labels may not capture every legal obligation. The selected answer is escalate ambiguous license interpretation to the responsible policy owner.",
+      "explanation": "A narrow reviewed exception avoids suppressing unrelated real secret findings throughout the repository. Broad source exclusion hides the very application code the scanner is intended to inspect. Removing validation loses coverage beyond the single harmless fixture's justified exception. A universal pattern exclusion prevents detection of unrelated genuine credential exposure.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q025",
-      "checkpointId": "CP5",
-      "caseId": "L22-C05",
-      "task": "tradeoff",
-      "caseContext": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "advanced",
-      "question": "License risk: All vulnerability scans pass, but a newly introduced dependency has a license the organization cannot accept. The team selects this remedy: \"Add license inventory and policy review.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The synthetic marker is detected, but its raw value is copied into public logs and screenshots. Which change preserves useful evidence while reducing disclosure habits?",
       "options": [
         {
           "key": "A",
-          "text": "License policy can restrict otherwise useful dependencies",
-          "rationale": "Exceptions require deliberate accountable decisions. This directly addresses the constraint stated in this case."
+          "text": "Retain redacted finding metadata and deterministic detection assertions",
+          "rationale": "Safe evidence demonstrates detection without normalizing publication of sensitive-looking material in logs."
         },
         {
           "key": "B",
-          "text": "A fixture may not cover every real secret format",
-          "rationale": "Detection coverage needs broader documented understanding. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
+          "text": "Retain raw findings in every report because this value is synthetic",
+          "rationale": "The exercise should establish a reusable redacted evidence habit before learners encounter real findings."
         },
         {
           "key": "C",
-          "text": "Containerized analysis still needs correct build context",
-          "rationale": "Missing sources or toolchains can invalidate the intended analysis. That addresses a different requirement: CodeQL in container. It does not directly resolve this case's stated constraint."
+          "text": "Remove failure reports and retain only a clean-scan screenshot",
+          "rationale": "That removes the negative detection evidence needed to demonstrate the scanner actually rejected the fixture."
+        },
+        {
+          "key": "D",
+          "text": "Mark the scanner passed without retaining any outcome",
+          "rationale": "An unsupported success claim does not provide evidence of the expected detection behavior."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Exceptions require deliberate accountable decisions. The selected answer is license policy can restrict otherwise useful dependencies.",
+      "explanation": "Safe evidence demonstrates detection without normalizing publication of sensitive-looking material in logs. The exercise should establish a reusable redacted evidence habit before learners encounter real findings. That removes the negative detection evidence needed to demonstrate the scanner actually rejected the fixture. An unsupported success claim does not provide evidence of the expected detection behavior.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Synthetic finding detected: yes\nEvidence includes: raw token-like fixture value\nRequested practice: redact sensitive values and retain useful detection metadata"
+      }
     },
     {
       "id": "L22-Q026",
       "checkpointId": "CP3",
-      "caseId": "L22-C06",
-      "task": "remedy",
-      "caseContext": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential.",
       "objectiveIds": [
-        "D4.2.4",
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which next change most directly satisfies the stated requirement?",
+      "question": "A scan covers only current files while policy also requires inspection of committed history. Which gap should the release report identify?",
       "options": [
         {
           "key": "A",
-          "text": "Propagate policy-relevant scan outcomes into the release gate",
-          "rationale": "Findings need enforceable policy handling. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Every detected secret is automatically revoked",
+          "rationale": "Detection alone does not invalidate credentials with the issuing authentication provider."
         },
         {
           "key": "B",
-          "text": "Add license inventory and policy review",
-          "rationale": "Legal usage constraints differ from security advisories. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Historical credential coverage remains unverified",
+          "rationale": "A current-tree scan cannot establish that earlier commits contain no exposed secrets."
         },
         {
           "key": "C",
-          "text": "Use a documented synthetic detection fixture in an isolated exercise",
-          "rationale": "Testing should avoid real credential exposure. This directly addresses the constraint stated in this case."
+          "text": "All history is clean because current files are clean",
+          "rationale": "Current contents do not describe deleted or changed material retained in previous commits."
+        },
+        {
+          "key": "D",
+          "text": "Dependency vulnerabilities are automatically absent",
+          "rationale": "Secret pattern scanning does not evaluate known advisory risk in package dependencies."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Testing should avoid real credential exposure. The selected answer is use a documented synthetic detection fixture in an isolated exercise.",
+      "explanation": "Detection alone does not invalidate credentials with the issuing authentication provider. A current-tree scan cannot establish that earlier commits contain no exposed secrets. Current contents do not describe deleted or changed material retained in previous commits. Secret pattern scanning does not evaluate known advisory risk in package dependencies.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q027",
       "checkpointId": "CP3",
-      "caseId": "L22-C06",
-      "task": "diagnosis",
-      "caseContext": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential.",
       "objectiveIds": [
-        "D4.2.4",
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A scanner returns a network error and no findings file. Which state should the required gate distinguish from a clean scan?",
       "options": [
         {
           "key": "A",
-          "text": "The pipeline converts a failing security decision into success",
-          "rationale": "Visible output alone does not block promotion. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Execution failure with unavailable assessment evidence",
+          "rationale": "Missing results after an error cannot be interpreted as a successful no-findings security assessment."
         },
         {
           "key": "B",
-          "text": "Vulnerability detection does not determine license compatibility",
-          "rationale": "A secure package can still violate usage policy. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Clean because the findings array is absent",
+          "rationale": "Absent output does not prove the tool completed or found no sensitive values."
         },
         {
           "key": "C",
-          "text": "A live secret is unnecessary to validate the workflow",
-          "rationale": "The educational goal is detection behavior. This directly addresses the constraint stated in this case."
+          "text": "Fixed because the command retried once",
+          "rationale": "A retry attempt alone does not establish successful execution or a clean assessment."
+        },
+        {
+          "key": "D",
+          "text": "Dismissed because a fixture was synthetic",
+          "rationale": "Fixture safety does not resolve an unsuccessful required scanner invocation and missing results."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The educational goal is detection behavior. The selected answer is a live secret is unnecessary to validate the workflow.",
+      "explanation": "Missing results after an error cannot be interpreted as a successful no-findings security assessment. Absent output does not prove the tool completed or found no sensitive values. A retry attempt alone does not establish successful execution or a clean assessment. Fixture safety does not resolve an unsuccessful required scanner invocation and missing results.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q028",
       "checkpointId": "CP3",
-      "caseId": "L22-C06",
-      "task": "verification",
-      "caseContext": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential.",
       "objectiveIds": [
-        "D4.2.4",
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A precommit secret check passes but CI finds a token in another tracked path. Which coverage correction should be made?",
       "options": [
         {
           "key": "A",
-          "text": "The dependency inventory exposes the disallowed license for review",
-          "rationale": "The evidence should identify package and applicable terms. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Treat precommit installation as proof of complete enforcement",
+          "rationale": "Developers can bypass local hooks and their installation does not prove all paths were scanned."
         },
         {
           "key": "B",
-          "text": "The expected test finding appears without an active credential",
-          "rationale": "The evidence should prove scanner execution safely. This directly addresses the constraint stated in this case."
+          "text": "Align checked paths and retain the CI gate",
+          "rationale": "Different scopes can miss committed files, so local convenience must not replace required shared coverage."
         },
         {
           "key": "C",
-          "text": "A controlled disallowed finding stops the protected release",
-          "rationale": "A negative probe demonstrates enforcement. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Disable CI because local checks already passed",
+          "rationale": "The local pass did not cover the observed leaked file found by the broader gate."
+        },
+        {
+          "key": "D",
+          "text": "Ignore every generated directory without checking tracked contents",
+          "rationale": "Broad exclusions can hide tracked credential material that remains in repository history."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The evidence should prove scanner execution safely. The selected answer is the expected test finding appears without an active credential.",
+      "explanation": "Developers can bypass local hooks and their installation does not prove all paths were scanned. Different scopes can miss committed files, so local convenience must not replace required shared coverage. The local pass did not cover the observed leaked file found by the broader gate. Broad exclusions can hide tracked credential material that remains in repository history.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q029",
       "checkpointId": "CP3",
-      "caseId": "L22-C06",
-      "task": "safeguard",
-      "caseContext": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential.",
       "objectiveIds": [
-        "D4.2.4",
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "applied",
-      "question": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The team intentionally injects a fake secret, expects a blocked scan, repairs it and expects success. What should evidence demonstrate?",
       "options": [
         {
           "key": "A",
-          "text": "Separate tool failure from vulnerability-policy failure",
-          "rationale": "Both need visible but appropriately classified handling. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Only a final successful scan",
+          "rationale": "A final pass alone does not establish that the negative fixture was ever detected."
         },
         {
           "key": "B",
-          "text": "Escalate ambiguous license interpretation to the responsible policy owner",
-          "rationale": "Automated labels may not capture every legal obligation. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
+          "text": "Only an injected fixture filename",
+          "rationale": "A filename does not show the scanner's detection or repaired-state behavior."
         },
         {
           "key": "C",
-          "text": "Clearly label and clean up deliberate training findings",
-          "rationale": "Synthetic alerts can otherwise confuse operational triage. This directly addresses the constraint stated in this case."
+          "text": "Only an unconditional nonzero wrapper exit",
+          "rationale": "An artificial exit does not demonstrate a finding produced by the intended detection logic."
+        },
+        {
+          "key": "D",
+          "text": "Healthy, failing and repaired outcomes for the same detector",
+          "rationale": "A complete sequence proves the check observes the intended defect and its actual removal."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Synthetic alerts can otherwise confuse operational triage. The selected answer is clearly label and clean up deliberate training findings.",
+      "explanation": "A final pass alone does not establish that the negative fixture was ever detected. A filename does not show the scanner's detection or repaired-state behavior. An artificial exit does not demonstrate a finding produced by the intended detection logic. A complete sequence proves the check observes the intended defect and its actual removal.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L22-Q030",
       "checkpointId": "CP3",
-      "caseId": "L22-C06",
-      "task": "tradeoff",
-      "caseContext": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential.",
       "objectiveIds": [
-        "D4.2.4",
-        "D4.3.1"
+        "D4.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Secret probe: A lab needs to demonstrate secret scanning without publishing an actual usable cloud credential. The team selects this remedy: \"Use a documented synthetic detection fixture in an isolated exercise.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The negative fixture is outside scanner scope, while the wrapper fails due to a missing executable. Which change is required before claiming break/fix success?",
       "options": [
         {
           "key": "A",
-          "text": "A fixture may not cover every real secret format",
-          "rationale": "Detection coverage needs broader documented understanding. This directly addresses the constraint stated in this case."
+          "text": "Suppress the error and mark the repaired phase passed",
+          "rationale": "An unsupported success report conceals both missing execution and the untested fixture scope."
         },
         {
           "key": "B",
-          "text": "Strict gating can interrupt delivery for false positives",
-          "rationale": "A reviewed exception process preserves accountability. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Use an in-scope fixture and assert the expected detection reason",
+          "rationale": "An unrelated tool error does not prove that the scanner observed the intended security defect."
         },
         {
           "key": "C",
-          "text": "License policy can restrict otherwise useful dependencies",
-          "rationale": "Exceptions require deliberate accountable decisions. That addresses a different requirement: License risk. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Detection coverage needs broader documented understanding. The selected answer is a fixture may not cover every real secret format.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q031",
-      "checkpointId": "CP2",
-      "caseId": "L22-C07",
-      "task": "remedy",
-      "caseContext": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds.",
-      "objectiveIds": [
-        "D4.3.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Propagate policy-relevant scan outcomes into the release gate",
-          "rationale": "Findings need enforceable policy handling. This directly addresses the constraint stated in this case."
+          "text": "Accept any nonzero status as a detected secret",
+          "rationale": "Execution failure and expected security detection are distinct outcomes requiring separate evidence."
         },
         {
-          "key": "B",
-          "text": "Inspect the resolved graph and update the affected dependency chain",
-          "rationale": "The deployed dependency graph includes transitive components. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Use a documented synthetic detection fixture in an isolated exercise",
-          "rationale": "Testing should avoid real credential exposure. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Findings need enforceable policy handling. The selected answer is propagate policy-relevant scan outcomes into the release gate.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q032",
-      "checkpointId": "CP2",
-      "caseId": "L22-C07",
-      "task": "diagnosis",
-      "caseContext": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds.",
-      "objectiveIds": [
-        "D4.3.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A live secret is unnecessary to validate the workflow",
-          "rationale": "The educational goal is detection behavior. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The pipeline converts a failing security decision into success",
-          "rationale": "Visible output alone does not block promotion. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Direct manifests alone do not describe all resolved packages",
-          "rationale": "A safe top-level version can still resolve unsafe children. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Delete the scanner dependency and keep the failure",
+          "rationale": "Preserving a missing tool cannot establish meaningful credential pattern detection coverage."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Visible output alone does not block promotion. The selected answer is the pipeline converts a failing security decision into success.",
+      "explanation": "An unsupported success report conceals both missing execution and the untested fixture scope. An unrelated tool error does not prove that the scanner observed the intended security defect. Execution failure and expected security detection are distinct outcomes requiring separate evidence. Preserving a missing tool cannot establish meaningful credential pattern detection coverage.",
       "sourceIds": [
         "S1",
-        "S2",
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Configured scan scope: src/**\nNegative fixture: test-fixtures/leaked.txt\nFailure reason: scanner executable missing\nClaimed outcome: expected secret detected"
+      }
+    },
+    {
+      "id": "L22-Q031",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D4.3.1"
+      ],
+      "difficulty": "foundational",
+      "question": "The team wants source-code analysis for security weaknesses in the ASP.NET API. Which scan category addresses that layer?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Dependency license inventory alone",
+          "rationale": "License review evaluates component policy rather than analyzing the application's own code defects."
+        },
+        {
+          "key": "B",
+          "text": "Container tag naming review alone",
+          "rationale": "Image labels do not inspect source-level security weaknesses in the API implementation."
+        },
+        {
+          "key": "C",
+          "text": "Artifact retention auditing alone",
+          "rationale": "Retention checks evidence lifetime rather than program behavior and source security flaws."
+        },
+        {
+          "key": "D",
+          "text": "Static code security analysis",
+          "rationale": "Code scanning analyzes source or compiled program structure for potential security weaknesses."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "License review evaluates component policy rather than analyzing the application's own code defects. Image labels do not inspect source-level security weaknesses in the API implementation. Retention checks evidence lifetime rather than program behavior and source security flaws. Code scanning analyzes source or compiled program structure for potential security weaknesses.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L22-Q032",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D4.3.5"
+      ],
+      "difficulty": "foundational",
+      "question": "The application packages clean source into an image whose operating-system base is vulnerable. Which additional scan category is needed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Container image vulnerability assessment",
+          "rationale": "Container assessment can identify affected operating-system and image components beyond application source scanning."
+        },
+        {
+          "key": "B",
+          "text": "Only a source formatter pass",
+          "rationale": "Formatting application files cannot evaluate packages contained in the runtime image layers."
+        },
+        {
+          "key": "C",
+          "text": "Only a repository issue-label check",
+          "rationale": "Issue metadata does not inspect the container's actual operating-system component versions."
+        },
+        {
+          "key": "D",
+          "text": "Only another local URI parser test",
+          "rationale": "Reference syntax testing does not evaluate image-layer vulnerability advisory exposure."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Container assessment can identify affected operating-system and image components beyond application source scanning. Formatting application files cannot evaluate packages contained in the runtime image layers. Issue metadata does not inspect the container's actual operating-system component versions. Reference syntax testing does not evaluate image-layer vulnerability advisory exposure.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L22-Q033",
-      "checkpointId": "CP2",
-      "caseId": "L22-C07",
-      "task": "verification",
-      "caseContext": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds.",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A CodeQL example is present in a lab artifact folder but no provider analysis has run. Which verification claim is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "A controlled disallowed finding stops the protected release",
-          "rationale": "A negative probe demonstrates enforcement. This directly addresses the constraint stated in this case."
+          "text": "The repository is free of exploitable code defects",
+          "rationale": "Static contract review cannot establish comprehensive absence of application security vulnerabilities."
         },
         {
           "key": "B",
-          "text": "The resolved lock graph no longer includes the affected version",
-          "rationale": "The proof must inspect actual build inputs. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "text": "Workflow contract reviewed; hosted analysis remains unverified",
+          "rationale": "Stored YAML and static checks do not demonstrate actual provider execution or resulting findings."
         },
         {
           "key": "C",
-          "text": "The expected test finding appears without an active credential",
-          "rationale": "The evidence should prove scanner execution safely. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "A negative probe demonstrates enforcement. The selected answer is a controlled disallowed finding stops the protected release.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q034",
-      "checkpointId": "CP2",
-      "caseId": "L22-C07",
-      "task": "safeguard",
-      "caseContext": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds.",
-      "objectiveIds": [
-        "D4.3.1"
-      ],
-      "difficulty": "applied",
-      "question": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Separate tool failure from vulnerability-policy failure",
-          "rationale": "Both need visible but appropriately classified handling. This directly addresses the constraint stated in this case."
+          "text": "Source analysis completed automatically by file presence",
+          "rationale": "A workflow example does not execute merely because its file exists in the course repository."
         },
         {
-          "key": "B",
-          "text": "Review compatibility and rerun representative tests",
-          "rationale": "Transitive changes can affect application behavior. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Clearly label and clean up deliberate training findings",
-          "rationale": "Synthetic alerts can otherwise confuse operational triage. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Both need visible but appropriately classified handling. The selected answer is separate tool failure from vulnerability-policy failure.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q035",
-      "checkpointId": "CP2",
-      "caseId": "L22-C07",
-      "task": "tradeoff",
-      "caseContext": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds.",
-      "objectiveIds": [
-        "D4.3.1"
-      ],
-      "difficulty": "advanced",
-      "question": "Ignored scan exit: A scanner reports critical findings but the wrapper always exits successfully and release promotion proceeds. The team selects this remedy: \"Propagate policy-relevant scan outcomes into the release gate.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A fix may depend on an upstream maintainer release",
-          "rationale": "Mitigation may be needed while waiting. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "A fixture may not cover every real secret format",
-          "rationale": "Detection coverage needs broader documented understanding. That addresses a different requirement: Secret probe. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Strict gating can interrupt delivery for false positives",
-          "rationale": "A reviewed exception process preserves accountability. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A reviewed exception process preserves accountability. The selected answer is strict gating can interrupt delivery for false positives.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q036",
-      "checkpointId": "CP1",
-      "caseId": "L22-C08",
-      "task": "remedy",
-      "caseContext": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file.",
-      "objectiveIds": [
-        "D4.3.6"
-      ],
-      "difficulty": "foundational",
-      "question": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Propagate policy-relevant scan outcomes into the release gate",
-          "rationale": "Findings need enforceable policy handling. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Inspect the resolved graph and update the affected dependency chain",
-          "rationale": "The deployed dependency graph includes transitive components. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Require justified dispositions and verify remediation evidence",
-          "rationale": "Alert status should reflect an accountable risk decision. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Every finding has been uploaded to GitHub",
+          "rationale": "No provider run means result publication has not been observed for this lesson."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The deployed dependency graph includes transitive components. The selected answer is inspect the resolved graph and update the affected dependency chain.",
+      "explanation": "Static contract review cannot establish comprehensive absence of application security vulnerabilities. Stored YAML and static checks do not demonstrate actual provider execution or resulting findings. A workflow example does not execute merely because its file exists in the course repository. No provider run means result publication has not been observed for this lesson.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L22-Q034",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D4.3.1"
+      ],
+      "difficulty": "applied",
+      "question": "Security scanning for untrusted pull requests currently uses the same persistent private deployment agent. Which execution boundary should be changed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep the runner and hide deployment variables by name",
+          "rationale": "Obscured names do not isolate untrusted code from the host's available capabilities."
+        },
+        {
+          "key": "B",
+          "text": "Grant the scan administrator credentials to prevent failures",
+          "rationale": "Broader privileges increase risk and do not repair the worker trust boundary."
+        },
+        {
+          "key": "C",
+          "text": "Run deployment first so its credentials are cached",
+          "rationale": "Caching deployment access worsens exposure to later untrusted analysis job code."
+        },
+        {
+          "key": "D",
+          "text": "Run untrusted analysis on isolated nondeployment workers",
+          "rationale": "Untrusted source must not inherit privileged deployment runner state or network capabilities."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Obscured names do not isolate untrusted code from the host's available capabilities. Broader privileges increase risk and do not repair the worker trust boundary. Caching deployment access worsens exposure to later untrusted analysis job code. Untrusted source must not inherit privileged deployment runner state or network capabilities.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L22-Q035",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D4.3.5"
+      ],
+      "difficulty": "advanced",
+      "question": "Source scanning passes, but the deployed image digest differs from the scanned tag's current content. Which provenance and scanning correction is needed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rename the tag to approved after deployment",
+          "rationale": "Changing a label does not assess the actual image contents or establish trustworthy provenance."
+        },
+        {
+          "key": "B",
+          "text": "Scan and deploy the same immutable image digest",
+          "rationale": "Mutable tags can change, so release evidence must bind assessment to the actual deployed bytes."
+        },
+        {
+          "key": "C",
+          "text": "Trust the old tag's clean report indefinitely",
+          "rationale": "A mutable name does not establish that the deployed image matches the previously assessed contents."
+        },
+        {
+          "key": "D",
+          "text": "Rescan only source and ignore the image",
+          "rationale": "Source assessment does not cover all image layers or prove deployed digest equivalence."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Changing a label does not assess the actual image contents or establish trustworthy provenance. Mutable tags can change, so release evidence must bind assessment to the actual deployed bytes. A mutable name does not establish that the deployed image matches the previously assessed contents. Source assessment does not cover all image layers or prove deployed digest equivalence.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Scanned tag: todo:release\nScanned digest: sha256:aaaa\nDeployed same tag now resolves: sha256:bbbb\nApplication source scan: passed"
+      }
+    },
+    {
+      "id": "L22-Q036",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D4.3.1"
+      ],
+      "difficulty": "foundational",
+      "question": "A policy requires security findings above a threshold to block merging. Which configuration must accompany analysis execution?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only an informational job without branch requirements",
+          "rationale": "Informational output can be ignored and does not enforce the required merge decision."
+        },
+        {
+          "key": "B",
+          "text": "Only a README statement that scanning is mandatory",
+          "rationale": "Documentation does not make branch admission depend on the actual security result."
+        },
+        {
+          "key": "C",
+          "text": "Only a nightly report after releases",
+          "rationale": "Postrelease reporting does not enforce the stated premerge security threshold gate."
+        },
+        {
+          "key": "D",
+          "text": "A required enforced result with explicit finding policy",
+          "rationale": "Running a scanner alone does not guarantee that policy-breaking results prevent merge."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Informational output can be ignored and does not enforce the required merge decision. Documentation does not make branch admission depend on the actual security result. Postrelease reporting does not enforce the stated premerge security threshold gate. Running a scanner alone does not guarantee that policy-breaking results prevent merge.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L22-Q037",
-      "checkpointId": "CP1",
-      "caseId": "L22-C08",
-      "task": "diagnosis",
-      "caseContext": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.5"
       ],
       "difficulty": "applied",
-      "question": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A container assessment's cloud prerequisites are unavailable and the learner has only reviewed a local scan plan. Which status is honest?",
       "options": [
         {
           "key": "A",
-          "text": "Direct manifests alone do not describe all resolved packages",
-          "rationale": "A safe top-level version can still resolve unsafe children. This directly addresses the constraint stated in this case."
+          "text": "All security products were enabled automatically",
+          "rationale": "A local plan does not authorize or perform paid security service activation."
         },
         {
           "key": "B",
-          "text": "Bulk dismissal changes reporting without fixing exposure",
-          "rationale": "A green chart can hide unresolved vulnerabilities. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "The cloud image assessment remains unexecuted",
+          "rationale": "A local plan cannot demonstrate provider entitlement, image ingestion or cloud vulnerability findings."
         },
         {
           "key": "C",
-          "text": "The pipeline converts a failing security decision into success",
-          "rationale": "Visible output alone does not block promotion. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Cloud scan passed because the plan parses",
+          "rationale": "Syntactic validity does not exercise actual image assessment or provider result collection."
+        },
+        {
+          "key": "D",
+          "text": "No vulnerabilities exist because no results arrived",
+          "rationale": "Absent execution evidence cannot establish that the image has no known vulnerable components."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "A safe top-level version can still resolve unsafe children. The selected answer is direct manifests alone do not describe all resolved packages.",
+      "explanation": "A local plan does not authorize or perform paid security service activation. A local plan cannot demonstrate provider entitlement, image ingestion or cloud vulnerability findings. Syntactic validity does not exercise actual image assessment or provider result collection. Absent execution evidence cannot establish that the image has no known vulnerable components.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L22-Q038",
-      "checkpointId": "CP1",
-      "caseId": "L22-C08",
-      "task": "verification",
-      "caseContext": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "applied",
-      "question": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A SARIF report was generated but upload failed, and branch policy expects the provider's code-scanning result. What needs investigation?",
       "options": [
         {
           "key": "A",
-          "text": "A controlled disallowed finding stops the protected release",
-          "rationale": "A negative probe demonstrates enforcement. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the source file was formatted",
+          "rationale": "Formatting does not repair analysis result upload authorization or required-check publication."
         },
         {
           "key": "B",
-          "text": "The resolved lock graph no longer includes the affected version",
-          "rationale": "The proof must inspect actual build inputs. This directly addresses the constraint stated in this case."
+          "text": "Only whether the SARIF document parses locally",
+          "rationale": "Valid document structure does not establish upload authorization or successful provider ingestion."
         },
         {
           "key": "C",
-          "text": "Each critical finding has a fix or approved documented exception",
-          "rationale": "The review should examine actual risk treatment. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the scanner process exited successfully",
+          "rationale": "Local process success does not prove that provider publication and branch enforcement succeeded."
+        },
+        {
+          "key": "D",
+          "text": "Result publication permissions and the required check outcome",
+          "rationale": "Local analysis output does not prove provider ingestion or successful enforcement of the expected branch gate."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The proof must inspect actual build inputs. The selected answer is the resolved lock graph no longer includes the affected version.",
+      "explanation": "Formatting does not repair analysis result upload authorization or required-check publication. Valid document structure does not establish upload authorization or successful provider ingestion. Local process success does not prove that provider publication and branch enforcement succeeded. Local analysis output does not prove provider ingestion or successful enforcement of the expected branch gate.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L22-Q039",
-      "checkpointId": "CP1",
-      "caseId": "L22-C08",
-      "task": "safeguard",
-      "caseContext": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.5"
       ],
       "difficulty": "applied",
-      "question": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Scanning uses a pinned action commit, but its database is stale and the scanner lacks access to the intended image. What does pinning establish and what remains missing?",
       "options": [
         {
           "key": "A",
-          "text": "Separate tool failure from vulnerability-policy failure",
-          "rationale": "Both need visible but appropriately classified handling. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "A stale database proves the image is clean",
+          "rationale": "Outdated advisory knowledge limits coverage rather than demonstrating absence of vulnerabilities."
         },
         {
           "key": "B",
-          "text": "Review compatibility and rerun representative tests",
-          "rationale": "Transitive changes can affect application behavior. This directly addresses the constraint stated in this case."
+          "text": "Tool-source identity; current data and image assessment remain needed",
+          "rationale": "An immutable action reference does not guarantee fresh advisory data or access to the assessed artifact."
         },
         {
           "key": "C",
-          "text": "Audit dismissal permissions and reasons",
-          "rationale": "Uncontrolled suppression undermines the security signal. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "All scan inputs and findings are automatically trustworthy",
+          "rationale": "Pinning one tool source cannot establish correctness of every runtime input and result."
+        },
+        {
+          "key": "D",
+          "text": "Image access is unnecessary once an action is pinned",
+          "rationale": "The scanner must still inspect the intended image to assess its components."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Transitive changes can affect application behavior. The selected answer is review compatibility and rerun representative tests.",
+      "explanation": "Outdated advisory knowledge limits coverage rather than demonstrating absence of vulnerabilities. An immutable action reference does not guarantee fresh advisory data or access to the assessed artifact. Pinning one tool source cannot establish correctness of every runtime input and result. The scanner must still inspect the intended image to assess its components.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L22-Q040",
-      "checkpointId": "CP1",
-      "caseId": "L22-C08",
-      "task": "tradeoff",
-      "caseContext": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D4.3.6"
+        "D4.3.1"
       ],
       "difficulty": "advanced",
-      "question": "Stale transitive dependency: The direct dependency version is unchanged, but a vulnerable transitive component remains in the lock file. The team selects this remedy: \"Inspect the resolved graph and update the affected dependency chain.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The scan reports zero findings after analyzing JavaScript only, while the release API is C# and its generated build sources were omitted. Which acceptance correction addresses both coverage gaps?",
       "options": [
         {
           "key": "A",
-          "text": "Strict gating can interrupt delivery for false positives",
-          "rationale": "A reviewed exception process preserves accountability. That addresses a different requirement: Ignored scan exit. It does not directly resolve this case's stated constraint."
+          "text": "Analyze the intended C# build and verify expected source coverage",
+          "rationale": "A clean result is meaningful only when analysis includes the actual application language and relevant build inputs."
         },
         {
           "key": "B",
-          "text": "A fix may depend on an upstream maintainer release",
-          "rationale": "Mitigation may be needed while waiting. This directly addresses the constraint stated in this case."
+          "text": "Accept zero findings because the scanner completed",
+          "rationale": "Successful execution does not prove that the intended application sources were analyzed."
         },
         {
           "key": "C",
-          "text": "Accepted risks remain risks until resolved",
-          "rationale": "Exceptions need owners scope and review dates. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Suppress the language mismatch as an artifact naming issue",
+          "rationale": "Language and source coverage errors are substantive assessment gaps rather than presentation metadata."
+        },
+        {
+          "key": "D",
+          "text": "Run dependency advisory scanning instead of code analysis",
+          "rationale": "Dependency advisories do not replace analysis of the application code and its build sources."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A clean result is meaningful only when analysis includes the actual application language and relevant build inputs. Successful execution does not prove that the intended application sources were analyzed. Language and source coverage errors are substantive assessment gaps rather than presentation metadata. Dependency advisories do not replace analysis of the application code and its build sources.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"applicationLanguage\":\"csharp\",\"analyzedLanguages\":[\"javascript\"],\"generatedBuildSourcesIncluded\":false,\"findings\":0,\"scannerCompleted\":true}"
+      }
+    },
+    {
+      "id": "L22-Q041",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D1.2.5"
+      ],
+      "difficulty": "foundational",
+      "question": "The dependency inventory reports an unknown license expression for one component. Which next step fits an evidence-based license policy?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Delete the package name from the report",
+          "rationale": "Removing inventory evidence does not remove the component or resolve its license classification."
+        },
+        {
+          "key": "B",
+          "text": "Queue a component-specific review before approval",
+          "rationale": "An unknown license requires resolving evidence rather than assuming it meets the organization's policy."
+        },
+        {
+          "key": "C",
+          "text": "Treat unknown as automatically allowed",
+          "rationale": "Missing license evidence cannot establish that the component satisfies the approved policy."
+        },
+        {
+          "key": "D",
+          "text": "Treat the vulnerability score as its license",
+          "rationale": "Security severity does not define the legal license expression attached to the component."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Mitigation may be needed while waiting. The selected answer is a fix may depend on an upstream maintainer release.",
+      "explanation": "Removing inventory evidence does not remove the component or resolve its license classification. An unknown license requires resolving evidence rather than assuming it meets the organization's policy. Missing license evidence cannot establish that the component satisfies the approved policy. Security severity does not define the legal license expression attached to the component.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q041",
-      "checkpointId": "CP5",
-      "caseId": "L22-C09",
-      "task": "remedy",
-      "caseContext": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review.",
-      "objectiveIds": [
-        "D1.2.5",
-        "D4.3.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Require scan evidence for the exact release digest",
-          "rationale": "Security evidence must match the delivered bytes. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Inspect the resolved graph and update the affected dependency chain",
-          "rationale": "The deployed dependency graph includes transitive components. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Require justified dispositions and verify remediation evidence",
-          "rationale": "Alert status should reflect an accountable risk decision. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Alert status should reflect an accountable risk decision. The selected answer is require justified dispositions and verify remediation evidence.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q042",
       "checkpointId": "CP5",
-      "caseId": "L22-C09",
-      "task": "diagnosis",
-      "caseContext": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review.",
       "objectiveIds": [
-        "D1.2.5",
-        "D4.3.1"
+        "D1.2.5"
       ],
       "difficulty": "foundational",
-      "question": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A security advisory scan is clean, but a new dependency has a disallowed license under company policy. What should the license gate do?",
       "options": [
         {
           "key": "A",
-          "text": "Direct manifests alone do not describe all resolved packages",
-          "rationale": "A safe top-level version can still resolve unsafe children. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "text": "Pass because no vulnerability was found",
+          "rationale": "A security result does not establish compliance with the organization's approved license policy."
         },
         {
           "key": "B",
-          "text": "Bulk dismissal changes reporting without fixing exposure",
-          "rationale": "A green chart can hide unresolved vulnerabilities. This directly addresses the constraint stated in this case."
+          "text": "Classify the dependency using only the application's own license",
+          "rationale": "The top-level project license does not automatically replace the separate dependency's license terms."
         },
         {
           "key": "C",
-          "text": "A reused tag hides the change in image identity",
-          "rationale": "An earlier result cannot validate a different image. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Disable license inventory for this pull request",
+          "rationale": "Hiding the component avoids the review rather than satisfying the stated acceptance rule."
+        },
+        {
+          "key": "D",
+          "text": "Block or require the defined reviewed exception",
+          "rationale": "Security and license policy are separate, so clean advisory results do not override license restrictions."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "A green chart can hide unresolved vulnerabilities. The selected answer is bulk dismissal changes reporting without fixing exposure.",
+      "explanation": "A security result does not establish compliance with the organization's approved license policy. The top-level project license does not automatically replace the separate dependency's license terms. Hiding the component avoids the review rather than satisfying the stated acceptance rule. Security and license policy are separate, so clean advisory results do not override license restrictions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q043",
       "checkpointId": "CP5",
-      "caseId": "L22-C09",
-      "task": "verification",
-      "caseContext": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review.",
       "objectiveIds": [
-        "D1.2.5",
-        "D4.3.1"
+        "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A license review queue needs enough evidence for an owner to assess one newly introduced package. Which record is most useful?",
       "options": [
         {
           "key": "A",
-          "text": "Each critical finding has a fix or approved documented exception",
-          "rationale": "The review should examine actual risk treatment. This directly addresses the constraint stated in this case."
+          "text": "Only the parent package's license expression",
+          "rationale": "The indirect component can have a distinct license that needs its own version-specific evidence."
         },
         {
           "key": "B",
-          "text": "The release digest matches the scanned digest",
-          "rationale": "Content identity connects the scan to deployment. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Package identity, version, license expression and source evidence",
+          "rationale": "A specific component record supports a review of the actual license attached to that version."
         },
         {
           "key": "C",
-          "text": "The resolved lock graph no longer includes the affected version",
-          "rationale": "The proof must inspect actual build inputs. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "text": "Only the total dependency count",
+          "rationale": "A count cannot identify which component version or license needs policy assessment."
+        },
+        {
+          "key": "D",
+          "text": "Only the scanner's elapsed time",
+          "rationale": "Duration does not describe the component's license expression or supporting evidence source."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The review should examine actual risk treatment. The selected answer is each critical finding has a fix or approved documented exception.",
+      "explanation": "The indirect component can have a distinct license that needs its own version-specific evidence. A specific component record supports a review of the actual license attached to that version. A count cannot identify which component version or license needs policy assessment. Duration does not describe the component's license expression or supporting evidence source.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q044",
       "checkpointId": "CP5",
-      "caseId": "L22-C09",
-      "task": "safeguard",
-      "caseContext": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review.",
       "objectiveIds": [
-        "D1.2.5",
-        "D4.3.1"
+        "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A dependency's license metadata changes between versions while the package name stays the same. Which scope should approval distinguish?",
       "options": [
         {
           "key": "A",
-          "text": "Audit dismissal permissions and reasons",
-          "rationale": "Uncontrolled suppression undermines the security signal. This directly addresses the constraint stated in this case."
+          "text": "Only whether the package compiles successfully",
+          "rationale": "Successful compilation does not establish compliance with the organization's component license policy."
         },
         {
           "key": "B",
-          "text": "Prevent substitution after the security decision",
-          "rationale": "Mutable release selection can invalidate approval evidence. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "The actual package version and applicable license evidence",
+          "rationale": "Name-only approvals can miss a license change in a newly resolved component version."
         },
         {
           "key": "C",
-          "text": "Review compatibility and rerun representative tests",
-          "rationale": "Transitive changes can affect application behavior. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "text": "Only the unchanged package name",
+          "rationale": "A stable name does not prove that the new version has identical license metadata."
+        },
+        {
+          "key": "D",
+          "text": "Only the top-level project's MIT license",
+          "rationale": "The application's own license does not automatically replace each dependency's separate license terms."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Uncontrolled suppression undermines the security signal. The selected answer is audit dismissal permissions and reasons.",
+      "explanation": "Successful compilation does not establish compliance with the organization's component license policy. Name-only approvals can miss a license change in a newly resolved component version. A stable name does not prove that the new version has identical license metadata. The application's own license does not automatically replace each dependency's separate license terms.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q045",
       "checkpointId": "CP5",
-      "caseId": "L22-C09",
-      "task": "tradeoff",
-      "caseContext": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review.",
       "objectiveIds": [
-        "D1.2.5",
-        "D4.3.1"
+        "D1.2.5"
       ],
       "difficulty": "advanced",
-      "question": "Alert suppression: An engineer dismisses every high-severity alert to make the dashboard green before a release review. The team selects this remedy: \"Require justified dispositions and verify remediation evidence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A transitive component has an unknown license and a patched upgrade is required urgently for security. Which decision handles both assurance tracks?",
       "options": [
         {
           "key": "A",
-          "text": "Accepted risks remain risks until resolved",
-          "rationale": "Exceptions need owners scope and review dates. This directly addresses the constraint stated in this case."
+          "text": "Assign the parent project's license to every transitive component",
+          "rationale": "A parent dependency's license does not necessarily describe each separately licensed indirect package."
         },
         {
           "key": "B",
-          "text": "Digest-specific evidence increases metadata management",
-          "rationale": "The benefit is trustworthy release traceability. That addresses a different requirement: Scan provenance. It does not directly resolve this case's stated constraint."
+          "text": "Review the upgrade's security fix and unresolved license with accountable owners",
+          "rationale": "Security urgency does not automatically approve unknown license terms, so both policies need explicit decisions."
         },
         {
           "key": "C",
-          "text": "A fix may depend on an upstream maintainer release",
-          "rationale": "Mitigation may be needed while waiting. That addresses a different requirement: Stale transitive dependency. It does not directly resolve this case's stated constraint."
+          "text": "Ignore license review because the patch fixes security",
+          "rationale": "A security remediation can still introduce or retain an unresolved license-policy issue."
+        },
+        {
+          "key": "D",
+          "text": "Delay all security remediation permanently until the queue empties",
+          "rationale": "An indefinite delay ignores the vulnerability risk instead of coordinating the two review requirements."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Exceptions need owners scope and review dates. The selected answer is accepted risks remain risks until resolved.",
+      "explanation": "A parent dependency's license does not necessarily describe each separately licensed indirect package. Security urgency does not automatically approve unknown license terms, so both policies need explicit decisions. A security remediation can still introduce or retain an unresolved license-policy issue. An indefinite delay ignores the vulnerability risk instead of coordinating the two review requirements.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S5"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"component\":\"Example.Transitive\",\"license\":\"UNKNOWN\",\"securityUpgradeRequired\":true,\"newVersionTested\":false,\"reviewOwners\":[\"security\",\"license-policy\"]}"
+      }
     },
     {
       "id": "L22-Q046",
-      "checkpointId": "CP4",
-      "caseId": "L22-C10",
-      "task": "remedy",
-      "caseContext": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.3.5"
+        "D1.2.5"
       ],
       "difficulty": "foundational",
-      "question": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which next change most directly satisfies the stated requirement?",
+      "question": "The local exercise generates a license review queue but no reviewer has decided on its unknown entries. Which completion statement is accurate?",
       "options": [
         {
           "key": "A",
-          "text": "Require scan evidence for the exact release digest",
-          "rationale": "Security evidence must match the delivered bytes. This directly addresses the constraint stated in this case."
+          "text": "All unknown packages are legally unusable",
+          "rationale": "Missing metadata alone does not establish the final legal interpretation of a component's license."
         },
         {
           "key": "B",
-          "text": "Add dependency vulnerability analysis to the scan strategy",
-          "rationale": "Different risk classes need different scanning capabilities. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Every transitive dependency was removed from the application",
+          "rationale": "Generating a report does not change the actual resolved package graph or deployed components."
         },
         {
           "key": "C",
-          "text": "Require justified dispositions and verify remediation evidence",
-          "rationale": "Alert status should reflect an accountable risk decision. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Inventory and queue created; policy decisions pending",
+          "rationale": "Creating review records does not establish that unresolved component licenses were approved."
+        },
+        {
+          "key": "D",
+          "text": "All dependency licenses approved automatically",
+          "rationale": "A queue is evidence of pending review rather than a completed approval decision."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Security evidence must match the delivered bytes. The selected answer is require scan evidence for the exact release digest.",
+      "explanation": "Missing metadata alone does not establish the final legal interpretation of a component's license. Generating a report does not change the actual resolved package graph or deployed components. Creating review records does not establish that unresolved component licenses were approved. A queue is evidence of pending review rather than a completed approval decision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q047",
-      "checkpointId": "CP4",
-      "caseId": "L22-C10",
-      "task": "diagnosis",
-      "caseContext": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.3.5"
+        "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A workflow compares dependency changes in pull requests and should reject license expressions outside an approved list. Which configuration addresses that policy?",
       "options": [
         {
           "key": "A",
-          "text": "Bulk dismissal changes reporting without fixing exposure",
-          "rationale": "A green chart can hide unresolved vulnerabilities. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Only a vulnerability severity threshold",
+          "rationale": "Security severity does not express which component licenses the organization permits."
         },
         {
           "key": "B",
-          "text": "A reused tag hides the change in image identity",
-          "rationale": "An earlier result cannot validate a different image. This directly addresses the constraint stated in this case."
+          "text": "Only a package cache key",
+          "rationale": "Cache identity controls reuse rather than license-policy acceptance of dependency changes."
         },
         {
           "key": "C",
-          "text": "Secret detection does not inspect dependency advisories",
-          "rationale": "One security tool does not cover every threat category. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Only a global MIT badge in README",
+          "rationale": "A repository badge does not evaluate separate dependency licenses against the organization's policy."
+        },
+        {
+          "key": "D",
+          "text": "An explicit allowlist or deny policy in dependency review",
+          "rationale": "Dependency review supports applying a configured license policy to introduced component changes."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "An earlier result cannot validate a different image. The selected answer is a reused tag hides the change in image identity.",
+      "explanation": "Security severity does not express which component licenses the organization permits. Cache identity controls reuse rather than license-policy acceptance of dependency changes. A repository badge does not evaluate separate dependency licenses against the organization's policy. Dependency review supports applying a configured license policy to introduced component changes.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L22-Q048",
-      "checkpointId": "CP4",
-      "caseId": "L22-C10",
-      "task": "verification",
-      "caseContext": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.3.5"
+        "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The report includes direct packages only, but policy applies to distributed transitive components too. What should license inventory change?",
       "options": [
         {
           "key": "A",
-          "text": "A known vulnerable test dependency produces the expected alert",
-          "rationale": "The probe should target the previously missing scan class. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "Approve based only on package download counts",
+          "rationale": "Popularity does not establish the applicable license expression or policy compatibility."
         },
         {
           "key": "B",
-          "text": "Each critical finding has a fix or approved documented exception",
-          "rationale": "The review should examine actual risk treatment. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Include the resolved transitive dependency set",
+          "rationale": "License review needs the relevant indirect components actually consumed or distributed by the application."
         },
         {
           "key": "C",
-          "text": "The release digest matches the scanned digest",
-          "rationale": "Content identity connects the scan to deployment. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Content identity connects the scan to deployment. The selected answer is the release digest matches the scanned digest.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L22-Q049",
-      "checkpointId": "CP4",
-      "caseId": "L22-C10",
-      "task": "safeguard",
-      "caseContext": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content.",
-      "objectiveIds": [
-        "D4.3.5"
-      ],
-      "difficulty": "applied",
-      "question": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Audit dismissal permissions and reasons",
-          "rationale": "Uncontrolled suppression undermines the security signal. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Infer every indirect license from its parent",
+          "rationale": "Dependencies can have separate license terms that differ from the referencing parent component."
         },
         {
-          "key": "B",
-          "text": "Prevent substitution after the security decision",
-          "rationale": "Mutable release selection can invalidate approval evidence. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Use a controlled fixture rather than a live exploitable deployment",
-          "rationale": "Validation should not create unnecessary exposure. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Ignore indirect packages that lack source imports",
+          "rationale": "A package can be distributed or used transitively without a direct source-level import."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Mutable release selection can invalidate approval evidence. The selected answer is prevent substitution after the security decision.",
+      "explanation": "Popularity does not establish the applicable license expression or policy compatibility. License review needs the relevant indirect components actually consumed or distributed by the application. Dependencies can have separate license terms that differ from the referencing parent component. A package can be distributed or used transitively without a direct source-level import.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
+      ]
+    },
+    {
+      "id": "L22-Q049",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D1.2.5"
+      ],
+      "difficulty": "applied",
+      "question": "An approved temporary license exception applies to one version until a named expiry date. Which update should trigger reassessment?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only a renamed pipeline job",
+          "rationale": "A job label does not determine whether the component still matches the exception's scope."
+        },
+        {
+          "key": "B",
+          "text": "A component version or license-evidence change",
+          "rationale": "A bounded exception does not automatically extend to different versions or changed license evidence."
+        },
+        {
+          "key": "C",
+          "text": "Only an unchanged package name despite a version upgrade",
+          "rationale": "A name-level match does not establish that new version terms remain within the approved exception."
+        },
+        {
+          "key": "D",
+          "text": "Only a faster dependency restore",
+          "rationale": "Restore duration does not change the license evidence covered by the approved exception."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A job label does not determine whether the component still matches the exception's scope. A bounded exception does not automatically extend to different versions or changed license evidence. A name-level match does not establish that new version terms remain within the approved exception. Restore duration does not change the license evidence covered by the approved exception.",
+      "sourceIds": [
+        "S5"
       ]
     },
     {
       "id": "L22-Q050",
-      "checkpointId": "CP4",
-      "caseId": "L22-C10",
-      "task": "tradeoff",
-      "caseContext": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D4.3.5"
+        "D4.3.1",
+        "D4.3.6",
+        "D4.2.4",
+        "D1.2.5"
       ],
       "difficulty": "advanced",
-      "question": "Scan provenance: A clean image report belongs to yesterday's digest, but today's release uses a rebuilt tag with different content. The team selects this remedy: \"Require scan evidence for the exact release digest.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The release has clean source results, an unresolved critical transitive advisory, one unknown license and a successful synthetic secret test. What should the gate conclude?",
       "options": [
         {
           "key": "A",
-          "text": "More scanners add triage and maintenance work",
-          "rationale": "Coverage should match the repository's actual risks. That addresses a different requirement: Scan gap. It does not directly resolve this case's stated constraint."
+          "text": "The source scan implicitly approves package licenses",
+          "rationale": "Source-code security analysis does not decide license compliance or remediate transitive advisories."
         },
         {
           "key": "B",
-          "text": "Accepted risks remain risks until resolved",
-          "rationale": "Exceptions need owners scope and review dates. That addresses a different requirement: Alert suppression. It does not directly resolve this case's stated constraint."
+          "text": "Release remains blocked by unresolved required assurance decisions",
+          "rationale": "A clean result in one scan category does not satisfy other unresolved security and license policies."
         },
         {
           "key": "C",
-          "text": "Digest-specific evidence increases metadata management",
-          "rationale": "The benefit is trustworthy release traceability. This directly addresses the constraint stated in this case."
+          "text": "Release passes because most categories succeeded",
+          "rationale": "Majority voting cannot override a required vulnerability or license-policy acceptance condition."
+        },
+        {
+          "key": "D",
+          "text": "The synthetic test proves all real credentials are absent",
+          "rationale": "A deterministic fixture covers its specific detection path rather than every possible credential exposure."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "The benefit is trustworthy release traceability. The selected answer is digest-specific evidence increases metadata management.",
+      "explanation": "Source-code security analysis does not decide license compliance or remediate transitive advisories. A clean result in one scan category does not satisfy other unresolved security and license policies. Majority voting cannot override a required vulnerability or license-policy acceptance condition. A deterministic fixture covers its specific detection path rather than every possible credential exposure.",
       "sourceIds": [
         "S1",
         "S2",
-        "S3"
-      ]
+        "S5",
+        "S6"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"sourceAnalysis\":\"clean\",\"criticalTransitiveAdvisory\":\"unresolved\",\"newDependencyLicense\":\"UNKNOWN\",\"syntheticSecretFixture\":\"detected and repaired\"}"
+      }
     }
   ]
 }

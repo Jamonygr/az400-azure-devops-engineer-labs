@@ -15,8 +15,8 @@ Learner role: **Observability engineer**. Outcome: Collect telemetry and configu
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair passed in CourseScanMonitorSequences.Tests.ps1. Local .NET package inventory/advisory queries and Gitleaks scans are real. GitHub/Azure APIs and Docker/Trivy reports are explicit fixtures; live security integration and alert delivery have not run. Repository CI separately runs the actual application container. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -51,7 +51,7 @@ Official objective topic IDs: `D1.2.7`, `D5.1.1`, `D5.1.2`, `D5.1.3`, `D5.1.4`
 | [CP2](#task-2) | Connect a workspace-based Application Insights component |
 | [CP3](#task-3) | Inspect supported metric names before selecting alerts |
 | [CP4](#task-4) | Create a silent sandbox response-time alert |
-| [CP5](#task-5) | Map pipeline and platform telemetry to owned response actions |
+| [CP5](#task-5) | Evaluate owned telemetry response decisions |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -239,7 +239,7 @@ Common failure and safe retry: No telemetry means no proof of firing behavior; u
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Map pipeline and platform telemetry to owned response actions
+## Task 5 — Evaluate owned telemetry response decisions
 
 <a id="task-5"></a>
 
@@ -254,15 +254,21 @@ Checkpoint: `CP5`
 ```powershell
 $map=[ordered]@{application='request duration/error rate';infrastructure=@('CPU','memory','disk','network');github='workflow_run completion and repository insights';azurePipelines='build/release result';notificationMode='reviewed owner only';externalMessagesSent=0;liveTrafficVerified=$false}
  $map|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'telemetry-response-map.json')
+$events=@(@{id='owned-slow';resourceGroup=$ResourceGroup;requests=12;averageMs=1200},@{id='owned-fast';resourceGroup=$ResourceGroup;requests=20;averageMs=200},@{id='foreign-slow';resourceGroup='another-group';requests=100;averageMs=2000})
+$decisions=@($events|ForEach-Object {@{id=$_.id;action=$(if($_.resourceGroup -ne $ResourceGroup){'exclude-unowned'}elseif($_.requests -gt 0 -and $_.averageMs -gt 1000){'investigate-latency'}else{'observe'});sent=$false}})
+$decisions|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'response-decisions.json')
 ```
 
-Expected state: Application, infrastructure, and delivery signals have distinct response paths.
+Expected state: Three synthetic observations yield investigate-latency, observe, and exclude-unowned decisions. No notification is sent; external alert delivery remains unverified.
 
 Positive validation:
 
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json
  if($m.infrastructure.Count -ne 4 -or $m.github -notmatch 'workflow_run'){throw 'Telemetry signal map incomplete.'}
+
+$d=@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json)
+if(@($d|Where-Object action -eq 'investigate-latency').Count -ne 1 -or @($d|Where-Object action -eq 'exclude-unowned').Count -ne 1){throw 'Owned response routing did not distinguish slow, healthy and unowned events.'}
 ```
 
 Negative validation:
@@ -270,9 +276,11 @@ Negative validation:
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'telemetry-response-map.json') -Raw|ConvertFrom-Json
  if($m.externalMessagesSent -ne 0 -or $m.liveTrafficVerified){throw 'Design review cannot claim traffic/notification verification.'}
+
+if(@(Get-Content (Join-Path $WorkRoot 'response-decisions.json') -Raw|ConvertFrom-Json|Where-Object sent).Count){throw 'Offline routing must not send notifications.'}
 ```
 
-Evidence to retain: Signal-to-owner/action matrix and unverified integration gates.
+Evidence to retain: Response map and computed response-decisions.json for slow, healthy and foreign resource observations.
 
 Common failure and safe retry: Configure VM/Container/Storage/Network Insights only for approved owned resources; avoid collecting credentials or personal request bodies.
 

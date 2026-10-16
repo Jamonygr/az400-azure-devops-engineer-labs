@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Read back reviewers and self-review policy rather than relying on the submitted JSON. The environment name in a dormant workflow must be deliberately mapped to the run-owned environment before activation.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. All five checkpoint commands, final validators and named fault/repair passed in CourseReleaseSequences.Tests.ps1. Local .NET publishing/tests, EF SQL generation and Bicep compilation are real; GitHub, Azure and readiness HTTP responses are explicit fail-closed doubles. Live release, SQL authentication and traffic routing have not run.
 
 ## CP1 — Prepare an environment approval policy
 
@@ -41,13 +41,13 @@ Retain and inspect: Workflow event, environment name, and minimum permissions.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Replace the dormant template environment name with release-$RunId before any separately authorized activation; bind its exact name to the federation subject and use a distinct reviewer.
 
-## CP4 — Model Azure Pipelines checks outside YAML author control
+## CP4 — Exercise owner-controlled approval and exclusive-lock decisions
 
-The approval contract separates protected resource checks from editable pipeline YAML.
+A local five-case resource policy model accepts an independently approved main release and rejects self-approval, a feature branch, an unavailable lock and missing approval. Real Azure DevOps resource checks still require bootstrap.
 
 Foundation/supporting task; no additional exam-objective coverage is claimed.
 
-Retain and inspect: Protected-resource check specification and owner.
+Retain and inspect: Computed decisions for all five requests, policy owner and explicit provider verification limitation.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Configure real checks through the separate privileged resource bootstrap; reading a YAML environment name alone does not prove approval enforcement.
 

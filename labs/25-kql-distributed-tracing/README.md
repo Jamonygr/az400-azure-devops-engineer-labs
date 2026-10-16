@@ -360,7 +360,7 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 ## Microsoft and platform sources
 
 - [Primary source 1](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview) — reviewed 2026-10-16.
-- [Primary source 2](https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data) — reviewed 2026-10-16.
+- [Primary source 2](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-collection-walkthroughs) — reviewed 2026-10-16.
 - [Primary source 3](https://learn.microsoft.com/en-us/kusto/query/join-leftouter) — reviewed 2026-10-16.
 
 ## Lifecycle scripts and worked solution

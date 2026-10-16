@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 Expected scanner exit 1 means the seeded fixture was blocked, not that the scanner crashed. Preserve redacted reports and provenance; never count a missing database/report as zero findings.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. All five checkpoint commands, final validators and named fault/repair passed in CourseScanMonitorSequences.Tests.ps1. Local .NET package inventory/advisory queries and Gitleaks scans are real. GitHub/Azure APIs and Docker/Trivy reports are explicit fixtures; live security integration and alert delivery have not run. Repository CI separately runs the actual application container.
 
 ## CP1 — Inventory direct and transitive dependencies
 

@@ -231,7 +231,7 @@ Positive validation:
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json;$scope="/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup"
  $a=@(az role assignment list --subscription $SubscriptionId --assignee $m.principalId --scope $scope -o json|ConvertFrom-Json)
- if(@($a|Where-Object scope -eq $scope).Count -lt 1){throw 'Scoped role assignment absent.'}
+ if(@($a|Where-Object {$_.scope -ieq $scope -and $_.principalId -eq $m.principalId -and $_.roleDefinitionId -match '/acdd72a7-3385-48ef-bd42-f606fba81ae7$'}).Count -lt 1){throw 'Exact scoped Reader assignment absent.'}
 ```
 
 Negative validation:

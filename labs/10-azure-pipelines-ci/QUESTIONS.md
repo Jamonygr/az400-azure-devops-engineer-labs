@@ -10,498 +10,587 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 Foundational · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
 
-GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which next change most directly satisfies the stated requirement?
+The lab uses Azure Repos, while a colleague proposes importing a GitHub repository. Which additional boundary must be prepared before that integration works?
 
-- **A.** Use a unique run identity and record source revision metadata
-- **B.** Restore scoped GitHub app authorization for that repository
-- **C.** Define an explicit CI trigger for the intended branches
+- **A.** An authorized GitHub repository connection and pipeline access
+- **B.** Only an annotated Git tag in Azure Repos
+- **C.** Only a new Azure service connection for application deployment
+- **D.** Only a different source YAML path in the same inaccessible provider
 
 ## L10-Q002
 
-Foundational · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.1](../../docs/objective-map.md)
 
-GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which explanation best accounts for the behavior or constraint described?
+A learner lists repositories in the owned project before cloning. Which returned values should establish the exact source boundary?
 
-- **A.** A repeated friendly label is not a unique build identifier
-- **B.** The source integration no longer has repository access
-- **C.** The trigger configuration excludes push-based execution
+- **A.** Only the default branch label returned for the repository
+- **B.** Repository ID, project identity and approved remote URL
+- **C.** Only the most recent commit author name
+- **D.** Only the repository friendly name
 
 ## L10-Q003
 
-Applied · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which observation provides the strongest evidence that the requested result was achieved?
+The sample CI should run for main pushes in Azure Pipelines YAML. Which section defines that automatic source-change scheduling?
 
-- **A.** A matching push starts a run and an excluded push does not
-- **B.** The artifact resolves to one run and exact commit
-- **C.** A pipeline run checks out the intended private commit
+- **A.** A variable named BuildDisplayBranch with main as its value
+- **B.** A trigger branch include rule for main
+- **C.** A deployment environment named main
+- **D.** A publish artifact step named main
 
 ## L10-Q004
 
-Applied · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. Which execution safeguard most directly addresses the risk in this case?
+The repository selects an exact SDK through global.json. Which UseDotNet task configuration preserves that source-controlled choice?
 
-- **A.** Do not treat a display number as the only content identifier
-- **B.** Authorize only the participating repository rather than the whole account
-- **C.** Review organization settings that affect implied YAML triggers
+- **A.** Remove SDK setup because YAML compilation installs every runtime
+- **B.** Use the build number as the SDK version
+- **C.** Install whichever SDK the last pipeline used
+- **D.** Enable useGlobalJson for SDK installation
 
 ## L10-Q005
 
-Advanced · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-GitHub connection failure: An Azure Pipeline cannot check out a private GitHub repository after the integration app loses access. The team selects this remedy: "Restore scoped GitHub app authorization for that repository." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A YAML author places a step task directly beside stages rather than within a job. What structural repair is needed?
 
-- **A.** External integration depends on installation ownership and lifecycle
-- **B.** Explicit triggers need maintenance when branch conventions change
-- **C.** Readable version labels and immutable identity serve different needs
+- **A.** Rename the task so its display name contains job
+- **B.** Grant subscription Owner to the build identity
+- **C.** Add more hosted parallelism to the organization
+- **D.** Nest executable steps inside a stage job
 
 ## L10-Q006
 
-Foundational · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.2.3](../../docs/objective-map.md)
 
-No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which next change most directly satisfies the stated requirement?
+A build must retain machine-readable tests even when assertions fail. Which reporting design fits this requirement without hiding the failure?
 
-- **A.** Restore scoped GitHub app authorization for that repository
-- **B.** Define an explicit CI trigger for the intended branches
-- **C.** Include shared build inputs in the path filter
+- **A.** Publish reports only after every test succeeds
+- **B.** Publish test results on failure while keeping tests blocking
+- **C.** Suppress test exit codes so publication always looks green
+- **D.** Replace results with the build queue timestamp
 
 ## L10-Q007
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.4](../../docs/objective-map.md)
 
-No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which explanation best accounts for the behavior or constraint described?
+A valid pipeline YAML exists only in an uncommitted local file. Why does pushing the current main branch not activate that change?
 
-- **A.** The filter tracks service files but omits shared dependencies
-- **B.** The source integration no longer has repository access
-- **C.** The trigger configuration excludes push-based execution
+- **A.** Azure Pipelines requires every build to deploy infrastructure first
+- **B.** The repository token needs organization-wide administrator authority
+- **C.** The solution must contain at least one database migration
+- **D.** The provider reads committed repository content for its selected revision
 
 ## L10-Q008
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which observation provides the strongest evidence that the requested result was achieved?
+A setup command registers a YAML definition with skip-first-run true. What has been established at that point?
 
-- **A.** Changing the shared script schedules the dependent service pipeline
-- **B.** A pipeline run checks out the intended private commit
-- **C.** A matching push starts a run and an excluded push does not
+- **A.** A production deployment passed all environment checks
+- **B.** The application artifact has already passed all tests
+- **C.** The definition exists but a successful build is unproven
+- **D.** The build identity automatically owns the Azure subscription
 
 ## L10-Q009
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. Which execution safeguard most directly addresses the risk in this case?
+A newly queued build reports status notStarted and result null. What should the learner conclude about CI completion?
 
-- **A.** Authorize only the participating repository rather than the whole account
-- **B.** Review organization settings that affect implied YAML triggers
-- **C.** Test representative included and excluded paths
+- **A.** It deployed successfully if the YAML filename is correct
+- **B.** It remains pending until execution completes successfully
+- **C.** It failed permanently because no result is available immediately
+- **D.** It passed because the queue command returned an ID
 
 ## L10-Q010
 
-Advanced · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-No automatic CI: Manually queued Azure runs succeed, but pushes never start a run because the YAML disables CI triggers. The team selects this remedy: "Define an explicit CI trigger for the intended branches." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A successful build publishes todo-api. Which source field must match the reviewed candidate before its artifact is accepted?
 
-- **A.** More complete filters may schedule additional work
-- **B.** External integration depends on installation ownership and lifecycle
-- **C.** Explicit triggers need maintenance when branch conventions change
+- **A.** Only the moving source branch display name
+- **B.** Only the artifact archive filename
+- **C.** The build sourceVersion exact commit identity
+- **D.** Only the build requester friendly name
 
 ## L10-Q011
 
-Foundational · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.3.3](../../docs/objective-map.md)
 
-Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which next change most directly satisfies the stated requirement?
+A clone retry finds a working copy whose origin differs from the resolved Azure Repos remote. How should setup proceed?
 
-- **A.** Include shared build inputs in the path filter
-- **B.** Use the actual authorized service connection identifier
-- **C.** Define an explicit CI trigger for the intended branches
+- **A.** Delete the organization to ensure a clean source boundary
+- **B.** Reset and force-push whichever origin already exists
+- **C.** Trust the directory because its name contains pipeline
+- **D.** Stop and investigate the repository identity mismatch
 
 ## L10-Q012
 
-Foundational · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which explanation best accounts for the behavior or constraint described?
+Two definitions share the requested pipeline name. Which additional information is necessary before reusing an existing definition safely?
 
-- **A.** The filter tracks service files but omits shared dependencies
-- **B.** YAML parsing does not validate every external resource relationship
-- **C.** The trigger configuration excludes push-based execution
+- **A.** Only the total historical build count
+- **B.** Only the requester email display value
+- **C.** Exact repository ID, project and YAML path
+- **D.** Only the definition creation date
 
 ## L10-Q013
 
-Applied · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which observation provides the strongest evidence that the requested result was achieved?
+The job creates build output but never publishes it. Why can another release pipeline not download todo-api from that run?
 
-- **A.** Changing the shared script schedules the dependent service pipeline
-- **B.** The task authenticates through the intended project connection
-- **C.** A matching push starts a run and an excluded push does not
+- **A.** Generated files need an explicit artifact publication step
+- **B.** Package publishing requires broad organization administrator rights
+- **C.** Every Release build configuration automatically uploads all files
+- **D.** The artifact name must equal the project GUID
 
 ## L10-Q014
 
-Applied · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. Which execution safeguard most directly addresses the risk in this case?
+A build finishes with result partiallySucceeded because a required test failure was tolerated. What should the course gate report?
 
-- **A.** Authorize the specific pipeline rather than every pipeline by default
-- **B.** Review organization settings that affect implied YAML triggers
-- **C.** Test representative included and excluded paths
+- **A.** Incomplete because required successful validation is absent
+- **B.** Passed because any finished build counts as success
+- **C.** Passed after changing the build display number
+- **D.** Passed if the package upload step succeeded
 
 ## L10-Q015
 
-Advanced · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.3.4](../../docs/objective-map.md)
 
-Path filter surprise: A shared build script changes outside the service folder, and the service pipeline does not run. The team selects this remedy: "Include shared build inputs in the path filter." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A retry finds the intended YAML and samples already committed with no staged diff. What source operation is appropriate?
 
-- **A.** Connection names form an operational dependency
-- **B.** Explicit triggers need maintenance when branch conventions change
-- **C.** More complete filters may schedule additional work
+- **A.** Reuse the verified revision without creating an empty commit
+- **B.** Grant all pipelines access to every service connection
+- **C.** Reset source to an unrelated earlier branch
+- **D.** Infer that hosted testing passed from no local changes
 
 ## L10-Q016
 
-Foundational · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
 
-Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which next change most directly satisfies the stated requirement?
+An Azure Repos YAML pipeline declares pr: main but pull requests still lack validation. What is required for this source provider?
 
-- **A.** Include shared build inputs in the path filter
-- **B.** Use the actual authorized service connection identifier
-- **C.** Publish the supported result format from the correct path
+```yaml
+trigger:
+  branches: {include: [main]}
+pr: [main]
+# Source provider: Azure Repos
+```
+
+- **A.** Rename the CI artifact to pull-request-validation
+- **B.** Configure an Azure Repos build-validation branch policy
+- **C.** Give every contributor permission to edit production secrets
+- **D.** Assume the YAML PR section overrides every repository policy
 
 ## L10-Q017
 
-Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
 
-Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which explanation best accounts for the behavior or constraint described?
+Main pushes touching only docs should not run application CI, while sample changes should. Which YAML design fits this scope?
 
-- **A.** Producing a result file does not automatically publish it
-- **B.** The filter tracks service files but omits shared dependencies
-- **C.** YAML parsing does not validate every external resource relationship
+- **A.** Combine the main branch filter with intended sample path includes
+- **B.** Publish documentation under a different artifact name
+- **C.** Add main only to the pipeline display name
+- **D.** Set every task to condition succeeded()
 
 ## L10-Q018
 
 Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which observation provides the strongest evidence that the requested result was achieved?
+A variable should select a template structure before jobs exist. Which expression timing matches this requirement in Azure Pipelines?
 
-- **A.** The run summary shows the expected test cases and failures
-- **B.** Changing the shared script schedules the dependent service pipeline
-- **C.** The task authenticates through the intended project connection
+- **A.** A compile-time parameter or template expression
+- **B.** A test result property from a previous step
+- **C.** A post-build artifact display label
+- **D.** A shell variable created in the last task
 
 ## L10-Q019
 
 Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. Which execution safeguard most directly addresses the risk in this case?
+A value created during a task must be used by a later task in the same job. Which mechanism is appropriate?
 
-- **A.** Authorize the specific pipeline rather than every pipeline by default
-- **B.** Publish diagnostics even on failure without masking failed status
-- **C.** Test representative included and excluded paths
+- **A.** Set only a process-local shell variable
+- **B.** Use the supported task.setvariable logging command
+- **C.** Change a YAML comment through the current shell
+- **D.** Declare the value as an already compiled parameter afterward
 
 ## L10-Q020
 
-Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-Task input error: A YAML task is syntactically valid but references a service connection name that does not exist in the project. The team selects this remedy: "Use the actual authorized service connection identifier." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An earlier pipeline creation request timed out after the server accepted it. What retry prevents duplicate owned definitions?
 
-- **A.** More complete filters may schedule additional work
-- **B.** Connection names form an operational dependency
-- **C.** Report paths and formats are part of the task contract
+```text
+Create response lost after timeout
+Name: ci-run42
+Repository ID: owned repository GUID
+```
+
+- **A.** Always create another pipeline with a random suffix
+- **B.** Assume timeout guarantees no provider mutation occurred
+- **C.** Delete every pipeline in the organization before retrying
+- **D.** Look up the exact owned name and repository before creating
 
 ## L10-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which next change most directly satisfies the stated requirement?
+A build has status completed and result succeeded, but sourceVersion differs from the saved lab SHA. How should validation respond?
 
-- **A.** Bind artifact download to the intended producing run
-- **B.** Use the actual authorized service connection identifier
-- **C.** Publish the supported result format from the correct path
+```json
+{"status":"completed","result":"succeeded","sourceVersion":"different-reviewed-sha"}
+```
+
+- **A.** Accept because main still has the same branch name
+- **B.** Reject the provenance mismatch despite successful execution
+- **C.** Accept if the requester is the same learner
+- **D.** Change the saved candidate SHA without reviewing the difference
 
 ## L10-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which explanation best accounts for the behavior or constraint described?
+The previous build's artifact has the same name as today's output. Which selection preserves promotion of the approved current candidate?
 
-- **A.** Producing a result file does not automatically publish it
-- **B.** The download selection is not tied to the validated build
-- **C.** YAML parsing does not validate every external resource relationship
+- **A.** Use the current branch name as the only selector
+- **B.** Download whichever named archive was listed first
+- **C.** Select the successful approved build ID and verify its sourceVersion
+- **D.** Rebuild at release time and reuse yesterday's artifact label
 
 ## L10-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which observation provides the strongest evidence that the requested result was achieved?
+A task needs a secret variable, but its script expects an environment variable that was never mapped. Which repair is appropriate?
 
-- **A.** The release records the expected build and artifact identity
-- **B.** The task authenticates through the intended project connection
-- **C.** The run summary shows the expected test cases and failures
+- **A.** Echo the secret into the YAML repository first
+- **B.** Map the secret explicitly into that task environment
+- **C.** Give every task every secret automatically
+- **D.** Rename the task so its display name matches the secret
 
 ## L10-Q024
 
-Applied · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. Which execution safeguard most directly addresses the risk in this case?
+A pipeline needs source read access but no ability to modify other projects. What authorization scope fits this workload?
 
-- **A.** Check source branch and run provenance before deployment
-- **B.** Authorize the specific pipeline rather than every pipeline by default
-- **C.** Publish diagnostics even on failure without masking failed status
+- **A.** Use collection-wide administration to avoid repository prompts
+- **B.** Use a personal administrator PAT in every step
+- **C.** Use the project-scoped build identity with needed repository reads
+- **D.** Grant subscription Owner to solve source repository access
 
 ## L10-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.4](../../docs/objective-map.md)
 
-Unpublished Azure test results: The test process creates a report, but the run summary displays no tests because no publication task reads it. The team selects this remedy: "Publish the supported result format from the correct path." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The workflow and source should enter the sandbox together without copied test results or local state. Which input list is appropriate?
 
-- **A.** Report paths and formats are part of the task contract
-- **B.** Explicit run selection requires promotion metadata
-- **C.** Connection names form an operational dependency
+- **A.** Copy only the existing application executable
+- **B.** Recursively copy every file including bin and state
+- **C.** Copy only directory names without file contents
+- **D.** Copy the tracked sample source allowlist
 
 ## L10-Q026
 
-Foundational · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which next change most directly satisfies the stated requirement?
+A saved definition ID points to the right repository but a different YAML path. What should the retry do?
 
-- **A.** Publish the supported result format from the correct path
-- **B.** Bind artifact download to the intended producing run
-- **C.** Evaluate Azure Pipelines integration with GitHub before changing platforms
+- **A.** Change the expected path locally without reviewing the source
+- **B.** Queue repeatedly until one build happens to succeed
+- **C.** Stop rather than silently reuse the different executable definition
+- **D.** Accept because YAML paths are cosmetic labels
 
 ## L10-Q027
 
-Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which explanation best accounts for the behavior or constraint described?
+A queued build waits because the organization has no available hosted parallelism. Which next step addresses the actual prerequisite?
 
-- **A.** The decision assumes code and pipeline must share a platform
-- **B.** Producing a result file does not automatically publish it
-- **C.** The download selection is not tied to the validated build
+- **A.** Obtain approved capacity or an authorized suitable isolated agent
+- **B.** Increase the repository contents permission to write
+- **C.** Delete the queued status from the local evidence file
+- **D.** Disable code coverage and mark the queued result green
 
 ## L10-Q028
 
-Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which observation provides the strongest evidence that the requested result was achieved?
+A downstream job needs an output variable produced by a named upstream task. What must its definition include?
 
-- **A.** GitHub changes build through the existing governed Azure pipeline
-- **B.** The run summary shows the expected test cases and failures
-- **C.** The release records the expected build and artifact identity
+- **A.** Only a matching artifact display name
+- **B.** Only a later position in the YAML file
+- **C.** Only the same variable spelling in an unrelated shell
+- **D.** An output variable reference through the dependency context
 
 ## L10-Q029
 
-Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. Which execution safeguard most directly addresses the risk in this case?
+The test task is allowed to fail for reporting, but package promotion must still be blocked. What should the final gate inspect?
 
-- **A.** Publish diagnostics even on failure without masking failed status
-- **B.** Check source branch and run provenance before deployment
-- **C.** Assess integration identity and permissions during the trial
+- **A.** Only whether the first restore step succeeded
+- **B.** Only whether a test report file exists
+- **C.** Actual test counters and the required failure outcome
+- **D.** Only whether the build directory was created
 
 ## L10-Q030
 
-Advanced · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Artifact confusion: Downstream stages download an artifact by a reused friendly name from an unintended run. The team selects this remedy: "Bind artifact download to the intended producing run." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release downloads an artifact then builds the application again. Why does this violate the intended build-once promotion model?
 
-- **A.** Report paths and formats are part of the task contract
-- **B.** Explicit run selection requires promotion metadata
-- **C.** Keeping two platforms increases integration administration
+```text
+Approved CI artifact: build 101, SHA A
+Release command: dotnet publish current main
+```
+
+- **A.** A new build always runs with broader project permissions
+- **B.** The deployed output can differ from the validated downloaded bytes
+- **C.** Downloading artifacts automatically disables all test execution
+- **D.** Every rebuild necessarily changes the database schema
 
 ## L10-Q031
 
-Foundational · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
 
-Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which next change most directly satisfies the stated requirement?
+A team needs one combined build for rapid main pushes while another build runs. What does trigger batch:true provide?
 
-- **A.** Evaluate Azure Pipelines integration with GitHub before changing platforms
-- **B.** Configure validation for the actual repository provider
-- **C.** Bind artifact download to the intended producing run
+- **A.** A subsequent CI run containing changes accumulated during active execution
+- **B.** Cancellation of every active production deployment automatically
+- **C.** Permission to skip all required tests after the first run
+- **D.** Automatic merging of every branch into main
 
 ## L10-Q032
 
-Foundational · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which explanation best accounts for the behavior or constraint described?
+A failed test should stop packaging, but diagnostic publication should still run. Which condition belongs on the diagnostic task?
 
-- **A.** Repository providers do not share identical PR validation configuration
-- **B.** The download selection is not tied to the validated build
-- **C.** The decision assumes code and pipeline must share a platform
+- **A.** Remove all task failure signals from the test command
+- **B.** Use succeeded() and expect reports after failed upstream tests
+- **C.** Use a failure-tolerant reporting condition such as succeededOrFailed()
+- **D.** Set the diagnostic task as the only required test
 
 ## L10-Q033
 
 Applied · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which observation provides the strongest evidence that the requested result was achieved?
+The learner registers a pipeline against a project other than the journal-owned sandbox. Which safeguard should reject the operation before reuse?
 
-- **A.** The release records the expected build and artifact identity
-- **B.** GitHub changes build through the existing governed Azure pipeline
-- **C.** A test pull request produces the expected validation status
+- **A.** Compare the returned project ID/name with the owned context
+- **B.** Compare only its human-readable pipeline display name
+- **C.** Use a broad collection administrator token to ignore scope
+- **D.** Check that it contains at least one successful old build
 
 ## L10-Q034
 
-Applied · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. Which execution safeguard most directly addresses the risk in this case?
+The artifact name includes a release number, but its producing run is gone. What is lost for a source-to-artifact audit?
 
-- **A.** Check source branch and run provenance before deployment
-- **B.** Assess integration identity and permissions during the trial
-- **C.** Protect the target branch with the appropriate required validation
+- **A.** Only a checksum retained beside the archive
+- **B.** Only a copy of the current pipeline YAML
+- **C.** The verifiable execution record connecting validation and source revision
+- **D.** Only a package version label without the original run relationship
 
 ## L10-Q035
 
-Advanced · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Wrong pipeline platform: A team with established Azure Boards approvals and private-network agents considers moving CI solely because source is on GitHub. The team selects this remedy: "Evaluate Azure Pipelines integration with GitHub before changing platforms." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A variable group contains nonsecret build options but is authorized to all pipelines by default. What narrower design fits this exercise?
 
-- **A.** Explicit run selection requires promotion metadata
-- **B.** Keeping two platforms increases integration administration
-- **C.** Provider portability may require policy changes as well as YAML
+- **A.** Assume nonsecret means every pipeline must inherit access
+- **B.** Grant every project contributor organization administrator membership
+- **C.** Store build options in a migration identity credential
+- **D.** Authorize only explicitly approved consuming pipelines
 
 ## L10-Q036
 
-Foundational · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which next change most directly satisfies the stated requirement?
+A learner observes a run successful on commit A then pushes commit B. What evidence is required to pass B's CI checkpoint?
 
-- **A.** Configure validation for the actual repository provider
-- **B.** Stop printing sensitive command lines and use supported secret handling
-- **C.** Evaluate Azure Pipelines integration with GitHub before changing platforms
+- **A.** A successful required execution whose sourceVersion is B
+- **B.** The successful A result because both use the same YAML filename
+- **C.** The fact that B has a later commit timestamp
+- **D.** The fact that A and B have the same author
 
 ## L10-Q037
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which explanation best accounts for the behavior or constraint described?
+Compile-time expressions refer to a runtime-generated value and resolve unexpectedly empty. Which boundary caused this error?
 
-- **A.** The decision assumes code and pipeline must share a platform
-- **B.** Repository providers do not share identical PR validation configuration
-- **C.** A secret variable is not safe if the script deliberately emits it
+- **A.** The agent does not support ordinary YAML comments
+- **B.** The value does not exist during template expansion
+- **C.** The artifact must be compressed using a different format
+- **D.** The pipeline needs an additional source repository tag
 
 ## L10-Q038
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.3.4](../../docs/objective-map.md)
 
-Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which observation provides the strongest evidence that the requested result was achieved?
+A script adds the reviewed workflow twice and stages no changes on retry. Which check prevents an unnecessary failing commit operation?
 
-- **A.** The task works while logs contain no sensitive value
-- **B.** GitHub changes build through the existing governed Azure pipeline
-- **C.** A test pull request produces the expected validation status
+- **A.** Reset every branch to the initial empty commit
+- **B.** Alter the test threshold solely to manufacture a diff
+- **C.** Push to another existing project to force execution
+- **D.** Inspect staged differences before running git commit
 
 ## L10-Q039
 
-Applied · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. Which execution safeguard most directly addresses the risk in this case?
+TRX reports show three failed tests despite a successful package upload. What is the correct release-quality conclusion from these observations?
 
-- **A.** Pass secrets only to the task that needs them
-- **B.** Assess integration identity and permissions during the trial
-- **C.** Protect the target branch with the appropriate required validation
+- **A.** A successful upload overrides the failed application assertions
+- **B.** The tests must have passed because the archive is nonempty
+- **C.** The report should be deleted before final validation
+- **D.** Artifact availability does not establish a passing test gate
 
 ## L10-Q040
 
-Advanced · [CP4](README.md#task-4) · [D3.3.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Pull-request trigger mismatch: A team copies Azure Repos validation assumptions into a GitHub-backed pipeline and PR runs behave differently. The team selects this remedy: "Configure validation for the actual repository provider." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A digest matches but the artifact belongs to a different successful source revision. Which assessment preserves the approved-candidate requirement?
 
-- **A.** Provider portability may require policy changes as well as YAML
-- **B.** Masking has limits for transformed or partial values
-- **C.** Keeping two platforms increases integration administration
+- **A.** Reject the source mismatch while recording passed content integrity
+- **B.** Accept because any successful source may replace an approved source
+- **C.** Rename the artifact to contain the approved SHA
+- **D.** Move the approved tag silently to the downloaded source
 
 ## L10-Q041
 
-Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which next change most directly satisfies the stated requirement?
+Main advances after a build is queued. The selected run succeeds for an earlier sourceVersion. How can the release avoid a branch-race mistake?
 
-- **A.** Use a unique run identity and record source revision metadata
-- **B.** Configure validation for the actual repository provider
-- **C.** Stop printing sensitive command lines and use supported secret handling
+```text
+Queued candidate: A
+Main after queue: B
+Completed build sourceVersion: A
+```
+
+- **A.** Compare only the run requester and pipeline friendly name
+- **B.** Bind promotion to an explicitly reviewed run and exact commit
+- **C.** Always choose the latest branch tip regardless of tested revision
+- **D.** Assume queue time permanently freezes the remote main reference
 
 ## L10-Q042
 
-Foundational · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
 
-Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which explanation best accounts for the behavior or constraint described?
+Azure Repos main requires pull-request validation plus push CI. A YAML pr block is present but no branch build policy exists. What complete design satisfies both requirements?
 
-- **A.** Repository providers do not share identical PR validation configuration
-- **B.** A secret variable is not safe if the script deliberately emits it
-- **C.** A repeated friendly label is not a unique build identifier
+- **A.** Keep main push triggers and add required branch build validation
+- **B.** Give every contributor permission to bypass all branch policies
+- **C.** Add a pipeline variable named RequiredPullRequestChecks
+- **D.** Remove push CI and rely on the unsupported YAML PR block
 
 ## L10-Q043
 
-Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which observation provides the strongest evidence that the requested result was achieved?
+An output is created in stage Build but needed in stage Deploy. Which design must the author inspect when it is empty?
 
-- **A.** A test pull request produces the expected validation status
-- **B.** The task works while logs contain no sensitive value
-- **C.** The artifact resolves to one run and exact commit
+```yaml
+stage: Deploy
+# Needs Build.Pack output named revision
+# stageDependencies must address the actual producer
+```
+
+- **A.** Only whether the output variable exists in the producing task local shell
+- **B.** Only whether the deployment timeout exceeds build duration
+- **C.** Named output exposure, stage dependency and stageDependencies mapping
+- **D.** Only whether both stages share the same display name
 
 ## L10-Q044
 
-Applied · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. Which execution safeguard most directly addresses the risk in this case?
+A release in one project needs artifacts from another restricted project. Which authorization design preserves both provenance and least privilege?
 
-- **A.** Do not treat a display number as the only content identifier
-- **B.** Protect the target branch with the appropriate required validation
-- **C.** Pass secrets only to the task that needs them
+- **A.** Disable every producing project security boundary
+- **B.** Grant the intended job identity only required source-build artifact reads
+- **C.** Use a collection administrator personal token for every task
+- **D.** Copy an arbitrary archive and invent the expected build ID
 
 ## L10-Q045
 
-Advanced · [CP3](README.md#task-3) · [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Secret printed by script: A YAML pipeline maps a secret into a script and then echoes the complete command line for diagnostics. The team selects this remedy: "Stop printing sensitive command lines and use supported secret handling." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A reusable template accepts Debug and Release, but a caller supplies Production as its configuration. Which response preserves its typed interface?
 
-- **A.** Provider portability may require policy changes as well as YAML
-- **B.** Masking has limits for transformed or partial values
-- **C.** Readable version labels and immutable identity serve different needs
+- **A.** Put Production in a shell variable after compilation
+- **B.** Treat Production as Release without recording the substitution
+- **C.** Reject the unsupported value before scheduling its build behavior
+- **D.** Give the template broader service-connection authority
 
 ## L10-Q046
 
-Foundational · [CP3](README.md#task-3) · [D3.1.4](../../docs/objective-map.md), [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.3.1](../../docs/objective-map.md)
 
-Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which next change most directly satisfies the stated requirement?
+A timed-out registration is retried; one matching name exists but points to another repository. What should the recovery logic do?
 
-- **A.** Restore scoped GitHub app authorization for that repository
-- **B.** Stop printing sensitive command lines and use supported secret handling
-- **C.** Use a unique run identity and record source revision metadata
+- **A.** Delete every pipeline with a similar name across the organization
+- **B.** Refuse adoption and reconcile the exact definition identity
+- **C.** Queue it once and trust any successful result
+- **D.** Adopt it because exactly one friendly name was returned
 
 ## L10-Q047
 
-Applied · [CP3](README.md#task-3) · [D3.1.4](../../docs/objective-map.md), [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.2.3](../../docs/objective-map.md)
 
-Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which explanation best accounts for the behavior or constraint described?
+Quality CI must prove tests passed and publish an immutable candidate, but optional diagnostics can fail. What policy distinguishes these outcomes correctly?
 
-- **A.** A repeated friendly label is not a unique build identifier
-- **B.** The source integration no longer has repository access
-- **C.** A secret variable is not safe if the script deliberately emits it
+- **A.** Treat artifact existence as the only required result
+- **B.** Treat a diagnostic timeout as proof application tests failed
+- **C.** Mark every task continueOnError so the run always finishes
+- **D.** Make required tests/package gates blocking and label diagnostics separately
 
 ## L10-Q048
 
-Applied · [CP3](README.md#task-3) · [D3.1.4](../../docs/objective-map.md), [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.4](../../docs/objective-map.md)
 
-Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which observation provides the strongest evidence that the requested result was achieved?
+Three rapid main pushes arrive while CI is active. With batching enabled, what source and result should final verification inspect?
 
-- **A.** The artifact resolves to one run and exact commit
-- **B.** A pipeline run checks out the intended private commit
-- **C.** The task works while logs contain no sensitive value
+- **A.** Only the count of push events received
+- **B.** Only the newest package friendly name
+- **C.** The actual batched run sourceVersion and final required results
+- **D.** Only the first pushed commit and its queued timestamp
 
 ## L10-Q049
 
-Applied · [CP3](README.md#task-3) · [D3.1.4](../../docs/objective-map.md), [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.1.4](../../docs/objective-map.md)
 
-Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. Which execution safeguard most directly addresses the risk in this case?
+An archive is retained but its lockfile inputs differ from the reviewed build record. What release investigation is warranted before promotion?
 
-- **A.** Do not treat a display number as the only content identifier
-- **B.** Authorize only the participating repository rather than the whole account
-- **C.** Pass secrets only to the task that needs them
+```text
+Approved lock graph: dependency X 1.2
+Selected archive metadata: dependency X 1.3
+```
+
+- **A.** Reconcile actual dependency inputs and trusted producing artifact identity
+- **B.** Change the reviewed lockfile record to whichever archive arrived
+- **C.** Assume identical artifact names guarantee the same dependency graph
+- **D.** Skip provenance checks because the archive downloads successfully
 
 ## L10-Q050
 
-Advanced · [CP3](README.md#task-3) · [D3.1.4](../../docs/objective-map.md), [D3.3.5](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.3.5](../../docs/objective-map.md)
 
-Untraceable run number: Builds use a constant display label, making support unable to identify which source revision produced an artifact. The team selects this remedy: "Use a unique run identity and record source revision metadata." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An untrusted contribution can edit YAML and requests a powerful service connection during tests. Which resource control should remain outside that editable YAML?
 
-- **A.** External integration depends on installation ownership and lifecycle
-- **B.** Masking has limits for transformed or partial values
-- **C.** Readable version labels and immutable identity serve different needs
+- **A.** A branch name chosen by the contributor
+- **B.** A comment asking contributors not to use the connection
+- **C.** A secret masking rule as the only protection
+- **D.** Explicit pipeline resource authorization and protected connection checks

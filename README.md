@@ -49,7 +49,7 @@ lanes. Context changes and unowned objects cause a refusal.
 - An accessible architecture diagram with editable Mermaid source.
 - Permissions, cost gates, exact-context commands, expected state, positive/negative checks, and evidence guidance.
 - Deterministic break/fix, troubleshooting, an optional challenge, and a worked solution.
-- `Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, and `Cleanup.ps1` with recoverable ownership journals and residual reporting.
+- `Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `BreakFix.ps1`, and `Cleanup.ps1` with recoverable ownership journals and residual reporting; capstones also use `Integration.ps1`.
 - Fifty original questions in Labs 01–25, each with answer rationales and objective/checkpoint/source traceability.
 
 The shared lifecycle engine is included in this checkout; run lab scripts from
@@ -101,8 +101,8 @@ supported alternatives. Paid integrations have explicit prerequisites and
 skipping them produces a partial result.
 
 Repository CI builds/tests the sample, verifies course contracts, and publishes
-documentation. Deployment examples remain in lab artifact folders. Initial
-release validation is local and CI-based; live Azure/DevOps paths are **not
+documentation. Deployment examples remain in lab artifact folders. Course
+validation is local and CI-based; live Azure/DevOps paths are **not
 live-verified**. Successful static checks do not establish cloud deployment success.
 
 ## License and sources

@@ -51,7 +51,7 @@ Official objective topic IDs: `D1.3.1`, `D1.3.2`, `D1.3.3`, `D1.3.4`, `D1.3.5`, 
 | [CP2](#task-2) | Author a process diagram and API handoff |
 | [CP3](#task-3) | Authenticate and reject webhook payloads locally |
 | [CP4](#task-4) | Create a sandbox project wiki from Markdown |
-| [CP5](#task-5) | Review Teams and Boards integration before authorization |
+| [CP5](#task-5) | Evaluate notification filtering and sanitized handoffs locally |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -260,7 +260,7 @@ Common failure and safe retry: Use the fresh project wiki; do not replace an org
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Review Teams and Boards integration before authorization
+## Task 5 — Evaluate notification filtering and sanitized handoffs locally
 
 <a id="task-5"></a>
 
@@ -274,15 +274,20 @@ Checkpoint: `CP5`
 ```powershell
 $review=[ordered]@{boardsProject=$AdoProject;githubRepository=$GhRepo;teamsChannel='UNCONFIGURED';notifications=@('release failure');externalAuthorizationRequired=$true;messagesSent=0}
  $review|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'integration-review.json')
+$events=@(@{id='release-failed';kind='release failure';repository=$GhRepo;secret='synthetic-only'},@{id='issue-edited';kind='issue edit';repository=$GhRepo;secret='synthetic-only'},@{id='foreign-release';kind='release failure';repository='another/owner';secret='synthetic-only'})
+$queued=@($events|Where-Object {$_.kind -in $review.notifications -and $_.repository -eq $GhRepo}|ForEach-Object {@{id=$_.id;summary='Release failed; investigate the access-controlled build record.';destination='UNCONFIGURED'}})
+@{fixtureOnly=$true;inputCount=$events.Count;queued=$queued;messagesSent=0}|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'notification-preview.json')
 ```
 
-Expected state: An explicit integration contract identifies authorization and filters; no Teams message is sent.
+Expected state: Three synthetic events exercise repository and event filters; only the owned failed release produces a sanitized preview. No external message is sent.
 
 Positive validation:
 
 ```powershell
 $r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json
  if (-not $r.externalAuthorizationRequired -or $r.notifications[0] -ne 'release failure') { throw 'Integration needs explicit authorization and event selection.' }
+$p=Get-Content (Join-Path $WorkRoot 'notification-preview.json') -Raw|ConvertFrom-Json
+if($p.inputCount -ne 3 -or @($p.queued).Count -ne 1 -or $p.queued[0].id -ne 'release-failed'){throw 'Notification filter failed its owned/routine/foreign cases.'}
 ```
 
 Negative validation:
@@ -290,9 +295,11 @@ Negative validation:
 ```powershell
 $r=Get-Content (Join-Path $WorkRoot 'integration-review.json') -Raw|ConvertFrom-Json
  if ($r.messagesSent -ne 0) { throw 'This review must not send external notifications.' }
+$text=Get-Content (Join-Path $WorkRoot 'notification-preview.json') -Raw
+if($text -match 'synthetic-only|"secret"' -or ($text|ConvertFrom-Json).messagesSent -ne 0){throw 'Notification preview leaked input fields or sent external traffic.'}
 ```
 
-Evidence to retain: integration-review.json plus the bootstrap authorization checklist.
+Evidence to retain: Input count, selected event identity, sanitized preview and separate account-level authorization requirements.
 
 Common failure and safe retry: Authorize external applications only through the separate account-bootstrap procedure, then test with approved recipients.
 

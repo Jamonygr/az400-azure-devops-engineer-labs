@@ -10,498 +10,580 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which next change most directly satisfies the stated requirement?
+A GitHub pull request implements issue 42 in the same repository. The author wants the issue to close when the change reaches the default branch. Which description text expresses that intent?
 
-- **A.** Integrate small pull requests into the default branch frequently
-- **B.** Assign triage ownership and targeted issue notifications
-- **C.** Restrict the installation to the training repository
+- **A.** Related to #42
+- **B.** Fixes PR 42
+- **C.** AB#42
+- **D.** Fixes #42
 
 ## L01-Q002
 
-Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which explanation best accounts for the behavior or constraint described?
+An author adds AB#217 only to a GitHub pull request title, but no Azure Boards development link appears. Where should the reference be moved?
 
-- **A.** The integration installation was authorized too broadly
-- **B.** Long-lived branches defer integration feedback
-- **C.** Issue capture alone does not establish a feedback loop
+- **A.** A pull request review comment
+- **B.** The pull request description
+- **C.** The pull request title with a closing keyword
+- **D.** A GitHub issue comment that quotes the pull request URL
 
 ## L01-Q003
 
-Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which observation provides the strongest evidence that the requested result was achieved?
+A five-person team integrates changes daily and needs review before shared code changes. Which workflow fits GitHub flow?
 
-- **A.** A test issue reaches its owner and receives acknowledgement
-- **B.** Only the training repository remains available to the connector
-- **C.** Small changes reach the default branch regularly
+- **A.** Create a focused branch, open a pull request, review and test it, then merge
+- **B.** Maintain develop and release branches with scheduled monthly integration
+- **C.** Use personal long-lived branches and review their combined quarterly merge
+- **D.** Push directly to main and review the completed changes in a nightly batch
 
 ## L01-Q004
 
-Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. Which execution safeguard most directly addresses the risk in this case?
+An on-call engineer wants security discussion updates without receiving every issue notification from a busy repository. Which subscription choice best fits?
 
-- **A.** Require review and automated checks before merging
-- **B.** Avoid sending customer secrets into issue notifications
-- **C.** Check existing integrations before removing repository permissions
+- **A.** Watch all activity and rely only on manually deleting unwanted email
+- **B.** Unwatch the repository and assume all security conversations still arrive
+- **C.** Star the repository and expect it to behave like a custom watch subscription
+- **D.** Use a custom repository notification subscription for the relevant event categories
 
 ## L01-Q005
 
-Advanced · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
 
-Short-lived branches: A team waits three weeks to integrate feature work, and conflicts delay feedback despite daily successful local tests. The team selects this remedy: "Integrate small pull requests into the default branch frequently." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A feature contains three independently tracked implementation tasks in Azure Boards. Which link best represents the decomposition?
 
-- **A.** Narrow access requires updates when new repositories join
-- **B.** Frequent integration requires disciplined small changes
-- **C.** More notifications can increase alert fatigue
+- **A.** Related links with no hierarchy
+- **B.** Predecessor links from every task to the feature
+- **C.** Parent/Child links from the feature to its tasks
+- **D.** Duplicate links among all four items
 
 ## L01-Q006
 
-Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D1.1.1](../../docs/objective-map.md)
 
-Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. Which next change most directly satisfies the stated requirement?
+A GitHub Project should move an issue to Done when that issue is closed. What is the appropriate first configuration?
 
-- **A.** Integrate small pull requests into the default branch frequently
-- **B.** Assign triage ownership and targeted issue notifications
-- **C.** Define one planning record and link repository activity
+- **A.** Enable automatic archive after issue closure
+- **B.** Apply a Done issue label when the issue closes
+- **C.** Use the workflow that sets status when an item is added
+- **D.** Enable the project's issue-closed status workflow
 
 ## L01-Q007
 
-Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. Which explanation best accounts for the behavior or constraint described?
+A pull request should link Azure Boards work item 91 without changing its workflow state. Which description is appropriate?
 
-- **A.** Long-lived branches defer integration feedback
-- **B.** Issue capture alone does not establish a feedback loop
-- **C.** Independent trackers lack a common work-item relationship
+- **A.** Resolved AB#91
+- **B.** Implements validation for AB#91
+- **C.** Fixes AB#91
+- **D.** Closed AB#91
 
 ## L01-Q008
 
-Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. Which observation provides the strongest evidence that the requested result was achieved?
+A pull request in org/api fixes issue 28 in org/platform. Which closing reference identifies the intended issue?
 
-- **A.** A work item navigates to its corresponding pull request
-- **B.** Small changes reach the default branch regularly
-- **C.** A test issue reaches its owner and receives acknowledgement
+- **A.** Fixes org/platform#28
+- **B.** Fixes #28
+- **C.** Fixes platform/28
+- **D.** Fixes org/api#28
 
 ## L01-Q009
 
-Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. Which execution safeguard most directly addresses the risk in this case?
+A support queue repeatedly receives bugs without reproduction steps. Which repository feature best collects those details at issue creation?
 
-- **A.** Avoid sending customer secrets into issue notifications
-- **B.** Agree ownership of status transitions before integrating tools
-- **C.** Require review and automated checks before merging
+- **A.** An issue template that requires only priority and component labels
+- **B.** A pull request template with test instructions
+- **C.** A saved issue-search filter for titles containing bug
+- **D.** An issue form with required reproduction and expected-behavior fields
 
 ## L01-Q010
 
-Advanced · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Silent triage: Production defects are filed in GitHub Issues, but no owner receives notifications and customer reports remain unacknowledged. The team selects this remedy: "Assign triage ownership and targeted issue notifications." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A reviewer sees GitHub issue #125 and Azure Boards work item AB#125 mentioned together. What should be assumed about these references?
 
-- **A.** Frequent integration requires disciplined small changes
-- **B.** More notifications can increase alert fatigue
-- **C.** Tool integration does not resolve conflicting team processes
+- **A.** They automatically identify a synchronized record when their numbers match
+- **B.** They refer to separate namespaces and may identify unrelated work
+- **C.** They are two aliases within the same repository-local namespace
+- **D.** AB#125 is resolved using whichever GitHub issue 125 is currently open
 
 ## L01-Q011
 
 Foundational · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
 
-Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which next change most directly satisfies the stated requirement?
+A cross-team delivery cannot start database migration until a schema design task is complete. Which Azure Boards link captures the ordering?
 
-- **A.** Define one planning record and link repository activity
-- **B.** Link bug, pull request, build, and release evidence
-- **C.** Assign triage ownership and targeted issue notifications
+- **A.** Tested By only
+- **B.** Predecessor/Successor
+- **C.** Parent/Child only
+- **D.** Duplicate
 
 ## L01-Q012
 
-Foundational · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which explanation best accounts for the behavior or constraint described?
+A GitHub pull request contains Fixes #63 but merges into release/2 rather than the repository default branch. What should the author expect?
 
-- **A.** Deployment success does not identify business intent
-- **B.** Issue capture alone does not establish a feedback loop
-- **C.** Independent trackers lack a common work-item relationship
+- **A.** The issue closes immediately because the closing keyword overrides the base branch
+- **B.** The issue closes when the pull request is approved, even before merge
+- **C.** The keyword will not automatically close the issue on that non-default-branch merge
+- **D.** The issue closes when the source branch is deleted after the release merge
 
 ## L01-Q013
 
-Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
 
-Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which observation provides the strongest evidence that the requested result was achieved?
+The Azure Boards app was installed for two selected GitHub repositories. A third repository needs work-item linking. What should be reviewed first?
 
-- **A.** A test issue reaches its owner and receives acknowledgement
-- **B.** A work item navigates to its corresponding pull request
-- **C.** The deployed commit can be traced back to its bug
+- **A.** Whether the third repository uses the same default branch name as the first two
+- **B.** Whether the third repository has matching GitHub issue numbers
+- **C.** The app installation's repository access and the Azure Boards connection scope
+- **D.** Whether all three repositories have the same visibility
 
 ## L01-Q014
 
-Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. Which execution safeguard most directly addresses the risk in this case?
+A public webhook endpoint receives a request claiming to be a GitHub issue event. What must the receiver verify before trusting its contents?
 
-- **A.** Preserve immutable build identifiers with release records
-- **B.** Avoid sending customer secrets into issue notifications
-- **C.** Agree ownership of status transitions before integrating tools
+- **A.** Only that the JSON contains an issue title
+- **B.** Only that the request uses port 443
+- **C.** The delivery signature using the configured webhook secret
+- **D.** Only that User-Agent contains GitHub
 
 ## L01-Q015
 
-Advanced · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Split planning: Developers use GitHub Projects while administrators track delivery in Azure Boards; the same task is manually recreated twice. The team selects this remedy: "Define one planning record and link repository activity." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An auditor wants to trace an Azure Boards requirement to its verification work. Which relation adds the appropriate test connection?
 
-- **A.** Traceability depends on consistent linking practices
-- **B.** More notifications can increase alert fatigue
-- **C.** Tool integration does not resolve conflicting team processes
+- **A.** A Related link to the test plan homepage
+- **B.** A Parent link making the test case the requirement owner
+- **C.** A Tested By link to the relevant test case
+- **D.** A hyperlink to the latest overall build status
 
 ## L01-Q016
 
-Foundational · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which next change most directly satisfies the stated requirement?
+The description contains Fixes AB#101, AB#102, and AB#103. All three items must transition on the default-branch merge. Which revision achieves this?
 
-- **A.** Define one planning record and link repository activity
-- **B.** Link bug, pull request, build, and release evidence
-- **C.** Verify the Boards GitHub connection and supported linking syntax
+```text
+Fixes AB#101, AB#102, and AB#103
+```
+
+- **A.** Leave the text unchanged because the first keyword applies to every following item
+- **B.** Replace every reference with #101, #102, and #103
+- **C.** Move the list to the pull request title only
+- **D.** Fixes AB#101, Fixes AB#102, Fixes AB#103
 
 ## L01-Q017
 
-Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which explanation best accounts for the behavior or constraint described?
+A webhook receiver sometimes receives the same delivery twice. Creating two follow-up work items would corrupt the queue. Which receiver design addresses this?
 
-- **A.** A text URL is not necessarily a recognized development link
-- **B.** Independent trackers lack a common work-item relationship
-- **C.** Deployment success does not identify business intent
+- **A.** Assume GitHub delivers each event exactly once and remove duplicate checks
+- **B.** Assign a new random event identity on every retry
+- **C.** Track a stable delivery identifier and make processing idempotent
+- **D.** Compare only the issue title and discard every later matching title
 
 ## L01-Q018
 
-Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.1.1](../../docs/objective-map.md)
 
-Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which observation provides the strongest evidence that the requested result was achieved?
+Closing an issue sets its Project status to Done. The team also wants reopening to reset status, but the current documented built-in workflows do not promise that reverse mapping. What should the design say?
 
-- **A.** The deployed commit can be traced back to its bug
-- **B.** The work item displays the pull request in development links
-- **C.** A work item navigates to its corresponding pull request
+- **A.** Verify available workflows and implement an explicit reopen handler if needed
+- **B.** Assume the issue-closed rule also handles the reopened event
+- **C.** Enable automatic archiving for closed items and leave reopened items archived
+- **D.** Set every item to In progress on a nightly schedule
 
 ## L01-Q019
 
-Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
 
-Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. Which execution safeguard most directly addresses the risk in this case?
+A task is blocked by an external team's issue, but both items are under different features. How should the relationship be recorded?
 
-- **A.** Authorize only the repositories needed by the project
-- **B.** Agree ownership of status transitions before integrating tools
-- **C.** Preserve immutable build identifiers with release records
+- **A.** Move the blocked task beneath the external issue as its child
+- **B.** Duplicate the external issue into the local feature and stop linking it
+- **C.** Mention blocked in the task title without identifying the blocker
+- **D.** Add a dependency link and keep each item's correct parent
 
 ## L01-Q020
 
-Advanced · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Audit gap: A successful release contains a defect fix, but the reviewer cannot determine which reported bug the deployment addressed. The team selects this remedy: "Link bug, pull request, build, and release evidence." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A GitHub repository is connected to projects in two Azure DevOps organizations, both containing work item 460. Linking is inconsistent. What is the strongest diagnosis?
 
-- **A.** Traceability depends on consistent linking practices
-- **B.** Repository moves can require integration reconfiguration
-- **C.** Tool integration does not resolve conflicting team processes
+```text
+GitHub: org/api
+Connections: dev.azure.com/first-org and dev.azure.com/second-org
+Both organizations contain a work item numbered 460.
+```
+
+- **A.** Remove project filters because work-item IDs are only project-unique
+- **B.** Rename one project so its work-item number changes
+- **C.** Use the same AB text and rely on the last connected organization always winning
+- **D.** AB references can be ambiguous across connected organizations; consolidate the repository connection to one organization
 
 ## L01-Q021
 
-Foundational · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which next change most directly satisfies the stated requirement?
+A maintainer manually links an issue to a pull request whose description has no closing keyword. Which evidence should confirm the intended automatic closure relationship?
 
-- **A.** Verify the Boards GitHub connection and supported linking syntax
-- **B.** Merge incrementally behind a disabled feature flag
-- **C.** Link bug, pull request, build, and release evidence
+- **A.** The pull request source branch contains the issue number
+- **B.** The pull request title repeats the issue title
+- **C.** The issue was assigned to the pull request author
+- **D.** The issue and pull request linked-development sections showing the correct relationship
 
 ## L01-Q022
 
-Foundational · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which explanation best accounts for the behavior or constraint described?
+A bug form requires Expected behavior and Actual behavior, yet reports still contain only vague text. What improvement most directly strengthens feedback quality?
 
-- **A.** Branch isolation was being used as a release mechanism
-- **B.** Deployment success does not identify business intent
-- **C.** A text URL is not necessarily a recognized development link
+- **A.** Add a minimal reproducible example prompt and a triage check for usable evidence
+- **B.** Require a higher-priority label before allowing report submission
+- **C.** Require a target release field while keeping reproduction guidance unchanged
+- **D.** Route every report directly to implementation without triage
 
 ## L01-Q023
 
-Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which observation provides the strongest evidence that the requested result was achieved?
+A pull request was linked by AB#72 in its description. The author later removes that reference. Why can the link disappear from the GitHub development section?
 
-- **A.** The deployed commit can be traced back to its bug
-- **B.** The work item displays the pull request in development links
-- **C.** The merged feature remains hidden until explicitly enabled
+- **A.** The description-derived relationship becomes permanent after its first creation
+- **B.** That section's AB reference link depends on the description retaining the reference
+- **C.** The issue reference automatically moves into the pull request title
+- **D.** The missing reference is restored automatically from the branch name
 
 ## L01-Q024
 
-Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. Which execution safeguard most directly addresses the risk in this case?
+A webhook receiver performs slow external work before returning a response, causing delivery timeouts. Which design improves reliability?
 
-- **A.** Test both enabled and disabled feature paths
-- **B.** Preserve immutable build identifiers with release records
-- **C.** Authorize only the repositories needed by the project
+- **A.** Validate and enqueue the event promptly, acknowledge it, and process durable work asynchronously
+- **B.** Keep synchronous processing and retry the entire external workflow after each timeout
+- **C.** Return success immediately and keep the accepted work only in process memory
+- **D.** Increase the sender retry count without changing receiver processing
 
 ## L01-Q025
 
-Advanced · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Missing development panel: An Azure Boards work item references a GitHub pull request only as plain text after the repository was moved. The team selects this remedy: "Verify the Boards GitHub connection and supported linking syntax." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A delivery report lists only work-item titles. Auditors cannot navigate to implementation or tests. Which addition most improves traceability?
 
-- **A.** Repository moves can require integration reconfiguration
-- **B.** Flags add lifecycle and cleanup work
-- **C.** Traceability depends on consistent linking practices
+- **A.** A count of successful builds for the whole repository
+- **B.** A copied summary of the latest test result in every title
+- **C.** A link to the newest default-branch commit for every work item
+- **D.** Stable work-item IDs and typed links to the actual code and verification artifacts
 
 ## L01-Q026
 
-Foundational · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. Which next change most directly satisfies the stated requirement?
+A small fix has passed review and merged. The team wants to remove branch clutter while preserving the accepted implementation. What is appropriate?
 
-- **A.** Merge incrementally behind a disabled feature flag
-- **B.** Filter events and route actionable failures to owners
-- **C.** Verify the Boards GitHub connection and supported linking syntax
+- **A.** Retain every merged topic branch as the required source of audit evidence
+- **B.** Delete the merged topic branch after confirming the accepted pull request remains available
+- **C.** Delete the issue relationship because the feature branch no longer exists
+- **D.** Recreate the merged branch at the current main revision under the old name
 
 ## L01-Q027
 
-Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
 
-Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. Which explanation best accounts for the behavior or constraint described?
+A project uses a custom Azure Boards workflow without a Resolved category. A valid Fixes AB reference is merged into the default branch. Which documented fallback should be checked?
 
-- **A.** Branch isolation was being used as a release mechanism
-- **B.** Unfiltered automation creates noise without prioritization
-- **C.** A text URL is not necessarily a recognized development link
+```text
+Process categories:
+Proposed: New
+InProgress: Active
+Completed: Verified
+Resolved: (none)
+```
+
+- **A.** The work item's previous state because Fixes never supports custom processes
+- **B.** The first alphabetical state in any category
+- **C.** The first available state in the Completed category
+- **D.** The literal state Done regardless of process configuration
 
 ## L01-Q028
 
-Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.1.1](../../docs/objective-map.md)
 
-Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. Which observation provides the strongest evidence that the requested result was achieved?
+A custom GitHub Project workflow must update an item's Status using GraphQL. Which information is needed beyond the issue number?
 
-- **A.** The merged feature remains hidden until explicitly enabled
-- **B.** A simulated regression creates one actionable assigned issue
-- **C.** The work item displays the pull request in development links
+- **A.** The issue number and the displayed Status option name only
+- **B.** The repository node ID and issue number only
+- **C.** The Project item ID, Status field ID, and target single-select option ID
+- **D.** The Project ID and the issue URL only
 
 ## L01-Q029
 
-Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. Which execution safeguard most directly addresses the risk in this case?
+A developer keeps missing requests for their own pull request reviews while receiving unrelated repository notifications. What should be checked first?
 
-- **A.** Deduplicate repeated events for the same incident
-- **B.** Authorize only the repositories needed by the project
-- **C.** Test both enabled and disabled feature paths
+- **A.** The repository's default reviewer assignment rules only
+- **B.** The developer customizes issue labels but leaves notification settings unchanged
+- **C.** The team adds the developer to every repository watch subscription
+- **D.** Personal notification routing, review-request subscriptions, and delivery channel settings
 
 ## L01-Q030
 
-Advanced · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
 
-Unfinished functionality: A team wants daily integration, but an incomplete feature must remain unavailable to customers until launch. The team selects this remedy: "Merge incrementally behind a disabled feature flag." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A team copies the same external dependency into five local work items. Updates become inconsistent. What is the better tracking structure?
 
-- **A.** Repository moves can require integration reconfiguration
-- **B.** Flags add lifecycle and cleanup work
-- **C.** Aggressive filtering can hide novel failure types
+- **A.** Delete the dependency record and mention its owner in chat
+- **B.** Keep one authoritative dependency and link the dependent items to it
+- **C.** Keep five copies and periodically replace their titles
+- **D.** Merge all dependent tasks into the external dependency regardless of ownership
 
 ## L01-Q031
 
-Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which next change most directly satisfies the stated requirement?
+An engineer manually adds a GitHub commit link from an Azure Boards work item, but validation rejects it. The commit exists. What prerequisite should be checked?
 
-- **A.** Filter events and route actionable failures to owners
-- **B.** Reference the exact work-item identifier in the pull request
-- **C.** Merge incrementally behind a disabled feature flag
+- **A.** Whether the repository branch has an AB reference in every commit message
+- **B.** Whether the work item is in the Completed category
+- **C.** Whether that GitHub repository is connected to the Azure Boards project
+- **D.** Whether the GitHub issue and Boards work-item numbers match
 
 ## L01-Q032
 
-Foundational · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which explanation best accounts for the behavior or constraint described?
+A pull request expands from a small validation fix into an unrelated user-interface redesign. Review time rises sharply. Which adjustment best supports focused flow?
 
-- **A.** Branch isolation was being used as a release mechanism
-- **B.** Unfiltered automation creates noise without prioritization
-- **C.** Human-readable titles are not unique traceability keys
+- **A.** Combine all remaining planned features into this request to minimize pull request count
+- **B.** Remove reviewers and merge once the branch builds
+- **C.** Create a permanent branch for the request and defer integration indefinitely
+- **D.** Split unrelated work into separate reviewed changes with their own acceptance criteria
 
 ## L01-Q033
 
 Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which observation provides the strongest evidence that the requested result was achieved?
+A signed webhook's event header says push, but the receiver processes it as issues because both payloads contain repository information. What should the receiver do?
 
-- **A.** A simulated regression creates one actionable assigned issue
-- **B.** The hotfix commit resolves to one specific bug record
-- **C.** The merged feature remains hidden until explicitly enabled
+- **A.** Dispatch only supported event types and validate each event's expected action and payload shape
+- **B.** Use the presence of repository data as sufficient proof of an issues event
+- **C.** Skip signature verification because the payload type will be checked
+- **D.** Treat every push as an issue-close event to keep the queue current
 
 ## L01-Q034
 
-Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. Which execution safeguard most directly addresses the risk in this case?
+Two pull requests implement different parts of one GitHub issue. Only the second completes its acceptance criteria. How should the first describe its relationship?
 
-- **A.** Test both enabled and disabled feature paths
-- **B.** Deduplicate repeated events for the same incident
-- **C.** Confirm the target project and repository context
+- **A.** Use Fixes on the first request because any partial implementation completes the issue
+- **B.** Omit all issue references from both requests until after release
+- **C.** Close the issue manually when the first request opens
+- **D.** Use a non-closing reference, reserving the closing relationship for the completing change
 
 ## L01-Q035
 
-Advanced · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Feedback overload: Every build event creates an issue, and responders now ignore the notification stream containing real customer regressions. The team selects this remedy: "Filter events and route actionable failures to owners." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A work item is marked Done, but its linked acceptance test failed in the release build. Which response best restores trustworthy quality traceability?
 
-- **A.** Flags add lifecycle and cleanup work
-- **B.** Aggressive filtering can hide novel failure types
-- **C.** Strict links add authoring discipline to reviews
+- **A.** Treat any linked test as proof of success regardless of outcome
+- **B.** Change the requirement wording silently to exclude the failing behavior
+- **C.** Reopen or otherwise correct the work state under the team's workflow and link the failed verification and repair
+- **D.** Delete the failed test link so the completed item remains green
 
 ## L01-Q036
 
-Foundational · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.1.1](../../docs/objective-map.md)
 
-Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. Which next change most directly satisfies the stated requirement?
+The Project's built-in workflow sets Done on issue closure, but the team needs a status rule involving three custom fields and an external approval. Which implementation choice is sound?
 
-- **A.** Filter events and route actionable failures to owners
-- **B.** Reference the exact work-item identifier in the pull request
-- **C.** Align project automation with the agreed lifecycle
+- **A.** Add the external approval URL as a Project text field and keep only the close rule
+- **B.** Run the built-in close rule repeatedly until the custom fields agree
+- **C.** Use a supported custom automation with explicit permissions and tests for the multi-field rule
+- **D.** Use only the issue-closed event and ignore later approval changes
 
 ## L01-Q037
 
-Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. Which explanation best accounts for the behavior or constraint described?
+A branch is created from an Azure Boards work item and later used to open a GitHub pull request. What should be verified before relying on automatic traceability?
 
-- **A.** Closing an issue does not guarantee every custom field updates
-- **B.** Unfiltered automation creates noise without prioritization
-- **C.** Human-readable titles are not unique traceability keys
+- **A.** The branch name includes the numeric work-item ID
+- **B.** The pull request author also owns the work item
+- **C.** The work item's development links identify the actual pull request and subsequent merge commit
+- **D.** The branch is visible in both users local clones
 
 ## L01-Q038
 
 Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. Which observation provides the strongest evidence that the requested result was achieved?
+A requirement is reworded after its original acceptance test passed. What traceability update is most useful?
 
-- **A.** A test merge produces the expected issue and project states
-- **B.** A simulated regression creates one actionable assigned issue
-- **C.** The hotfix commit resolves to one specific bug record
+- **A.** Record the requirement revision and reassess whether linked tests verify the new criteria
+- **B.** Keep the old pass as unconditional proof for any future requirement text
+- **C.** Remove all historical test records whenever wording changes
+- **D.** Create a new unrelated test title without linking it to the requirement
 
 ## L01-Q039
 
-Applied · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
 
-Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. Which execution safeguard most directly addresses the risk in this case?
+The Azure Boards app needs one additional private repository after an approved pilot. Which change fits the requested access boundary?
 
-- **A.** Deduplicate repeated events for the same incident
-- **B.** Confirm the target project and repository context
-- **C.** Test automation on a disposable work item first
+- **A.** Add only that repository to the installation and connection, then verify the existing integration still works
+- **B.** Grant the app all current and future repositories to avoid reviewing selection
+- **C.** Replace the app with an individual administrator's broad personal token
+- **D.** Make the repository public solely to avoid configuring app access
 
 ## L01-Q040
 
-Advanced · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Ambiguous hotfix: Two similarly named bugs exist, and a hotfix pull request mentions only a title rather than a stable identifier. The team selects this remedy: "Reference the exact work-item identifier in the pull request." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A receiver acknowledged a webhook, then crashed before its background work was durably queued. GitHub shows delivery success, but no work item exists. Which design corrects this failure window?
 
-- **A.** Aggressive filtering can hide novel failure types
-- **B.** Strict links add authoring discipline to reviews
-- **C.** Custom workflows increase integration maintenance
+- **A.** Acknowledge the event and store it in a process-local queue
+- **B.** Persist the accepted event durably before acknowledgement and retry processing idempotently
+- **C.** Acknowledge first and rely only on GitHub to retry failed HTTP deliveries
+- **D.** Persist only the issue title and reconstruct the event on restart
 
 ## L01-Q041
 
-Foundational · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D1.1.3](../../docs/objective-map.md)
 
-State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Which next change most directly satisfies the stated requirement?
+Two projects in one Azure DevOps organization link GitHub changes to work items 600 and 601. A proposed fix renumbers items because the engineer assumes IDs are project-local. What is the correct response?
 
-- **A.** Restrict the installation to the training repository
-- **B.** Reference the exact work-item identifier in the pull request
-- **C.** Align project automation with the agreed lifecycle
+```text
+Organization: contoso
+Project Alpha: work item 600
+Project Beta: work item 601
+The GitHub repository is installed for the expected organization.
+```
+
+- **A.** Keep the organization-unique IDs and diagnose repository connection and supported reference placement
+- **B.** Renumber both items until their IDs match their GitHub issue numbers
+- **C.** Connect the same repository to a second organization so the IDs become project-local
+- **D.** Replace AB references with project names only
 
 ## L01-Q042
 
-Foundational · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Which explanation best accounts for the behavior or constraint described?
+One GitHub pull request completes issue 18 and Azure Boards work item 913. It must close the GitHub issue but only link the Boards item for a later business review. Which description meets both requirements?
 
-- **A.** The integration installation was authorized too broadly
-- **B.** Human-readable titles are not unique traceability keys
-- **C.** Closing an issue does not guarantee every custom field updates
+- **A.** AB#18; #913
+- **B.** Fixes #18; implementation for AB#913
+- **C.** Fixes #18; Fixes AB#913
+- **D.** Related to #18; Fixes AB#913
 
 ## L01-Q043
 
-Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Which observation provides the strongest evidence that the requested result was achieved?
+A validly signed issue event is replayed after a previous successful delivery, and the issue was subsequently reopened. The automation creates a follow-up only once per close event. What is the best handling?
 
-- **A.** Only the training repository remains available to the connector
-- **B.** The hotfix commit resolves to one specific bug record
-- **C.** A test merge produces the expected issue and project states
+- **A.** Create another follow-up because a valid signature guarantees a new event
+- **B.** Trust the payload action alone and skip delivery tracking
+- **C.** Authenticate the request, deduplicate its delivery identity, and process lifecycle events with their current-state rules
+- **D.** Ignore all future events sharing that issue number
 
 ## L01-Q044
 
-Applied · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.1.1](../../docs/objective-map.md)
 
-State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. Which execution safeguard most directly addresses the risk in this case?
+A Project supports close-to-Done via a built-in workflow and a custom reopen-to-In progress handler. Reopening changes the issue state but leaves Status Done. What evidence best narrows the fault?
 
-- **A.** Check existing integrations before removing repository permissions
-- **B.** Confirm the target project and repository context
-- **C.** Test automation on a disposable work item first
+- **A.** Inspect only the issue-closed built-in rule because Done was the last visible status
+- **B.** Retry the Project mutation with the issue number as the Project item ID
+- **C.** Inspect the reopen event delivery, custom handler authorization and item mutation, separately from the built-in close rule
+- **D.** Verify only that the webhook request returned HTTP 200
 
 ## L01-Q045
 
-Advanced · [CP2](README.md#task-2) · [D1.1.3](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-State mismatch: A merged pull request closes an issue, but a separate project field remains In Progress and the team dashboard disagrees. The team selects this remedy: "Align project automation with the agreed lifecycle." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An auditor follows a work item to a pull request that merged, but the deployed artifact came from an earlier commit. The work item is marked release-verified. What should be corrected?
 
-- **A.** Narrow access requires updates when new repositories join
-- **B.** Strict links add authoring discipline to reviews
-- **C.** Custom workflows increase integration maintenance
+```text
+Work item: release-verified
+Linked PR merge commit: bbb222
+Deployed artifact source: aaa111
+Deployment timestamp: after the PR merge
+```
+
+- **A.** Use the successful merge check as sufficient release verification
+- **B.** Link only the latest default-branch build and keep release-verified
+- **C.** Link the actual build and deployed revision, then verify the requirement against that artifact before claiming release completion
+- **D.** Mark the older artifact verified because its own tests passed
 
 ## L01-Q046
 
-Foundational · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D1.1.2](../../docs/objective-map.md)
 
-Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. Which next change most directly satisfies the stated requirement?
+A customer reports the same symptom as an existing issue, but reproduces it on a different supported version with different steps. The queue is overloaded. What is the best triage decision?
 
-- **A.** Integrate small pull requests into the default branch frequently
-- **B.** Align project automation with the agreed lifecycle
-- **C.** Restrict the installation to the training repository
+- **A.** Compare reproduction and affected-version evidence before linking as duplicate or creating distinct work
+- **B.** Classify as duplicate using symptom text alone and preserve the new version only as a comment
+- **C.** Create separate work automatically for every report regardless of reproduction
+- **D.** Replace the old reproduction with the new steps without retaining version history
 
 ## L01-Q047
 
-Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. Which explanation best accounts for the behavior or constraint described?
+A release contains a feature branch spanning four requirements, two passed tests, and one unresolved requirement. The team wants an auditable partial release. Which plan is strongest?
 
-- **A.** The integration installation was authorized too broadly
-- **B.** Long-lived branches defer integration feedback
-- **C.** Closing an issue does not guarantee every custom field updates
+- **A.** Close the unresolved requirement and file an unlinked note after deployment
+- **B.** Separate the releasable changes where feasible and trace each included requirement to its implementation and acceptance result
+- **C.** Mark all requirements complete because at least two tests passed
+- **D.** Use the feature branch name as the only release scope record
 
 ## L01-Q048
 
-Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D1.1.1](../../docs/objective-map.md)
 
-Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. Which observation provides the strongest evidence that the requested result was achieved?
+A private repository moves to a new GitHub organization. Existing local AB text remains, but new links stop appearing. A second Azure DevOps organization is proposed as a shortcut. What is the best recovery plan?
 
-- **A.** A test merge produces the expected issue and project states
-- **B.** Only the training repository remains available to the connector
-- **C.** Small changes reach the default branch regularly
+- **A.** Reconnect the moved repository to an additional Azure DevOps organization
+- **B.** Recheck the moved repository's app installation and original connection, preserving a single connected Azure DevOps organization
+- **C.** Reinstall the app with access to every repository in the new organization
+- **D.** Change all references to link-only AB syntax while leaving installation access unchanged
 
 ## L01-Q049
 
-Applied · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.1.3](../../docs/objective-map.md)
 
-Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. Which execution safeguard most directly addresses the risk in this case?
+A custom queue integration has retryable API failures, expiring credentials, and occasional duplicate deliveries. It must create one Project item per source issue. Which design best meets these constraints?
 
-- **A.** Require review and automated checks before merging
-- **B.** Test automation on a disposable work item first
-- **C.** Check existing integrations before removing repository permissions
+- **A.** Use stable source identity, durable retry state, renewable least-privilege authentication, and idempotent create-or-update logic
+- **B.** Deduplicate by issue title and retry with a new Project item on every API failure
+- **C.** Use durable delivery storage but perform unconditional creates after each worker retry
+- **D.** Use idempotent updates with one manually renewed broad personal token and no expiry recovery
 
 ## L01-Q050
 
-Advanced · [CP3](README.md#task-3) · [D1.3.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.1.4](../../docs/objective-map.md)
 
-Excess integration access: A training Boards connection can see unrelated private GitHub repositories although the lab uses one repository. The team selects this remedy: "Restrict the installation to the training repository." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A release export records work item 52 as accepted using test run 300. A rerun against the same source fails after a configuration change, and consumers already downloaded the export. What preserves an auditable decision history?
 
-- **A.** Frequent integration requires disciplined small changes
-- **B.** Custom workflows increase integration maintenance
-- **C.** Narrow access requires updates when new repositories join
+- **A.** Leave the export unchanged because source code did not change
+- **B.** Delete the work item and replace it with a new unlinked record
+- **C.** Publish a superseding decision linked to both test runs and configuration revisions, and reassess release eligibility
+- **D.** Overwrite test run 300's result with the rerun outcome

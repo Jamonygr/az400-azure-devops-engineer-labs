@@ -8,500 +8,593 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 ## L17-Q001
 
-Foundational · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which next change most directly satisfies the stated requirement?
+A pull request changes a Bicep property and must fail before any Azure authentication. Which check fits?
 
-- **A.** Run validation and review the what-if result
-- **B.** Use secure parameter handling and avoid secret outputs
-- **C.** Output a nonsensitive reference rather than the secret value
+```bicep
+resource account 'Microsoft.Storage/storageAccounts@2025-01-01' = {
+  name: 'example'
+  properties: { typoProperty: true }
+}
+```
+
+- **A.** Run production what-if only
+- **B.** Review resource names only
+- **C.** Compile and lint locally
+- **D.** Deploy and read errors
 
 ## L17-Q002
 
-Foundational · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which explanation best accounts for the behavior or constraint described?
+Three environments need the same resource declarations but different locations and account names. How should the team organize them?
 
-- **A.** Template validity does not establish an acceptable resource diff
-- **B.** Infrastructure metadata can expose plain configuration values
-- **C.** Infrastructure output was used as an unrestricted secret channel
+- **A.** Use a parameterized module
+- **B.** Copy all declarations three times
+- **C.** Hardcode production settings everywhere
+- **D.** Patch generated JSON with regex
 
 ## L17-Q003
 
 Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which observation provides the strongest evidence that the requested result was achieved?
+A reviewer needs to see proposed changes to existing resources before approving this template. Which operation provides that evidence?
 
-- **A.** Deployment records do not reveal the sensitive value
-- **B.** The public artifact contains only the permitted reference
-- **C.** The reviewed plan identifies the intended access change
+- **A.** Compile without Azure context
+- **B.** Run deployment before review
+- **C.** Run scoped what-if
+- **D.** Read deployment history only
 
 ## L17-Q004
 
-Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which execution safeguard most directly addresses the risk in this case?
+A consumer module needs the exact resource ID created by another module. Which interface avoids duplicated naming logic?
 
-- **A.** Prefer references to a secret store where appropriate
-- **B.** Restrict secret resolution to the task that actually needs it
-- **C.** Verify subscription resource group and parameters before deployment
+- **A.** Parse a deployment display name
+- **B.** Search every subscription by prefix
+- **C.** Expose a resource ID output
+- **D.** Duplicate its name algorithm
 
 ## L17-Q005
 
 Advanced · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. The team selects this remedy: "Run validation and review the what-if result." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Approval covered test parameters, but the queued job changes both subscription and SKU. Which action preserves a meaningful production gate?
 
-- **A.** What-if is a planning aid with limitations
-- **B.** Secure parameters do not make every downstream use safe
-- **C.** Reference-based designs depend on runtime identity access
+```powershell
+az deployment group what-if --subscription $TestSub --resource-group $TestGroup --parameters sku=B1
+# Later queued operation:
+az deployment group create --subscription $ProdSub --resource-group $ProdGroup --parameters sku=S1
+```
+
+- **A.** Review a fresh production preview
+- **B.** Reuse approval for identical source
+- **C.** Deploy then attach old approval
+- **D.** Approve changed parameters after a local compile only
 
 ## L17-Q006
 
-Foundational · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which next change most directly satisfies the stated requirement?
+The app module supports optional private networking, and development callers have no subnet. Which input contract best supports both topologies?
 
-- **A.** Use secure parameter handling and avoid secret outputs
-- **B.** Make the required static validation enforce pipeline failure
-- **C.** Run validation and review the what-if result
+- **A.** Hide a fixed subnet ID
+- **B.** Choose the first existing subnet
+- **C.** Make subnet optional and conditional
+- **D.** Require a placeholder production subnet
 
 ## L17-Q007
 
-Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which explanation best accounts for the behavior or constraint described?
+Refactoring left an unused Bicep parameter that no caller needs. Which change improves the public module contract?
 
-- **A.** Template validity does not establish an acceptable resource diff
-- **B.** Infrastructure metadata can expose plain configuration values
-- **C.** The wrapper ignores validation failure status
+```bicep
+param obsoleteRegion string
+param location string = resourceGroup().location
+// All resources use location; none reference obsoleteRegion.
+```
+
+- **A.** Mention it in a comment
+- **B.** Pass different values per environment
+- **C.** Remove the unused input
+- **D.** Disable the complete analyzer
 
 ## L17-Q008
 
-Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which observation provides the strongest evidence that the requested result was achieved?
+Storage names must stay stable on retries but differ across resource groups. Which suffix input supports that requirement?
 
-- **A.** A known invalid fixture blocks the deployment path
-- **B.** The reviewed plan identifies the intended access change
-- **C.** Deployment records do not reveal the sensitive value
+- **A.** Use one fixed global name
+- **B.** Generate a random suffix each run
+- **C.** Use the resource group ID
+- **D.** Use the current timestamp
 
 ## L17-Q009
 
-Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which execution safeguard most directly addresses the risk in this case?
+The team wants one Bicep linter finding to fail pull requests consistently. Where should its enforcement severity be set?
 
-- **A.** Prefer references to a secret store where appropriate
-- **B.** Keep diagnostic output while preserving nonzero status
-- **C.** Verify subscription resource group and parameters before deployment
+- **A.** Only in an editor-local configuration
+- **B.** In the deployment parameter file only
+- **C.** In repository bicepconfig.json
+- **D.** In a rule-specific inline suppression at each occurrence
 
 ## L17-Q010
 
-Advanced · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. The team selects this remedy: "Use secure parameter handling and avoid secret outputs." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Compilation succeeds, but provider validation rejects the selected regional SKU. Which interpretation and action are both justified?
 
-- **A.** What-if is a planning aid with limitations
-- **B.** Secure parameters do not make every downstream use safe
-- **C.** Static checks cannot prove service behavior
+- **A.** Review a supported region or SKU
+- **B.** Trust compilation and force deployment
+- **C.** Wait for a linter warning
+- **D.** Remove validation and retain SKU
 
 ## L17-Q011
 
-Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which next change most directly satisfies the stated requirement?
+The learner changed their default subscription after creating the journal-owned group. How should the preview command retain its intended scope?
 
-- **A.** Make the required static validation enforce pipeline failure
-- **B.** Express the resource relationship through declarative references
-- **C.** Use secure parameter handling and avoid secret outputs
+- **A.** Choose the first listed subscription
+- **B.** Run only a local compiler
+- **C.** Pass subscription and group explicitly
+- **D.** Pass only the group name
 
 ## L17-Q012
 
-Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which explanation best accounts for the behavior or constraint described?
+A what-if Modify record contains an unresolved runtime reference expression. How should the reviewer interpret that result before approval?
 
-- **A.** Infrastructure metadata can expose plain configuration values
-- **B.** The wrapper ignores validation failure status
-- **C.** The script hides a required provisioning relationship
+- **A.** Inspect the expression and live state
+- **B.** Assume destructive replacement is certain
+- **C.** Delete the existing resource immediately
+- **D.** Suppress every future preview
 
 ## L17-Q013
 
-Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which observation provides the strongest evidence that the requested result was achieved?
+Part of a large nested what-if expansion is marked Ignore. What does that mean for the deployment review?
 
-- **A.** The dependent resource deploys only after its prerequisite is ready
-- **B.** Deployment records do not reveal the sensitive value
-- **C.** A known invalid fixture blocks the deployment path
+```json
+{"changeType":"Ignore","diagnostic":"Nested template expansion limit reached"}
+```
+
+- **A.** Those resources can never change
+- **B.** Those resources are already deleted
+- **C.** The deployment already succeeded there
+- **D.** Some resources lack complete analysis
 
 ## L17-Q014
 
-Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which execution safeguard most directly addresses the risk in this case?
+Auditors need machine-readable planned changes linked to the exact reviewed template and parameter revision. What should CI retain?
 
-- **A.** Prefer references to a secret store where appropriate
-- **B.** Keep diagnostic output while preserving nonzero status
-- **C.** Avoid unnecessary dependencies that serialize independent resources
+- **A.** Only the mutable source filename
+- **B.** Only command elapsed time
+- **C.** Structured what-if and revision metadata
+- **D.** Only the summary change counts
 
 ## L17-Q015
 
-Advanced · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. The team selects this remedy: "Make the required static validation enforce pipeline failure." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A current CLI reviewer needs provider checks without resource write permissions. Which mode supports that review while keeping deployment separately authorized?
 
-- **A.** Declared dependencies do not solve every readiness condition
-- **B.** Secure parameters do not make every downstream use safe
-- **C.** Static checks cannot prove service behavior
+- **A.** Permanent subscription Owner for review
+- **B.** Skip validation and certify deployment rights
+- **C.** ProviderNoRbac validation
+- **D.** Template validation as full availability proof
 
 ## L17-Q016
 
-Foundational · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which next change most directly satisfies the stated requirement?
+A secure deployment input is needed later by application configuration. Which output avoids exposing its secret value in deployment history?
 
-- **A.** Compare desired configuration and reconcile through a reviewed change
-- **B.** Make the required static validation enforce pipeline failure
-- **C.** Express the resource relationship through declarative references
+- **A.** A nonsensitive resource reference
+- **B.** The secret as ordinary output
+- **C.** The secret encoded as Base64
+- **D.** The secret inside a resource name
 
 ## L17-Q017
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which explanation best accounts for the behavior or constraint described?
+What-if completed successfully and no create command ran afterward. Which status accurately describes the infrastructure's execution evidence?
 
-- **A.** The script hides a required provisioning relationship
-- **B.** Out-of-band changes bypassed the normal declaration workflow
-- **C.** The wrapper ignores validation failure status
+- **A.** Preview completed; deployment unexecuted
+- **B.** Deployment completed through preview
+- **C.** Cleanup completed through preview
+- **D.** Application readiness fully verified
 
 ## L17-Q018
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which observation provides the strongest evidence that the requested result was achieved?
+A second run uses the same resource identities and desired settings. What should a declarative infrastructure deployment aim to do?
 
-- **A.** The deployed configuration matches the approved desired state
-- **B.** A known invalid fixture blocks the deployment path
-- **C.** The dependent resource deploys only after its prerequisite is ready
+- **A.** Create an additional copy
+- **B.** Skip property checks forever
+- **C.** Rename every existing resource
+- **D.** Converge to the same state
 
 ## L17-Q019
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which execution safeguard most directly addresses the risk in this case?
+The selected group has a different run's ownership marker although the current identity can write there. What should execution do?
 
-- **A.** Keep diagnostic output while preserving nonzero status
-- **B.** Avoid unnecessary dependencies that serialize independent resources
-- **C.** Determine whether the manual change was an emergency correction
+- **A.** Deploy and repair ownership later
+- **B.** Change only the local run ID
+- **C.** Refuse the mismatched context
+- **D.** Overwrite the ownership marker
 
 ## L17-Q020
 
-Advanced · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. The team selects this remedy: "Express the resource relationship through declarative references." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Module code changed after approval while the parameter file stayed unchanged. Which control binds execution to the reviewed infrastructure rather than current branch contents?
 
-- **A.** Strict reconciliation needs an exception and feedback process
-- **B.** Static checks cannot prove service behavior
-- **C.** Declared dependencies do not solve every readiness condition
+- **A.** Reuse approval if module parameter types are unchanged
+- **B.** Check parameter hashes and accept any compiled module version
+- **C.** Deploy the immutable approved artifact
+- **D.** Approve the moving branch name
 
 ## L17-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which next change most directly satisfies the stated requirement?
+The low-cost core has no SQL dependency, but the advanced workload requires existing SQL networking. Which default execution path is appropriate?
 
-- **A.** Compare desired configuration and reconcile through a reviewed change
-- **B.** Extract a reusable versioned module with explicit parameters
-- **C.** Express the resource relationship through declarative references
+- **A.** Deploy advanced and ignore readiness
+- **B.** Create unplanned publicly accessible SQL
+- **C.** Call compilation successful SQL integration
+- **D.** Deploy core; gate advanced prerequisites
 
 ## L17-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which explanation best accounts for the behavior or constraint described?
+A deployment operation is renamed while resource type, name and scope remain unchanged. What primarily determines the actual Azure resource identity?
 
-- **A.** Out-of-band changes bypassed the normal declaration workflow
-- **B.** Copies are maintained as independent implementations
-- **C.** The script hides a required provisioning relationship
+- **A.** Pipeline run number alone
+- **B.** Type, name and scope
+- **C.** Deployment operation name alone
+- **D.** Bicep source filename alone
 
 ## L17-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which observation provides the strongest evidence that the requested result was achieved?
+Deployment failed after storage creation but before another resource completed. What should a retry inspect before assuming no state remains?
 
-- **A.** The dependent resource deploys only after its prerequisite is ready
-- **B.** The deployed configuration matches the approved desired state
-- **C.** Each environment resolves the approved module version
+- **A.** Every subscription's storage accounts for deletion
+- **B.** A new random naming prefix
+- **C.** Actual resources under recorded ownership
+- **D.** Only the final error string
 
 ## L17-Q024
 
-Applied · [CP5](README.md#task-5) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which execution safeguard most directly addresses the risk in this case?
+The module consumes an identity that already exists and must not create a replacement. Which declaration expresses the intended relationship?
 
-- **A.** Determine whether the manual change was an emergency correction
-- **B.** Review module updates against representative environments
-- **C.** Avoid unnecessary dependencies that serialize independent resources
+- **A.** String containing the deployment name
+- **B.** Existing resource with explicit scope
+- **C.** New identity with timestamp name
+- **D.** First identity returned by inventory
 
 ## L17-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.5.3](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. The team selects this remedy: "Compare desired configuration and reconcile through a reviewed change." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Storage was created, but role assignment failed because the caller lacks assignment rights. How should recovery retain ownership while avoiding permanent broad privileges?
 
-- **A.** Strict reconciliation needs an exception and feedback process
-- **B.** Reusable modules need interface and version discipline
-- **C.** Declared dependencies do not solve every readiness condition
+```text
+storage/create: Succeeded
+roleAssignments/write: AuthorizationFailed
+Journal: storage account ID retained; run ownership marker matches
+```
+
+- **A.** Discard the journal and rename everything
+- **B.** Grant every pipeline permanent Owner
+- **C.** Ignore the assignment and certify integration
+- **D.** Inspect partial state and authorize narrowly
 
 ## L17-Q026
 
-Foundational · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which next change most directly satisfies the stated requirement?
+A team varies account SKU using parameters rather than editing shared Bicep declarations. What benefit does that design provide?
 
-- **A.** Match deployment scope and identity permissions to the required operation
-- **B.** Compare desired configuration and reconcile through a reviewed change
-- **C.** Extract a reusable versioned module with explicit parameters
+- **A.** Prevent all expensive input choices
+- **B.** Separate environment choices from reusable logic
+- **C.** Guarantee every regional SKU exists
+- **D.** Remove the need for previews
 
 ## L17-Q027
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which explanation best accounts for the behavior or constraint described?
+Compilation reports a string argument where the module expects an integer parameter. Which correction directly addresses the reported defect?
 
-- **A.** Resource-group rights do not grant all subscription operations
-- **B.** Out-of-band changes bypassed the normal declaration workflow
-- **C.** Copies are maintained as independent implementations
+- **A.** Suppress every linter rule
+- **B.** Supply a quoted numeric string in the parameter file
+- **C.** Change the module parameter to string without reviewing its numeric consumers
+- **D.** Supply the declared integer type
 
 ## L17-Q028
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which observation provides the strongest evidence that the requested result was achieved?
+Validation needs the exact storage account created by a module without searching by naming prefix. Which output best supports that requirement?
 
-- **A.** The intended scoped operation succeeds without unrelated elevation
-- **B.** The deployed configuration matches the approved desired state
-- **C.** Each environment resolves the approved module version
+- **A.** The subscription's display name
+- **B.** A count of created resources
+- **C.** The complete storage ARM ID
+- **D.** A wildcard training prefix
 
 ## L17-Q029
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which execution safeguard most directly addresses the risk in this case?
+After successful deployment, a learner needs recorded output values without changing resources again. Which operation should the automation use?
 
-- **A.** Review module updates against representative environments
-- **B.** Separate privileged foundation changes from routine application deployment
-- **C.** Determine whether the manual change was an emergency correction
+- **A.** Delete the deployment history entry
+- **B.** Substitute a new what-if preview
+- **C.** Read deployment properties.outputs
+- **D.** Create the group again elsewhere
 
 ## L17-Q030
 
-Advanced · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. The team selects this remedy: "Extract a reusable versioned module with explicit parameters." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+One owned resource exists after failure, another is absent, and the same artifact is still approved. Which retry best avoids duplicate resources?
 
-- **A.** Reusable modules need interface and version discipline
-- **B.** More scopes and identities add orchestration work
-- **C.** Strict reconciliation needs an exception and feedback process
+- **A.** Skip the missing resource
+- **B.** Reuse identities and reconcile the declaration
+- **C.** Randomize all resource names
+- **D.** Delete all target-group resources and redeploy to simplify reconciliation
 
 ## L17-Q031
 
-Foundational · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
 
-Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which next change most directly satisfies the stated requirement?
+Source declares HTTPS-only access and deployment reports success. Which observation most directly verifies the actual deployed security setting?
 
-- **A.** Match deployment scope and identity permissions to the required operation
-- **B.** Parameterize or deterministically derive collision-resistant names
-- **C.** Extract a reusable versioned module with explicit parameters
+- **A.** Search the Bicep source
+- **B.** Inspect only the exit code
+- **C.** Read an HTTPS diagram label
+- **D.** Read the exact live property
 
 ## L17-Q032
 
-Foundational · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
 
-Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which explanation best accounts for the behavior or constraint described?
+The deployment returns a managed identity resource ID. How should validation establish that Azure actually provisioned the intended identity?
 
-- **A.** Copies are maintained as independent implementations
-- **B.** Resource-group rights do not grant all subscription operations
-- **C.** A global namespace cannot accept duplicated fixed names
+- **A.** Accept any tenant principal
+- **B.** Check for identity in the string
+- **C.** Check only that clientId is nonempty in a local plan
+- **D.** Read that ID and principalId
 
 ## L17-Q033
 
-Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
 
-Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which observation provides the strongest evidence that the requested result was achieved?
+A service read contradicts the secure public-access setting still present in source. Which result should validation report?
 
-- **A.** Two isolated deployments produce distinct valid names
-- **B.** Each environment resolves the approved module version
-- **C.** The intended scoped operation succeeds without unrelated elevation
+- **A.** Pass because names match
+- **B.** Reset the whole subscription
+- **C.** A configuration mismatch requiring investigation
+- **D.** Pass because source is secure
 
 ## L17-Q034
 
-Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
 
-Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which execution safeguard most directly addresses the risk in this case?
+Deployment outputs exist but the API's first request fails. Which extra evidence is needed before claiming application readiness?
 
-- **A.** Review module updates against representative environments
-- **B.** Separate privileged foundation changes from routine application deployment
-- **C.** Keep naming deterministic enough for lifecycle management
+- **A.** Runtime readiness and dependency checks
+- **B.** Only nonempty output values
+- **C.** Another source formatter pass
+- **D.** Only the liveness endpoint returning success
 
 ## L17-Q035
 
-Advanced · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
 
-Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. The team selects this remedy: "Match deployment scope and identity permissions to the required operation." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A security setting passed yesterday but today's what-if reports an unexplained modification. What should a reviewer do before approving reconciliation?
 
-- **A.** Reusable modules need interface and version discipline
-- **B.** More scopes and identities add orchestration work
-- **C.** Name constraints differ across Azure resource types
+- **A.** Compare actual state and expression evaluation
+- **B.** Approve all modifications automatically
+- **C.** Delete the owned group first
+- **D.** Ignore unchanged source files
 
 ## L17-Q036
 
-Foundational · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which next change most directly satisfies the stated requirement?
+The deployment must preserve group ownership metadata while adding exact lab-run tags. Which Bicep pattern expresses the intended tag policy?
 
-- **A.** Parameterize or deterministically derive collision-resistant names
-- **B.** Add scoped deployment and postdeployment verification
-- **C.** Match deployment scope and identity permissions to the required operation
+- **A.** Merge group and explicit run tags
+- **B.** Replace tags with course only
+- **C.** Keep run ID only locally
+- **D.** Remove tags after deployment
 
 ## L17-Q037
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
 
-Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which explanation best accounts for the behavior or constraint described?
+Validation must establish that an output belongs to the expected subscription, owned group and resource name. Which assertion is strongest?
 
-- **A.** A global namespace cannot accept duplicated fixed names
-- **B.** A preview cannot prove every execution and service condition
-- **C.** Resource-group rights do not grant all subscription operations
+- **A.** Compare the complete expected resource ID
+- **B.** Compare three trailing name characters
+- **C.** Accept any course-tagged resource
+- **D.** Accept any parseable JSON result
 
 ## L17-Q038
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.3](../../docs/objective-map.md)
 
-Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which observation provides the strongest evidence that the requested result was achieved?
+The core deploys a managed identity without assigning broad permissions. What is true immediately after that identity is created?
 
-- **A.** The intended scoped operation succeeds without unrelated elevation
-- **B.** Two isolated deployments produce distinct valid names
-- **C.** A safe test deployment passes required functional probes
+- **A.** It needs no audience review
+- **B.** Authorization still requires scoped grants
+- **C.** It administers every subscription resource
+- **D.** It inherits the learner's access
 
 ## L17-Q039
 
-Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
 
-Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which execution safeguard most directly addresses the risk in this case?
+A required security property is missing from an otherwise parseable Azure response. How should the validator classify its observation?
 
-- **A.** Separate privileged foundation changes from routine application deployment
-- **B.** Keep naming deterministic enough for lifecycle management
-- **C.** Use a bounded training target and cleanup procedure
+- **A.** Replace null with expected value
+- **B.** Pass because JSON parsed
+- **C.** Validate a similarly named account
+- **D.** Fail or record incomplete evidence
 
 ## L17-Q040
 
-Advanced · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
 
-Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. The team selects this remedy: "Parameterize or deterministically derive collision-resistant names." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The resource ID is correct but the deployed artifact predates the approved policy change. Which missing control prevents accepting this evidence?
 
-- **A.** Live verification can incur cost
-- **B.** More scopes and identities add orchestration work
-- **C.** Name constraints differ across Azure resource types
+```json
+{"approvedRevision":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","appliedRevision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","resourceScopeMatches":true}
+```
+
+- **A.** Accept outputs whose names match the approved plan
+- **B.** Use another successful deployment from the same subscription as evidence
+- **C.** Compare only the deployed and approved parameter files
+- **D.** Bind deployed artifact to approved revision
 
 ## L17-Q041
 
-Foundational · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
 
-Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which next change most directly satisfies the stated requirement?
+A postdeployment what-if reports no intended changes in the analyzed scope. What conclusion can the learner reasonably draw?
 
-- **A.** Output a nonsensitive reference rather than the secret value
-- **B.** Parameterize or deterministically derive collision-resistant names
-- **C.** Add scoped deployment and postdeployment verification
+- **A.** All application dependencies are healthy
+- **B.** Future drift is impossible
+- **C.** Cleanup has deleted the resources
+- **D.** The evaluated declaration currently appears converged
 
 ## L17-Q042
 
-Foundational · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which explanation best accounts for the behavior or constraint described?
+The top-level template references a module outside the staged learner repository. What must change before the package is self-contained?
 
-- **A.** A global namespace cannot accept duplicated fixed names
-- **B.** A preview cannot prove every execution and service condition
-- **C.** Infrastructure output was used as an unrestricted secret channel
+- **A.** Document only the missing filename
+- **B.** Require guessing another repository
+- **C.** Package and reference the dependency
+- **D.** Keep the author's absolute path
 
 ## L17-Q043
 
-Applied · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which observation provides the strongest evidence that the requested result was achieved?
+Production and development share infrastructure logic but need reviewed parameter differences. Which source-control arrangement supports reproducible deployment for both?
 
-- **A.** Two isolated deployments produce distinct valid names
-- **B.** A safe test deployment passes required functional probes
-- **C.** The public artifact contains only the permitted reference
+- **A.** Hardcode production secrets in source
+- **B.** Fetch arbitrary latest modules during release
+- **C.** Version modules and environment parameters
+- **D.** Keep private edits on each agent
 
 ## L17-Q044
 
-Applied · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which execution safeguard most directly addresses the risk in this case?
+One analyzer warning is a justified false positive in a specific declaration. Which exception is narrowest and maintainable?
 
-- **A.** Restrict secret resolution to the task that actually needs it
-- **B.** Keep naming deterministic enough for lifecycle management
-- **C.** Use a bounded training target and cleanup procedure
+- **A.** Document a focused rule suppression
+- **B.** Disable the complete analyzer
+- **C.** Remove CI compilation entirely
+- **D.** Reduce all severities permanently
 
 ## L17-Q045
 
-Advanced · [CP4](README.md#task-4) · [D3.5.3](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. The team selects this remedy: "Add scoped deployment and postdeployment verification." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Approval and cost acknowledgement covered B1 without slots. A queued parameter changes to S1 and creates staging, while the source revision stays identical. Which gate must change before execution?
 
-- **A.** Name constraints differ across Azure resource types
-- **B.** Live verification can incur cost
-- **C.** Reference-based designs depend on runtime identity access
+```text
+Approved: B1; no slot; low-cost acknowledgement attached
+Queued: S1; staging slot newly created; same source revision
+Policy: cost changes require a reviewed scoped preview
+```
+
+- **A.** Review the exact S1 preview and acknowledge its changed cost
+- **B.** Accept any syntactically allowed SKU
+- **C.** Deploy S1 under the old approval and review its cost afterward
+- **D.** Reuse the original B1 preview
 
 ## L17-Q046
 
-Foundational · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which next change most directly satisfies the stated requirement?
+Reusable definitions belong in Git, but runtime journals contain learner-specific state. Which files should the shared course version-control by default?
 
-- **A.** Add scoped deployment and postdeployment verification
-- **B.** Output a nonsensitive reference rather than the secret value
-- **C.** Run validation and review the what-if result
+- **A.** Every build cache directory
+- **B.** Encrypted secrets beside their key
+- **C.** Definitions and nonsensitive parameter examples
+- **D.** All learner ownership journals
 
 ## L17-Q047
 
-Applied · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
 
-Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which explanation best accounts for the behavior or constraint described?
+Cleanup has a recorded resource ID, but its current ownership marker differs. Which lifecycle response preserves the exact deletion boundary?
 
-- **A.** A preview cannot prove every execution and service condition
-- **B.** Infrastructure output was used as an unrestricted secret channel
-- **C.** Template validity does not establish an acceptable resource diff
+- **A.** Delete all matching prefix resources
+- **B.** Overwrite the marker before deleting
+- **C.** Refuse and report the mismatch
+- **D.** Delete using the old name
 
 ## L17-Q048
 
-Applied · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.3](../../docs/objective-map.md)
 
-Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which observation provides the strongest evidence that the requested result was achieved?
+An additional module output is needed while existing consumers must keep working. Which change best preserves the output contract?
 
-- **A.** A safe test deployment passes required functional probes
-- **B.** The public artifact contains only the permitted reference
-- **C.** The reviewed plan identifies the intended access change
+- **A.** Change an existing output's meaning
+- **B.** Return the entire secret environment
+- **C.** Remove outputs and infer names
+- **D.** Add a documented nonsensitive output
 
 ## L17-Q049
 
-Applied · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP2](README.md#task-2) · [D3.5.3](../../docs/objective-map.md)
 
-Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which execution safeguard most directly addresses the risk in this case?
+The learner only compiled locally because their Azure subscription prerequisite is unavailable. Which recorded validation status is accurate?
 
-- **A.** Use a bounded training target and cleanup procedure
-- **B.** Restrict secret resolution to the task that actually needs it
-- **C.** Verify subscription resource group and parameters before deployment
+- **A.** Cloud failure proven by missing account
+- **B.** Syntax verified; cloud execution unverified
+- **C.** Full deployment verified by compilation
+- **D.** All checkpoints passed through review
 
 ## L17-Q050
 
-Advanced · [CP4](README.md#task-4) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
 
-Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. The team selects this remedy: "Output a nonsensitive reference rather than the secret value." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A retained baseline and a clean postdeployment preview exist. The declared output now resolves to shared-production, while the journal owns az400-owned-run. Which condition must block acceptance despite apparently converged infrastructure?
 
-- **A.** Live verification can incur cost
-- **B.** Reference-based designs depend on runtime identity access
-- **C.** What-if is a planning aid with limitations
+```json
+{"preview":"NoChange","journalGroup":"az400-owned-run","outputGroup":"shared-production","baselineRetained":true}
+```
+
+- **A.** Only whether the baseline and current parameter hashes match
+- **B.** Nothing after a clean preview
+- **C.** The output scope mismatch
+- **D.** Only whether the template compiler reported warnings

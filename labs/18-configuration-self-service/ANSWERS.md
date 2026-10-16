@@ -6,700 +6,794 @@ Verified: 2026-10-16. Original practice material; no recalled exam questions.
 
 ## L18-Q001
 
-Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
 
-Configuration choice: A team confuses resource provisioning with ongoing operating-system compliance on existing machines. Which next change most directly satisfies the stated requirement?
+An engineer describes the required service settings instead of a sequence of manual edits. Which configuration-management concept does this illustrate?
 
-- **A. Separate infrastructure deployment from guest configuration requirements** **Correct.** Provisioned resources and guest state are distinct layers. This directly addresses the constraint stated in this case.
-- **B. Use a supported machine-configuration compliance policy** Ongoing assessment detects guest-state divergence. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **C. Define one authoritative desired-state owner for the setting** Competing writers cause oscillation rather than convergence. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
+- **A. A chronological command transcript** A transcript records actions rather than the required resulting configuration state.
+- **B. A production incident timeline** An incident timeline describes events rather than the intended server configuration.
+- **C. A release artifact retention policy** Retention governs stored evidence rather than the machine's declared operating settings.
+- **D. A desired-state declaration** **Correct.** A desired-state document describes the condition that reconciliation should establish.
 
-**Explanation:** Provisioned resources and guest state are distinct layers. The selected answer is separate infrastructure deployment from guest configuration requirements.
+**Explanation:** A transcript records actions rather than the required resulting configuration state. An incident timeline describes events rather than the intended server configuration. Retention governs stored evidence rather than the machine's declared operating settings. A desired-state document describes the condition that reconciliation should establish.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q002
 
-Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
 
-Configuration choice: A team confuses resource provisioning with ongoing operating-system compliance on existing machines. Which explanation best accounts for the behavior or constraint described?
+The current configuration differs from the approved declaration, and the team wants a report before repair. Which operation fits?
 
-- **A. Creating a VM does not establish continuing guest compliance** **Correct.** The desired state must be assessed inside the machine. This directly addresses the constraint stated in this case.
-- **B. A one-time installation script does not provide continuing assessment** Later manual edits occur after initial provisioning. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **C. Two automation paths enforce incompatible configurations** Both tools can be working as individually configured. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
+- **A. Replace evidence with expected values** Expected values cannot substitute for observations of the actual current configuration.
+- **B. Audit current against desired state** **Correct.** Audit identifies mismatches without requiring those settings to be changed immediately.
+- **C. Apply every available configuration** Unreviewed application changes state before the requested audit report is produced.
+- **D. Delete the desired-state document** Removing the declaration discards the reference needed to identify configuration drift.
 
-**Explanation:** The desired state must be assessed inside the machine. The selected answer is creating a VM does not establish continuing guest compliance.
+**Explanation:** Expected values cannot substitute for observations of the actual current configuration. Audit identifies mismatches without requiring those settings to be changed immediately. Unreviewed application changes state before the requested audit report is produced. Removing the declaration discards the reference needed to identify configuration drift.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q003
 
-Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
 
-Configuration choice: A team confuses resource provisioning with ongoing operating-system compliance on existing machines. Which observation provides the strongest evidence that the requested result was achieved?
+The lab's declared JSON setting is correct but its actual file contains another value. Which comparison demonstrates drift?
 
-- **A. The setting stabilizes under one agreed source of truth** Repeated evaluations should converge rather than fight. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **B. The design identifies both provisioning and guest-state controls** **Correct.** Each requirement needs an appropriate implementation mechanism. This directly addresses the constraint stated in this case.
-- **C. The changed setting appears as noncompliant** The evidence should include deliberate drift. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
+- **A. Compare only file modification timestamps** A timestamp change cannot identify whether the declared setting value actually differs.
+- **B. Check only the previous repair exit status** An earlier successful repair does not observe the current configuration value after later edits.
+- **C. Compare observed and declared values** **Correct.** Drift is a discrepancy between the observed state and the declared target.
+- **D. Compare two copies of the declaration** Matching desired documents does not inspect the actual configuration being managed.
 
-**Explanation:** Each requirement needs an appropriate implementation mechanism. The selected answer is the design identifies both provisioning and guest-state controls.
+**Explanation:** A timestamp change cannot identify whether the declared setting value actually differs. An earlier successful repair does not observe the current configuration value after later edits. Drift is a discrepancy between the observed state and the declared target. Matching desired documents does not inspect the actual configuration being managed.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q004
 
-Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.4](../../docs/objective-map.md)
 
-Configuration choice: A team confuses resource provisioning with ongoing operating-system compliance on existing machines. Which execution safeguard most directly addresses the risk in this case?
+A reconciliation script writes the desired value even when it already matches. What property should a well-designed repeated run preserve?
 
-- **A. Test policy effects on an isolated machine first** Configuration enforcement can alter operational behavior. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **B. Map existing configuration ownership before adding enforcement** New policy can conflict with established operational automation. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **C. Choose supported technology for the actual operating system** **Correct.** Legacy tooling may not support the target. This directly addresses the constraint stated in this case.
+```json
+{"desired":{"mode":"safe"},"firstRun":{"changed":true},"secondRun":{"changed":false,"mode":"safe"}}
+```
 
-**Explanation:** Legacy tooling may not support the target. The selected answer is choose supported technology for the actual operating system.
+- **A. A new ownership identity each run** Changing ownership context obstructs controlled management of the same declared resource.
+- **B. The same intended final state** **Correct.** Repeated reconciliation should converge on desired settings without accumulating additional changes.
+- **C. An increasing number of files** Accumulating copies suggests imperative repetition rather than stable desired-state convergence.
+- **D. A fresh random setting every run** Random settings prevent convergence to the same approved configuration declaration.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** Changing ownership context obstructs controlled management of the same declared resource. Repeated reconciliation should converge on desired settings without accumulating additional changes. Accumulating copies suggests imperative repetition rather than stable desired-state convergence. Random settings prevent convergence to the same approved configuration declaration.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q005
 
-Advanced · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Configuration choice: A team confuses resource provisioning with ongoing operating-system compliance on existing machines. The team selects this remedy: "Separate infrastructure deployment from guest configuration requirements." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+An audit-only policy reports drift on a production machine, but automatic repair would interrupt a service. Which mode and action match the restriction?
 
-- **A. Central ownership needs coordination across teams** Technical convergence depends on agreed responsibility. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **B. More than one tool may be necessary** **Correct.** A single product need not satisfy every configuration layer. This directly addresses the constraint stated in this case.
-- **C. Assessment frequency affects detection delay** Drift is not always visible immediately. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
+- **A. Keep audit mode and schedule approved remediation** **Correct.** Audit reports noncompliance while leaving the disruptive correction under explicit change control.
+- **B. Enable autocorrection without review** Autocorrection can modify production state contrary to the stated interruption restriction.
+- **C. Mark the drift compliant permanently** Ignoring a real mismatch conceals the configuration condition requiring planned remediation.
+- **D. Delete the assignment to clear the result** Removing observation does not establish that the machine satisfies its desired configuration.
 
-**Explanation:** A single product need not satisfy every configuration layer. The selected answer is more than one tool may be necessary.
+**Explanation:** Audit reports noncompliance while leaving the disruptive correction under explicit change control. Autocorrection can modify production state contrary to the stated interruption restriction. Ignoring a real mismatch conceals the configuration condition requiring planned remediation. Removing observation does not establish that the machine satisfies its desired configuration.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q006
 
-Foundational · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
 
-Guest drift: Administrators repeatedly change a required Windows setting after deployment, and the team needs ongoing visibility. Which next change most directly satisfies the stated requirement?
+A local configuration fixture uses a single declared file under its workspace. What should the reconciliation function modify?
 
-- **A. Separate infrastructure deployment from guest configuration requirements** Provisioned resources and guest state are distinct layers. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. Use a supported machine-configuration compliance policy** **Correct.** Ongoing assessment detects guest-state divergence. This directly addresses the constraint stated in this case.
-- **C. Check whether the assignment audits or applies configuration** Detection and remediation are separate capabilities. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. The parent directory's entire contents** Replacing the parent directory changes unrelated state beyond the declared resource.
+- **B. Only the exact declared owned file** **Correct.** A precise resource boundary limits correction to the fixture's intended managed state.
+- **C. Every file sharing its extension** Extension matching can include unrelated files outside the declared configuration resource.
+- **D. Any file whose name contains config** A broad naming pattern does not establish the managed file's ownership boundary.
 
-**Explanation:** Ongoing assessment detects guest-state divergence. The selected answer is use a supported machine-configuration compliance policy.
+**Explanation:** Replacing the parent directory changes unrelated state beyond the declared resource. A precise resource boundary limits correction to the fixture's intended managed state. Extension matching can include unrelated files outside the declared configuration resource. A broad naming pattern does not establish the managed file's ownership boundary.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q007
 
 Applied · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
 
-Guest drift: Administrators repeatedly change a required Windows setting after deployment, and the team needs ongoing visibility. Which explanation best accounts for the behavior or constraint described?
+The team needs to see what changed during a configuration repair and what remained unverified remotely. Which evidence is useful?
 
-- **A. A one-time installation script does not provide continuing assessment** **Correct.** Later manual edits occur after initial provisioning. This directly addresses the constraint stated in this case.
-- **B. An audit policy does not imply automatic repair** Its purpose may be reporting rather than enforcement. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
-- **C. Creating a VM does not establish continuing guest compliance** The desired state must be assessed inside the machine. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
+- **A. Only the desired value copied twice** Repeating desired intent does not prove the original or resulting observed state.
+- **B. Only a successful JSON parsing result** Parsing verifies document syntax rather than configuration repair and managed execution scope.
+- **C. Only the existence of a screenshot** A screenshot's existence does not establish which settings were actually changed.
+- **D. Before and after values with execution scope** **Correct.** Scoped observations show local convergence while avoiding unsupported claims about provider execution.
 
-**Explanation:** Later manual edits occur after initial provisioning. The selected answer is a one-time installation script does not provide continuing assessment.
+**Explanation:** Repeating desired intent does not prove the original or resulting observed state. Parsing verifies document syntax rather than configuration repair and managed execution scope. A screenshot's existence does not establish which settings were actually changed. Scoped observations show local convergence while avoiding unsupported claims about provider execution.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q008
 
 Applied · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
 
-Guest drift: Administrators repeatedly change a required Windows setting after deployment, and the team needs ongoing visibility. Which observation provides the strongest evidence that the requested result was achieved?
+A local audit returns noncompliance and the learner has not run reconciliation. Which checkpoint status accurately reflects the managed configuration?
 
-- **A. The design identifies both provisioning and guest-state controls** Each requirement needs an appropriate implementation mechanism. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. The changed setting appears as noncompliant** **Correct.** The evidence should include deliberate drift. This directly addresses the constraint stated in this case.
-- **C. The configured assignment shows the intended remediation behavior** The test should verify the actual assignment type. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. Cloud policy deployed by local audit** A local fixture cannot establish that Azure Policy assignments were created.
+- **B. Drift detected; repair still pending** **Correct.** An audit result identifies a mismatch without proving that correction has executed.
+- **C. Reconciliation passed because drift was visible** Detecting a defect does not mean the managed state has been repaired.
+- **D. All settings compliant because declarations parse** Valid declarations can still differ from the actual observed configuration values.
 
-**Explanation:** The evidence should include deliberate drift. The selected answer is the changed setting appears as noncompliant.
+**Explanation:** A local fixture cannot establish that Azure Policy assignments were created. An audit result identifies a mismatch without proving that correction has executed. Detecting a defect does not mean the managed state has been repaired. Valid declarations can still differ from the actual observed configuration values.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q009
 
-Applied · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
+Applied · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
 
-Guest drift: Administrators repeatedly change a required Windows setting after deployment, and the team needs ongoing visibility. Which execution safeguard most directly addresses the risk in this case?
+An approved desired-state document changes one property while other file properties are deliberately unmanaged. Which repair strategy avoids accidental expansion of scope?
 
-- **A. Choose supported technology for the actual operating system** Legacy tooling may not support the target. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. Test policy effects on an isolated machine first** **Correct.** Configuration enforcement can alter operational behavior. This directly addresses the constraint stated in this case.
-- **C. Confirm support and prerequisites before enabling enforcement** Not every policy supports the same action. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. Import any settings found on another machine** Unreviewed external settings do not represent this resource's approved desired state.
+- **B. Reconcile only the declared properties** **Correct.** A constrained repair preserves unrelated settings outside the declared management contract.
+- **C. Replace every property with defaults** Default replacement can overwrite intentionally unmanaged settings unrelated to this correction.
+- **D. Delete the complete configuration directory** Directory deletion removes more state than the declared property discrepancy requires.
 
-**Explanation:** Configuration enforcement can alter operational behavior. The selected answer is test policy effects on an isolated machine first.
+**Explanation:** Unreviewed external settings do not represent this resource's approved desired state. A constrained repair preserves unrelated settings outside the declared management contract. Default replacement can overwrite intentionally unmanaged settings unrelated to this correction. Directory deletion removes more state than the declared property discrepancy requires.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q010
 
-Advanced · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D3.5.2](../../docs/objective-map.md)
 
-Guest drift: Administrators repeatedly change a required Windows setting after deployment, and the team needs ongoing visibility. The team selects this remedy: "Use a supported machine-configuration compliance policy." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A second reconciliation reports no changes, but the first run only simulated writes. Which evidence is still required before claiming repair?
 
-- **A. Automatic enforcement can conflict with operational changes** Teams need a controlled exception process. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
-- **B. More than one tool may be necessary** A single product need not satisfy every configuration layer. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **C. Assessment frequency affects detection delay** **Correct.** Drift is not always visible immediately. This directly addresses the constraint stated in this case.
+```json
+{"operation":"reconcile","preview":true,"wouldChange":true,"actualWritePerformed":false}
+```
 
-**Explanation:** Drift is not always visible immediately. The selected answer is assessment frequency affects detection delay.
+- **A. A real write followed by an observed-state audit** **Correct.** A simulated change does not establish that actual managed settings reached compliance.
+- **B. A second simulation using identical inputs** Repeated simulations still do not inspect the state after an actual correction.
+- **C. Accept a passing reconciliation-script syntax check as evidence of repair** A syntactically valid script can still have run only in preview and leave actual settings unchanged.
+- **D. Use the desired-state file itself as the postrepair observation** Reading the desired value does not independently observe whether the managed resource was changed.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** A simulated change does not establish that actual managed settings reached compliance. Repeated simulations still do not inspect the state after an actual correction. A syntactically valid script can still have run only in preview and leave actual settings unchanged. Reading the desired value does not independently observe whether the managed resource was changed.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q011
 
-Foundational · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Audit assumption: A policy reports a machine as noncompliant, but the team expects the setting to repair itself automatically. Which next change most directly satisfies the stated requirement?
+A platform team wants machine configuration evaluated across many assigned machines using Azure governance. Which Azure capability fits this requirement?
 
-- **A. Check whether the assignment audits or applies configuration** **Correct.** Detection and remediation are separate capabilities. This directly addresses the constraint stated in this case.
-- **B. Verify machine identity extension and supported prerequisites** The service needs a functioning guest-assessment path. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **C. Use a supported machine-configuration compliance policy** Ongoing assessment detects guest-state divergence. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
+- **A. An application package cache** Dependency caches accelerate builds rather than orchestrating guest configuration compliance policies.
+- **B. Machine Configuration orchestrated through Azure Policy** **Correct.** Policy can assign machine configurations and expose per-setting compliance at scale.
+- **C. Bicep formatting without policy assignment** Formatting infrastructure source cannot evaluate guest operating-system settings across assigned machines.
+- **D. A single local JSON fixture** Local fixture calculations do not create fleet-wide policy assignments or compliance observations.
 
-**Explanation:** Detection and remediation are separate capabilities. The selected answer is check whether the assignment audits or applies configuration.
+**Explanation:** Dependency caches accelerate builds rather than orchestrating guest configuration compliance policies. Policy can assign machine configurations and expose per-setting compliance at scale. Formatting infrastructure source cannot evaluate guest operating-system settings across assigned machines. Local fixture calculations do not create fleet-wide policy assignments or compliance observations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q012
 
-Foundational · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Audit assumption: A policy reports a machine as noncompliant, but the team expects the setting to repair itself automatically. Which explanation best accounts for the behavior or constraint described?
+A machine requires reporting only, and its owner does not permit automatic configuration changes. Which Machine Configuration enforcement mode matches?
 
-- **A. A one-time installation script does not provide continuing assessment** Later manual edits occur after initial provisioning. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **B. An audit policy does not imply automatic repair** **Correct.** Its purpose may be reporting rather than enforcement. This directly addresses the constraint stated in this case.
-- **C. Policy assignment alone does not install every prerequisite** The machine must be able to participate. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
+- **A. Unreviewed manual repair** Manual changes still alter configuration contrary to the reporting-only requirement.
+- **B. Audit** **Correct.** Audit reports current state without applying corrective configuration to the managed machine.
+- **C. Apply and Monitor** This mode applies configuration first, exceeding the stated reporting-only permission boundary.
+- **D. Apply and Autocorrect** This mode applies and repairs drift rather than merely reporting observations.
 
-**Explanation:** Its purpose may be reporting rather than enforcement. The selected answer is an audit policy does not imply automatic repair.
+**Explanation:** Manual changes still alter configuration contrary to the reporting-only requirement. Audit reports current state without applying corrective configuration to the managed machine. This mode applies configuration first, exceeding the stated reporting-only permission boundary. This mode applies and repairs drift rather than merely reporting observations.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q013
 
-Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Audit assumption: A policy reports a machine as noncompliant, but the team expects the setting to repair itself automatically. Which observation provides the strongest evidence that the requested result was achieved?
+The organization wants configuration applied once and future drift reported, with subsequent corrections controlled by change tickets. Which mode fits?
 
-- **A. The changed setting appears as noncompliant** The evidence should include deliberate drift. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **B. The configured assignment shows the intended remediation behavior** **Correct.** The test should verify the actual assignment type. This directly addresses the constraint stated in this case.
-- **C. The target reports a recent evaluated compliance result** A fresh result demonstrates an active assessment path. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
+- **A. Audit only** Audit alone does not perform the requested initial configuration application.
+- **B. Apply and Autocorrect** Automatic later correction conflicts with the requirement for ticket-controlled subsequent repairs.
+- **C. Remove the assignment after deployment** Removing monitoring prevents the requested reporting of future configuration drift.
+- **D. Apply and Monitor** **Correct.** This mode applies configuration and monitors later changes without continuous automatic correction.
 
-**Explanation:** The test should verify the actual assignment type. The selected answer is the configured assignment shows the intended remediation behavior.
+**Explanation:** Audit alone does not perform the requested initial configuration application. Automatic later correction conflicts with the requirement for ticket-controlled subsequent repairs. Removing monitoring prevents the requested reporting of future configuration drift. This mode applies configuration and monitors later changes without continuous automatic correction.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q014
 
-Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Audit assumption: A policy reports a machine as noncompliant, but the team expects the setting to repair itself automatically. Which execution safeguard most directly addresses the risk in this case?
+Machines must automatically return to their approved configuration after an unauthorized setting change. Which supported Machine Configuration mode provides that behavior?
 
-- **A. Confirm support and prerequisites before enabling enforcement** **Correct.** Not every policy supports the same action. This directly addresses the constraint stated in this case.
-- **B. Scope prerequisite deployment to the intended machines** Broad automation can alter unrelated workloads. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **C. Test policy effects on an isolated machine first** Configuration enforcement can alter operational behavior. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
+- **A. Apply and Monitor** This mode monitors later drift rather than automatically restoring every mismatch.
+- **B. One-time source compilation** Compiling a configuration does not continuously observe or repair a managed machine.
+- **C. Apply and Autocorrect** **Correct.** This mode applies declared configuration and brings drifted machines back into conformance.
+- **D. Audit only** Audit reports discrepancies without applying the requested corrective configuration changes.
 
-**Explanation:** Not every policy supports the same action. The selected answer is confirm support and prerequisites before enabling enforcement.
+**Explanation:** This mode monitors later drift rather than automatically restoring every mismatch. Compiling a configuration does not continuously observe or repair a managed machine. This mode applies declared configuration and brings drifted machines back into conformance. Audit reports discrepancies without applying the requested corrective configuration changes.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q015
 
-Advanced · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Audit assumption: A policy reports a machine as noncompliant, but the team expects the setting to repair itself automatically. The team selects this remedy: "Check whether the assignment audits or applies configuration." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The team selected autocorrection, but a critical setting causes repeated service disruption when repaired. What change addresses both governance and availability?
 
-- **A. Assessment frequency affects detection delay** Drift is not always visible immediately. That addresses a different requirement: Guest drift. It does not directly resolve this case's stated constraint.
-- **B. Automatic enforcement can conflict with operational changes** **Correct.** Teams need a controlled exception process. This directly addresses the constraint stated in this case.
-- **C. Prerequisite management adds lifecycle work** Extensions and identities also need monitoring. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
+```text
+Mode: Apply and Autocorrect
+Repair: resets service setting and restarts process
+Observed: configuration returns; active sessions are repeatedly interrupted
+```
 
-**Explanation:** Teams need a controlled exception process. The selected answer is automatic enforcement can conflict with operational changes.
+- **A. Declare every current value compliant automatically** Copying drift into desired state bypasses review of whether those settings are acceptable.
+- **B. Keep autocorrection unchanged and suppress service alerts** Suppressing symptoms preserves the harmful correction cycle and obscures operational impact.
+- **C. Review the desired setting and use controlled remediation while diagnosing** **Correct.** Automatic correction should not repeatedly apply a harmful declaration without operational review.
+- **D. Remove all configuration reporting forever** Disabling observation hides risk and does not resolve the defective target setting.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** Copying drift into desired state bypasses review of whether those settings are acceptable. Suppressing symptoms preserves the harmful correction cycle and obscures operational impact. Automatic correction should not repeatedly apply a harmful declaration without operational review. Disabling observation hides risk and does not resolve the defective target setting.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q016
 
-Foundational · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Missing prerequisite: A guest-configuration policy is assigned, but no useful machine result appears because required platform components are absent. Which next change most directly satisfies the stated requirement?
+A Linux host is outside its publisher's supported lifecycle. What must the team verify before adopting it into Machine Configuration management?
 
-- **A. Verify machine identity extension and supported prerequisites** **Correct.** The service needs a functioning guest-assessment path. This directly addresses the constraint stated in this case.
-- **B. Teach the legacy exam concept alongside Machine Configuration** Current guidance needs both scope accuracy and lifecycle context. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. Check whether the assignment audits or applies configuration** Detection and remediation are separate capabilities. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. Only whether its configuration file parses** Source syntax cannot establish runtime support on an unsupported operating system.
+- **B. Only whether another host reported compliance** Another host's result does not prove this machine's operating-system compatibility.
+- **C. The current supported operating-system matrix** **Correct.** Machine Configuration support depends on compatible clients and supported operating-system versions.
+- **D. Only whether the Azure Arc agent can connect successfully** Successful Arc connectivity does not establish that this operating-system release is supported by Machine Configuration.
 
-**Explanation:** The service needs a functioning guest-assessment path. The selected answer is verify machine identity extension and supported prerequisites.
+**Explanation:** Source syntax cannot establish runtime support on an unsupported operating system. Another host's result does not prove this machine's operating-system compatibility. Machine Configuration support depends on compatible clients and supported operating-system versions. Successful Arc connectivity does not establish that this operating-system release is supported by Machine Configuration.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q017
 
-Applied · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Missing prerequisite: A guest-configuration policy is assigned, but no useful machine result appears because required platform components are absent. Which explanation best accounts for the behavior or constraint described?
+A server runs outside Azure and must participate in the same guest-configuration governance model. Which onboarding direction should be evaluated?
 
-- **A. Policy assignment alone does not install every prerequisite** **Correct.** The machine must be able to participate. This directly addresses the constraint stated in this case.
-- **B. Exam inclusion does not guarantee long-term service availability** The curriculum must distinguish assessed legacy capabilities. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. An audit policy does not imply automatic repair** Its purpose may be reporting rather than enforcement. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. Azure Arc-enabled machine integration** **Correct.** Machine Configuration includes hybrid governance for supported Arc-enabled server resources.
+- **B. Create a similarly named Azure tag** A tag alone does not connect the machine to configuration governance services.
+- **C. Target an Azure VM-only assignment without onboarding the hybrid host** The external server still needs supported hybrid connectivity rather than an unrelated Azure VM target.
+- **D. Run the lab's local fixture once** A local fixture does not establish remote Azure configuration assignments or agent connectivity.
 
-**Explanation:** The machine must be able to participate. The selected answer is policy assignment alone does not install every prerequisite.
+**Explanation:** Machine Configuration includes hybrid governance for supported Arc-enabled server resources. A tag alone does not connect the machine to configuration governance services. The external server still needs supported hybrid connectivity rather than an unrelated Azure VM target. A local fixture does not establish remote Azure configuration assignments or agent connectivity.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q018
 
-Applied · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Missing prerequisite: A guest-configuration policy is assigned, but no useful machine result appears because required platform components are absent. Which observation provides the strongest evidence that the requested result was achieved?
+A policy assignment exists, but no per-setting machine results are available. Which next investigation is most directly useful?
 
-- **A. The configured assignment shows the intended remediation behavior** The test should verify the actual assignment type. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
-- **B. The target reports a recent evaluated compliance result** **Correct.** A fresh result demonstrates an active assessment path. This directly addresses the constraint stated in this case.
-- **C. The lab states the retirement date and current supported direction** Readers need the explicit technology lifecycle boundary. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
+- **A. Check assignment targeting and machine evaluation prerequisites** **Correct.** An assignment declaration alone does not prove client connectivity or successful setting evaluation.
+- **B. Assume every machine is compliant** Missing evaluation evidence cannot establish compliance with the declared configuration settings.
+- **C. Delete the desired-state package immediately** Removing the package does not diagnose targeting or evaluation prerequisites.
+- **D. Report local JSON results as remote evidence** Local fixture outputs do not describe the actual assigned machine's evaluated settings.
 
-**Explanation:** A fresh result demonstrates an active assessment path. The selected answer is the target reports a recent evaluated compliance result.
+**Explanation:** An assignment declaration alone does not prove client connectivity or successful setting evaluation. Missing evaluation evidence cannot establish compliance with the declared configuration settings. Removing the package does not diagnose targeting or evaluation prerequisites. Local fixture outputs do not describe the actual assigned machine's evaluated settings.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q019
 
-Applied · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Missing prerequisite: A guest-configuration policy is assigned, but no useful machine result appears because required platform components are absent. Which execution safeguard most directly addresses the risk in this case?
+A configuration package changes while operators keep the previous compliance screenshot. What evidence best establishes the new package's evaluated result?
 
-- **A. Scope prerequisite deployment to the intended machines** **Correct.** Broad automation can alter unrelated workloads. This directly addresses the constraint stated in this case.
-- **B. Avoid presenting retired Linux Automation DSC as a new supported path** Legacy operating-system support differs from current alternatives. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. Confirm support and prerequisites before enabling enforcement** Not every policy supports the same action. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. The old screenshot renamed as latest** Renaming evidence does not evaluate a newly assigned configuration package revision.
+- **B. The package file's current size** File size cannot establish which package version a machine actually evaluated.
+- **C. A successful source commit alone** Committing configuration does not prove assignment or evaluation on managed target machines.
+- **D. Fresh results linked to the assigned package revision** **Correct.** Compliance evidence must correspond to the configuration version actually assigned and evaluated.
 
-**Explanation:** Broad automation can alter unrelated workloads. The selected answer is scope prerequisite deployment to the intended machines.
+**Explanation:** Renaming evidence does not evaluate a newly assigned configuration package revision. File size cannot establish which package version a machine actually evaluated. Committing configuration does not prove assignment or evaluation on managed target machines. Compliance evidence must correspond to the configuration version actually assigned and evaluated.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q020
 
-Advanced · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Missing prerequisite: A guest-configuration policy is assigned, but no useful machine result appears because required platform components are absent. The team selects this remedy: "Verify machine identity extension and supported prerequisites." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A machine shows noncompliance, while its policy assignment and package version are correct. Which investigation distinguishes a real setting discrepancy from execution failure?
 
-- **A. Prerequisite management adds lifecycle work** **Correct.** Extensions and identities also need monitoring. This directly addresses the constraint stated in this case.
-- **B. Migration is not necessarily a direct settings copy** Equivalent intent may need a redesigned configuration package. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. Automatic enforcement can conflict with operational changes** Teams need a controlled exception process. That addresses a different requirement: Audit assumption. It does not directly resolve this case's stated constraint.
+- **A. Reassign the identical package without inspecting evaluation errors** Repeated assignment alone cannot distinguish a real setting mismatch from failed prerequisite evaluation.
+- **B. Treat the compliance rollup as sufficient proof of a wrong setting** The aggregate noncompliant result does not distinguish resource mismatch from an unsuccessful detailed evaluation.
+- **C. Inspect per-setting results and evaluation errors** **Correct.** Detailed observations reveal whether settings differ or evaluation prerequisites prevented reliable measurement.
+- **D. Switch to autocorrection before checking evaluation prerequisites** Changing enforcement mode cannot repair missing evaluation prerequisites and may introduce unintended changes.
 
-**Explanation:** Extensions and identities also need monitoring. The selected answer is prerequisite management adds lifecycle work.
+**Explanation:** Detailed observations reveal whether settings differ or evaluation prerequisites prevented reliable measurement. Repeated assignment alone cannot distinguish a real setting mismatch from failed prerequisite evaluation. The aggregate noncompliant result does not distinguish resource mismatch from an unsuccessful detailed evaluation. Changing enforcement mode cannot repair missing evaluation prerequisites and may introduce unintended changes.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q021
 
-Foundational · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Legacy DSC curriculum: A proposed new lab relies exclusively on Automation State Configuration without mentioning its announced retirement. Which next change most directly satisfies the stated requirement?
+The desired state has converged locally and a retry should prove idempotence rather than simply rerun the script. Which observation is strongest?
 
-- **A. Verify machine identity extension and supported prerequisites** The service needs a functioning guest-assessment path. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **B. Teach the legacy exam concept alongside Machine Configuration** **Correct.** Current guidance needs both scope accuracy and lifecycle context. This directly addresses the constraint stated in this case.
-- **C. Document its February22 retirement and provide a pipeline alternative** A learning implementation must acknowledge the announced lifecycle. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
+- **A. No changes plus an independent observed-state match** **Correct.** Idempotence evidence combines stable repeated execution with verification of actual target values.
+- **B. Only a zero exit code** Exit status alone may not expose unintended repeated writes or changed values.
+- **C. Only an unchanged desired-state file** The declaration can stay unchanged while the managed resource still drifts.
+- **D. Only a faster second run** Performance timing does not establish that the intended configuration remained correct.
 
-**Explanation:** Current guidance needs both scope accuracy and lifecycle context. The selected answer is teach the legacy exam concept alongside Machine Configuration.
+**Explanation:** Idempotence evidence combines stable repeated execution with verification of actual target values. Exit status alone may not expose unintended repeated writes or changed values. The declaration can stay unchanged while the managed resource still drifts. Performance timing does not establish that the intended configuration remained correct.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q022
 
-Foundational · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D3.5.4](../../docs/objective-map.md)
 
-Legacy DSC curriculum: A proposed new lab relies exclusively on Automation State Configuration without mentioning its announced retirement. Which explanation best accounts for the behavior or constraint described?
+A managed file was manually edited after successful repair. Which test demonstrates that the declaration can detect this new drift?
 
-- **A. Exam inclusion does not guarantee long-term service availability** **Correct.** The curriculum must distinguish assessed legacy capabilities. This directly addresses the constraint stated in this case.
-- **B. The examined capability has a time-bounded service future** Exam relevance does not remove retirement constraints. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **C. Policy assignment alone does not install every prerequisite** The machine must be able to participate. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
+- **A. Rerun formatting on desired JSON** Formatting desired input does not introduce a mismatch in the actual managed state.
+- **B. Change the declared property in the actual managed file, then rerun audit** **Correct.** Changing the observed managed setting creates the intended mismatch without editing the desired-state declaration that defines correctness.
+- **C. Delete the audit output file only** Removing evidence does not change the managed configuration value under evaluation.
+- **D. Rename an unrelated temporary directory** An unrelated filesystem change does not exercise the declared resource's drift detection.
 
-**Explanation:** The curriculum must distinguish assessed legacy capabilities. The selected answer is exam inclusion does not guarantee long-term service availability.
+**Explanation:** Formatting desired input does not introduce a mismatch in the actual managed state. Changing the observed managed setting creates the intended mismatch without editing the desired-state declaration that defines correctness. Removing evidence does not change the managed configuration value under evaluation. An unrelated filesystem change does not exercise the declared resource's drift detection.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q023
 
-Applied · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.4](../../docs/objective-map.md)
 
-Legacy DSC curriculum: A proposed new lab relies exclusively on Automation State Configuration without mentioning its announced retirement. Which observation provides the strongest evidence that the requested result was achieved?
+Reconciliation detects an unexpected symbolic-link boundary before writing the declared file. Which response preserves the local ownership boundary?
 
-- **A. The learner can explain ADE and execute the supported alternative** Coverage and practical continuity need separate evidence. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **B. The target reports a recent evaluated compliance result** A fresh result demonstrates an active assessment path. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **C. The lab states the retirement date and current supported direction** **Correct.** Readers need the explicit technology lifecycle boundary. This directly addresses the constraint stated in this case.
+- **A. Delete every file beside the link** Broad deletion is unrelated to safely resolving the specific path ownership problem.
+- **B. Replace evidence with a simulated pass** A simulated pass conceals that the actual target could not be safely managed.
+- **C. Refuse the redirected write and report it** **Correct.** A link can redirect modification outside the intended exact managed workspace.
+- **D. Follow the link and repair anyway** Following a redirected path can modify state outside the declared ownership scope.
 
-**Explanation:** Readers need the explicit technology lifecycle boundary. The selected answer is the lab states the retirement date and current supported direction.
+**Explanation:** Broad deletion is unrelated to safely resolving the specific path ownership problem. A simulated pass conceals that the actual target could not be safely managed. A link can redirect modification outside the intended exact managed workspace. Following a redirected path can modify state outside the declared ownership scope.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q024
 
-Applied · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D3.5.2](../../docs/objective-map.md)
 
-Legacy DSC curriculum: A proposed new lab relies exclusively on Automation State Configuration without mentioning its announced retirement. Which execution safeguard most directly addresses the risk in this case?
+A configuration run updates one setting and then fails before the next. What should recovery preserve before retrying reconciliation?
 
-- **A. Scope prerequisite deployment to the intended machines** Broad automation can alter unrelated workloads. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **B. Avoid presenting retired Linux Automation DSC as a new supported path** **Correct.** Legacy operating-system support differs from current alternatives. This directly addresses the constraint stated in this case.
-- **C. Keep ADE exercises bounded and avoid new long-lived dependencies** Training should not create an unmanaged retirement burden. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
+- **A. Recorded partial state and the same desired declaration** **Correct.** Partial evidence supports targeted retries without assuming every earlier change was rolled back.
+- **B. A claim that no settings changed** Failure does not guarantee rollback of every previously completed configuration write.
+- **C. New random target paths for both settings** Changing targets abandons the partially managed resources instead of reconciling them.
+- **D. A deletion of every ownership record** Discarding state prevents reliable recovery and obscures which resources were modified.
 
-**Explanation:** Legacy operating-system support differs from current alternatives. The selected answer is avoid presenting retired Linux Automation DSC as a new supported path.
+**Explanation:** Partial evidence supports targeted retries without assuming every earlier change was rolled back. Failure does not guarantee rollback of every previously completed configuration write. Changing targets abandons the partially managed resources instead of reconciling them. Discarding state prevents reliable recovery and obscures which resources were modified.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q025
 
-Advanced · [CP5](README.md#task-5) · [D3.5.4](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D3.5.2](../../docs/objective-map.md)
 
-Legacy DSC curriculum: A proposed new lab relies exclusively on Automation State Configuration without mentioning its announced retirement. The team selects this remedy: "Teach the legacy exam concept alongside Machine Configuration." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A drift test changes an unrelated file, while the validator still passes. How should that break/fix exercise be corrected?
 
-- **A. Alternative self-service requires explicit governance design** There is no universal one-to-one replacement. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **B. Prerequisite management adds lifecycle work** Extensions and identities also need monitoring. That addresses a different requirement: Missing prerequisite. It does not directly resolve this case's stated constraint.
-- **C. Migration is not necessarily a direct settings copy** **Correct.** Equivalent intent may need a redesigned configuration package. This directly addresses the constraint stated in this case.
+```text
+Declared resource: workspace/appsettings.json, mode=safe
+Injected defect: workspace/unrelated.txt
+Audit: compliant
+```
 
-**Explanation:** Equivalent intent may need a redesigned configuration package. The selected answer is migration is not necessarily a direct settings copy.
+- **A. Force the validator to fail unconditionally** An unconditional error does not demonstrate detection of an actual configuration defect.
+- **B. Accept the passing negative check** A passing negative check fails to prove the intended fault was detected.
+- **C. Fail validation whenever any workspace file changes** Broad workspace drift includes intentionally unmanaged files and would not demonstrate the declared setting contract.
+- **D. Inject a defect in the declared managed setting** **Correct.** The negative assertion must observe the same resource whose repair the checkpoint demonstrates.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** The negative assertion must observe the same resource whose repair the checkpoint demonstrates. An unconditional error does not demonstrate detection of an actual configuration defect. A passing negative check fails to prove the intended fault was detected. Broad workspace drift includes intentionally unmanaged files and would not demonstrate the declared setting contract.
+
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview)
 
 ## L18-Q026
 
-Foundational · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-ADE retirement: A self-service lab uses Azure Deployment Environments, but learners plan to rely on it after February 2027. Which next change most directly satisfies the stated requirement?
+Developers request a disposable environment through an approved catalog instead of choosing arbitrary infrastructure. Which benefit should the catalog provide?
 
-- **A. Document its February22 retirement and provide a pipeline alternative** **Correct.** A learning implementation must acknowledge the announced lifecycle. This directly addresses the constraint stated in this case.
-- **B. Constrain approved templates scopes and parameter choices** Self-service should operate within a governed boundary. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **C. Teach the legacy exam concept alongside Machine Configuration** Current guidance needs both scope accuracy and lifecycle context. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
+- **A. A governed reusable provisioning contract** **Correct.** A catalog exposes reviewed templates and constrained inputs through a consistent interface.
+- **B. Unlimited subscription administration** Self-service does not require granting users unrestricted rights over every subscription resource.
+- **C. A bypass around ownership tracking** Self-service still needs exact context, resource ownership and managed lifecycle evidence.
+- **D. An automatic guarantee of zero cost** Approved resource templates can still create billable services requiring spending controls.
 
-**Explanation:** A learning implementation must acknowledge the announced lifecycle. The selected answer is document its February22 retirement and provide a pipeline alternative.
+**Explanation:** A catalog exposes reviewed templates and constrained inputs through a consistent interface. Self-service does not require granting users unrestricted rights over every subscription resource. Self-service still needs exact context, resource ownership and managed lifecycle evidence. Approved resource templates can still create billable services requiring spending controls.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q027
 
-Applied · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-ADE retirement: A self-service lab uses Azure Deployment Environments, but learners plan to rely on it after February 2027. Which explanation best accounts for the behavior or constraint described?
+The catalog allows only Standard_LRS storage, but the request selects a premium SKU. What should request validation do before provisioning?
 
-- **A. The examined capability has a time-bounded service future** **Correct.** Exam relevance does not remove retirement constraints. This directly addresses the constraint stated in this case.
-- **B. A convenient portal does not itself establish guardrails** Unrestricted parameters can bypass platform intent. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **C. Exam inclusion does not guarantee long-term service availability** The curriculum must distinguish assessed legacy capabilities. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
+- **A. Reject the unapproved SKU** **Correct.** Input validation must enforce the catalog's declared allowed configuration choices.
+- **B. Substitute a premium equivalent silently** Silent substitution changes reviewed cost and behavior outside the requested contract.
+- **C. Provision first and report afterward** Postprovisioning reporting occurs after the forbidden configuration and associated cost exist.
+- **D. Expand allowed values automatically** Expanding policy from an invalid request defeats the catalog's governance restriction.
 
-**Explanation:** Exam relevance does not remove retirement constraints. The selected answer is the examined capability has a time-bounded service future.
+**Explanation:** Input validation must enforce the catalog's declared allowed configuration choices. Silent substitution changes reviewed cost and behavior outside the requested contract. Postprovisioning reporting occurs after the forbidden configuration and associated cost exist. Expanding policy from an invalid request defeats the catalog's governance restriction.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q028
 
-Applied · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-ADE retirement: A self-service lab uses Azure Deployment Environments, but learners plan to rely on it after February 2027. Which observation provides the strongest evidence that the requested result was achieved?
+A catalog template points outside its repository and succeeds only on the author's workstation. Which correction makes independent self-service reproducible?
 
-- **A. Unsupported targets are rejected while approved environments deploy** Both permitted and denied paths demonstrate governance. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **B. The lab states the retirement date and current supported direction** Readers need the explicit technology lifecycle boundary. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. The learner can explain ADE and execute the supported alternative** **Correct.** Coverage and practical continuity need separate evidence. This directly addresses the constraint stated in this case.
+- **A. Package the template and local dependencies** **Correct.** A self-contained package provides resolvable reviewed infrastructure definitions to every consumer.
+- **B. Document the author's username** Knowing an author does not provide missing template implementations or filesystem dependencies.
+- **C. Skip template resolution validation** Skipping validation cannot make an absent dependency available during environment provisioning.
+- **D. Require the author's build cache** A private mutable cache is not a portable versioned infrastructure dependency contract.
 
-**Explanation:** Coverage and practical continuity need separate evidence. The selected answer is the learner can explain ADE and execute the supported alternative.
+**Explanation:** A self-contained package provides resolvable reviewed infrastructure definitions to every consumer. Knowing an author does not provide missing template implementations or filesystem dependencies. Skipping validation cannot make an absent dependency available during environment provisioning. A private mutable cache is not a portable versioned infrastructure dependency contract.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q029
 
-Applied · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-ADE retirement: A self-service lab uses Azure Deployment Environments, but learners plan to rely on it after February 2027. Which execution safeguard most directly addresses the risk in this case?
+A developer submits a valid catalog request but omits the subscription and owned resource-group context. Which response is appropriate?
 
-- **A. Use scoped identities and validate policy effects** Parameter validation alone is not an authorization boundary. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **B. Avoid presenting retired Linux Automation DSC as a new supported path** Legacy operating-system support differs from current alternatives. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
-- **C. Keep ADE exercises bounded and avoid new long-lived dependencies** **Correct.** Training should not create an unmanaged retirement burden. This directly addresses the constraint stated in this case.
+- **A. Choose any group tagged training** A shared training tag cannot identify the exact request's owned resource group.
+- **B. Generate a new local marker only** A local marker does not authorize an unspecified existing deployment target group.
+- **C. Refuse provisioning until context is explicit** **Correct.** A valid resource shape does not identify the authorized deployment and ownership boundary.
+- **D. Use the most recently selected subscription** Ambient defaults can redirect provisioning away from the developer's intended owned environment.
 
-**Explanation:** Training should not create an unmanaged retirement burden. The selected answer is keep ADE exercises bounded and avoid new long-lived dependencies.
+**Explanation:** A shared training tag cannot identify the exact request's owned resource group. A local marker does not authorize an unspecified existing deployment target group. A valid resource shape does not identify the authorized deployment and ownership boundary. Ambient defaults can redirect provisioning away from the developer's intended owned environment.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q030
 
-Advanced · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-ADE retirement: A self-service lab uses Azure Deployment Environments, but learners plan to rely on it after February 2027. The team selects this remedy: "Document its February22 retirement and provide a pipeline alternative." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A catalog request is approved for one template revision, but its source branch moves before execution. How should self-service retain both reproducibility and review meaning?
 
-- **A. Alternative self-service requires explicit governance design** **Correct.** There is no universal one-to-one replacement. This directly addresses the constraint stated in this case.
-- **B. Guardrails reduce flexibility for unusual workloads** Exceptions need an accountable platform process. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **C. Migration is not necessarily a direct settings copy** Equivalent intent may need a redesigned configuration package. That addresses a different requirement: Legacy DSC curriculum. It does not directly resolve this case's stated constraint.
+```json
+{"approvedTemplateCommit":"aaaa","executionTemplateRef":"main","mainNow":"bbbb","requestParametersUnchanged":true}
+```
 
-**Explanation:** There is no universal one-to-one replacement. The selected answer is alternative self-service requires explicit governance design.
+- **A. Fetch latest source after approval** Moving source can introduce resource changes outside the already reviewed request.
+- **B. Approve parameters while allowing template updates until execution** The same parameters can produce different changes under an unreviewed template implementation.
+- **C. Reuse any cached template with that filename** Cache filenames cannot prove correspondence to the reviewed environment request revision.
+- **D. Resolve an immutable template revision and revalidate inputs** **Correct.** Review must bind the exact infrastructure implementation and approved configuration values together.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** Review must bind the exact infrastructure implementation and approved configuration values together. Moving source can introduce resource changes outside the already reviewed request. The same parameters can produce different changes under an unreviewed template implementation. Cache filenames cannot prove correspondence to the reviewed environment request revision.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q031
 
 Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Uncontrolled self-service: Developers can run a provisioning template with arbitrary subscription and networking values. Which next change most directly satisfies the stated requirement?
+Two users select the same catalog item while requiring separate disposable environments. What must the lifecycle distinguish to clean them safely?
 
-- **A. Document its February22 retirement and provide a pipeline alternative** A learning implementation must acknowledge the announced lifecycle. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **B. Constrain approved templates scopes and parameter choices** **Correct.** Self-service should operate within a governed boundary. This directly addresses the constraint stated in this case.
-- **C. Version and verify configuration package content** Assessment should depend on deliberate immutable inputs. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
+- **A. Only the shared catalog title** A common title cannot distinguish resources created by separate users or runs.
+- **B. Only the Azure region** Multiple unrelated environments can exist in the same Azure deployment region.
+- **C. Only the date of course completion** A completion date does not identify the actual managed resource deletion boundary.
+- **D. Exact context and resource ownership per run** **Correct.** Independent runs need separate managed IDs and ownership evidence for targeted cleanup.
 
-**Explanation:** Self-service should operate within a governed boundary. The selected answer is constrain approved templates scopes and parameter choices.
+**Explanation:** A common title cannot distinguish resources created by separate users or runs. Multiple unrelated environments can exist in the same Azure deployment region. A completion date does not identify the actual managed resource deletion boundary. Independent runs need separate managed IDs and ownership evidence for targeted cleanup.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q032
 
 Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Uncontrolled self-service: Developers can run a provisioning template with arbitrary subscription and networking values. Which explanation best accounts for the behavior or constraint described?
+The catalog exposes a preview operation and a separate execution flag. What should happen when a learner runs the default command?
 
-- **A. A convenient portal does not itself establish guardrails** **Correct.** Unrestricted parameters can bypass platform intent. This directly addresses the constraint stated in this case.
-- **B. A mutable package location changes behavior without an assignment change** The recorded reference does not identify stable content. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **C. The examined capability has a time-bounded service future** Exam relevance does not remove retirement constraints. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
+- **A. Write a passed live-deployment result** A preview cannot demonstrate actual provider execution or deployed runtime observations.
+- **B. Validate and preview without creating resources** **Correct.** Preview defaults let learners review intended changes before explicitly authorizing execution.
+- **C. Create the smallest resource automatically** Even small resources are mutations and may incur costs without execution authorization.
+- **D. Create resources and immediately delete them** Temporary provisioning still changes external state and may leave partial billable resources.
 
-**Explanation:** Unrestricted parameters can bypass platform intent. The selected answer is a convenient portal does not itself establish guardrails.
+**Explanation:** A preview cannot demonstrate actual provider execution or deployed runtime observations. Preview defaults let learners review intended changes before explicitly authorizing execution. Even small resources are mutations and may incur costs without execution authorization. Temporary provisioning still changes external state and may leave partial billable resources.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q033
 
 Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Uncontrolled self-service: Developers can run a provisioning template with arbitrary subscription and networking values. Which observation provides the strongest evidence that the requested result was achieved?
+A self-service environment request needs a cost acknowledgement because storage is billable. Which validation belongs before resource creation?
 
-- **A. Machines evaluate the approved package identity** The proof should bind policy to expected content. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **B. The learner can explain ADE and execute the supported alternative** Coverage and practical continuity need separate evidence. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **C. Unsupported targets are rejected while approved environments deploy** **Correct.** Both permitted and denied paths demonstrate governance. This directly addresses the constraint stated in this case.
+- **A. Only a successful local compiler result** Compilation provides source evidence rather than explicit authorization for billable external operations.
+- **B. An explicit acknowledgement for the selected paid configuration** **Correct.** The gate must cover the actual requested resource configuration and its potential charges.
+- **C. A generic acknowledgement from another lab** Unrelated consent does not identify this environment's selected resources or spending context.
+- **D. Only a valid YAML document** Syntactic validity does not demonstrate that the learner accepted the resource costs.
 
-**Explanation:** Both permitted and denied paths demonstrate governance. The selected answer is unsupported targets are rejected while approved environments deploy.
+**Explanation:** Compilation provides source evidence rather than explicit authorization for billable external operations. The gate must cover the actual requested resource configuration and its potential charges. Unrelated consent does not identify this environment's selected resources or spending context. Syntactic validity does not demonstrate that the learner accepted the resource costs.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q034
 
 Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Uncontrolled self-service: Developers can run a provisioning template with arbitrary subscription and networking values. Which execution safeguard most directly addresses the risk in this case?
+The self-service deletion plan lists exact managed IDs and includes an unrelated preexisting resource. Which object should execution refuse to delete?
 
-- **A. Keep ADE exercises bounded and avoid new long-lived dependencies** Training should not create an unmanaged retirement burden. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **B. Use scoped identities and validate policy effects** **Correct.** Parameter validation alone is not an authorization boundary. This directly addresses the constraint stated in this case.
-- **C. Review and test new packages before broad assignment** Guest-level changes can affect many machines. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
+- **A. The resource without matching ownership evidence** **Correct.** Deletion authority is limited to recorded resources whose current ownership still matches.
+- **B. The smallest owned storage account** Cost size does not invalidate an exact matching managed resource ownership record.
+- **C. The newest owned identity** Creation time does not replace or contradict valid exact ownership evidence.
+- **D. Every resource created by this request** Matching managed IDs remain eligible for cleanup under the explicit lifecycle context.
 
-**Explanation:** Parameter validation alone is not an authorization boundary. The selected answer is use scoped identities and validate policy effects.
+**Explanation:** Deletion authority is limited to recorded resources whose current ownership still matches. Cost size does not invalidate an exact matching managed resource ownership record. Creation time does not replace or contradict valid exact ownership evidence. Matching managed IDs remain eligible for cleanup under the explicit lifecycle context.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q035
 
 Advanced · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Uncontrolled self-service: Developers can run a provisioning template with arbitrary subscription and networking values. The team selects this remedy: "Constrain approved templates scopes and parameter choices." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A request journals its exact resource name before creation, then receives a timeout. A service read finds the resource with the matching run marker, but final IDs were not saved. Which recovery avoids duplication and adoption?
 
-- **A. Versioned packages create promotion and retention work** Controlled updates improve reproducibility and rollback planning. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **B. Alternative self-service requires explicit governance design** There is no universal one-to-one replacement. That addresses a different requirement: ADE retirement. It does not directly resolve this case's stated constraint.
-- **C. Guardrails reduce flexibility for unusual workloads** **Correct.** Exceptions need an accountable platform process. This directly addresses the constraint stated in this case.
+```text
+Journal intent saved: request-42, exact resource name and run marker
+Provider create: client timeout
+Provider read: resource exists with matching run marker
+```
 
-**Explanation:** Exceptions need an accountable platform process. The selected answer is guardrails reduce flexibility for unusual workloads.
+- **A. Journal intent, recover exact IDs and verify ownership before retry** **Correct.** Partial recovery must reconcile provider observations with the request's established ownership context.
+- **B. Search every subscription and adopt matching names** Name similarity cannot establish exact resource ownership after a partial failure.
+- **C. Discard state and create new random resources** New creation abandons successful partial resources and can increase unmanaged spending.
+- **D. Report complete failure with no residual audit** An overall error does not prove that no managed resources were created.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** Partial recovery must reconcile provider observations with the request's established ownership context. Name similarity cannot establish exact resource ownership after a partial failure. New creation abandons successful partial resources and can increase unmanaged spending. An overall error does not prove that no managed resources were created.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q036
 
-Foundational · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
+Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Custom package drift: A configuration package URL remains constant while its contents change, producing unexplained compliance differences. Which next change most directly satisfies the stated requirement?
+A catalog operator wants environment users to choose a feature flag but never supply long-lived deployment credentials. Which interface supports that separation?
 
-- **A. Version and verify configuration package content** **Correct.** Assessment should depend on deliberate immutable inputs. This directly addresses the constraint stated in this case.
-- **B. Inventory and remove remaining owned training resources** Deleting metadata may not remove all deployed infrastructure. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **C. Constrain approved templates scopes and parameter choices** Self-service should operate within a governed boundary. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
+- **A. Let requesters provide a permanent deployment password as a catalog parameter** Passing reusable credentials through requests fails the desired separation between settings and workload authentication.
+- **B. Expose approved settings and use scoped workload identity** **Correct.** Developers can select configuration while deployment authentication remains a separately governed capability.
+- **C. Accept an administrator password in catalog source** Committed administrator credentials unnecessarily expose authentication data to catalog readers.
+- **D. Share a subscription Owner token with every requester** Broad shared tokens collapse identity accountability and exceed self-service provisioning needs.
 
-**Explanation:** Assessment should depend on deliberate immutable inputs. The selected answer is version and verify configuration package content.
+**Explanation:** Passing reusable credentials through requests fails the desired separation between settings and workload authentication. Developers can select configuration while deployment authentication remains a separately governed capability. Committed administrator credentials unnecessarily expose authentication data to catalog readers. Broad shared tokens collapse identity accountability and exceed self-service provisioning needs.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q037
 
-Applied · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Custom package drift: A configuration package URL remains constant while its contents change, producing unexplained compliance differences. Which explanation best accounts for the behavior or constraint described?
+The request validator emits parameters that match the approved small template. Which additional evidence is needed to claim the environment was deployed?
 
-- **A. Service metadata and customer-owned resources have different lifecycles** The provisioning boundary may span multiple resource groups. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **B. A convenient portal does not itself establish guardrails** Unrestricted parameters can bypass platform intent. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **C. A mutable package location changes behavior without an assignment change** **Correct.** The recorded reference does not identify stable content. This directly addresses the constraint stated in this case.
+- **A. Actual provider execution and scoped resource validation** **Correct.** A parameter plan establishes intent rather than completed Azure resource provisioning.
+- **B. A second identical parameter plan** Repeated planning still does not create or inspect the intended remote resources.
+- **C. A local JSON schema pass** Schema validation checks document shape without observing external resource creation results.
+- **D. The catalog README's example output** Illustrative output cannot prove this request's actual service execution and resource state.
 
-**Explanation:** The recorded reference does not identify stable content. The selected answer is a mutable package location changes behavior without an assignment change.
+**Explanation:** A parameter plan establishes intent rather than completed Azure resource provisioning. Repeated planning still does not create or inspect the intended remote resources. Schema validation checks document shape without observing external resource creation results. Illustrative output cannot prove this request's actual service execution and resource state.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q038
 
-Applied · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Custom package drift: A configuration package URL remains constant while its contents change, producing unexplained compliance differences. Which observation provides the strongest evidence that the requested result was achieved?
+A team migrates self-service provisioning to pipeline-triggered Bicep but removes its deletion journal. Which original capability is lost?
 
-- **A. The inventory and cost view show only intentionally retained resources** Cleanup needs evidence beyond a deleted portal entry. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **B. Unsupported targets are rejected while approved environments deploy** Both permitted and denied paths demonstrate governance. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **C. Machines evaluate the approved package identity** **Correct.** The proof should bind policy to expected content. This directly addresses the constraint stated in this case.
+- **A. The ability to select an Azure region** A journal is not the mechanism defining the template's regional parameter choices.
+- **B. The ability to compile template source** Local compilation can continue even when lifecycle ownership evidence is missing.
+- **C. Reliable owned lifecycle cleanup and partial recovery** **Correct.** Provisioning needs exact ownership records to recover failures and remove managed resources safely.
+- **D. The ability to parse catalog request JSON** Request parsing is separate from the deletion journal; removing ownership history does not inherently remove JSON parsing.
 
-**Explanation:** The proof should bind policy to expected content. The selected answer is machines evaluate the approved package identity.
+**Explanation:** A journal is not the mechanism defining the template's regional parameter choices. Local compilation can continue even when lifecycle ownership evidence is missing. Provisioning needs exact ownership records to recover failures and remove managed resources safely. Request parsing is separate from the deletion journal; removing ownership history does not inherently remove JSON parsing.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q039
 
-Applied · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
 
-Custom package drift: A configuration package URL remains constant while its contents change, producing unexplained compliance differences. Which execution safeguard most directly addresses the risk in this case?
+The same request identifier is retried after a transient failure. What should a reliable self-service orchestrator avoid?
 
-- **A. Review and test new packages before broad assignment** **Correct.** Guest-level changes can affect many machines. This directly addresses the constraint stated in this case.
-- **B. Verify ownership and dependencies before deleting shared resources** Dev Center components may serve other workloads. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **C. Use scoped identities and validate policy effects** Parameter validation alone is not an authorization boundary. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
+- **A. Rechecking the selected subscription** Context verification is useful and does not itself create duplicate environment resources.
+- **B. Reading current owned resource properties** Service reads support safe recovery by establishing what the previous attempt created.
+- **C. Preserving the original review evidence** Retained approval evidence links retry behavior to the same intended environment request.
+- **D. Creating duplicate environments for the same request** **Correct.** Stable request identity should reconcile partial state rather than multiplying managed environments.
 
-**Explanation:** Guest-level changes can affect many machines. The selected answer is review and test new packages before broad assignment.
+**Explanation:** Context verification is useful and does not itself create duplicate environment resources. Service reads support safe recovery by establishing what the previous attempt created. Retained approval evidence links retry behavior to the same intended environment request. Stable request identity should reconcile partial state rather than multiplying managed environments.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q040
 
-Advanced · [CP1](README.md#task-1) · [D3.5.2](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.5](../../docs/objective-map.md)
 
-Custom package drift: A configuration package URL remains constant while its contents change, producing unexplained compliance differences. The team selects this remedy: "Version and verify configuration package content." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A replacement workflow provisions correctly, but ADE metadata deletion left owned storage running and a shared dev center still hosts Dev Box. Which cleanup plan addresses residual costs without disrupting the surviving workload?
 
-- **A. Guardrails reduce flexibility for unusual workloads** Exceptions need an accountable platform process. That addresses a different requirement: Uncontrolled self-service. It does not directly resolve this case's stated constraint.
-- **B. Versioned packages create promotion and retention work** **Correct.** Controlled updates improve reproducibility and rollback planning. This directly addresses the constraint stated in this case.
-- **C. Complete cleanup can require several control-plane operations** One delete button may not end every charge. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
+```text
+Dev center: platform-shared
+Retiring ADE project: training-ade
+Remaining consumer: active Dev Box pool
+Proposed cleanup: delete parent dev center
+```
 
-**Explanation:** Controlled updates improve reproducibility and rollback planning. The selected answer is versioned packages create promotion and retention work.
+- **A. Inventory exact owned residuals, remove ADE-only permissions and preserve shared Dev Box parents** **Correct.** Verified ownership and dependency inventory support cleanup of obsolete resources without deleting active shared infrastructure.
+- **B. Delete the dev center and all linked resource groups** Broad parent deletion can disrupt surviving Dev Box consumers and resources outside the exact owned cleanup scope.
+- **C. Delete only ADE metadata and retain every role assignment** Metadata removal does not eliminate the remaining billable storage or obsolete elevated deployment permissions.
+- **D. Keep all ADE resources and permissions indefinitely** Permanent retention leaves confirmed obsolete resources billable and unnecessary access grants active.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** Verified ownership and dependency inventory support cleanup of obsolete resources without deleting active shared infrastructure. Broad parent deletion can disrupt surviving Dev Box consumers and resources outside the exact owned cleanup scope. Metadata removal does not eliminate the remaining billable storage or obsolete elevated deployment permissions. Permanent retention leaves confirmed obsolete resources billable and unnecessary access grants active.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q041
 
-Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Cleanup gap: A learner deletes an environment record but still sees charges from resources deployed outside its managed group. Which next change most directly satisfies the stated requirement?
+A team depends on Azure Deployment Environments and is planning new course exercises in late 2026. Which direction matches Microsoft's retirement guidance?
 
-- **A. Version and verify configuration package content** Assessment should depend on deliberate immutable inputs. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **B. Inventory and remove remaining owned training resources** **Correct.** Deleting metadata may not remove all deployed infrastructure. This directly addresses the constraint stated in this case.
-- **C. Define one authoritative desired-state owner for the setting** Competing writers cause oscillation rather than convergence. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
+- **A. Replace it with Dev Box without evaluating requirements** Dev Box has different workload goals and a separate retirement timeline.
+- **B. Delete all shared dev centers immediately** Shared parent resources can still have dependencies that require inventory before deletion.
+- **C. Inventory dependencies and validate a governed replacement workflow** **Correct.** Retirement requires planned migration covering governance, identities, lifecycle and developer self-service behavior.
+- **D. Assume ADE remains the permanent default** The published retirement notice requires an explicit replacement and migration plan.
 
-**Explanation:** Deleting metadata may not remove all deployed infrastructure. The selected answer is inventory and remove remaining owned training resources.
+**Explanation:** Dev Box has different workload goals and a separate retirement timeline. Shared parent resources can still have dependencies that require inventory before deletion. Retirement requires planned migration covering governance, identities, lifecycle and developer self-service behavior. The published retirement notice requires an explicit replacement and migration plan.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q042
 
-Foundational · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Cleanup gap: A learner deletes an environment record but still sees charges from resources deployed outside its managed group. Which explanation best accounts for the behavior or constraint described?
+Which inventory is necessary before retiring ADE-specific automation that may share dev centers with other workloads?
 
-- **A. Two automation paths enforce incompatible configurations** Both tools can be working as individually configured. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **B. A mutable package location changes behavior without an assignment change** The recorded reference does not identify stable content. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **C. Service metadata and customer-owned resources have different lifecycles** **Correct.** The provisioning boundary may span multiple resource groups. This directly addresses the constraint stated in this case.
+- **A. Environment definitions, resources, identities and shared dependencies** **Correct.** Migration planning needs both provisioning objects and remaining consumers of shared parent resources.
+- **B. Only the number of YAML files** File counts do not describe deployed environments, permissions or shared infrastructure dependencies.
+- **C. Only ARM resource-group inventory without ADE instance inventory** ADE environment instances and control-plane dependencies require inventory beyond their deployed resource groups.
+- **D. Only the deployment command's version** A tool version does not inventory environment instances or resource ownership relationships.
 
-**Explanation:** The provisioning boundary may span multiple resource groups. The selected answer is service metadata and customer-owned resources have different lifecycles.
+**Explanation:** Migration planning needs both provisioning objects and remaining consumers of shared parent resources. File counts do not describe deployed environments, permissions or shared infrastructure dependencies. ADE environment instances and control-plane dependencies require inventory beyond their deployed resource groups. A tool version does not inventory environment instances or resource ownership relationships.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q043
 
-Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Cleanup gap: A learner deletes an environment record but still sees charges from resources deployed outside its managed group. Which observation provides the strongest evidence that the requested result was achieved?
+A platform architect asks for ADE's single universal drop-in successor. Which answer accurately frames the replacement decision?
 
-- **A. The inventory and cost view show only intentionally retained resources** **Correct.** Cleanup needs evidence beyond a deleted portal entry. This directly addresses the constraint stated in this case.
-- **B. The setting stabilizes under one agreed source of truth** Repeated evaluations should converge rather than fight. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **C. Machines evaluate the approved package identity** The proof should bind policy to expected content. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
+- **A. Only local JSON fixtures are a production replacement** A teaching fixture does not provide cloud environment governance or provisioning operations.
+- **B. Deleting ADE metadata is the complete replacement strategy** Metadata removal does not establish a new developer self-service provisioning workflow.
+- **C. Evaluate alternatives against each scenario's requirements** **Correct.** Microsoft guidance describes multiple approaches rather than one universal one-to-one replacement.
+- **D. Every ADE environment maps directly to one identical service** Different environment requirements need evaluation of governance, lifecycle and infrastructure orchestration capabilities.
 
-**Explanation:** Cleanup needs evidence beyond a deleted portal entry. The selected answer is the inventory and cost view show only intentionally retained resources.
+**Explanation:** A teaching fixture does not provide cloud environment governance or provisioning operations. Metadata removal does not establish a new developer self-service provisioning workflow. Microsoft guidance describes multiple approaches rather than one universal one-to-one replacement. Different environment requirements need evaluation of governance, lifecycle and infrastructure orchestration capabilities.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q044
 
-Applied · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Cleanup gap: A learner deletes an environment record but still sees charges from resources deployed outside its managed group. Which execution safeguard most directly addresses the risk in this case?
+A retired environment's metadata is gone, but an Azure resource still incurs charges. Which follow-up action is needed?
 
-- **A. Review and test new packages before broad assignment** Guest-level changes can affect many machines. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
-- **B. Verify ownership and dependencies before deleting shared resources** **Correct.** Dev Center components may serve other workloads. This directly addresses the constraint stated in this case.
-- **C. Map existing configuration ownership before adding enforcement** New policy can conflict with established operational automation. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
+- **A. Recreate the metadata to hide the charge** Metadata recreation does not remove or justify the remaining billable resource.
+- **B. Delete every subscription resource without ownership review** Cost investigation does not authorize deleting resources outside the managed ownership boundary.
+- **C. Audit remaining owned resources and cost data** **Correct.** Removing service metadata does not guarantee deletion of every deployed billable resource.
+- **D. Mark cost cleanup complete automatically** Metadata disappearance alone cannot establish that ongoing customer-owned resource charges stopped.
 
-**Explanation:** Dev Center components may serve other workloads. The selected answer is verify ownership and dependencies before deleting shared resources.
+**Explanation:** Metadata recreation does not remove or justify the remaining billable resource. Cost investigation does not authorize deleting resources outside the managed ownership boundary. Removing service metadata does not guarantee deletion of every deployed billable resource. Metadata disappearance alone cannot establish that ongoing customer-owned resource charges stopped.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q045
 
-Advanced · [CP4](README.md#task-4) · [D3.5.5](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Cleanup gap: A learner deletes an environment record but still sees charges from resources deployed outside its managed group. The team selects this remedy: "Inventory and remove remaining owned training resources." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Resource Graph lists ADE host resources and deployment groups but no environment instances. Dev Box still uses a shared dev center. Which inventory action is required before deciding which ADE-only objects can be retired?
 
-- **A. Complete cleanup can require several control-plane operations** **Correct.** One delete button may not end every charge. This directly addresses the constraint stated in this case.
-- **B. Central ownership needs coordination across teams** Technical convergence depends on agreed responsibility. That addresses a different requirement: Conflicting tools. It does not directly resolve this case's stated constraint.
-- **C. Versioned packages create promotion and retention work** Controlled updates improve reproducibility and rollback planning. That addresses a different requirement: Custom package drift. It does not directly resolve this case's stated constraint.
+```text
+ARM inventory: dev center, project, environment types, deployment groups
+ADE instance ARM IDs: none
+Known consumer: active Dev Box pool
+Retirement scope: ADE-only resources and permissions
+```
 
-**Explanation:** One delete button may not end every charge. The selected answer is complete cleanup can require several control-plane operations.
+- **A. Treat absent ARM environment IDs as proof no ADE instances remain** ADE instances lack ARM resource IDs, so Resource Graph absence cannot establish that no environment instances exist.
+- **B. Delete every dev center returned by Resource Graph** Host discovery does not establish that shared parents lack active Dev Box or other remaining consumers.
+- **C. Inventory only the catalog Git files and ignore deployed instances** Source files cannot establish the actual environment instances, deployment resources and active shared dependencies requiring cleanup.
+- **D. Supplement ARM inventory with ADE instance data and map deployment resources and shared consumers** **Correct.** ADE environment instances require separate inventory, and shared dependencies must remain protected during targeted retirement cleanup.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Explanation:** ADE instances lack ARM resource IDs, so Resource Graph absence cannot establish that no environment instances exist. Host discovery does not establish that shared parents lack active Dev Box or other remaining consumers. Source files cannot establish the actual environment instances, deployment resources and active shared dependencies requiring cleanup. ADE environment instances require separate inventory, and shared dependencies must remain protected during targeted retirement cleanup.
+
+**Sources:** [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide)
 
 ## L18-Q046
 
-Foundational · [CP3](README.md#task-3) · [D3.5.1](../../docs/objective-map.md), [D3.5.2](../../docs/objective-map.md)
+Foundational · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Conflicting tools: A startup script and configuration enforcement repeatedly overwrite each other's operating-system settings. Which next change most directly satisfies the stated requirement?
+An organization uses Automation State Configuration today and needs a supported future guest-configuration strategy. Which direction should it evaluate?
 
-- **A. Define one authoritative desired-state owner for the setting** **Correct.** Competing writers cause oscillation rather than convergence. This directly addresses the constraint stated in this case.
-- **B. Separate infrastructure deployment from guest configuration requirements** Provisioned resources and guest state are distinct layers. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **C. Inventory and remove remaining owned training resources** Deleting metadata may not remove all deployed infrastructure. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
+- **A. Migration to Azure Machine Configuration** **Correct.** Microsoft's retirement guidance directs users toward Machine Configuration for future supported scenarios.
+- **B. Permanent expansion of the retiring service** Expanding dependency increases later migration burden without resolving the published service retirement.
+- **C. Migration to Azure Deployment Environments for guest settings** ADE provisions environments and itself has retirement guidance rather than replacing guest configuration management.
+- **D. Using repository tags as machine compliance results** Repository metadata cannot evaluate or apply operating-system configuration on actual machines.
 
-**Explanation:** Competing writers cause oscillation rather than convergence. The selected answer is define one authoritative desired-state owner for the setting.
+**Explanation:** Microsoft's retirement guidance directs users toward Machine Configuration for future supported scenarios. Expanding dependency increases later migration burden without resolving the published service retirement. ADE provisions environments and itself has retirement guidance rather than replacing guest configuration management. Repository metadata cannot evaluate or apply operating-system configuration on actual machines.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
 
 ## L18-Q047
 
-Applied · [CP3](README.md#task-3) · [D3.5.1](../../docs/objective-map.md), [D3.5.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Conflicting tools: A startup script and configuration enforcement repeatedly overwrite each other's operating-system settings. Which explanation best accounts for the behavior or constraint described?
+The team migrates a DSC workload and assumes every legacy resource and correction mode behaves identically. What should acceptance require?
 
-- **A. Service metadata and customer-owned resources have different lifecycles** The provisioning boundary may span multiple resource groups. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **B. Two automation paths enforce incompatible configurations** **Correct.** Both tools can be working as individually configured. This directly addresses the constraint stated in this case.
-- **C. Creating a VM does not establish continuing guest compliance** The desired state must be assessed inside the machine. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
+- **A. Rename the legacy package only** Renaming cannot establish resource compatibility or the replacement's actual enforcement behavior.
+- **B. Declare compatibility from a passing JSON schema** Document shape does not prove supported guest resources or runtime correction behavior.
+- **C. Skip failure and recovery cases** Migration confidence requires more than a single successful configuration application path.
+- **D. Test package compatibility and representative configuration behavior** **Correct.** A replacement needs verified support and equivalent operational outcomes for the actual workload.
 
-**Explanation:** Both tools can be working as individually configured. The selected answer is two automation paths enforce incompatible configurations.
+**Explanation:** Renaming cannot establish resource compatibility or the replacement's actual enforcement behavior. Document shape does not prove supported guest resources or runtime correction behavior. Migration confidence requires more than a single successful configuration application path. A replacement needs verified support and equivalent operational outcomes for the actual workload.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
 
 ## L18-Q048
 
-Applied · [CP3](README.md#task-3) · [D3.5.1](../../docs/objective-map.md), [D3.5.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Conflicting tools: A startup script and configuration enforcement repeatedly overwrite each other's operating-system settings. Which observation provides the strongest evidence that the requested result was achieved?
+The lesson preserves legacy DSC commands to explain an exam topic. How should their status be presented alongside the current exercise?
 
-- **A. The design identifies both provisioning and guest-state controls** Each requirement needs an appropriate implementation mechanism. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. The inventory and cost view show only intentionally retained resources** Cleanup needs evidence beyond a deleted portal entry. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **C. The setting stabilizes under one agreed source of truth** **Correct.** Repeated evaluations should converge rather than fight. This directly addresses the constraint stated in this case.
+- **A. Label legacy context and provide the supported alternative** **Correct.** Historical learning should remain distinguishable from the recommended current execution and migration path.
+- **B. Run retiring service creation by default** Default provisioning creates new dependency on a service with announced retirement guidance.
+- **C. Remove all date and source information** Without dated sources learners cannot assess whether legacy guidance remains applicable.
+- **D. Mark legacy commands executed after local review** Reviewing commands does not demonstrate that the remote service execution was performed.
 
-**Explanation:** Repeated evaluations should converge rather than fight. The selected answer is the setting stabilizes under one agreed source of truth.
+**Explanation:** Historical learning should remain distinguishable from the recommended current execution and migration path. Default provisioning creates new dependency on a service with announced retirement guidance. Without dated sources learners cannot assess whether legacy guidance remains applicable. Reviewing commands does not demonstrate that the remote service execution was performed.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
 
 ## L18-Q049
 
-Applied · [CP3](README.md#task-3) · [D3.5.1](../../docs/objective-map.md), [D3.5.2](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D3.5.1](../../docs/objective-map.md)
 
-Conflicting tools: A startup script and configuration enforcement repeatedly overwrite each other's operating-system settings. Which execution safeguard most directly addresses the risk in this case?
+A migration candidate is an Arc-enabled hybrid server with custom guest settings. Which evaluation is necessary before assigning the new configuration package?
 
-- **A. Choose supported technology for the actual operating system** Legacy tooling may not support the target. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. Verify ownership and dependencies before deleting shared resources** Dev Center components may serve other workloads. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **C. Map existing configuration ownership before adding enforcement** **Correct.** New policy can conflict with established operational automation. This directly addresses the constraint stated in this case.
+- **A. Assign broadly before checking the package** Broad unvalidated assignment can introduce incompatible configuration changes across managed machines.
+- **B. Check supported OS, package compatibility and required connectivity** **Correct.** Hybrid support does not eliminate client, package and network prerequisites for reliable evaluation.
+- **C. Check only whether Azure CLI is installed** CLI presence does not establish the target machine's runtime configuration prerequisites.
+- **D. Copy an Azure VM compliance screenshot** Another machine's evidence cannot prove this hybrid target's actual package evaluation.
 
-**Explanation:** New policy can conflict with established operational automation. The selected answer is map existing configuration ownership before adding enforcement.
+**Explanation:** Broad unvalidated assignment can introduce incompatible configuration changes across managed machines. Hybrid support does not eliminate client, package and network prerequisites for reliable evaluation. CLI presence does not establish the target machine's runtime configuration prerequisites. Another machine's evidence cannot prove this hybrid target's actual package evaluation.
 
-**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
+**Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)
 
 ## L18-Q050
 
-Advanced · [CP3](README.md#task-3) · [D3.5.1](../../docs/objective-map.md), [D3.5.2](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D3.5.2](../../docs/objective-map.md)
 
-Conflicting tools: A startup script and configuration enforcement repeatedly overwrite each other's operating-system settings. The team selects this remedy: "Define one authoritative desired-state owner for the setting." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A replacement passes local reconciliation and catalog validation but no cloud assignments, create/delete workflows or failure recovery were exercised. Which completion claim is justified?
 
-- **A. More than one tool may be necessary** A single product need not satisfy every configuration layer. That addresses a different requirement: Configuration choice. It does not directly resolve this case's stated constraint.
-- **B. Complete cleanup can require several control-plane operations** One delete button may not end every charge. That addresses a different requirement: Cleanup gap. It does not directly resolve this case's stated constraint.
-- **C. Central ownership needs coordination across teams** **Correct.** Technical convergence depends on agreed responsibility. This directly addresses the constraint stated in this case.
+- **A. Live identity and networking verified by schema validation** Document validation does not exercise authentication exchanges or remote network connectivity paths.
+- **B. Offline contracts verified; provider migration acceptance remains pending** **Correct.** Local evidence does not establish remote assignment, provisioning, cleanup or recovery integration behavior.
+- **C. Full service migration completed successfully** Untested provider operations and lifecycle behavior remain material acceptance requirements.
+- **D. All retired-service resources safely removed** Local fixture results cannot prove that any actual service resource was deleted.
 
-**Explanation:** Technical convergence depends on agreed responsibility. The selected answer is central ownership needs coordination across teams.
+**Explanation:** Document validation does not exercise authentication exchanges or remote network connectivity paths. Local evidence does not establish remote assignment, provisioning, cleanup or recovery integration behavior. Untested provider operations and lifecycle behavior remain material acceptance requirements. Local fixture results cannot prove that any actual service resource was deleted.
 
 **Sources:** [S1](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview); [S2](https://learn.microsoft.com/en-us/azure/deployment-environments/deployment-environments-retirement-guide); [S3](https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview)

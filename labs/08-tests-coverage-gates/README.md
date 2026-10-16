@@ -15,8 +15,8 @@ Learner role: **Quality engineer**. Outcome: Run tests, collect coverage, and en
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -51,7 +51,7 @@ Official objective topic IDs: `D1.2.4`, `D3.2.1`, `D3.2.2`, `D3.2.3`, `D3.2.4`
 | [CP2](#task-2) | Run tests and retain machine-readable results |
 | [CP3](#task-3) | Collect coverage independently of test count |
 | [CP4](#task-4) | Evaluate a documented release quality threshold |
-| [CP5](#task-5) | Separate test layers and external load gates |
+| [CP5](#task-5) | Execute release gate decisions across test layers |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -245,7 +245,7 @@ Common failure and safe retry: Improve exercised behavior; threshold changes req
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Separate test layers and external load gates
+## Task 5 — Execute release gate decisions across test layers
 
 <a id="task-5"></a>
 
@@ -258,15 +258,24 @@ Checkpoint: `CP5`
 ```powershell
 $strategy=[ordered]@{unit='pure behavior checks';integration='WebApplicationFactory with isolated SQLite';load='separate approved endpoint and budget';release=@('tests pass','coverage>=0.65','security checks clear');productionTrafficAllowed=$false}
  $strategy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'test-strategy.json')
+$cases=@(@{id='healthy';tests=$true;coverage=0.80;security=$true;expected=$true},@{id='failed-test';tests=$false;coverage=0.90;security=$true;expected=$false},@{id='low-coverage';tests=$true;coverage=0.64;security=$true;expected=$false},@{id='security-block';tests=$true;coverage=0.90;security=$false;expected=$false})
+$results=foreach($case in $cases){
+ $allowed=$case.tests -and $case.coverage -ge 0.65 -and $case.security
+ if($allowed -ne $case.expected){throw "Release gate decision failed: $($case.id)"}
+ @{id=$case.id;allowed=$allowed}
+}
+@{fixtureOnly=$true;results=@($results);loadTrafficSent=$false}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'gate-decisions.json')
 ```
 
-Expected state: Test layers and release gates are explicit; load testing requires a separate sandbox endpoint.
+Expected state: A four-case local gate accepts healthy evidence and independently blocks failed tests, low coverage and a security finding. No load traffic is sent.
 
 Positive validation:
 
 ```powershell
 $s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json
  if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }
+$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json
+if(@($g.results).Count -ne 4 -or @($g.results|Where-Object allowed).Count -ne 1 -or -not ($g.results|Where-Object id -eq 'healthy').allowed){throw 'Release gate truth table is incomplete.'}
 ```
 
 Negative validation:
@@ -274,9 +283,11 @@ Negative validation:
 ```powershell
 $s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json
  if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }
+$g=Get-Content (Join-Path $WorkRoot 'gate-decisions.json') -Raw|ConvertFrom-Json
+if($g.loadTrafficSent -or @($g.results|Where-Object {$_.id -ne 'healthy' -and $_.allowed}).Count){throw 'A negative gate case was accepted or load was sent.'}
 ```
 
-Evidence to retain: Layer-to-risk matrix and approval requirements for future load tests.
+Evidence to retain: Four computed decisions, the executed unit/HTTP tests from earlier tasks, and the separately authorized load-test boundary.
 
 Common failure and safe retry: Keep load generation outside ordinary PR CI and bound concurrency, duration, and cost.
 

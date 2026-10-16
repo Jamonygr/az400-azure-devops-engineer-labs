@@ -6,7 +6,7 @@ Use this after attempting the guided tasks. Expected results describe authored b
 
 The consumer must resolve Versioned.Library 1.2.0 from the intended feed. A successful restore of an unintended version fails the learning goal even if compilation succeeds.
 
-Author verification: **not-run**. All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run.
+Author verification: **offline-tested**. The complete five-checkpoint sequence, final-state revalidation, fault detection and repair run with real local Git/.NET/package/file operations and fail-closed synthetic GitHub/Azure DevOps responses. Provider operations remain unverified live.
 
 ## CP1 — Create a versioned local package
 
@@ -53,16 +53,16 @@ Retain and inspect: Both versions and stable digest preservation.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Promote the same package to a feed view; avoid rebuilding after approval.
 
-## CP5 — Compare GitHub Packages and Azure Artifacts publication contracts
+## CP5 — Promote verified package bytes and evaluate upstream trust
 
-A publish contract separates registries, scopes, views, and upstream trust; it sends no package.
+The approved stable package is copied unchanged into a local Release view and a source allowlist accepts the reviewed upstream while rejecting an unreviewed one. Hosted feed publication remains separate.
 
 | Objective | Evidence level | Observation and limits |
 |---|---|---|
 | `D3.1.1` | explained | Compare private/public feed selection and authorization using the feed decision record. |
 | `D3.1.2` | explained | Describe upstream/feed promotion topology; the concrete exercise uses a local NuGet folder. |
 
-Retain and inspect: Feed plan; registry credentials remain outside Git.
+Retain and inspect: Before/after SHA256, promoted local package and two evaluated upstream cases; no registry credential.
 
 Interpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: Complete feed creation/permissions bootstrap before an explicitly authorized publication.
 

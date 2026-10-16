@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "08",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -10,1872 +10,2014 @@
     {
       "id": "S2",
       "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelines"
+    },
+    {
+      "id": "S5",
+      "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage"
+    },
+    {
+      "id": "S6",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-analytics?view=azure-devops"
+    },
+    {
+      "id": "S7",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops"
+    },
+    {
+      "id": "S8",
+      "url": "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test"
     }
   ],
   "questions": [
     {
       "id": "L08-Q001",
       "checkpointId": "CP5",
-      "caseId": "L08-C01",
-      "task": "remedy",
-      "caseContext": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned.",
       "objectiveIds": [
         "D3.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which next change most directly satisfies the stated requirement?",
+      "question": "A deterministic price-calculation function needs feedback before any cloud environment exists. Which test layer is the best first fit?",
       "options": [
         {
           "key": "A",
-          "text": "Propagate the failed test exit code to the job result",
-          "rationale": "The execution status must reflect the actual test outcome. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "A manual release approval with no executed assertion",
+          "rationale": "Approval does not evaluate whether the calculation returns the required result."
         },
         {
           "key": "B",
-          "text": "Add focused local unit tests for the calculation contract",
-          "rationale": "Pure behavior can be checked cheaply without deployment. This directly addresses the constraint stated in this case."
+          "text": "A database migration smoke test only",
+          "rationale": "Schema behavior does not directly test the price-calculation contract."
         },
         {
           "key": "C",
-          "text": "Add an integration test against a representative database",
-          "rationale": "The failure occurs at an external system boundary. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Focused local unit tests with explicit expected results",
+          "rationale": "The isolated calculation can be checked quickly without deploying external dependencies."
+        },
+        {
+          "key": "D",
+          "text": "A full production load test as the only validation",
+          "rationale": "That is expensive indirect feedback for an isolated pure function."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Pure behavior can be checked cheaply without deployment. The selected answer is add focused local unit tests for the calculation contract.",
+      "explanation": "Approval does not evaluate whether the calculation returns the required result. Schema behavior does not directly test the price-calculation contract. The isolated calculation can be checked quickly without deploying external dependencies. That is expensive indirect feedback for an isolated pure function.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q002",
       "checkpointId": "CP5",
-      "caseId": "L08-C01",
-      "task": "diagnosis",
-      "caseContext": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned.",
       "objectiveIds": [
         "D3.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Unit tests use a database mock and pass, but the actual deployed schema lacks a required column. What missing test layer addresses the failure?",
       "options": [
         {
           "key": "A",
-          "text": "The wrapper script swallowed the failing command status",
-          "rationale": "Result files cannot compensate for an incorrect success state. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "An integration test against a representative database schema",
+          "rationale": "The failure occurs at a real dependency contract omitted by the mock."
         },
         {
           "key": "B",
-          "text": "The defect can be isolated below the integration boundary",
-          "rationale": "Cloud deployment adds unnecessary feedback latency. This directly addresses the constraint stated in this case."
+          "text": "More repetitions of the same database mock",
+          "rationale": "Repeated isolated behavior does not create real schema interaction."
         },
         {
           "key": "C",
-          "text": "Mocks do not exercise actual database compatibility",
-          "rationale": "The isolated test replaced the failing dependency. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "A test that checks only repository branch naming",
+          "rationale": "A source workflow property does not exercise the database boundary."
+        },
+        {
+          "key": "D",
+          "text": "A release-note spelling check",
+          "rationale": "Documentation correctness does not validate the runtime schema."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Cloud deployment adds unnecessary feedback latency. The selected answer is the defect can be isolated below the integration boundary.",
+      "explanation": "The failure occurs at a real dependency contract omitted by the mock. Repeated isolated behavior does not create real schema interaction. A source workflow property does not exercise the database boundary. Documentation correctness does not validate the runtime schema.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q003",
       "checkpointId": "CP5",
-      "caseId": "L08-C01",
-      "task": "verification",
-      "caseContext": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The API passes functional checks for one user but slows sharply with hundreds of concurrent requests. Which test addresses the unresolved risk?",
       "options": [
         {
           "key": "A",
-          "text": "A wrong calculation fails the local test suite",
-          "rationale": "The test must detect an actual incorrect result. This directly addresses the constraint stated in this case."
+          "text": "Only a database migration dry run",
+          "rationale": "Schema planning does not establish end-to-end service capacity."
         },
         {
           "key": "B",
-          "text": "A schema-incompatible service fails the integration test",
-          "rationale": "The test should reproduce the missing boundary behavior. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "A representative load test with response-time and error acceptance criteria",
+          "rationale": "The question concerns behavior under concurrent demand rather than single-request correctness."
         },
         {
           "key": "C",
-          "text": "A known failing assertion makes the job fail",
-          "rationale": "A controlled negative probe verifies status propagation. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "Only a unit test of one controller's return type",
+          "rationale": "That does not exercise contention and capacity at the required workload."
+        },
+        {
+          "key": "D",
+          "text": "Only another static analysis pass of method names",
+          "rationale": "Naming analysis does not measure runtime concurrency behavior."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The test must detect an actual incorrect result. The selected answer is a wrong calculation fails the local test suite.",
+      "explanation": "Schema planning does not establish end-to-end service capacity. The question concerns behavior under concurrent demand rather than single-request correctness. That does not exercise contention and capacity at the required workload. Naming analysis does not measure runtime concurrency behavior.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q004",
       "checkpointId": "CP5",
-      "caseId": "L08-C01",
-      "task": "safeguard",
-      "caseContext": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "Which unit-test dependency design makes an isolated calculation test deterministic?",
       "options": [
         {
           "key": "A",
-          "text": "Keep diagnostic publication separate from success conditions",
-          "rationale": "Useful failure reports should remain available after rejection. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "Depend on whichever records happen to exist in the shared production database",
+          "rationale": "Uncontrolled data couples the result to unrelated activity."
         },
         {
           "key": "B",
-          "text": "Use deterministic inputs and assert meaningful outcomes",
-          "rationale": "Nondeterministic tests weaken trust in fast feedback. This directly addresses the constraint stated in this case."
+          "text": "Order all tests alphabetically so one test prepares another's hidden state",
+          "rationale": "A deterministic suite should not rely on accidental test ordering."
         },
         {
           "key": "C",
-          "text": "Use disposable test data and isolated credentials",
-          "rationale": "Integration execution must not modify production records. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Supply controlled inputs and replace unrelated external dependencies through suitable boundaries",
+          "rationale": "The test should exercise the intended behavior without uncontrolled network or clock effects."
+        },
+        {
+          "key": "D",
+          "text": "Use the current production exchange rate from the internet in every assertion",
+          "rationale": "A changing external input can alter results independently of the code under test."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Nondeterministic tests weaken trust in fast feedback. The selected answer is use deterministic inputs and assert meaningful outcomes.",
+      "explanation": "Uncontrolled data couples the result to unrelated activity. A deterministic suite should not rely on accidental test ordering. The test should exercise the intended behavior without uncontrolled network or clock effects. A changing external input can alter results independently of the code under test.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q005",
       "checkpointId": "CP5",
-      "caseId": "L08-C01",
-      "task": "tradeoff",
-      "caseContext": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "advanced",
-      "question": "Fast feedback: A pure price-calculation function changes frequently, and defects should be caught before any cloud environment is provisioned. The team selects this remedy: \"Add focused local unit tests for the calculation contract.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "What must a representative integration database provide for a meaningful schema-compatibility test?",
       "options": [
         {
           "key": "A",
-          "text": "Integration tests cost more time and infrastructure",
-          "rationale": "Use them where boundary risks justify the overhead. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "The relevant schema and behavior needed by the application contract",
+          "rationale": "The test environment must exercise the boundary at risk, not merely any database connection."
         },
         {
           "key": "B",
-          "text": "Correct failure propagation can reveal previously hidden defects",
-          "rationale": "A newly red pipeline may indicate stronger reporting. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "Exactly the same unrelated customer records as production",
+          "rationale": "Sensitive production data is not inherently required to validate this schema relationship."
         },
         {
           "key": "C",
-          "text": "Unit tests do not prove external integration behavior",
-          "rationale": "A complete strategy needs additional test layers. This directly addresses the constraint stated in this case."
+          "text": "The cheapest storage option regardless of unsupported behavior",
+          "rationale": "A nonrepresentative dependency can hide the very contract failure being tested."
+        },
+        {
+          "key": "D",
+          "text": "Only an open TCP port with no database operations",
+          "rationale": "Connectivity alone does not establish the application's schema behavior."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A complete strategy needs additional test layers. The selected answer is unit tests do not prove external integration behavior.",
+      "explanation": "The test environment must exercise the boundary at risk, not merely any database connection. Sensitive production data is not inherently required to validate this schema relationship. A nonrepresentative dependency can hide the very contract failure being tested. Connectivity alone does not establish the application's schema behavior.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q006",
       "checkpointId": "CP5",
-      "caseId": "L08-C02",
-      "task": "remedy",
-      "caseContext": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema.",
       "objectiveIds": [
         "D3.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which next change most directly satisfies the stated requirement?",
+      "question": "Which workload input matters when using a load test to support a capacity claim?",
       "options": [
         {
           "key": "A",
-          "text": "Run representative load tests with latency and error thresholds",
-          "rationale": "Concurrency changes resource behavior beyond functional correctness. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Only the latest release tag's text",
+          "rationale": "A label does not describe traffic mix or demand timing."
         },
         {
           "key": "B",
-          "text": "Add focused local unit tests for the calculation contract",
-          "rationale": "Pure behavior can be checked cheaply without deployment. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Only the number of assertions in unit tests",
+          "rationale": "Unit-suite size does not define production concurrency."
         },
         {
           "key": "C",
-          "text": "Add an integration test against a representative database",
-          "rationale": "The failure occurs at an external system boundary. This directly addresses the constraint stated in this case."
+          "text": "A request mix arrival pattern and concurrency representative of the intended users",
+          "rationale": "Capacity evidence depends on the actual shape of demand being simulated."
+        },
+        {
+          "key": "D",
+          "text": "Only the number of source files in the repository",
+          "rationale": "Repository size is not a request workload model."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The failure occurs at an external system boundary. The selected answer is add an integration test against a representative database.",
+      "explanation": "A label does not describe traffic mix or demand timing. Unit-suite size does not define production concurrency. Capacity evidence depends on the actual shape of demand being simulated. Repository size is not a request workload model.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q007",
       "checkpointId": "CP5",
-      "caseId": "L08-C02",
-      "task": "diagnosis",
-      "caseContext": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "foundational",
+      "question": "A calculation test executes the code but never checks the returned total. What confidence is missing?",
       "options": [
         {
           "key": "A",
-          "text": "The defect can be isolated below the integration boundary",
-          "rationale": "Cloud deployment adds unnecessary feedback latency. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Evidence that the calculation method can be invoked without throwing",
+          "rationale": "Successful invocation does not establish that a wrong returned value would fail this test."
         },
         {
           "key": "B",
-          "text": "Mocks do not exercise actual database compatibility",
-          "rationale": "The isolated test replaced the failing dependency. This directly addresses the constraint stated in this case."
+          "text": "Evidence that the method returns a value of the expected type",
+          "rationale": "Type correctness alone does not verify the required numeric total."
         },
         {
           "key": "C",
-          "text": "Functional success under light traffic does not prove capacity",
-          "rationale": "The missing signal is behavior under realistic demand. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Evidence that the test is discovered and counted by the runner",
+          "rationale": "Discovery and execution count do not establish a meaningful correctness assertion."
+        },
+        {
+          "key": "D",
+          "text": "Evidence that an incorrect result would cause the test to fail",
+          "rationale": "Execution alone does not establish a meaningful behavioral assertion."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The isolated test replaced the failing dependency. The selected answer is mocks do not exercise actual database compatibility.",
+      "explanation": "Successful invocation does not establish that a wrong returned value would fail this test. Type correctness alone does not verify the required numeric total. Discovery and execution count do not establish a meaningful correctness assertion. Execution alone does not establish a meaningful behavioral assertion.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S3"
+      ],
+      "exhibit": {
+        "language": "csharp",
+        "code": "[Fact]\npublic void Calculates_total()\n{\n    var actual = Price.Calculate(100m, 0.20m);\n    // No assertion checks actual.\n}"
+      }
     },
     {
       "id": "L08-Q008",
       "checkpointId": "CP5",
-      "caseId": "L08-C02",
-      "task": "verification",
-      "caseContext": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "Which outcome demonstrates the new integration test covers the previously missed database contract?",
       "options": [
         {
           "key": "A",
-          "text": "Latency and error rates satisfy thresholds at target load",
-          "rationale": "The result must cover the expected workload shape. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "A deliberately incompatible schema causes an actionable test failure before promotion",
+          "rationale": "The negative case exercises the exact boundary whose absence caused the escape."
         },
         {
           "key": "B",
-          "text": "A wrong calculation fails the local test suite",
-          "rationale": "The test must detect an actual incorrect result. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "The test still passes when the required column is removed",
+          "rationale": "That suggests it is not checking the intended compatibility risk."
         },
         {
           "key": "C",
-          "text": "A schema-incompatible service fails the integration test",
-          "rationale": "The test should reproduce the missing boundary behavior. This directly addresses the constraint stated in this case."
+          "text": "The database server's display name matches the application name",
+          "rationale": "Naming does not prove operational schema compatibility."
+        },
+        {
+          "key": "D",
+          "text": "The test runner reports more skipped tests",
+          "rationale": "Skipped cases do not demonstrate the required defect was detected."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The test should reproduce the missing boundary behavior. The selected answer is a schema-incompatible service fails the integration test.",
+      "explanation": "The negative case exercises the exact boundary whose absence caused the escape. That suggests it is not checking the intended compatibility risk. Naming does not prove operational schema compatibility. Skipped cases do not demonstrate the required defect was detected.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q009",
       "checkpointId": "CP5",
-      "caseId": "L08-C02",
-      "task": "safeguard",
-      "caseContext": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A load test must satisfy P95 latency under 500 ms and error rate under 1 percent at the target demand. Which result meets both stated thresholds?",
       "options": [
         {
           "key": "A",
-          "text": "Run controlled load against an authorized environment",
-          "rationale": "Unbounded tests can disrupt services and create costs. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "P95 of 420 ms with 0.4 percent errors at the target demand",
+          "rationale": "Both the tail latency and error proportion satisfy the declared workload-specific limits."
         },
         {
           "key": "B",
-          "text": "Use deterministic inputs and assert meaningful outcomes",
-          "rationale": "Nondeterministic tests weaken trust in fast feedback. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Mean latency 200 ms with P95 of 900 ms and 0.2 percent errors",
+          "rationale": "A fast mean does not satisfy the stated P95 limit."
         },
         {
           "key": "C",
-          "text": "Use disposable test data and isolated credentials",
-          "rationale": "Integration execution must not modify production records. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Integration execution must not modify production records. The selected answer is use disposable test data and isolated credentials.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q010",
-      "checkpointId": "CP5",
-      "caseId": "L08-C02",
-      "task": "tradeoff",
-      "caseContext": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema.",
-      "objectiveIds": [
-        "D3.2.2"
-      ],
-      "difficulty": "advanced",
-      "question": "Hidden integration failure: Unit tests mock the database successfully, but the deployed service cannot read its real schema. The team selects this remedy: \"Add an integration test against a representative database.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Integration tests cost more time and infrastructure",
-          "rationale": "Use them where boundary risks justify the overhead. This directly addresses the constraint stated in this case."
+          "text": "P95 of 350 ms with 3 percent errors",
+          "rationale": "The latency passes while the error-rate requirement fails."
         },
         {
-          "key": "B",
-          "text": "A synthetic workload may differ from real traffic",
-          "rationale": "Capacity conclusions depend on representative test design. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Unit tests do not prove external integration behavior",
-          "rationale": "A complete strategy needs additional test layers. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "P95 of 400 ms with 0.3 percent errors at one tenth of target demand",
+          "rationale": "Passing under a different much lighter workload does not establish the requested capacity."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Use them where boundary risks justify the overhead. The selected answer is integration tests cost more time and infrastructure.",
+      "explanation": "Both the tail latency and error proportion satisfy the declared workload-specific limits. A fast mean does not satisfy the stated P95 limit. The latency passes while the error-rate requirement fails. Passing under a different much lighter workload does not establish the requested capacity.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Required demand: 200 concurrent users\nAcceptance: P95<500ms and errors<1 percent\nCandidateA: P95420ms,errors0.4 percent at 200 users"
+      }
+    },
+    {
+      "id": "L08-Q010",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.2.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Which controlled negative check best validates a unit test for a tax rule?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run the unchanged test repeatedly until its duration decreases",
+          "rationale": "Timing does not demonstrate defect-detection strength."
+        },
+        {
+          "key": "B",
+          "text": "Introduce a safe deliberate wrong result in the test exercise and confirm the assertion fails",
+          "rationale": "A targeted defect demonstrates that the assertion detects the behavior it claims to protect."
+        },
+        {
+          "key": "C",
+          "text": "Add another passing assertion that true equals true",
+          "rationale": "That increases test count without testing the tax result."
+        },
+        {
+          "key": "D",
+          "text": "Rename the test method to include the expected tax",
+          "rationale": "A name alone does not make a false result fail."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Timing does not demonstrate defect-detection strength. A targeted defect demonstrates that the assertion detects the behavior it claims to protect. That increases test count without testing the tax result. A name alone does not make a false result fail.",
+      "sourceIds": [
+        "S3"
       ]
     },
     {
       "id": "L08-Q011",
       "checkpointId": "CP5",
-      "caseId": "L08-C03",
-      "task": "remedy",
-      "caseContext": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously.",
       "objectiveIds": [
         "D3.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which next change most directly satisfies the stated requirement?",
+      "question": "How should integration-test data be handled in a shared training environment?",
       "options": [
         {
           "key": "A",
-          "text": "Add an integration test against a representative database",
-          "rationale": "The failure occurs at an external system boundary. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Let every parallel test overwrite the same shared row without coordination",
+          "rationale": "Uncontrolled shared mutation can create flakes and corrupt test assumptions."
         },
         {
           "key": "B",
-          "text": "Run representative load tests with latency and error thresholds",
-          "rationale": "Concurrency changes resource behavior beyond functional correctness. This directly addresses the constraint stated in this case."
+          "text": "Disable cleanup and reuse every previous run's unknown state",
+          "rationale": "Accumulated state makes later results harder to reproduce and attribute."
         },
         {
           "key": "C",
-          "text": "Publish structured test results even when test execution fails",
-          "rationale": "Failure details need an accessible reporting path. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Use isolated controlled fixtures and clean up only the test-owned data",
+          "rationale": "The test should avoid modifying unrelated or sensitive production records."
+        },
+        {
+          "key": "D",
+          "text": "Use live customer records so no fixture preparation is needed",
+          "rationale": "That creates avoidable privacy and modification risks."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Concurrency changes resource behavior beyond functional correctness. The selected answer is run representative load tests with latency and error thresholds.",
+      "explanation": "Uncontrolled shared mutation can create flakes and corrupt test assumptions. Accumulated state makes later results harder to reproduce and attribute. The test should avoid modifying unrelated or sensitive production records. That creates avoidable privacy and modification risks.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q012",
       "checkpointId": "CP5",
-      "caseId": "L08-C03",
-      "task": "diagnosis",
-      "caseContext": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously.",
       "objectiveIds": [
         "D3.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which prerequisite should be established before running a substantial load test against an endpoint?",
       "options": [
         {
           "key": "A",
-          "text": "Execution failure and result publication are separate steps",
-          "rationale": "A stopped job may skip ordinary success-only publishing. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Authorization scope resource limits and an agreed safe test window",
+          "rationale": "Synthetic demand can affect availability and incur costs beyond a local test process."
         },
         {
           "key": "B",
-          "text": "Mocks do not exercise actual database compatibility",
-          "rationale": "The isolated test replaced the failing dependency. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Only one successful functional probe against the endpoint",
+          "rationale": "Reachability does not authorize significant artificial demand or establish safe resource limits."
         },
         {
           "key": "C",
-          "text": "Functional success under light traffic does not prove capacity",
-          "rationale": "The missing signal is behavior under realistic demand. This directly addresses the constraint stated in this case."
+          "text": "Only source-repository read permission for the load-test author",
+          "rationale": "Source access does not authorize stressing a deployed service."
+        },
+        {
+          "key": "D",
+          "text": "Only a production-like request mix with no agreed workload ceiling",
+          "rationale": "A realistic workload still needs authorized scope and operational bounds before execution."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The missing signal is behavior under realistic demand. The selected answer is functional success under light traffic does not prove capacity.",
+      "explanation": "Synthetic demand can affect availability and incur costs beyond a local test process. Reachability does not authorize significant artificial demand or establish safe resource limits. Source access does not authorize stressing a deployed service. A realistic workload still needs authorized scope and operational bounds before execution.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q013",
       "checkpointId": "CP5",
-      "caseId": "L08-C03",
-      "task": "verification",
-      "caseContext": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The checkout code has pure pricing rules and a database boundary. The team needs fast local feedback plus protection against schema incompatibility. Which strategy fits?",
       "options": [
         {
           "key": "A",
-          "text": "Latency and error rates satisfy thresholds at target load",
-          "rationale": "The result must cover the expected workload shape. This directly addresses the constraint stated in this case."
+          "text": "Mock every database call and declare integration compatibility proven",
+          "rationale": "A mock does not exercise the actual external schema contract."
         },
         {
           "key": "B",
-          "text": "The run displays the failing tests and diagnostic details",
-          "rationale": "Actionable reports make failures reviewable and traceable. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Run only a slow full-system test for every arithmetic edit and omit local assertions",
+          "rationale": "That loses useful fast feedback and makes diagnosis less focused."
         },
         {
           "key": "C",
-          "text": "A schema-incompatible service fails the integration test",
-          "rationale": "The test should reproduce the missing boundary behavior. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Use code coverage as the only acceptance condition for both layers",
+          "rationale": "Execution percentage does not prove either the asserted rule or real boundary compatibility."
+        },
+        {
+          "key": "D",
+          "text": "Use focused unit tests for isolated rules and representative integration tests for the database contract",
+          "rationale": "Different layers address different risks without making every check depend on full deployment."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The result must cover the expected workload shape. The selected answer is latency and error rates satisfy thresholds at target load.",
+      "explanation": "A mock does not exercise the actual external schema contract. That loses useful fast feedback and makes diagnosis less focused. Execution percentage does not prove either the asserted rule or real boundary compatibility. Different layers address different risks without making every check depend on full deployment.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L08-Q014",
       "checkpointId": "CP5",
-      "caseId": "L08-C03",
-      "task": "safeguard",
-      "caseContext": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "applied",
-      "question": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A realistic database test costs minutes while pricing unit tests cost milliseconds. Which pipeline allocation best balances feedback speed and boundary risk?",
       "options": [
         {
           "key": "A",
-          "text": "Preserve failure status while collecting diagnostic output",
-          "rationale": "Publishing results should not convert a failed test to success. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Run all integration tests only after every production release has fully completed",
+          "rationale": "That detects compatibility problems too late to serve the intended prepromotion gate."
         },
         {
           "key": "B",
-          "text": "Use disposable test data and isolated credentials",
-          "rationale": "Integration execution must not modify production records. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "Replace all unit tests with integration tests even for pure calculation changes",
+          "rationale": "The additional dependency cost is unnecessary for every isolated behavior check."
         },
         {
           "key": "C",
-          "text": "Run controlled load against an authorized environment",
-          "rationale": "Unbounded tests can disrupt services and create costs. This directly addresses the constraint stated in this case."
+          "text": "Run fast isolated checks early and gate relevant promotion with representative integration tests",
+          "rationale": "The strategy preserves quick feedback while retaining the important external-contract evidence."
+        },
+        {
+          "key": "D",
+          "text": "Remove integration tests because they are slower than unit tests",
+          "rationale": "That discards the missing boundary assurance rather than optimizing its placement."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Unbounded tests can disrupt services and create costs. The selected answer is run controlled load against an authorized environment.",
+      "explanation": "That detects compatibility problems too late to serve the intended prepromotion gate. The additional dependency cost is unnecessary for every isolated behavior check. The strategy preserves quick feedback while retaining the important external-contract evidence. That discards the missing boundary assurance rather than optimizing its placement.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q015",
       "checkpointId": "CP5",
-      "caseId": "L08-C03",
-      "task": "tradeoff",
-      "caseContext": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously.",
       "objectiveIds": [
         "D3.2.2"
       ],
-      "difficulty": "advanced",
-      "question": "Capacity uncertainty: The API passes functional tests but latency becomes unacceptable when hundreds of clients use it simultaneously. The team selects this remedy: \"Run representative load tests with latency and error thresholds.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A load test passes on a small synthetic dataset with warm caches, but the claimed deployment must handle larger cold-start traffic. What is the defensible next step?",
       "options": [
         {
           "key": "A",
-          "text": "A synthetic workload may differ from real traffic",
-          "rationale": "Capacity conclusions depend on representative test design. This directly addresses the constraint stated in this case."
+          "text": "Multiply the observed throughput by the production server count without further checks",
+          "rationale": "Scaling can be limited by shared bottlenecks and workload differences."
         },
         {
           "key": "B",
-          "text": "Detailed reports can expose sensitive test data",
-          "rationale": "Sanitize inputs and control report access. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Ignore latency tails because the overall request count was high",
+          "rationale": "Volume alone does not satisfy a user-facing response-time requirement."
         },
         {
           "key": "C",
-          "text": "Integration tests cost more time and infrastructure",
-          "rationale": "Use them where boundary risks justify the overhead. That addresses a different requirement: Hidden integration failure. It does not directly resolve this case's stated constraint."
+          "text": "State the tested conditions and extend representative scenarios before claiming the broader capacity",
+          "rationale": "The current evidence does not cover important demand and data conditions in the proposed claim."
+        },
+        {
+          "key": "D",
+          "text": "Declare the same result valid for every dataset and startup condition",
+          "rationale": "Capacity depends on the workload and environment actually exercised."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Capacity conclusions depend on representative test design. The selected answer is a synthetic workload may differ from real traffic.",
+      "explanation": "Scaling can be limited by shared bottlenecks and workload differences. Volume alone does not satisfy a user-facing response-time requirement. The current evidence does not cover important demand and data conditions in the proposed claim. Capacity depends on the workload and environment actually exercised.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q016",
       "checkpointId": "CP2",
-      "caseId": "L08-C04",
-      "task": "remedy",
-      "caseContext": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases.",
       "objectiveIds": [
         "D3.2.3"
       ],
-      "difficulty": "foundational",
-      "question": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "The test runner creates a TRX file, but Azure Pipelines shows no test cases. Which step connects that file to the run's test reporting?",
       "options": [
         {
           "key": "A",
-          "text": "Run representative load tests with latency and error thresholds",
-          "rationale": "Concurrency changes resource behavior beyond functional correctness. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Upload the TRX file only as a generic pipeline artifact",
+          "rationale": "File retention helps diagnostics but does not itself ingest structured test cases into the test view."
         },
         {
           "key": "B",
-          "text": "Publish structured test results even when test execution fails",
-          "rationale": "Failure details need an accessible reporting path. This directly addresses the constraint stated in this case."
+          "text": "Publish code coverage while omitting the test-result task",
+          "rationale": "Coverage and test-case outcome publication are distinct reporting operations."
         },
         {
           "key": "C",
-          "text": "Review coverage scope and add behavioral tests for changed logic",
-          "rationale": "A percentage must be interpreted against meaningful behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Set a pipeline variable to the number of passed tests",
+          "rationale": "An aggregate variable does not provide the structured result file and format needed for case ingestion."
+        },
+        {
+          "key": "D",
+          "text": "Publish the supported test result file using the correct format and path",
+          "rationale": "Execution and structured result ingestion are separate pipeline operations."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Failure details need an accessible reporting path. The selected answer is publish structured test results even when test execution fails.",
+      "explanation": "File retention helps diagnostics but does not itself ingest structured test cases into the test view. Coverage and test-case outcome publication are distinct reporting operations. An aggregate variable does not provide the structured result file and format needed for case ingestion. Execution and structured result ingestion are separate pipeline operations.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L08-Q017",
-      "checkpointId": "CP2",
-      "caseId": "L08-C04",
-      "task": "diagnosis",
-      "caseContext": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.2.3"
+        "D3.2.4"
       ],
       "difficulty": "applied",
-      "question": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A coverage report says 80 of 100 included lines executed. What does the 80 percent line coverage value establish?",
       "options": [
         {
           "key": "A",
-          "text": "Functional success under light traffic does not prove capacity",
-          "rationale": "The missing signal is behavior under realistic demand. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Every possible branch condition was exercised",
+          "rationale": "Line coverage does not necessarily establish branch coverage."
         },
         {
           "key": "B",
-          "text": "Execution failure and result publication are separate steps",
-          "rationale": "A stopped job may skip ordinary success-only publishing. This directly addresses the constraint stated in this case."
+          "text": "Those included lines were exercised during the measured tests",
+          "rationale": "Execution coverage does not by itself establish strong assertions or complete correctness."
         },
         {
           "key": "C",
-          "text": "Coverage measures execution rather than assertion quality",
-          "rationale": "High execution coverage can coexist with weak validation. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Every included line has an assertion proving its business behavior",
+          "rationale": "Executed lines need not have meaningful assertions about every outcome."
+        },
+        {
+          "key": "D",
+          "text": "The application has only a 20 percentchance of a production defect",
+          "rationale": "Coverage is not a calibrated probability of failure."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A stopped job may skip ordinary success-only publishing. The selected answer is execution failure and result publication are separate steps.",
+      "explanation": "Line coverage does not necessarily establish branch coverage. Execution coverage does not by itself establish strong assertions or complete correctness. Executed lines need not have meaningful assertions about every outcome. Coverage is not a calibrated probability of failure.",
       "sourceIds": [
         "S1",
-        "S2"
-      ]
+        "S5"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Included source lines: 100\nExecuted included lines: 80\nLine coverage: 80 percent\nAssertion strength: not measured by this counter"
+      }
     },
     {
       "id": "L08-Q018",
-      "checkpointId": "CP2",
-      "caseId": "L08-C04",
-      "task": "verification",
-      "caseContext": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.2.3"
+        "D3.2.1"
       ],
       "difficulty": "applied",
-      "question": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Security and test reports are generated, but deployment proceeds after a required validation fails. What condition is missing?",
       "options": [
         {
           "key": "A",
-          "text": "A deliberate business-logic defect causes a test failure",
-          "rationale": "Mutation-like evidence checks whether assertions detect incorrect behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "A more detailed deployment-step display name",
+          "rationale": "Naming does not change the stage's execution condition."
         },
         {
           "key": "B",
-          "text": "Latency and error rates satisfy thresholds at target load",
-          "rationale": "The result must cover the expected workload shape. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "An enforced release dependency on the required successful validation",
+          "rationale": "Reporting a result does not automatically make promotion conditional on it."
         },
         {
           "key": "C",
-          "text": "The run displays the failing tests and diagnostic details",
-          "rationale": "Actionable reports make failures reviewable and traceable. This directly addresses the constraint stated in this case."
+          "text": "A longer retention window for successful reports",
+          "rationale": "Storage duration does not control whether the candidate can deploy."
+        },
+        {
+          "key": "D",
+          "text": "A second dashboard displaying the same optional failure",
+          "rationale": "Duplicating visibility does not enforce an acceptance rule."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Actionable reports make failures reviewable and traceable. The selected answer is the run displays the failing tests and diagnostic details.",
+      "explanation": "Naming does not change the stage's execution condition. Reporting a result does not automatically make promotion conditional on it. Storage duration does not control whether the candidate can deploy. Duplicating visibility does not enforce an acceptance rule.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S7"
       ]
     },
     {
       "id": "L08-Q019",
       "checkpointId": "CP2",
-      "caseId": "L08-C04",
-      "task": "safeguard",
-      "caseContext": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases.",
       "objectiveIds": [
         "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Tests pass locally but fail on the hosted runner because their expected date format depends on the current locale. What should be fixed?",
       "options": [
         {
           "key": "A",
-          "text": "Document exclusions and avoid hiding high-risk code",
-          "rationale": "Changing the denominator can create misleading improvements. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Copy the local test output into the hosted result directory",
+          "rationale": "That would misrepresent what the hosted execution actually observed."
         },
         {
           "key": "B",
-          "text": "Run controlled load against an authorized environment",
-          "rationale": "Unbounded tests can disrupt services and create costs. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Make the intended formatting contract explicit and control the test environment inputs",
+          "rationale": "An unrecorded locale assumption can create environment-dependent results."
         },
         {
           "key": "C",
-          "text": "Preserve failure status while collecting diagnostic output",
-          "rationale": "Publishing results should not convert a failed test to success. This directly addresses the constraint stated in this case."
+          "text": "Run retries until the hosted locale happens to match",
+          "rationale": "Retries do not deliberately establish the required formatting behavior."
+        },
+        {
+          "key": "D",
+          "text": "Remove all assertions involving dates",
+          "rationale": "That discards behavior coverage rather than clarifying the contract."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Publishing results should not convert a failed test to success. The selected answer is preserve failure status while collecting diagnostic output.",
+      "explanation": "That would misrepresent what the hosted execution actually observed. An unrecorded locale assumption can create environment-dependent results. Retries do not deliberately establish the required formatting behavior. That discards behavior coverage rather than clarifying the contract.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3",
+        "S8"
       ]
     },
     {
       "id": "L08-Q020",
       "checkpointId": "CP2",
-      "caseId": "L08-C04",
-      "task": "tradeoff",
-      "caseContext": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases.",
       "objectiveIds": [
+        "D3.2.2",
         "D3.2.3"
       ],
-      "difficulty": "advanced",
-      "question": "Invisible failures: A test command returns nonzero, but the pipeline uploads no test report and reviewers cannot identify failing cases. The team selects this remedy: \"Publish structured test results even when test execution fails.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "An integration test fails intermittently and passes on retry without a source change. What evidence should remain visible?",
       "options": [
         {
           "key": "A",
-          "text": "Detailed reports can expose sensitive test data",
-          "rationale": "Sanitize inputs and control report access. This directly addresses the constraint stated in this case."
+          "text": "Only the final passing result",
+          "rationale": "That hides the first failure and the repeated work."
         },
         {
           "key": "B",
-          "text": "Coverage thresholds can encourage metric gaming",
-          "rationale": "Treat coverage as one signal within the testing strategy. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Only the fastest successful execution time",
+          "rationale": "A best-case duration conceals the unstable behavior."
         },
         {
           "key": "C",
-          "text": "A synthetic workload may differ from real traffic",
-          "rationale": "Capacity conclusions depend on representative test design. That addresses a different requirement: Capacity uncertainty. It does not directly resolve this case's stated constraint."
+          "text": "Only the total test count regardless of attempts",
+          "rationale": "The count does not explain why the result changes."
+        },
+        {
+          "key": "D",
+          "text": "Initial failures retries and the identified flake classification",
+          "rationale": "The final green attempt does not erase the delivery cost or underlying instability."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Sanitize inputs and control report access. The selected answer is detailed reports can expose sensitive test data.",
+      "explanation": "That hides the first failure and the repeated work. A best-case duration conceals the unstable behavior. The count does not explain why the result changes. The final green attempt does not erase the delivery cost or underlying instability.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L08-Q021",
-      "checkpointId": "CP3",
-      "caseId": "L08-C05",
-      "task": "remedy",
-      "caseContext": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.4"
+        "D3.2.3"
       ],
-      "difficulty": "foundational",
-      "question": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "Which task input must match a runner producing VSTest TRX results?",
       "options": [
         {
           "key": "A",
-          "text": "Publish structured test results even when test execution fails",
-          "rationale": "Failure details need an accessible reporting path. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
+          "text": "Only the target branch's name",
+          "rationale": "Branch naming does not define the report parser or file location."
         },
         {
           "key": "B",
-          "text": "Review coverage scope and add behavioral tests for changed logic",
-          "rationale": "A percentage must be interpreted against meaningful behavior. This directly addresses the constraint stated in this case."
+          "text": "Only the number of CPUs on the build agent",
+          "rationale": "Capacity does not tell the publisher which structured files to read."
         },
         {
           "key": "C",
-          "text": "Make critical quality results required deployment conditions",
-          "rationale": "Informational reports do not enforce release safety. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
+          "text": "Only the release environment's approver list",
+          "rationale": "Deployment approval does not configure test-report ingestion."
+        },
+        {
+          "key": "D",
+          "text": "The result format and file selection identifying the TRX output",
+          "rationale": "The publisher needs to interpret and locate the actual emitted report."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "A percentage must be interpreted against meaningful behavior. The selected answer is review coverage scope and add behavioral tests for changed logic.",
+      "explanation": "Branch naming does not define the report parser or file location. Capacity does not tell the publisher which structured files to read. Deployment approval does not configure test-report ingestion. The publisher needs to interpret and locate the actual emitted report.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L08-Q022",
       "checkpointId": "CP3",
-      "caseId": "L08-C05",
-      "task": "diagnosis",
-      "caseContext": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions.",
-      "objectiveIds": [
-        "D3.2.4"
-      ],
-      "difficulty": "foundational",
-      "question": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The release condition ignores failed validation outcomes",
-          "rationale": "Visibility alone cannot stop an unsafe promotion. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Execution failure and result publication are separate steps",
-          "rationale": "A stopped job may skip ordinary success-only publishing. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Coverage measures execution rather than assertion quality",
-          "rationale": "High execution coverage can coexist with weak validation. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "High execution coverage can coexist with weak validation. The selected answer is coverage measures execution rather than assertion quality.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q023",
-      "checkpointId": "CP3",
-      "caseId": "L08-C05",
-      "task": "verification",
-      "caseContext": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions.",
       "objectiveIds": [
         "D3.2.4"
       ],
       "difficulty": "applied",
-      "question": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A suite reports 95 percent line coverage yet accepts a deliberately wrong business result. What weakness does this expose?",
       "options": [
         {
           "key": "A",
-          "text": "A deliberate business-logic defect causes a test failure",
-          "rationale": "Mutation-like evidence checks whether assertions detect incorrect behavior. This directly addresses the constraint stated in this case."
+          "text": "The application cannot have reached the incorrect method",
+          "rationale": "Execution and acceptance of a wrong value can occur together."
         },
         {
           "key": "B",
-          "text": "A deliberately failed critical check blocks deployment",
-          "rationale": "A negative test demonstrates actual gating behavior. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
+          "text": "High execution coverage can coexist with inadequate assertions",
+          "rationale": "Coverage and behavioral defect detection are different signals."
         },
         {
           "key": "C",
-          "text": "The run displays the failing tests and diagnostic details",
-          "rationale": "Actionable reports make failures reviewable and traceable. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Mutation-like evidence checks whether assertions detect incorrect behavior. The selected answer is a deliberate business-logic defect causes a test failure.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q024",
-      "checkpointId": "CP3",
-      "caseId": "L08-C05",
-      "task": "safeguard",
-      "caseContext": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions.",
-      "objectiveIds": [
-        "D3.2.4"
-      ],
-      "difficulty": "applied",
-      "question": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Document exclusions and avoid hiding high-risk code",
-          "rationale": "Changing the denominator can create misleading improvements. This directly addresses the constraint stated in this case."
+          "text": "The coverage tool must be unable to count any executed lines",
+          "rationale": "The reported execution can be real even if its assertions are weak."
         },
         {
-          "key": "B",
-          "text": "Provide an accountable exception path for exceptional cases",
-          "rationale": "Unreviewed bypass would defeat the required control. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Preserve failure status while collecting diagnostic output",
-          "rationale": "Publishing results should not convert a failed test to success. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Changing the denominator can create misleading improvements. The selected answer is document exclusions and avoid hiding high-risk code.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q025",
-      "checkpointId": "CP3",
-      "caseId": "L08-C05",
-      "task": "tradeoff",
-      "caseContext": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions.",
-      "objectiveIds": [
-        "D3.2.4"
-      ],
-      "difficulty": "advanced",
-      "question": "Inflated coverage: The dashboard reports98 percent coverage after generated files are excluded, but changed business logic has no assertions. The team selects this remedy: \"Review coverage scope and add behavioral tests for changed logic.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Coverage thresholds can encourage metric gaming",
-          "rationale": "Treat coverage as one signal within the testing strategy. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Strict gates can block releases during tool outages",
-          "rationale": "The exception policy should preserve evidence and ownership. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Detailed reports can expose sensitive test data",
-          "rationale": "Sanitize inputs and control report access. That addresses a different requirement: Invisible failures. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Treat coverage as one signal within the testing strategy. The selected answer is coverage thresholds can encourage metric gaming.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q026",
-      "checkpointId": "CP4",
-      "caseId": "L08-C06",
-      "task": "remedy",
-      "caseContext": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail.",
-      "objectiveIds": [
-        "D3.2.1"
-      ],
-      "difficulty": "foundational",
-      "question": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Make critical quality results required deployment conditions",
-          "rationale": "Informational reports do not enforce release safety. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Align test environment dependencies and remove unintended locale assumptions",
-          "rationale": "Reproducibility needs explicit environmental inputs. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Review coverage scope and add behavioral tests for changed logic",
-          "rationale": "A percentage must be interpreted against meaningful behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Informational reports do not enforce release safety. The selected answer is make critical quality results required deployment conditions.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q027",
-      "checkpointId": "CP4",
-      "caseId": "L08-C06",
-      "task": "diagnosis",
-      "caseContext": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail.",
-      "objectiveIds": [
-        "D3.2.1"
-      ],
-      "difficulty": "applied",
-      "question": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Coverage measures execution rather than assertion quality",
-          "rationale": "High execution coverage can coexist with weak validation. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The release condition ignores failed validation outcomes",
-          "rationale": "Visibility alone cannot stop an unsafe promotion. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "The test depends on an unrecorded local environment",
-          "rationale": "Different agents expose the hidden assumption. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Every high-coverage test is necessarily a load test",
+          "rationale": "Coverage does not determine the test layer."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Visibility alone cannot stop an unsafe promotion. The selected answer is the release condition ignores failed validation outcomes.",
+      "explanation": "Execution and acceptance of a wrong value can occur together. Coverage and behavioral defect detection are different signals. The reported execution can be real even if its assertions are weak. Coverage does not determine the test layer.",
       "sourceIds": [
         "S1",
-        "S2"
+        "S3"
+      ]
+    },
+    {
+      "id": "L08-Q023",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "A deployment job uses a custom condition that ignores failed prerequisite jobs. What must the author review?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Whether the custom expression preserves the required success dependency",
+          "rationale": "Custom conditions can alter the default acceptance behavior."
+        },
+        {
+          "key": "B",
+          "text": "Only whether the YAML file has an application version comment",
+          "rationale": "Comments do not establish execution semantics."
+        },
+        {
+          "key": "C",
+          "text": "Only the order jobs appear in the text",
+          "rationale": "A graph and its conditions, not visual text order alone, control scheduling."
+        },
+        {
+          "key": "D",
+          "text": "Only how long the agent takes to download the source",
+          "rationale": "Checkout duration does not determine whether failed validation gates deployment."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Custom conditions can alter the default acceptance behavior. Comments do not establish execution semantics. A graph and its conditions, not visual text order alone, control scheduling. Checkout duration does not determine whether failed validation gates deployment.",
+      "sourceIds": [
+        "S7"
+      ]
+    },
+    {
+      "id": "L08-Q024",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "A workflow relies on whichever .NET SDK is preinstalled on its hosted image. What improves toolchain repeatability?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rename the solution without changing its runtime requirements",
+          "rationale": "File naming does not select a deterministic SDK."
+        },
+        {
+          "key": "B",
+          "text": "Increase the timeout while leaving the toolchain implicit",
+          "rationale": "More time does not resolve an incompatible default runtime."
+        },
+        {
+          "key": "C",
+          "text": "Always use the latest preview SDK without validating compatibility",
+          "rationale": "A moving preview is not the intended stable supported toolchain."
+        },
+        {
+          "key": "D",
+          "text": "Select and install the supported SDK explicitly using the repository's version policy",
+          "rationale": "The build environment should not depend on an uncontrolled image default."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "File naming does not select a deterministic SDK. More time does not resolve an incompatible default runtime. A moving preview is not the intended stable supported toolchain. The build environment should not depend on an uncontrolled image default.",
+      "sourceIds": [
+        "S8"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"sdk\":{\"version\":\"10.0.100\",\"rollForward\":\"latestPatch\"}}"
+      }
+    },
+    {
+      "id": "L08-Q025",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.2.2",
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "What is the first useful question when investigating an intermittently failing test?",
+      "options": [
+        {
+          "key": "A",
+          "text": "How to increase retries without recording which attempts failed",
+          "rationale": "Retries can hide changing conditions rather than identify the cause of instability."
+        },
+        {
+          "key": "B",
+          "text": "Which uncontrolled timing shared state infrastructure or input differs between attempts",
+          "rationale": "A causal investigation needs the changing condition behind the outcome."
+        },
+        {
+          "key": "C",
+          "text": "How to raise every timeout before inspecting the failing step",
+          "rationale": "Broad timeout changes can mask a race or shared-state problem without locating it."
+        },
+        {
+          "key": "D",
+          "text": "How to classify every transient failure as a product defect immediately",
+          "rationale": "Classification should follow evidence about the changing test, environment, or product condition."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Retries can hide changing conditions rather than identify the cause of instability. A causal investigation needs the changing condition behind the outcome. Broad timeout changes can mask a race or shared-state problem without locating it. Classification should follow evidence about the changing test, environment, or product condition.",
+      "sourceIds": [
+        "S6",
+        "S3"
+      ]
+    },
+    {
+      "id": "L08-Q026",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "applied",
+      "question": "Tests fail and a success-only reporting step is skipped. How should failure diagnostics be retained without turning the build green?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Set the entire test job to continue successfully on every error",
+          "rationale": "That can conceal the gate failure while publishing the report."
+        },
+        {
+          "key": "B",
+          "text": "Skip result publication whenever any assertion fails",
+          "rationale": "That removes the evidence most needed to diagnose a failing run."
+        },
+        {
+          "key": "C",
+          "text": "Replace the failed result with an empty successful report",
+          "rationale": "That misstates the actual execution rather than preserving it."
+        },
+        {
+          "key": "D",
+          "text": "Use an appropriate failure-aware publishing condition while preserving the failed test outcome",
+          "rationale": "Diagnostics should remain available even when the required execution correctly rejects the candidate."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That can conceal the gate failure while publishing the report. That removes the evidence most needed to diagnose a failing run. That misstates the actual execution rather than preserving it. Diagnostics should remain available even when the required execution correctly rejects the candidate.",
+      "sourceIds": [
+        "S4",
+        "S7"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "- script: dotnet test --logger trx --results-directory TestResults\n- task: PublishTestResults@2\n  #Default success-only condition; no explicit failure-aware condition.\n  inputs:\n    testResultsFormat: VSTest\n    testResultsFiles: TestResults/*.trx"
+      }
+    },
+    {
+      "id": "L08-Q027",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "What should be inspected when a coverage percentage jumps after exclusions are expanded?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Which code left the denominator and whether important risk paths were hidden",
+          "rationale": "A smaller included population can improve the percentage without adding protective tests."
+        },
+        {
+          "key": "B",
+          "text": "Only whether the coverage report filename changed",
+          "rationale": "Report naming does not establish which source code left the measured population."
+        },
+        {
+          "key": "C",
+          "text": "Only whether the exclusion rules use valid syntax",
+          "rationale": "Valid rules can still exclude important behavior and distort the policy evidence."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the resulting number exceeds the old threshold",
+          "rationale": "The same threshold can represent weaker protection after the denominator changes."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A smaller included population can improve the percentage without adding protective tests. Report naming does not establish which source code left the measured population. Valid rules can still exclude important behavior and distort the policy evidence. The same threshold can represent weaker protection after the denominator changes.",
+      "sourceIds": [
+        "S1",
+        "S3"
       ]
     },
     {
       "id": "L08-Q028",
       "checkpointId": "CP4",
-      "caseId": "L08-C06",
-      "task": "verification",
-      "caseContext": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail.",
       "objectiveIds": [
         "D3.2.1"
       ],
       "difficulty": "applied",
-      "question": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What negative probe demonstrates that a quality gate actually protects release promotion?",
       "options": [
         {
           "key": "A",
-          "text": "A clean agent reproduces the intended deterministic result",
-          "rationale": "The validation must occur outside the developer machine. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Count all jobs with test in their names",
+          "rationale": "A naming count cannot prove their outcomes constrain promotion."
         },
         {
           "key": "B",
-          "text": "A deliberate business-logic defect causes a test failure",
-          "rationale": "Mutation-like evidence checks whether assertions detect incorrect behavior. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Introduce a controlled disallowed validation outcome and verify deployment does not start",
+          "rationale": "The test exercises the denied path rather than only a successful run."
         },
         {
           "key": "C",
-          "text": "A deliberately failed critical check blocks deployment",
-          "rationale": "A negative test demonstrates actual gating behavior. This directly addresses the constraint stated in this case."
+          "text": "Run the healthy path twice and compare green badges",
+          "rationale": "Repeated success does not show how the gate handles failure."
+        },
+        {
+          "key": "D",
+          "text": "Inspect a statement in the README saying tests are required",
+          "rationale": "Documentation intent is weaker than actual execution enforcement."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "A negative test demonstrates actual gating behavior. The selected answer is a deliberately failed critical check blocks deployment.",
+      "explanation": "A naming count cannot prove their outcomes constrain promotion. The test exercises the denied path rather than only a successful run. Repeated success does not show how the gate handles failure. Documentation intent is weaker than actual execution enforcement.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S7"
       ]
     },
     {
       "id": "L08-Q029",
-      "checkpointId": "CP4",
-      "caseId": "L08-C06",
-      "task": "safeguard",
-      "caseContext": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.1"
+        "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Which test most directly reveals a hidden dependency on one developer's machine?",
       "options": [
         {
           "key": "A",
-          "text": "Document exclusions and avoid hiding high-risk code",
-          "rationale": "Changing the denominator can create misleading improvements. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "Execute the documented build and tests in a clean representative environment",
+          "rationale": "A clean run exposes missing inputs or settings masked by local state."
         },
         {
           "key": "B",
-          "text": "Provide an accountable exception path for exceptional cases",
-          "rationale": "Unreviewed bypass would defeat the required control. This directly addresses the constraint stated in this case."
+          "text": "Run the tests repeatedly in the same unchanged local workspace",
+          "rationale": "That can preserve the hidden state that makes them pass."
         },
         {
           "key": "C",
-          "text": "Pin supported runtimes and record relevant test configuration",
-          "rationale": "Implicit defaults can change when images update. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Ask the developer whether the dependency exists",
+          "rationale": "Self-report is less direct than exercising the clean environment."
+        },
+        {
+          "key": "D",
+          "text": "Copy the previous build outputs into the test folder before running",
+          "rationale": "That can conceal missing or stale build inputs."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Unreviewed bypass would defeat the required control. The selected answer is provide an accountable exception path for exceptional cases.",
+      "explanation": "A clean run exposes missing inputs or settings masked by local state. That can preserve the hidden state that makes them pass. Self-report is less direct than exercising the clean environment. That can conceal missing or stale build inputs.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L08-Q030",
-      "checkpointId": "CP4",
-      "caseId": "L08-C06",
-      "task": "tradeoff",
-      "caseContext": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.1"
+        "D3.2.2",
+        "D3.2.3"
       ],
-      "difficulty": "advanced",
-      "question": "Unenforced gate: A team publishes security and test reports but deployment continues even when critical checks fail. The team selects this remedy: \"Make critical quality results required deployment conditions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A test is temporarily quarantined while its timing defect is repaired. What makes this accountable?",
       "options": [
         {
           "key": "A",
-          "text": "Coverage thresholds can encourage metric gaming",
-          "rationale": "Treat coverage as one signal within the testing strategy. That addresses a different requirement: Inflated coverage. It does not directly resolve this case's stated constraint."
+          "text": "A documented owner reason scope and deadline to restore reliable coverage",
+          "rationale": "Temporary exclusion should not become permanent unowned loss of protection."
         },
         {
           "key": "B",
-          "text": "Strict gates can block releases during tool outages",
-          "rationale": "The exception policy should preserve evidence and ownership. This directly addresses the constraint stated in this case."
+          "text": "No record because quarantine means the test is irrelevant",
+          "rationale": "The test may protect important behavior despite its implementation defect."
         },
         {
           "key": "C",
-          "text": "Overpinning dependencies increases upgrade maintenance",
-          "rationale": "Controlled updates are still required for support and security. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Automatically quarantine every future failure of any test",
+          "rationale": "That would progressively remove assurance without investigation."
+        },
+        {
+          "key": "D",
+          "text": "Keep reporting the skipped test as an executed pass",
+          "rationale": "That misstates the remaining coverage and execution evidence."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The exception policy should preserve evidence and ownership. The selected answer is strict gates can block releases during tool outages.",
+      "explanation": "Temporary exclusion should not become permanent unowned loss of protection. The test may protect important behavior despite its implementation defect. That would progressively remove assurance without investigation. That misstates the remaining coverage and execution evidence.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6",
+        "S3"
       ]
     },
     {
       "id": "L08-Q031",
-      "checkpointId": "CP1",
-      "caseId": "L08-C07",
-      "task": "remedy",
-      "caseContext": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ.",
-      "objectiveIds": [
-        "D3.2.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Align test environment dependencies and remove unintended locale assumptions",
-          "rationale": "Reproducibility needs explicit environmental inputs. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Classify and fix the flake while retaining failure visibility",
-          "rationale": "Repeated retries can conceal reliability problems. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Make critical quality results required deployment conditions",
-          "rationale": "Informational reports do not enforce release safety. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Reproducibility needs explicit environmental inputs. The selected answer is align test environment dependencies and remove unintended locale assumptions.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q032",
-      "checkpointId": "CP1",
-      "caseId": "L08-C07",
-      "task": "diagnosis",
-      "caseContext": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ.",
-      "objectiveIds": [
-        "D3.2.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The release condition ignores failed validation outcomes",
-          "rationale": "Visibility alone cannot stop an unsafe promotion. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The test depends on an unrecorded local environment",
-          "rationale": "Different agents expose the hidden assumption. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Intermittent infrastructure or timing assumptions contaminate the result",
-          "rationale": "A later pass does not explain the original failure. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Different agents expose the hidden assumption. The selected answer is the test depends on an unrecorded local environment.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q033",
-      "checkpointId": "CP1",
-      "caseId": "L08-C07",
-      "task": "verification",
-      "caseContext": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which verification distinguishes a published test report from a merely existing file on the agent?",
       "options": [
         {
           "key": "A",
-          "text": "A clean agent reproduces the intended deterministic result",
-          "rationale": "The validation must occur outside the developer machine. This directly addresses the constraint stated in this case."
+          "text": "The run's test view contains the expected cases and recorded failures",
+          "rationale": "The structured output must reach the intended review surface."
         },
         {
           "key": "B",
-          "text": "Failure frequency and root cause improve after the targeted fix",
-          "rationale": "The evidence should show reduced flakiness rather than hidden retries. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
+          "text": "The temporary directory contains a file with a test-like name",
+          "rationale": "Local existence does not prove ingestion."
         },
         {
           "key": "C",
-          "text": "A deliberately failed critical check blocks deployment",
-          "rationale": "A negative test demonstrates actual gating behavior. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
+          "text": "The build log prints the intended report path",
+          "rationale": "A printed path does not prove the publisher matched and parsed the file."
+        },
+        {
+          "key": "D",
+          "text": "The pipeline artifact list contains an unrelated ZIP file",
+          "rationale": "Artifact storage is separate from structured test reporting."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The validation must occur outside the developer machine. The selected answer is a clean agent reproduces the intended deterministic result.",
+      "explanation": "The structured output must reach the intended review surface. Local existence does not prove ingestion. A printed path does not prove the publisher matched and parsed the file. Artifact storage is separate from structured test reporting.",
+      "sourceIds": [
+        "S4"
+      ]
+    },
+    {
+      "id": "L08-Q032",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "A pipeline publishes coverage but has no numeric quality policy. What is needed to enforce a required minimum?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only a larger coverage chart on the dashboard",
+          "rationale": "Visibility does not turn a metric into a required acceptance condition."
+        },
+        {
+          "key": "B",
+          "text": "A comment in YAML saying coverage should be high",
+          "rationale": "A comment does not execute a threshold decision."
+        },
+        {
+          "key": "C",
+          "text": "A package version label containing the target percentage",
+          "rationale": "A label does not evaluate actual measured coverage."
+        },
+        {
+          "key": "D",
+          "text": "A deliberate threshold check whose failure affects the acceptance path",
+          "rationale": "Report publication alone is not necessarily a policy-enforcement gate."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Visibility does not turn a metric into a required acceptance condition. A comment does not execute a threshold decision. A label does not evaluate actual measured coverage. Report publication alone is not necessarily a policy-enforcement gate.",
       "sourceIds": [
         "S1",
-        "S2"
+        "S5"
+      ]
+    },
+    {
+      "id": "L08-Q033",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "applied",
+      "question": "The test service is unavailable during an emergency release. What makes an exception process accountable?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Automatically mark every unavailable check successful",
+          "rationale": "That changes missing assurance into false positive evidence."
+        },
+        {
+          "key": "B",
+          "text": "Remove the gate permanently whenever an outage occurs",
+          "rationale": "A temporary failure does not justify indefinite loss of protection."
+        },
+        {
+          "key": "C",
+          "text": "Let the requesting author approve their own exception without recording it",
+          "rationale": "That removes independent accountability for the changed risk decision."
+        },
+        {
+          "key": "D",
+          "text": "A restricted authorized decision with recorded reason scope and follow-up validation",
+          "rationale": "An exception should remain deliberate and auditable rather than becoming silent routine bypass."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That changes missing assurance into false positive evidence. A temporary failure does not justify indefinite loss of protection. That removes independent accountability for the changed risk decision. An exception should remain deliberate and auditable rather than becoming silent routine bypass.",
+      "sourceIds": [
+        "S7",
+        "S3"
       ]
     },
     {
       "id": "L08-Q034",
       "checkpointId": "CP1",
-      "caseId": "L08-C07",
-      "task": "safeguard",
-      "caseContext": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ.",
       "objectiveIds": [
         "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What must be recorded when pinning a test toolchain to make reproducibility sustainable?",
       "options": [
         {
           "key": "A",
-          "text": "Pin supported runtimes and record relevant test configuration",
-          "rationale": "Implicit defaults can change when images update. This directly addresses the constraint stated in this case."
+          "text": "A commitment never to update any component again",
+          "rationale": "Permanent stasis can retain vulnerabilities or unsupported toolchain versions."
         },
         {
           "key": "B",
-          "text": "Quarantine only with an owner and recovery deadline",
-          "rationale": "Unowned quarantine can permanently remove important coverage. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
+          "text": "Only the successful test count from the latest run",
+          "rationale": "A count does not identify the software inputs or their future maintenance policy."
         },
         {
           "key": "C",
-          "text": "Provide an accountable exception path for exceptional cases",
-          "rationale": "Unreviewed bypass would defeat the required control. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
+          "text": "Only a download link that always resolves to the latest SDK",
+          "rationale": "A moving download does not preserve the selected version or establish reviewed updates."
+        },
+        {
+          "key": "D",
+          "text": "An owner and reviewed update process for supported versions",
+          "rationale": "A deliberate pin still needs security compatibility and support maintenance."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Implicit defaults can change when images update. The selected answer is pin supported runtimes and record relevant test configuration.",
+      "explanation": "Permanent stasis can retain vulnerabilities or unsupported toolchain versions. A count does not identify the software inputs or their future maintenance policy. A moving download does not preserve the selected version or establish reviewed updates. A deliberate pin still needs security compatibility and support maintenance.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3",
+        "S8"
       ]
     },
     {
       "id": "L08-Q035",
-      "checkpointId": "CP1",
-      "caseId": "L08-C07",
-      "task": "tradeoff",
-      "caseContext": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ.",
+      "checkpointId": "CP2",
       "objectiveIds": [
+        "D3.2.2",
         "D3.2.3"
       ],
-      "difficulty": "advanced",
-      "question": "Environment mismatch: Tests pass locally but fail on the hosted agent because their runtime and locale differ. The team selects this remedy: \"Align test environment dependencies and remove unintended locale assumptions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "Why can bounded retries be useful yet insufficient as the complete flakiness strategy?",
       "options": [
         {
           "key": "A",
-          "text": "Overpinning dependencies increases upgrade maintenance",
-          "rationale": "Controlled updates are still required for support and security. This directly addresses the constraint stated in this case."
+          "text": "Retries never consume extra execution capacity",
+          "rationale": "Repeated attempts use runner time and resources."
         },
         {
           "key": "B",
-          "text": "Retries may improve resilience but increase latency",
-          "rationale": "They should be bounded and reported transparently. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
+          "text": "Every flaky test should be retried forever until it eventually passes",
+          "rationale": "Unbounded repetition can turn persistent defects into delayed misleading success."
         },
         {
           "key": "C",
-          "text": "Strict gates can block releases during tool outages",
-          "rationale": "The exception policy should preserve evidence and ownership. That addresses a different requirement: Unenforced gate. It does not directly resolve this case's stated constraint."
+          "text": "They may recover transient execution but can hide failures and add time unless classified and investigated",
+          "rationale": "Retry behavior and root-cause remediation have different purposes."
+        },
+        {
+          "key": "D",
+          "text": "A retry guarantees the original failure was not a product defect",
+          "rationale": "A later pass alone does not establish what caused the first failure."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Controlled updates are still required for support and security. The selected answer is overpinning dependencies increases upgrade maintenance.",
+      "explanation": "Repeated attempts use runner time and resources. Unbounded repetition can turn persistent defects into delayed misleading success. Retry behavior and root-cause remediation have different purposes. A later pass alone does not establish what caused the first failure.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6",
+        "S3"
       ]
     },
     {
       "id": "L08-Q036",
       "checkpointId": "CP2",
-      "caseId": "L08-C08",
-      "task": "remedy",
-      "caseContext": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green.",
       "objectiveIds": [
-        "D3.2.2",
         "D3.2.3"
       ],
-      "difficulty": "foundational",
-      "question": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A required test fails. The team needs the gate to stay red, the TRX report available, and diagnostic files free of credentials. Which design fits?",
       "options": [
         {
           "key": "A",
-          "text": "Inspect changed-code coverage and branch-risk scenarios",
-          "rationale": "Overall aggregates can dilute untested new behavior. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Ignore the test exit code and rely on reviewers to find a failure in the uploaded logs",
+          "rationale": "That loses the required automated rejection boundary."
         },
         {
           "key": "B",
-          "text": "Align test environment dependencies and remove unintended locale assumptions",
-          "rationale": "Reproducibility needs explicit environmental inputs. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Publish results only after every test succeeds and omit all failed-run artifacts",
+          "rationale": "That preserves redness but fails the diagnostic-availability requirement."
         },
         {
           "key": "C",
-          "text": "Classify and fix the flake while retaining failure visibility",
-          "rationale": "Repeated retries can conceal reliability problems. This directly addresses the constraint stated in this case."
+          "text": "Upload the entire runner environment and workspace whenever tests fail",
+          "rationale": "That can distribute secrets and unrelated data with the useful report."
+        },
+        {
+          "key": "D",
+          "text": "Propagate the test failure, publish supported results under a failure-aware condition, and upload only sanitized diagnostics",
+          "rationale": "Failure semantics, structured reporting, and content hygiene are separate requirements the design addresses."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Repeated retries can conceal reliability problems. The selected answer is classify and fix the flake while retaining failure visibility.",
+      "explanation": "That loses the required automated rejection boundary. That preserves redness but fails the diagnostic-availability requirement. That can distribute secrets and unrelated data with the useful report. Failure semantics, structured reporting, and content hygiene are separate requirements the design addresses.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4",
+        "S7"
       ]
     },
     {
       "id": "L08-Q037",
-      "checkpointId": "CP2",
-      "caseId": "L08-C08",
-      "task": "diagnosis",
-      "caseContext": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green.",
-      "objectiveIds": [
-        "D3.2.2",
-        "D3.2.3"
-      ],
-      "difficulty": "applied",
-      "question": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Existing well-tested code masks the new coverage gap",
-          "rationale": "A stable average does not imply safe change coverage. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The test depends on an unrecorded local environment",
-          "rationale": "Different agents expose the hidden assumption. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Intermittent infrastructure or timing assumptions contaminate the result",
-          "rationale": "A later pass does not explain the original failure. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A later pass does not explain the original failure. The selected answer is intermittent infrastructure or timing assumptions contaminate the result.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q038",
-      "checkpointId": "CP2",
-      "caseId": "L08-C08",
-      "task": "verification",
-      "caseContext": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green.",
-      "objectiveIds": [
-        "D3.2.2",
-        "D3.2.3"
-      ],
-      "difficulty": "applied",
-      "question": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "New branches have assertions for relevant success and failure paths",
-          "rationale": "The proof must address the newly introduced risk. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "A clean agent reproduces the intended deterministic result",
-          "rationale": "The validation must occur outside the developer machine. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Failure frequency and root cause improve after the targeted fix",
-          "rationale": "The evidence should show reduced flakiness rather than hidden retries. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The evidence should show reduced flakiness rather than hidden retries. The selected answer is failure frequency and root cause improve after the targeted fix.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q039",
-      "checkpointId": "CP2",
-      "caseId": "L08-C08",
-      "task": "safeguard",
-      "caseContext": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green.",
-      "objectiveIds": [
-        "D3.2.2",
-        "D3.2.3"
-      ],
-      "difficulty": "applied",
-      "question": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Avoid using coverage alone as the release decision",
-          "rationale": "Assertions and business-critical scenarios still require review. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Pin supported runtimes and record relevant test configuration",
-          "rationale": "Implicit defaults can change when images update. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Quarantine only with an owner and recovery deadline",
-          "rationale": "Unowned quarantine can permanently remove important coverage. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Unowned quarantine can permanently remove important coverage. The selected answer is quarantine only with an owner and recovery deadline.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q040",
-      "checkpointId": "CP2",
-      "caseId": "L08-C08",
-      "task": "tradeoff",
-      "caseContext": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green.",
-      "objectiveIds": [
-        "D3.2.2",
-        "D3.2.3"
-      ],
-      "difficulty": "advanced",
-      "question": "Flaky integration test: A network-dependent test fails randomly and the team proposes rerunning every failure until the pipeline turns green. The team selects this remedy: \"Classify and fix the flake while retaining failure visibility.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Overpinning dependencies increases upgrade maintenance",
-          "rationale": "Controlled updates are still required for support and security. That addresses a different requirement: Environment mismatch. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Retries may improve resilience but increase latency",
-          "rationale": "They should be bounded and reported transparently. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Changed-code metrics depend on the comparison baseline",
-          "rationale": "Incorrect base revisions can misclassify the affected code. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "They should be bounded and reported transparently. The selected answer is retries may improve resilience but increase latency.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q041",
       "checkpointId": "CP3",
-      "caseId": "L08-C09",
-      "task": "remedy",
-      "caseContext": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches.",
       "objectiveIds": [
-        "D1.2.4",
-        "D3.2.4"
-      ],
-      "difficulty": "foundational",
-      "question": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Propagate the failed test exit code to the job result",
-          "rationale": "The execution status must reflect the actual test outcome. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Classify and fix the flake while retaining failure visibility",
-          "rationale": "Repeated retries can conceal reliability problems. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Inspect changed-code coverage and branch-risk scenarios",
-          "rationale": "Overall aggregates can dilute untested new behavior. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Overall aggregates can dilute untested new behavior. The selected answer is inspect changed-code coverage and branch-risk scenarios.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q042",
-      "checkpointId": "CP3",
-      "caseId": "L08-C09",
-      "task": "diagnosis",
-      "caseContext": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches.",
-      "objectiveIds": [
-        "D1.2.4",
-        "D3.2.4"
-      ],
-      "difficulty": "foundational",
-      "question": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The wrapper script swallowed the failing command status",
-          "rationale": "Result files cannot compensate for an incorrect success state. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Intermittent infrastructure or timing assumptions contaminate the result",
-          "rationale": "A later pass does not explain the original failure. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Existing well-tested code masks the new coverage gap",
-          "rationale": "A stable average does not imply safe change coverage. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A stable average does not imply safe change coverage. The selected answer is existing well-tested code masks the new coverage gap.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q043",
-      "checkpointId": "CP3",
-      "caseId": "L08-C09",
-      "task": "verification",
-      "caseContext": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches.",
-      "objectiveIds": [
-        "D1.2.4",
         "D3.2.4"
       ],
       "difficulty": "applied",
-      "question": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Two measured modules contain 100 and 900 included lines. They cover 100 and 450 lines respectively. Which combined line-coverage figure correctly weights the included source population?",
       "options": [
         {
           "key": "A",
-          "text": "Failure frequency and root cause improve after the targeted fix",
-          "rationale": "The evidence should show reduced flakiness rather than hidden retries. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
+          "text": "55 percent",
+          "rationale": "The combined ratio is 550 covered lines divided by 1000 included lines."
         },
         {
           "key": "B",
-          "text": "New branches have assertions for relevant success and failure paths",
-          "rationale": "The proof must address the newly introduced risk. This directly addresses the constraint stated in this case."
+          "text": "75 percent",
+          "rationale": "Averaging the module percentages gives equal weight to modules with very different line counts."
         },
         {
           "key": "C",
-          "text": "A known failing assertion makes the job fail",
-          "rationale": "A controlled negative probe verifies status propagation. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The proof must address the newly introduced risk. The selected answer is new branches have assertions for relevant success and failure paths.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q044",
-      "checkpointId": "CP3",
-      "caseId": "L08-C09",
-      "task": "safeguard",
-      "caseContext": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches.",
-      "objectiveIds": [
-        "D1.2.4",
-        "D3.2.4"
-      ],
-      "difficulty": "applied",
-      "question": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Keep diagnostic publication separate from success conditions",
-          "rationale": "Useful failure reports should remain available after rejection. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
+          "text": "50 percent",
+          "rationale": "This uses only the larger module and omits the fully covered smaller module."
         },
         {
-          "key": "B",
-          "text": "Quarantine only with an owner and recovery deadline",
-          "rationale": "Unowned quarantine can permanently remove important coverage. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Avoid using coverage alone as the release decision",
-          "rationale": "Assertions and business-critical scenarios still require review. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Assertions and business-critical scenarios still require review. The selected answer is avoid using coverage alone as the release decision.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q045",
-      "checkpointId": "CP3",
-      "caseId": "L08-C09",
-      "task": "tradeoff",
-      "caseContext": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches.",
-      "objectiveIds": [
-        "D1.2.4",
-        "D3.2.4"
-      ],
-      "difficulty": "advanced",
-      "question": "Changed-code blind spot: Overall coverage remains stable while a new critical module adds many untested branches. The team selects this remedy: \"Inspect changed-code coverage and branch-risk scenarios.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Correct failure propagation can reveal previously hidden defects",
-          "rationale": "A newly red pipeline may indicate stronger reporting. That addresses a different requirement: False green command. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Retries may improve resilience but increase latency",
-          "rationale": "They should be bounded and reported transparently. That addresses a different requirement: Flaky integration test. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Changed-code metrics depend on the comparison baseline",
-          "rationale": "Incorrect base revisions can misclassify the affected code. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Incorrect base revisions can misclassify the affected code. The selected answer is changed-code metrics depend on the comparison baseline.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L08-Q046",
-      "checkpointId": "CP4",
-      "caseId": "L08-C10",
-      "task": "remedy",
-      "caseContext": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures.",
-      "objectiveIds": [
-        "D3.2.1",
-        "D3.2.3"
-      ],
-      "difficulty": "foundational",
-      "question": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Propagate the failed test exit code to the job result",
-          "rationale": "The execution status must reflect the actual test outcome. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Add focused local unit tests for the calculation contract",
-          "rationale": "Pure behavior can be checked cheaply without deployment. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Inspect changed-code coverage and branch-risk scenarios",
-          "rationale": "Overall aggregates can dilute untested new behavior. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "100 percent",
+          "rationale": "Complete coverage of one module does not establish complete coverage of the other."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The execution status must reflect the actual test outcome. The selected answer is propagate the failed test exit code to the job result.",
+      "explanation": "The combined ratio is 550 covered lines divided by 1000 included lines. Averaging the module percentages gives equal weight to modules with very different line counts. This uses only the larger module and omits the fully covered smaller module. Complete coverage of one module does not establish complete coverage of the other.",
       "sourceIds": [
         "S1",
-        "S2"
-      ]
+        "S5"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Module A: included=100; covered=100\nModule B: included=900; covered=450"
+      }
     },
     {
-      "id": "L08-Q047",
+      "id": "L08-Q038",
       "checkpointId": "CP4",
-      "caseId": "L08-C10",
-      "task": "diagnosis",
-      "caseContext": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures.",
       "objectiveIds": [
-        "D3.2.1",
-        "D3.2.3"
+        "D3.2.1"
       ],
       "difficulty": "applied",
-      "question": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A pipeline needs strict rejection for failed tests but diagnostic publication after failures and an approved emergency exception path. Which design meets those distinct purposes?",
       "options": [
         {
           "key": "A",
-          "text": "The defect can be isolated below the integration boundary",
-          "rationale": "Cloud deployment adds unnecessary feedback latency. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Use continue-on-error for every task so diagnostic steps always run",
+          "rationale": "That can turn required failures into a nonblocking path."
         },
         {
           "key": "B",
-          "text": "Existing well-tested code masks the new coverage gap",
-          "rationale": "A stable average does not imply safe change coverage. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Block diagnostic publication whenever a gate rejects the candidate",
+          "rationale": "That makes failures harder to investigate without strengthening rejection."
         },
         {
           "key": "C",
-          "text": "The wrapper script swallowed the failing command status",
-          "rationale": "Result files cannot compensate for an incorrect success state. This directly addresses the constraint stated in this case."
+          "text": "Treat the existence of any approval as proof that the tests passed",
+          "rationale": "Authorization to accept risk is different from an actual successful test result."
+        },
+        {
+          "key": "D",
+          "text": "Keep failure propagation and required dependencies, use failure-aware diagnostic steps, and govern exceptions separately",
+          "rationale": "Observability should not weaken the normal gate, while exceptional authority remains explicit."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Result files cannot compensate for an incorrect success state. The selected answer is the wrapper script swallowed the failing command status.",
+      "explanation": "That can turn required failures into a nonblocking path. That makes failures harder to investigate without strengthening rejection. Authorization to accept risk is different from an actual successful test result. Observability should not weaken the normal gate, while exceptional authority remains explicit.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S7",
+        "S3"
       ]
     },
     {
-      "id": "L08-Q048",
-      "checkpointId": "CP4",
-      "caseId": "L08-C10",
-      "task": "verification",
-      "caseContext": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures.",
+      "id": "L08-Q039",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.1",
         "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A locale-dependent test and an implicit SDK both fail after moving to hosted CI. The team also needs supported upgrades over time. Which repair plan is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "A wrong calculation fails the local test suite",
-          "rationale": "The test must detect an actual incorrect result. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Force every hosted job to reuse an old local output directory",
+          "rationale": "That imports uncontrolled state and can hide whether the current source builds."
         },
         {
           "key": "B",
-          "text": "New branches have assertions for relevant success and failure paths",
-          "rationale": "The proof must address the newly introduced risk. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Retry failures indefinitely while keeping runtime and locale implicit",
+          "rationale": "Unbounded retries do not establish the intended execution contract."
         },
         {
           "key": "C",
-          "text": "A known failing assertion makes the job fail",
-          "rationale": "A controlled negative probe verifies status propagation. This directly addresses the constraint stated in this case."
+          "text": "Remove the failing cases and label the hosted environment unsupported",
+          "rationale": "That avoids the required hosted validation instead of resolving its assumptions."
+        },
+        {
+          "key": "D",
+          "text": "Specify the behavior and environment inputs, run clean representative tests, and maintain the pinned toolchain through reviewed upgrades",
+          "rationale": "The plan addresses deterministic behavior and ongoing support rather than freezing an accidental local setup."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A controlled negative probe verifies status propagation. The selected answer is a known failing assertion makes the job fail.",
+      "explanation": "That imports uncontrolled state and can hide whether the current source builds. Unbounded retries do not establish the intended execution contract. That avoids the required hosted validation instead of resolving its assumptions. The plan addresses deterministic behavior and ongoing support rather than freezing an accidental local setup.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3",
+        "S8"
       ]
     },
     {
-      "id": "L08-Q049",
-      "checkpointId": "CP4",
-      "caseId": "L08-C10",
-      "task": "safeguard",
-      "caseContext": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures.",
+      "id": "L08-Q040",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.2.1",
+        "D3.2.2",
         "D3.2.3"
       ],
       "difficulty": "applied",
-      "question": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The integration test starts an asynchronous write, then reads immediately; timing varies across runs. Which repair best removes the race while preserving the intended write/read contract?",
       "options": [
         {
           "key": "A",
-          "text": "Avoid using coverage alone as the release decision",
-          "rationale": "Assertions and business-critical scenarios still require review. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Await the write completion, isolate the test data, and use a bounded observable readiness condition if the boundary is eventually consistent",
+          "rationale": "Synchronization should follow the operation contract rather than a guessed fixed delay."
         },
         {
           "key": "B",
-          "text": "Keep diagnostic publication separate from success conditions",
-          "rationale": "Useful failure reports should remain available after rejection. This directly addresses the constraint stated in this case."
+          "text": "Add the same 30-second sleep before every assertion and keep shared data",
+          "rationale": "A fixed delay is slow and still timing-dependent, while shared data can add interference."
         },
         {
           "key": "C",
-          "text": "Use deterministic inputs and assert meaningful outcomes",
-          "rationale": "Nondeterministic tests weaken trust in fast feedback. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Retry the whole suite until every test eventually passes without recording the first failure",
+          "rationale": "This hides the race rather than making the individual contract test deterministic."
+        },
+        {
+          "key": "D",
+          "text": "Replace the read assertion with a check that the write task was allocated",
+          "rationale": "Task creation does not establish the completed write or the read behavior being tested."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Useful failure reports should remain available after rejection. The selected answer is keep diagnostic publication separate from success conditions.",
+      "explanation": "Synchronization should follow the operation contract rather than a guessed fixed delay. A fixed delay is slow and still timing-dependent, while shared data can add interference. This hides the race rather than making the individual contract test deterministic. Task creation does not establish the completed write or the read behavior being tested.",
+      "sourceIds": [
+        "S3",
+        "S6"
+      ],
+      "exhibit": {
+        "language": "csharp",
+        "code": "var pending = repository.WriteAsync(item);\nvar actual = await repository.ReadAsync(item.Id);\nAssert.Equal(item, actual);"
+      }
+    },
+    {
+      "id": "L08-Q041",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.2.4",
+        "D3.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Overall line coverage is 92 percent, but a new payment branch executes only during startup and accepts a deliberately wrong total. The CI time budget is fixed. Which acceptance change is strongest?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raise the overall threshold to 93 percent using more startup tests",
+          "rationale": "That can increase execution coverage while leaving the wrong payment behavior undetected."
+        },
+        {
+          "key": "B",
+          "text": "Exclude the payment module so its new branches do not affect the denominator",
+          "rationale": "Exclusion hides the risk rather than verifying the required behavior."
+        },
+        {
+          "key": "C",
+          "text": "Accept the module because 92 percent exceeds the repository target",
+          "rationale": "A passing aggregate threshold does not resolve the demonstrated assertion failure."
+        },
+        {
+          "key": "D",
+          "text": "Add focused assertions for the payment behavior and inspect changed-risk coverage against the correct baseline",
+          "rationale": "Execution coverage and behavioral detection are different evidence, so target the high-risk gap without padding unrelated tests."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That can increase execution coverage while leaving the wrong payment behavior undetected. Exclusion hides the risk rather than verifying the required behavior. A passing aggregate threshold does not resolve the demonstrated assertion failure. Execution coverage and behavioral detection are different evidence, so target the high-risk gap without padding unrelated tests.",
       "sourceIds": [
         "S1",
-        "S2"
+        "S5"
       ]
     },
     {
-      "id": "L08-Q050",
+      "id": "L08-Q042",
       "checkpointId": "CP4",
-      "caseId": "L08-C10",
-      "task": "tradeoff",
-      "caseContext": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures.",
       "objectiveIds": [
         "D3.2.1",
         "D3.2.3"
       ],
       "difficulty": "advanced",
-      "question": "False green command: A shell step ignores the test process exit code and reports success after multiple assertion failures. The team selects this remedy: \"Propagate the failed test exit code to the job result.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The Bash step in the exhibit runs failed tests, then prints a message; deployment proceeds. Diagnostics must remain available after failure. Which repair satisfies both requirements?",
       "options": [
         {
           "key": "A",
-          "text": "Unit tests do not prove external integration behavior",
-          "rationale": "A complete strategy needs additional test layers. That addresses a different requirement: Fast feedback. It does not directly resolve this case's stated constraint."
+          "text": "Keep the wrapper and make the message say tests failed",
+          "rationale": "Text output does not change the successful shell exit status masking the failure."
         },
         {
           "key": "B",
-          "text": "Changed-code metrics depend on the comparison baseline",
-          "rationale": "Incorrect base revisions can misclassify the affected code. That addresses a different requirement: Changed-code blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Remove report publication so the last command becomes the failed test",
+          "rationale": "That can expose failure but abandons the required structured diagnostic retention."
         },
         {
           "key": "C",
-          "text": "Correct failure propagation can reveal previously hidden defects",
-          "rationale": "A newly red pipeline may indicate stronger reporting. This directly addresses the constraint stated in this case."
+          "text": "Allow deployment and open an issue whenever the report contains failures",
+          "rationale": "That changes a required pre-deployment rejection into a post-deployment follow-up."
+        },
+        {
+          "key": "D",
+          "text": "Propagate the test failure and publish results in a separate failure-aware step, with deployment requiring the validation outcome",
+          "rationale": "The test status must remain authoritative while diagnostic publication is independently allowed after failure."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Text output does not change the successful shell exit status masking the failure. That can expose failure but abandons the required structured diagnostic retention. That changes a required pre-deployment rejection into a post-deployment follow-up. The test status must remain authoritative while diagnostic publication is independently allowed after failure.",
+      "sourceIds": [
+        "S7",
+        "S8"
+      ],
+      "exhibit": {
+        "language": "bash",
+        "code": "dotnet test --logger trx\nprintf \"test step complete\\n\""
+      }
+    },
+    {
+      "id": "L08-Q043",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "A pull request changes ten risky lines, but changed-code coverage is computed against last month's release and includes 500 unrelated lines. The threshold passes. What correction makes the gate meaningful?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Exclude all preexisting files regardless of which lines the request changes",
+          "rationale": "A changed line in an existing file can still carry the exact risk the gate should assess."
+        },
+        {
+          "key": "B",
+          "text": "Use the intended comparison revision and verify relevant scenarios and exclusions for the actual change",
+          "rationale": "The base determines what counts as changed, and numeric coverage still needs behavioral interpretation."
+        },
+        {
+          "key": "C",
+          "text": "Keep the broad base because more measured lines always means stronger protection",
+          "rationale": "Unrelated lines can dilute the specific change's untested behavior."
+        },
+        {
+          "key": "D",
+          "text": "Replace the threshold with the number of test files changed",
+          "rationale": "File counts do not establish coverage or assertions for the risky behavior."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "A changed line in an existing file can still carry the exact risk the gate should assess. The base determines what counts as changed, and numeric coverage still needs behavioral interpretation. Unrelated lines can dilute the specific change's untested behavior. File counts do not establish coverage or assertions for the risky behavior.",
+      "sourceIds": [
+        "S1",
+        "S5"
+      ]
+    },
+    {
+      "id": "L08-Q044",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Tests return a failure status, but the PublishTestResults task has its default success-only condition. No cases appear for failing runs. What should change without making failed tests pass?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run only the passing tests before publication",
+          "rationale": "That hides the failing execution rather than reporting the actual required suite."
+        },
+        {
+          "key": "B",
+          "text": "Use a failure-aware publication condition, correct TRX format/path, and retain the original failed job outcome",
+          "rationale": "Publication and acceptance are distinct concerns; diagnostics should survive the failure they explain."
+        },
+        {
+          "key": "C",
+          "text": "Set the entire test job to continueOnError and use its resulting success as deployment approval",
+          "rationale": "That can weaken the required failure boundary instead of independently publishing diagnostics."
+        },
+        {
+          "key": "D",
+          "text": "Publish the source directory as test results without parsing the runner format",
+          "rationale": "An arbitrary directory upload does not establish structured case reporting."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "That hides the failing execution rather than reporting the actual required suite. Publication and acceptance are distinct concerns; diagnostics should survive the failure they explain. That can weaken the required failure boundary instead of independently publishing diagnostics. An arbitrary directory upload does not establish structured case reporting.",
+      "sourceIds": [
+        "S4",
+        "S7"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "- script: dotnet test --logger \"trx;LogFileName=tests.trx\"\n- task: PublishTestResults@2\n  inputs:\n    testResultsFormat: VSTest\n    testResultsFiles: \"**/tests.trx\""
+      }
+    },
+    {
+      "id": "L08-Q045",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.2.2",
+        "D3.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "Database mocks pass, but the real schema rejects a required column write. Full end-to-end tests take an hour. Which test allocation offers useful early protection under a short CI budget?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep focused unit checks and add a representative targeted integration test for the schema contract before promotion",
+          "rationale": "A narrow real-boundary test addresses the observed gap without requiring every change to wait for the full suite."
+        },
+        {
+          "key": "B",
+          "text": "Replace all unit tests with the entire hour-long suite for every local edit",
+          "rationale": "That may increase feedback delay without being necessary to target this specific boundary failure."
+        },
+        {
+          "key": "C",
+          "text": "Make the mock accept every write so it matches the successful unit outcome",
+          "rationale": "Relaxing the mock does not validate the actual schema compatibility."
+        },
+        {
+          "key": "D",
+          "text": "Treat a clean application build as equivalent to a database integration test",
+          "rationale": "Compilation does not establish that the deployed schema accepts the application's write contract."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A narrow real-boundary test addresses the observed gap without requiring every change to wait for the full suite. That may increase feedback delay without being necessary to target this specific boundary failure. Relaxing the mock does not validate the actual schema compatibility. Compilation does not establish that the deployed schema accepts the application's write contract.",
+      "sourceIds": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "id": "L08-Q046",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "A critical integration test fails on five percent of unchanged runs and passes on retry. Release needs its coverage; hiding retries makes the dashboard look green. Which strategy is strongest?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Retry until success and publish only the last attempt",
+          "rationale": "That conceals the observed reliability problem and can add unbounded delay."
+        },
+        {
+          "key": "B",
+          "text": "Delete the test permanently because a flaky test cannot provide any useful signal",
+          "rationale": "The critical behavior still needs reliable coverage rather than permanent abandonment."
+        },
+        {
+          "key": "C",
+          "text": "Treat every intermittent failure as a product regression without investigating cause",
+          "rationale": "A useful disposition must distinguish product behavior from environment or test nondeterminism."
+        },
+        {
+          "key": "D",
+          "text": "Expose initial failures and retries, investigate shared state or timing, and govern any quarantine with owner, deadline, and replacement protection",
+          "rationale": "Retries can aid execution recovery but do not replace diagnosis or transparent risk management."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That conceals the observed reliability problem and can add unbounded delay. The critical behavior still needs reliable coverage rather than permanent abandonment. A useful disposition must distinguish product behavior from environment or test nondeterminism. Retries can aid execution recovery but do not replace diagnosis or transparent risk management.",
+      "sourceIds": [
+        "S3",
+        "S6"
+      ]
+    },
+    {
+      "id": "L08-Q047",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Coverage rose after generated and legacy paths were excluded. A critical hand-written error path was included in the new exclusions. What should the reviewer do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Compare only the new percentage with the old target and ignore scope changes",
+          "rationale": "The same threshold can mean different evidence when the measured population changes."
+        },
+        {
+          "key": "B",
+          "text": "Review the excluded paths and restore risk-relevant measurement and assertions before interpreting the percentage",
+          "rationale": "A changed denominator can improve the number while hiding behavior the policy intended to protect."
+        },
+        {
+          "key": "C",
+          "text": "Approve because any exclusion of legacy code is automatically harmless",
+          "rationale": "The critical hand-written path's risk is not removed by labeling it legacy."
+        },
+        {
+          "key": "D",
+          "text": "Require zero exclusions even for generated code without considering policy purpose",
+          "rationale": "The issue is justified risk-aware scope, not an indiscriminate ban on every exclusion."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The same threshold can mean different evidence when the measured population changes. A changed denominator can improve the number while hiding behavior the policy intended to protect. The critical hand-written path's risk is not removed by labeling it legacy. The issue is justified risk-aware scope, not an indiscriminate ban on every exclusion.",
+      "sourceIds": [
+        "S1",
+        "S5"
+      ]
+    },
+    {
+      "id": "L08-Q048",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "A deployment job uses the shown custom Azure Pipelines condition. The unit-test job failed, but a branch check is true. Which correction preserves the required dependency?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Remove dependsOn and rely only on the branch name",
+          "rationale": "That removes explicit sequencing and still does not require successful validation."
+        },
+        {
+          "key": "B",
+          "text": "Run deployment first and inspect the test job result afterward",
+          "rationale": "That reverses the required protection boundary rather than enforcing it."
+        },
+        {
+          "key": "C",
+          "text": "Combine the branch condition with the required success condition and verify a controlled failed prerequisite blocks deployment",
+          "rationale": "A custom condition can override default success behavior, so both the branch and dependency result must be expressed."
+        },
+        {
+          "key": "D",
+          "text": "Keep the condition because dependsOn alone always prevents execution after failures",
+          "rationale": "Custom conditions determine execution and can permit a job despite a failed dependency."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A newly red pipeline may indicate stronger reporting. The selected answer is correct failure propagation can reveal previously hidden defects.",
+      "explanation": "That removes explicit sequencing and still does not require successful validation. That reverses the required protection boundary rather than enforcing it. A custom condition can override default success behavior, so both the branch and dependency result must be expressed. Custom conditions determine execution and can permit a job despite a failed dependency.",
+      "sourceIds": [
+        "S7"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "- job: Deploy\n  dependsOn: UnitTests\n  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')\n  steps:\n    - script: ./deploy.sh"
+      }
+    },
+    {
+      "id": "L08-Q049",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D1.2.4",
+        "D3.2.4"
+      ],
+      "difficulty": "advanced",
+      "question": "A team must preserve its overall coverage policy, verify a new validation branch, and avoid extending CI beyond ten minutes. Which plan best balances these constraints?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raise coverage by repeatedly running the same startup test",
+          "rationale": "Repeated execution of the same lines does not add the missing behavioral evidence."
+        },
+        {
+          "key": "B",
+          "text": "Disable the coverage gate and rely only on the historical defect count",
+          "rationale": "Past defects do not establish acceptance of the new branch or preserve the required policy."
+        },
+        {
+          "key": "C",
+          "text": "Keep the policy, add targeted positive and rejection assertions, and review redundant test cost and coverage scope",
+          "rationale": "The plan protects the new risk while optimizing low-value execution rather than hiding gaps."
+        },
+        {
+          "key": "D",
+          "text": "Remove the rejection test because successful-path execution counts as line coverage",
+          "rationale": "Executing success behavior does not verify that invalid input is rejected."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Repeated execution of the same lines does not add the missing behavioral evidence. Past defects do not establish acceptance of the new branch or preserve the required policy. The plan protects the new risk while optimizing low-value execution rather than hiding gaps. Executing success behavior does not verify that invalid input is rejected.",
       "sourceIds": [
         "S1",
-        "S2"
+        "S5"
+      ]
+    },
+    {
+      "id": "L08-Q050",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.2.1",
+        "D3.2.3"
+      ],
+      "difficulty": "advanced",
+      "question": "A release pipeline masks dotnet test failure, skips reports on failed jobs, and has a deployment condition that checks only main. Which end-to-end acceptance test best verifies the repair?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Run the healthy test suite once and confirm deployment succeeds",
+          "rationale": "A healthy path cannot demonstrate that required failure rejection works."
+        },
+        {
+          "key": "B",
+          "text": "Inspect only the YAML for the word succeeded",
+          "rationale": "Text inspection cannot establish actual script exit handling or published result contents."
+        },
+        {
+          "key": "C",
+          "text": "Confirm a TRX file exists locally and approve the release",
+          "rationale": "Local file presence does not prove structured publication or deployment gating."
+        },
+        {
+          "key": "D",
+          "text": "Inject a controlled failing assertion, confirm the validation stays failed, inspect the published cases, and prove deployment never starts; then verify the repaired healthy path",
+          "rationale": "The combined contract includes failure propagation, retained structured diagnostics, and enforced promotion dependency in both directions."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A healthy path cannot demonstrate that required failure rejection works. Text inspection cannot establish actual script exit handling or published result contents. Local file presence does not prove structured publication or deployment gating. The combined contract includes failure propagation, retained structured diagnostics, and enforced promotion dependency in both directions.",
+      "sourceIds": [
+        "S4",
+        "S7",
+        "S8"
       ]
     }
   ]

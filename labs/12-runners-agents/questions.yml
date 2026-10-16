@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "12",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -10,1916 +10,1938 @@
     {
       "id": "S2",
       "url": "https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners"
-    },
-    {
-      "id": "S3",
-      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops"
     }
   ],
   "questions": [
     {
       "id": "L12-Q001",
-      "checkpointId": "CP4",
-      "caseId": "L12-C01",
-      "task": "remedy",
-      "caseContext": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "foundational",
-      "question": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which next change most directly satisfies the stated requirement?",
+      "question": "A worker has Git but no .NET 10 SDK required by global.json. Which prerequisite should its capability check report?",
       "options": [
         {
           "key": "A",
-          "text": "Use an appropriately connected agent with restricted network access",
-          "rationale": "Execution needs a route to the private target. This directly addresses the constraint stated in this case."
+          "text": "The repository needs a different issue tracker",
+          "rationale": "Work tracking provider choice does not install the required application compilation toolchain."
         },
         {
           "key": "B",
-          "text": "Check parallel-job entitlement and available execution slots",
-          "rationale": "An online agent is not unlimited parallel capacity. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "The application source must automatically be considered invalid",
+          "rationale": "A missing worker tool is an environment prerequisite rather than demonstrated source failure."
         },
         {
           "key": "C",
-          "text": "Identify required endpoints and allow the minimum supported connectivity",
-          "rationale": "Agent operation needs specific rather than unrestricted egress. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
+          "text": "The worker requires more concurrent job slots",
+          "rationale": "Additional capacity does not supply the missing SDK required for actual application compilation."
+        },
+        {
+          "key": "D",
+          "text": "The required build toolchain is missing",
+          "rationale": "Source retrieval tools cannot substitute for the SDK required to compile the application."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Source retrieval tools cannot substitute for the SDK required to compile the application. Work tracking provider choice does not install the required application compilation toolchain. Additional capacity does not supply the missing SDK required for actual application compilation. A missing worker tool is an environment prerequisite rather than demonstrated source failure.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L12-Q002",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "foundational",
+      "question": "GitHub runner inventory returns total_count zero for a new sandbox. What can the learner conclude from that read?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No GitHub-hosted runner can ever execute repository jobs",
+          "rationale": "Repository self-hosted inventory does not enumerate the hosted service execution pool."
+        },
+        {
+          "key": "B",
+          "text": "The application test suite has already failed",
+          "rationale": "Runner registration state does not execute or evaluate any application assertions."
+        },
+        {
+          "key": "C",
+          "text": "No repository self-hosted runners are registered in this inventory",
+          "rationale": "The response describes registration state rather than every possible hosted execution option."
+        },
+        {
+          "key": "D",
+          "text": "Organization billing has automatically been upgraded",
+          "rationale": "A read-only inventory response does not change billing or product entitlement."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The response describes registration state rather than every possible hosted execution option. Repository self-hosted inventory does not enumerate the hosted service execution pool. Runner registration state does not execute or evaluate any application assertions. A read-only inventory response does not change billing or product entitlement.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q003",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "foundational",
+      "question": "Azure DevOps lists two agent pools, but a queued build waits for capacity. Which distinction explains the observation?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The build must have completed before it was queued",
+          "rationale": "Queueing precedes execution and cannot itself establish a successful completed result."
+        },
+        {
+          "key": "B",
+          "text": "Every visible pool guarantees unlimited simultaneous jobs",
+          "rationale": "Registration and visibility do not establish available organization execution entitlement."
+        },
+        {
+          "key": "C",
+          "text": "Changing artifact names allocates more parallel workers",
+          "rationale": "Output labeling does not provide scheduler capacity or authorize additional workers."
+        },
+        {
+          "key": "D",
+          "text": "Pool inventory differs from available authorized parallel execution capacity",
+          "rationale": "A readable pool does not guarantee a matching idle worker and permitted parallel slot."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A readable pool does not guarantee a matching idle worker and permitted parallel slot. Registration and visibility do not establish available organization execution entitlement. Queueing precedes execution and cannot itself establish a successful completed result. Output labeling does not provide scheduler capacity or authorize additional workers.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Readable pools: 2\nMatching idle agents: 0\nPermitted parallel jobs: 1"
+      }
+    },
+    {
+      "id": "L12-Q004",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.3.7"
+      ],
+      "difficulty": "foundational",
+      "question": "A runner receives HTTPS responses from api.github.com and dev.azure.com. Which additional claim remains unproven by that check?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It can reach the private SQL endpoint",
+          "rationale": "Public control-plane reachability does not establish routing or DNS for a private database."
+        },
+        {
+          "key": "B",
+          "text": "It connected to the two tested HTTPS endpoints",
+          "rationale": "Successful bounded responses do provide evidence for those explicitly tested public addresses."
+        },
+        {
+          "key": "C",
+          "text": "The response arrived before the configured timeout",
+          "rationale": "A successful bounded request establishes that observation for the tested endpoints."
+        },
+        {
+          "key": "D",
+          "text": "The requests used the configured HTTPS service port",
+          "rationale": "The tested HTTPS URLs do establish the selected protocol endpoint boundary."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Execution needs a route to the private target. The selected answer is use an appropriately connected agent with restricted network access.",
+      "explanation": "Public control-plane reachability does not establish routing or DNS for a private database. Successful bounded responses do provide evidence for those explicitly tested public addresses. The tested HTTPS URLs do establish the selected protocol endpoint boundary. A successful bounded request establishes that observation for the tested endpoints.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q002",
-      "checkpointId": "CP4",
-      "caseId": "L12-C01",
-      "task": "diagnosis",
-      "caseContext": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "foundational",
-      "question": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Scheduling is constrained by organization execution limits",
-          "rationale": "Machine count and entitlement are different resources. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "A narrow download failure was generalized into unlimited access",
-          "rationale": "Connectivity diagnosis should identify the actual dependency. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "The hosted worker lacks the required private connectivity",
-          "rationale": "Credentials alone cannot establish a network route. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Credentials alone cannot establish a network route. The selected answer is the hosted worker lacks the required private connectivity.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q003",
-      "checkpointId": "CP4",
-      "caseId": "L12-C01",
-      "task": "verification",
-      "caseContext": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Required job operations work while unrelated destinations remain restricted",
-          "rationale": "Positive and negative network checks establish scope. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "The agent reaches only the intended private test endpoint",
-          "rationale": "Connectivity must match the required network boundary. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Queued jobs start when an authorized slot becomes available",
-          "rationale": "The evidence should distinguish capacity from agent health. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Connectivity must match the required network boundary. The selected answer is the agent reaches only the intended private test endpoint.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q004",
-      "checkpointId": "CP4",
-      "caseId": "L12-C01",
-      "task": "safeguard",
-      "caseContext": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Measure demand before purchasing additional capacity",
-          "rationale": "Long queues can also reflect inefficient job design. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Maintain documented endpoint requirements and update procedures",
-          "rationale": "Service dependencies can change over time. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Avoid exposing the private service publicly as a shortcut",
-          "rationale": "A network workaround should preserve the access design. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "A network workaround should preserve the access design. The selected answer is avoid exposing the private service publicly as a shortcut.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q005",
-      "checkpointId": "CP4",
-      "caseId": "L12-C01",
-      "task": "tradeoff",
-      "caseContext": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "advanced",
-      "question": "Private endpoint: A hosted agent cannot reach a service exposed only inside the training virtual network. The team selects this remedy: \"Use an appropriately connected agent with restricted network access.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "More parallel entitlement can increase cost",
-          "rationale": "Capacity should follow justified workload demand. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Tighter egress increases configuration maintenance",
-          "rationale": "The restriction provides a clearer network trust boundary. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Self-managed connectivity adds infrastructure operations",
-          "rationale": "Agent placement introduces patching and capacity responsibilities. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Agent placement introduces patching and capacity responsibilities. The selected answer is self-managed connectivity adds infrastructure operations.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q006",
-      "checkpointId": "CP3",
-      "caseId": "L12-C02",
-      "task": "remedy",
-      "caseContext": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "foundational",
-      "question": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which next change most directly satisfies the stated requirement?",
+      "question": "The local worker fixture removes its temporary directory after one successful job. What does that observation demonstrate?",
       "options": [
         {
           "key": "A",
-          "text": "Separate untrusted execution and use isolated ephemeral workers",
-          "rationale": "Persistent state can bridge trust boundaries between jobs. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "Every previous credential has been revoked remotely",
+          "rationale": "Removing local workspace files does not revoke external tokens or identity grants."
         },
         {
           "key": "B",
-          "text": "Use an appropriately connected agent with restricted network access",
-          "rationale": "Execution needs a route to the private target. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
+          "text": "Hostile code could never access the underlying operating system",
+          "rationale": "Temporary directory deletion is not an operating-system containment or privilege boundary."
         },
         {
           "key": "C",
-          "text": "Check parallel-job entitlement and available execution slots",
-          "rationale": "An online agent is not unlimited parallel capacity. This directly addresses the constraint stated in this case."
+          "text": "The worker is registered ephemerally with GitHub",
+          "rationale": "Local process cleanup does not create or verify a provider runner registration."
+        },
+        {
+          "key": "D",
+          "text": "The fixture implemented its one-job workspace cleanup behavior",
+          "rationale": "The measured process lifecycle does not establish full provider registration or security isolation."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "An online agent is not unlimited parallel capacity. The selected answer is check parallel-job entitlement and available execution slots.",
+      "explanation": "The measured process lifecycle does not establish full provider registration or security isolation. Local process cleanup does not create or verify a provider runner registration. Temporary directory deletion is not an operating-system containment or privilege boundary. Removing local workspace files does not revoke external tokens or identity grants.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
-      "id": "L12-Q007",
-      "checkpointId": "CP3",
-      "caseId": "L12-C02",
-      "task": "diagnosis",
-      "caseContext": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online.",
+      "id": "L12-Q006",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "applied",
-      "question": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "foundational",
+      "question": "The worker fixture deliberately fails its job. Which final property must still hold for the cleanup requirement?",
       "options": [
         {
           "key": "A",
-          "text": "The runner can retain malicious changes after the job",
-          "rationale": "Later privileged work inherits the compromised environment. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "The failure must be hidden from the outer process",
+          "rationale": "Failure propagation is part of observable lifecycle behavior and should remain visible."
         },
         {
           "key": "B",
-          "text": "The hosted worker lacks the required private connectivity",
-          "rationale": "Credentials alone cannot establish a network route. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
+          "text": "Its temporary job workspace is removed despite failure",
+          "rationale": "Cleanup should cover unsuccessful execution rather than only the healthy completion path."
         },
         {
           "key": "C",
-          "text": "Scheduling is constrained by organization execution limits",
-          "rationale": "Machine count and entitlement are different resources. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Machine count and entitlement are different resources. The selected answer is scheduling is constrained by organization execution limits.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q008",
-      "checkpointId": "CP3",
-      "caseId": "L12-C02",
-      "task": "verification",
-      "caseContext": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Untrusted jobs cannot affect the privileged runner pool",
-          "rationale": "Isolation must hold across separate workflow runs. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "Its evidence must claim the job succeeded",
+          "rationale": "Preserving truthful failure is necessary even when cleanup itself completes correctly."
         },
         {
-          "key": "B",
-          "text": "The agent reaches only the intended private test endpoint",
-          "rationale": "Connectivity must match the required network boundary. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Queued jobs start when an authorized slot becomes available",
-          "rationale": "The evidence should distinguish capacity from agent health. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The evidence should distinguish capacity from agent health. The selected answer is queued jobs start when an authorized slot becomes available.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q009",
-      "checkpointId": "CP3",
-      "caseId": "L12-C02",
-      "task": "safeguard",
-      "caseContext": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Avoid exposing the private service publicly as a shortcut",
-          "rationale": "A network workaround should preserve the access design. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Measure demand before purchasing additional capacity",
-          "rationale": "Long queues can also reflect inefficient job design. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Do not assign deployment credentials to untrusted worker contexts",
-          "rationale": "A clean workspace alone is not a credential boundary. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "The failed workspace should become the next job workspace",
+          "rationale": "Reusing failed state conflicts with the intended disposable single-job lifecycle."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Long queues can also reflect inefficient job design. The selected answer is measure demand before purchasing additional capacity.",
+      "explanation": "Cleanup should cover unsuccessful execution rather than only the healthy completion path. Preserving truthful failure is necessary even when cleanup itself completes correctly. Failure propagation is part of observable lifecycle behavior and should remain visible. Reusing failed state conflicts with the intended disposable single-job lifecycle.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q007",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "foundational",
+      "question": "A single-job design still passes deployment credentials into untrusted contribution code. Which boundary is violated despite using an ephemeral workspace?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The workspace cleanup needs to run sooner after completion",
+          "rationale": "Faster post-job cleanup cannot prevent hostile code using an available credential while the job executes."
+        },
+        {
+          "key": "B",
+          "text": "The generated artifact should use a different digest algorithm",
+          "rationale": "Changing content identification does not remove deployment authority available to the contributor code."
+        },
+        {
+          "key": "C",
+          "text": "The worker needs a different operating-system routing label",
+          "rationale": "A routing label does not address privileged credentials already exposed to the untrusted executable workload."
+        },
+        {
+          "key": "D",
+          "text": "The untrusted job received authority it should never possess",
+          "rationale": "Short worker lifetime does not justify exposing privileged credentials to arbitrary contributor code."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A routing label does not address privileged credentials already exposed to the untrusted executable workload. Changing content identification does not remove deployment authority available to the contributor code. Short worker lifetime does not justify exposing privileged credentials to arbitrary contributor code. Faster post-job cleanup cannot prevent hostile code using an available credential while the job executes.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q008",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "foundational",
+      "question": "A Linux x64 application bundle is scheduled on a Windows ARM worker without a compatible toolchain. What selection should be corrected?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Runner operating system and architecture compatibility",
+          "rationale": "The selected worker must support the executable and required build toolchain architecture."
+        },
+        {
+          "key": "B",
+          "text": "Only the pipeline display number",
+          "rationale": "A friendly run number does not change the worker execution environment compatibility."
+        },
+        {
+          "key": "C",
+          "text": "Only the work-item state",
+          "rationale": "Planning status does not provide an operating system or compatible executable runtime."
+        },
+        {
+          "key": "D",
+          "text": "Only the worker parallel-job entitlement",
+          "rationale": "Permitted concurrent capacity does not make an incompatible operating system and executable architecture work together."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Planning status does not provide an operating system or compatible executable runtime. Permitted concurrent capacity does not make an incompatible operating system and executable architecture work together. The selected worker must support the executable and required build toolchain architecture. A friendly run number does not change the worker execution environment compatibility.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L12-Q009",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "foundational",
+      "question": "A self-hosted runner appears offline in inventory. What is the appropriate interpretation before queueing work to its labels?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Registration exists but current execution availability is absent",
+          "rationale": "An offline registered runner is not an available connected worker for immediate execution."
+        },
+        {
+          "key": "B",
+          "text": "Its label grants cloud resource Owner automatically",
+          "rationale": "A routing label does not confer unrelated Azure resource authorization."
+        },
+        {
+          "key": "C",
+          "text": "Its last successful artifact proves it is currently connected",
+          "rationale": "Historical output cannot establish present worker connectivity or scheduling availability."
+        },
+        {
+          "key": "D",
+          "text": "The repository source must have a compilation error",
+          "rationale": "Offline registration state does not evaluate the current application source."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "An offline registered runner is not an available connected worker for immediate execution. Historical output cannot establish present worker connectivity or scheduling availability. A routing label does not confer unrelated Azure resource authorization. Offline registration state does not evaluate the current application source.",
+      "sourceIds": [
+        "S2"
       ]
     },
     {
       "id": "L12-Q010",
       "checkpointId": "CP3",
-      "caseId": "L12-C02",
-      "task": "tradeoff",
-      "caseContext": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online.",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "No capacity: Eligible jobs wait in queue even though the organization's agent machines appear healthy and online. The team selects this remedy: \"Check parallel-job entitlement and available execution slots.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A pipeline names an agent pool that exists but is not authorized for that pipeline. What prerequisite is missing?",
       "options": [
         {
           "key": "A",
-          "text": "Ephemeral execution adds provisioning overhead",
-          "rationale": "Isolation trades operational setup for reduced persistence risk. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "A different application test assertion",
+          "rationale": "Test behavior is not evaluated until an authorized worker can execute the job."
         },
         {
           "key": "B",
-          "text": "Self-managed connectivity adds infrastructure operations",
-          "rationale": "Agent placement introduces patching and capacity responsibilities. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
+          "text": "Explicit resource access for the intended consuming pipeline",
+          "rationale": "Pool existence does not establish the execution identity permission to use its agents."
         },
         {
           "key": "C",
-          "text": "More parallel entitlement can increase cost",
-          "rationale": "Capacity should follow justified workload demand. This directly addresses the constraint stated in this case."
+          "text": "A shorter YAML filename",
+          "rationale": "Source naming does not grant permission to consume a protected execution pool."
+        },
+        {
+          "key": "D",
+          "text": "A larger artifact compression buffer",
+          "rationale": "Output compression cannot resolve a protected execution resource authorization denial."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Capacity should follow justified workload demand. The selected answer is more parallel entitlement can increase cost.",
+      "explanation": "Pool existence does not establish the execution identity permission to use its agents. Source naming does not grant permission to consume a protected execution pool. Test behavior is not evaluated until an authorized worker can execute the job. Output compression cannot resolve a protected execution resource authorization denial.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q011",
-      "checkpointId": "CP2",
-      "caseId": "L12-C03",
-      "task": "remedy",
-      "caseContext": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
       "difficulty": "foundational",
-      "question": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which next change most directly satisfies the stated requirement?",
+      "question": "The fixture reports credentialEnvironmentPresent false after filtering environment names. Which conclusion is justified from that result alone?",
       "options": [
         {
           "key": "A",
-          "text": "Check parallel-job entitlement and available execution slots",
-          "rationale": "An online agent is not unlimited parallel capacity. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "The operating system enforces perfect tenant isolation",
+          "rationale": "Filtering selected process variables does not provide operating-system or hypervisor security isolation."
         },
         {
           "key": "B",
-          "text": "Separate untrusted execution and use isolated ephemeral workers",
-          "rationale": "Persistent state can bridge trust boundaries between jobs. This directly addresses the constraint stated in this case."
+          "text": "The host has no secrets anywhere",
+          "rationale": "A limited environment check cannot inspect every file, process or credential source."
         },
         {
           "key": "C",
-          "text": "Use appropriate pool selection and agent demands or labels",
-          "rationale": "Scheduling should match declared execution capabilities. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Those checked credential-like variables were not forwarded by this fixture",
+          "rationale": "The test validates a particular local environment filtering behavior rather than universal secret absence."
+        },
+        {
+          "key": "D",
+          "text": "The cloud provider revoked all previous credentials",
+          "rationale": "A local process observation does not establish remote identity lifecycle operations."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Persistent state can bridge trust boundaries between jobs. The selected answer is separate untrusted execution and use isolated ephemeral workers.",
+      "explanation": "The test validates a particular local environment filtering behavior rather than universal secret absence. A limited environment check cannot inspect every file, process or credential source. Filtering selected process variables does not provide operating-system or hypervisor security isolation. A local process observation does not establish remote identity lifecycle operations.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q012",
-      "checkpointId": "CP2",
-      "caseId": "L12-C03",
-      "task": "diagnosis",
-      "caseContext": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases.",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.3.7"
       ],
       "difficulty": "foundational",
-      "question": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The private worker can resolve SQL DNS but cannot establish the required TCP connection. What does DNS success prove?",
       "options": [
         {
           "key": "A",
-          "text": "Scheduling is constrained by organization execution limits",
-          "rationale": "Machine count and entitlement are different resources. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "The public hosted worker has the same private reachability",
+          "rationale": "A result from one network does not establish another worker network path."
         },
         {
           "key": "B",
-          "text": "The runner can retain malicious changes after the job",
-          "rationale": "Later privileged work inherits the compromised environment. This directly addresses the constraint stated in this case."
+          "text": "All database users have correct roles",
+          "rationale": "DNS resolution does not inspect or change SQL identity permission grants."
         },
         {
           "key": "C",
-          "text": "The job's requirements are not represented in selection rules",
-          "rationale": "An online worker may lack necessary tools. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Name resolution only; network access still needs validation",
+          "rationale": "Resolving an address does not establish routing, firewall permission or service connectivity."
+        },
+        {
+          "key": "D",
+          "text": "The full database migration path has passed",
+          "rationale": "Migration requires network connectivity and database authorization beyond successful name resolution."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Later privileged work inherits the compromised environment. The selected answer is the runner can retain malicious changes after the job.",
+      "explanation": "Resolving an address does not establish routing, firewall permission or service connectivity. Migration requires network connectivity and database authorization beyond successful name resolution. DNS resolution does not inspect or change SQL identity permission grants. A result from one network does not establish another worker network path.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q013",
-      "checkpointId": "CP2",
-      "caseId": "L12-C03",
-      "task": "verification",
-      "caseContext": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "applied",
-      "question": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which observation provides the strongest evidence that the requested result was achieved?",
+      "difficulty": "foundational",
+      "question": "The worker fixture records a SHA256 of its produced artifact. Why is this useful lifecycle evidence?",
       "options": [
         {
           "key": "A",
-          "text": "Queued jobs start when an authorized slot becomes available",
-          "rationale": "The evidence should distinguish capacity from agent health. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "It identifies the output content created during that job",
+          "rationale": "A digest connects the observed fixture result with particular output bytes."
         },
         {
           "key": "B",
-          "text": "Untrusted jobs cannot affect the privileged runner pool",
-          "rationale": "Isolation must hold across separate workflow runs. This directly addresses the constraint stated in this case."
+          "text": "It registers the worker with both providers",
+          "rationale": "Content hashing does not create GitHub runner or Azure agent registration state."
         },
         {
           "key": "C",
-          "text": "The selected worker reports the required compiler version",
-          "rationale": "The actual execution host must satisfy the requirement. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "It proves every application test passed",
+          "rationale": "Content identity does not encode a successful behavioral test execution result."
+        },
+        {
+          "key": "D",
+          "text": "It grants the next job deployment permission",
+          "rationale": "Hashing an artifact does not authorize any identity to modify cloud resources."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Isolation must hold across separate workflow runs. The selected answer is untrusted jobs cannot affect the privileged runner pool.",
+      "explanation": "A digest connects the observed fixture result with particular output bytes. Content identity does not encode a successful behavioral test execution result. Hashing an artifact does not authorize any identity to modify cloud resources. Content hashing does not create GitHub runner or Azure agent registration state.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"jobExitCode\":0,\"workspaceRemoved\":true,\"outputSha256\":\"64-hex-character-digest\"}"
+      }
     },
     {
       "id": "L12-Q014",
-      "checkpointId": "CP2",
-      "caseId": "L12-C03",
-      "task": "safeguard",
-      "caseContext": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "applied",
-      "question": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "foundational",
+      "question": "A pool contains five agents but the organization allows one parallel job. How many jobs can its entitlement permit at once?",
       "options": [
         {
           "key": "A",
-          "text": "Measure demand before purchasing additional capacity",
-          "rationale": "Long queues can also reflect inefficient job design. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "One permitted parallel job",
+          "rationale": "Registered worker count does not override the organization parallel execution entitlement limit."
         },
         {
           "key": "B",
-          "text": "Do not assign deployment credentials to untrusted worker contexts",
-          "rationale": "A clean workspace alone is not a credential boundary. This directly addresses the constraint stated in this case."
+          "text": "Zero permanently because more agents than slots is invalid",
+          "rationale": "Additional registered agents can wait or provide selection without invalidating all execution."
         },
         {
           "key": "C",
-          "text": "Maintain capabilities and installation state deliberately",
-          "rationale": "Stale labels can falsely advertise a usable toolchain. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Unlimited jobs if each has a unique name",
+          "rationale": "Friendly names do not change the organization execution capacity or entitlement."
+        },
+        {
+          "key": "D",
+          "text": "Five jobs because all agents are registered",
+          "rationale": "Agent inventory does not itself grant a matching number of parallel service slots."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "A clean workspace alone is not a credential boundary. The selected answer is do not assign deployment credentials to untrusted worker contexts.",
+      "explanation": "Registered worker count does not override the organization parallel execution entitlement limit. Agent inventory does not itself grant a matching number of parallel service slots. Friendly names do not change the organization execution capacity or entitlement. Additional registered agents can wait or provide selection without invalidating all execution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q015",
-      "checkpointId": "CP2",
-      "caseId": "L12-C03",
-      "task": "tradeoff",
-      "caseContext": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases.",
+      "checkpointId": "CP5",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Persistent compromise: An untrusted pull request runs on a privileged persistent self-hosted runner used later for releases. The team selects this remedy: \"Separate untrusted execution and use isolated ephemeral workers.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "foundational",
+      "question": "A learner runs the local ephemeral fixture but never invokes GitHub registration APIs. How should the result be described?",
       "options": [
         {
           "key": "A",
-          "text": "Ephemeral execution adds provisioning overhead",
-          "rationale": "Isolation trades operational setup for reduced persistence risk. This directly addresses the constraint stated in this case."
+          "text": "A proof of private SQL network readiness",
+          "rationale": "Local filesystem behavior does not test the required database network route."
         },
         {
           "key": "B",
-          "text": "Specialized agents reduce scheduling flexibility",
-          "rationale": "A narrow pool can become a capacity bottleneck. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Local lifecycle practice with provider registration unverified",
+          "rationale": "The completion claim must stay within the process behavior actually exercised locally."
         },
         {
           "key": "C",
-          "text": "More parallel entitlement can increase cost",
-          "rationale": "Capacity should follow justified workload demand. That addresses a different requirement: No capacity. It does not directly resolve this case's stated constraint."
+          "text": "An Azure DevOps hosted agent deployment",
+          "rationale": "The fixture does not provision or register a provider-managed execution worker."
+        },
+        {
+          "key": "D",
+          "text": "A fully registered production GitHub runner",
+          "rationale": "No registration request or provider response establishes that claimed remote state."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Isolation trades operational setup for reduced persistence risk. The selected answer is ephemeral execution adds provisioning overhead.",
+      "explanation": "The completion claim must stay within the process behavior actually exercised locally. No registration request or provider response establishes that claimed remote state. The fixture does not provision or register a provider-managed execution worker. Local filesystem behavior does not test the required database network route.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q016",
-      "checkpointId": "CP1",
-      "caseId": "L12-C04",
-      "task": "remedy",
-      "caseContext": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "An ephemeral runner handles one job but leaves its VM running with cached credentials. What further lifecycle boundary needs repair?",
       "options": [
         {
           "key": "A",
-          "text": "Use appropriate pool selection and agent demands or labels",
-          "rationale": "Scheduling should match declared execution capabilities. This directly addresses the constraint stated in this case."
+          "text": "Only increase job retry count",
+          "rationale": "More execution attempts can reuse the same unsafe retained machine state."
         },
         {
           "key": "B",
-          "text": "Clean or recreate the workspace and declare all inputs",
-          "rationale": "A reproducible job must not rely on leftovers. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "Destroy or sanitize the underlying worker and revoke residual access",
+          "rationale": "Single-job registration alone does not remove machine state or persistent credential exposure."
         },
         {
           "key": "C",
-          "text": "Separate untrusted execution and use isolated ephemeral workers",
-          "rationale": "Persistent state can bridge trust boundaries between jobs. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "Only remove a task comment from YAML",
+          "rationale": "Comments do not control VM lifetime or retained execution credential material."
+        },
+        {
+          "key": "D",
+          "text": "Only shorten the friendly runner display name",
+          "rationale": "Presentation does not remove retained machine state or authorize its disposal."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Scheduling should match declared execution capabilities. The selected answer is use appropriate pool selection and agent demands or labels.",
+      "explanation": "Single-job registration alone does not remove machine state or persistent credential exposure. Presentation does not remove retained machine state or authorize its disposal. Comments do not control VM lifetime or retained execution credential material. More execution attempts can reuse the same unsafe retained machine state.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q017",
-      "checkpointId": "CP1",
-      "caseId": "L12-C04",
-      "task": "diagnosis",
-      "caseContext": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.2"
+        "D3.3.7"
       ],
       "difficulty": "applied",
-      "question": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A hosted build succeeds publicly but a SQL migration needs private DNS and routing. Which execution design fits the migration stage?",
       "options": [
         {
           "key": "A",
-          "text": "The runner can retain malicious changes after the job",
-          "rationale": "Later privileged work inherits the compromised environment. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "Any public worker with the same artifact filename",
+          "rationale": "Output naming does not establish access to the private database network."
         },
         {
           "key": "B",
-          "text": "The job's requirements are not represented in selection rules",
-          "rationale": "An online worker may lack necessary tools. This directly addresses the constraint stated in this case."
+          "text": "An approved isolated private-network worker with restricted job access",
+          "rationale": "The migration needs a real authorized network path without exposing it to arbitrary code."
         },
         {
           "key": "C",
-          "text": "Persistent workspace state masks an undeclared dependency",
-          "rationale": "The repository alone cannot reproduce the build. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "A longer SQL connection timeout on an unreachable public route",
+          "rationale": "Waiting longer cannot create missing private routing or DNS connectivity."
+        },
+        {
+          "key": "D",
+          "text": "A GitHub issue documenting the intended subnet",
+          "rationale": "Documentation does not attach the executing worker to the required network boundary."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "An online worker may lack necessary tools. The selected answer is the job's requirements are not represented in selection rules.",
+      "explanation": "The migration needs a real authorized network path without exposing it to arbitrary code. Output naming does not establish access to the private database network. Waiting longer cannot create missing private routing or DNS connectivity. Documentation does not attach the executing worker to the required network boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q018",
-      "checkpointId": "CP1",
-      "caseId": "L12-C04",
-      "task": "verification",
-      "caseContext": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A GitHub workflow requests labels that no connected runner satisfies. Why does the job remain queued?",
       "options": [
         {
           "key": "A",
-          "text": "A fresh isolated worker builds the same source successfully",
-          "rationale": "Clean execution reveals hidden state dependencies. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "The application must have failed its tests already",
+          "rationale": "Queued work has not established an application test execution outcome."
         },
         {
           "key": "B",
-          "text": "Untrusted jobs cannot affect the privileged runner pool",
-          "rationale": "Isolation must hold across separate workflow runs. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "No available eligible worker matches the requested routing labels",
+          "rationale": "Scheduling requires a connected worker satisfying the job requested runner characteristics."
         },
         {
           "key": "C",
-          "text": "The selected worker reports the required compiler version",
-          "rationale": "The actual execution host must satisfy the requirement. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "The actual execution host must satisfy the requirement. The selected answer is the selected worker reports the required compiler version.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q019",
-      "checkpointId": "CP1",
-      "caseId": "L12-C04",
-      "task": "safeguard",
-      "caseContext": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Do not assign deployment credentials to untrusted worker contexts",
-          "rationale": "A clean workspace alone is not a credential boundary. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "The branch name always overrides the runs-on labels",
+          "rationale": "A source reference does not automatically replace the requested worker routing configuration."
         },
         {
-          "key": "B",
-          "text": "Maintain capabilities and installation state deliberately",
-          "rationale": "Stale labels can falsely advertise a usable toolchain. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Keep caches separate from correctness-critical build outputs",
-          "rationale": "Cached data should accelerate rather than define the result. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "The selected runner has an incompatible version label but still matches all requested routing constraints",
+          "rationale": "The stated queue problem is the absence of any connected worker satisfying the actual requested label set."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Stale labels can falsely advertise a usable toolchain. The selected answer is maintain capabilities and installation state deliberately.",
+      "explanation": "Queued work has not established an application test execution outcome. The stated queue problem is the absence of any connected worker satisfying the actual requested label set. A source reference does not automatically replace the requested worker routing configuration. Scheduling requires a connected worker satisfying the job requested runner characteristics.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q019",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "applied",
+      "question": "An Azure job demands a capability absent from every authorized agent. What is the safest capacity repair?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Skip the test job and claim capacity passed",
+          "rationale": "Omitting execution cannot establish that a suitable authorized worker is available."
+        },
+        {
+          "key": "B",
+          "text": "Advertise the capability without installing the required tool",
+          "rationale": "A misleading label can schedule work that still cannot execute the required behavior."
+        },
+        {
+          "key": "C",
+          "text": "Provide an approved matching agent or correct an unjustified demand",
+          "rationale": "The execution request needs an eligible worker with the required actual tool capability."
+        },
+        {
+          "key": "D",
+          "text": "Grant all agents subscription Owner",
+          "rationale": "Azure authority does not install or supply a missing build capability."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "The execution request needs an eligible worker with the required actual tool capability. A misleading label can schedule work that still cannot execute the required behavior. Azure authority does not install or supply a missing build capability. Omitting execution cannot establish that a suitable authorized worker is available.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L12-Q020",
-      "checkpointId": "CP1",
-      "caseId": "L12-C04",
-      "task": "tradeoff",
-      "caseContext": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Wrong agent selected: A job requires a proprietary compiler, but the scheduler chooses agents without that installed tool. The team selects this remedy: \"Use appropriate pool selection and agent demands or labels.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A temporary worker launches a child process, then deletes only the parent script. What cleanup gap remains?",
       "options": [
         {
           "key": "A",
-          "text": "Cleaning can increase build duration",
-          "rationale": "Reproducibility may require trading some cache convenience. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "The output hash automatically changes to zero",
+          "rationale": "File cleanup does not imply a specific new value for a retained digest."
         },
         {
           "key": "B",
-          "text": "Ephemeral execution adds provisioning overhead",
-          "rationale": "Isolation trades operational setup for reduced persistence risk. That addresses a different requirement: Persistent compromise. It does not directly resolve this case's stated constraint."
+          "text": "All remote runner registrations necessarily disappear",
+          "rationale": "Local script deletion is not a provider deregistration operation."
         },
         {
           "key": "C",
-          "text": "Specialized agents reduce scheduling flexibility",
-          "rationale": "A narrow pool can become a capacity bottleneck. This directly addresses the constraint stated in this case."
+          "text": "The organization parallelism becomes unlimited",
+          "rationale": "Machine process cleanup does not change provider execution entitlement or capacity."
+        },
+        {
+          "key": "D",
+          "text": "The child process and its retained state may survive",
+          "rationale": "Deleting one script does not establish termination of spawned execution or residual files."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A narrow pool can become a capacity bottleneck. The selected answer is specialized agents reduce scheduling flexibility.",
+      "explanation": "Deleting one script does not establish termination of spawned execution or residual files. File cleanup does not imply a specific new value for a retained digest. Local script deletion is not a provider deregistration operation. Machine process cleanup does not change provider execution entitlement or capacity.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q021",
-      "checkpointId": "CP5",
-      "caseId": "L12-C05",
-      "task": "remedy",
-      "caseContext": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input.",
+      "checkpointId": "CP1",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A new hosted image removes a tool that the pipeline relied on implicitly. Which preparation reduces this hidden dependency?",
       "options": [
         {
           "key": "A",
-          "text": "Clean or recreate the workspace and declare all inputs",
-          "rationale": "A reproducible job must not rely on leftovers. This directly addresses the constraint stated in this case."
+          "text": "Only add more required code reviewers",
+          "rationale": "Review count does not directly establish the executing worker toolchain capabilities."
         },
         {
           "key": "B",
-          "text": "Run the agent under the least-privileged suitable identity",
-          "rationale": "Build execution does not require broad administrative authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Only retain older test reports for longer",
+          "rationale": "Historical evidence does not supply a required tool to the new worker."
         },
         {
           "key": "C",
-          "text": "Use appropriate pool selection and agent demands or labels",
-          "rationale": "Scheduling should match declared execution capabilities. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Record and install the required pinned toolchain explicitly",
+          "rationale": "An explicit capability contract avoids relying on incidental image contents remaining unchanged."
+        },
+        {
+          "key": "D",
+          "text": "Only rename the selected hosted image label locally",
+          "rationale": "Renaming does not restore a missing executable or establish compatibility."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A reproducible job must not rely on leftovers. The selected answer is clean or recreate the workspace and declare all inputs.",
+      "explanation": "An explicit capability contract avoids relying on incidental image contents remaining unchanged. Renaming does not restore a missing executable or establish compatibility. Historical evidence does not supply a required tool to the new worker. Review count does not directly establish the executing worker toolchain capabilities.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q022",
-      "checkpointId": "CP5",
-      "caseId": "L12-C05",
-      "task": "diagnosis",
-      "caseContext": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input.",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.3.7"
       ],
-      "difficulty": "foundational",
-      "question": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "applied",
+      "question": "A corporate proxy permits repository HTTPS but blocks artifact storage endpoints. Which result should the team expect?",
       "options": [
         {
           "key": "A",
-          "text": "The operating-system identity exceeds the task's needs",
-          "rationale": "Any executed build code inherits that authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Checkout can pass while artifact transfer still fails",
+          "rationale": "Separate service endpoints require their own allowed network paths and connectivity observations."
         },
         {
           "key": "B",
-          "text": "The job's requirements are not represented in selection rules",
-          "rationale": "An online worker may lack necessary tools. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "A larger worker disk creates the missing outbound route",
+          "rationale": "Storage capacity does not authorize network access through the configured proxy."
         },
         {
           "key": "C",
-          "text": "Persistent workspace state masks an undeclared dependency",
-          "rationale": "The repository alone cannot reproduce the build. This directly addresses the constraint stated in this case."
+          "text": "Artifact naming automatically bypasses proxy enforcement",
+          "rationale": "Friendly output labels do not change network firewall or proxy policy."
+        },
+        {
+          "key": "D",
+          "text": "Checkout success proves every provider endpoint is reachable",
+          "rationale": "One endpoint response cannot establish connectivity to independently filtered service addresses."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The repository alone cannot reproduce the build. The selected answer is persistent workspace state masks an undeclared dependency.",
+      "explanation": "Separate service endpoints require their own allowed network paths and connectivity observations. One endpoint response cannot establish connectivity to independently filtered service addresses. Friendly output labels do not change network firewall or proxy policy. Storage capacity does not authorize network access through the configured proxy.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "api.github.com: HTTPS allowed\nrepository checkout: passed\nartifact storage endpoint: proxy denied"
+      }
     },
     {
       "id": "L12-Q023",
       "checkpointId": "CP5",
-      "caseId": "L12-C05",
-      "task": "verification",
-      "caseContext": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input.",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A healthy worker cleanup passes, but the failed-job fixture leaves its workspace. Which acceptance condition is unmet?",
       "options": [
         {
           "key": "A",
-          "text": "A fresh isolated worker builds the same source successfully",
-          "rationale": "Clean execution reveals hidden state dependencies. This directly addresses the constraint stated in this case."
+          "text": "The output artifact should be renamed before deletion",
+          "rationale": "Output naming cannot repair a missing failed-job workspace cleanup path."
         },
         {
           "key": "B",
-          "text": "The build succeeds while prohibited administrative actions fail",
-          "rationale": "Useful capability and denied excess demonstrate least privilege. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Failure automatically revokes every host credential",
+          "rationale": "A job result does not perform universal credential revocation on the underlying machine."
         },
         {
           "key": "C",
-          "text": "The selected worker reports the required compiler version",
-          "rationale": "The actual execution host must satisfy the requirement. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Clean execution reveals hidden state dependencies. The selected answer is a fresh isolated worker builds the same source successfully.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q024",
-      "checkpointId": "CP5",
-      "caseId": "L12-C05",
-      "task": "safeguard",
-      "caseContext": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input.",
-      "objectiveIds": [
-        "D3.3.7"
-      ],
-      "difficulty": "applied",
-      "question": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Inventory tool and filesystem access before changing the account",
-          "rationale": "Hidden dependencies may rely on unnecessary elevation. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Cleanup must execute for both success and failure",
+          "rationale": "Disposable execution requires residual-state removal across the actual job completion outcomes."
         },
         {
-          "key": "B",
-          "text": "Maintain capabilities and installation state deliberately",
-          "rationale": "Stale labels can falsely advertise a usable toolchain. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Keep caches separate from correctness-critical build outputs",
-          "rationale": "Cached data should accelerate rather than define the result. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Only successful jobs need isolation or cleanup",
+          "rationale": "Failed untrusted work can leave equally sensitive or dangerous residual execution state."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Cached data should accelerate rather than define the result. The selected answer is keep caches separate from correctness-critical build outputs.",
+      "explanation": "Disposable execution requires residual-state removal across the actual job completion outcomes. Failed untrusted work can leave equally sensitive or dangerous residual execution state. A job result does not perform universal credential revocation on the underlying machine. Output naming cannot repair a missing failed-job workspace cleanup path.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q024",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "applied",
+      "question": "Two agents execute from one shared writable workspace and their tests interfere. What boundary should be changed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Raise every test timeout indefinitely",
+          "rationale": "More time does not remove conflicting concurrent writes to the same paths."
+        },
+        {
+          "key": "B",
+          "text": "Give concurrent jobs separate owned workspaces or isolated workers",
+          "rationale": "Independent execution needs filesystem boundaries that prevent accidental cross-job state collisions."
+        },
+        {
+          "key": "C",
+          "text": "Share one deployment credential to keep their state consistent",
+          "rationale": "Shared authority does not isolate their local mutable execution files."
+        },
+        {
+          "key": "D",
+          "text": "Assign identical job display names to both agents",
+          "rationale": "Display labels do not prevent shared writable filesystem interference."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Independent execution needs filesystem boundaries that prevent accidental cross-job state collisions. Display labels do not prevent shared writable filesystem interference. More time does not remove conflicting concurrent writes to the same paths. Shared authority does not isolate their local mutable execution files.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L12-Q025",
-      "checkpointId": "CP5",
-      "caseId": "L12-C05",
-      "task": "tradeoff",
-      "caseContext": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input.",
+      "checkpointId": "CP2",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Dirty workspace: A build succeeds only on one persistent worker because files from an earlier run satisfy a missing input. The team selects this remedy: \"Clean or recreate the workspace and declare all inputs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A repository administrator wants runners restricted to approved repositories rather than any repository in the organization. Which provider control fits?",
       "options": [
         {
           "key": "A",
-          "text": "Cleaning can increase build duration",
-          "rationale": "Reproducibility may require trading some cache convenience. This directly addresses the constraint stated in this case."
+          "text": "Use routing labels alone to identify approved repositories",
+          "rationale": "Labels select worker characteristics but do not establish the requested repository access restriction."
         },
         {
           "key": "B",
-          "text": "Some installations need a separate privileged preparation step",
-          "rationale": "Routine jobs should not retain installation-level authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Rely only on one-job workspace deletion",
+          "rationale": "Filesystem cleanup does not decide which repositories may send workloads to the runner group."
         },
         {
           "key": "C",
-          "text": "Specialized agents reduce scheduling flexibility",
-          "rationale": "A narrow pool can become a capacity bottleneck. That addresses a different requirement: Wrong agent selected. It does not directly resolve this case's stated constraint."
+          "text": "Give all organization members the registration token",
+          "rationale": "Broad token distribution expands rather than restricts access to worker infrastructure."
+        },
+        {
+          "key": "D",
+          "text": "Use runner group access restrictions for intended consumers",
+          "rationale": "Routing infrastructure should be exposed only to repositories authorized to execute its workloads."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Reproducibility may require trading some cache convenience. The selected answer is cleaning can increase build duration.",
+      "explanation": "Routing infrastructure should be exposed only to repositories authorized to execute its workloads. Labels select worker characteristics but do not establish the requested repository access restriction. Filesystem cleanup does not decide which repositories may send workloads to the runner group. Broad token distribution expands rather than restricts access to worker infrastructure.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q026",
       "checkpointId": "CP5",
-      "caseId": "L12-C06",
-      "task": "remedy",
-      "caseContext": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports.",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A worker filters token-like environment names but mounts a shared host directory containing credentials. What does this reveal?",
       "options": [
         {
           "key": "A",
-          "text": "Run the agent under the least-privileged suitable identity",
-          "rationale": "Build execution does not require broad administrative authority. This directly addresses the constraint stated in this case."
+          "text": "A false environment flag guarantees no possible secret access",
+          "rationale": "The limited fixture result cannot prove all mounted storage lacks sensitive values."
         },
         {
           "key": "B",
-          "text": "Declare toolchain setup and select a supported image intentionally",
-          "rationale": "Image contents are maintained service dependencies. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Environment filtering does not cover other credential sources",
+          "rationale": "Secret isolation must address mounted files and machine context beyond selected process variables."
         },
         {
           "key": "C",
-          "text": "Clean or recreate the workspace and declare all inputs",
-          "rationale": "A reproducible job must not rely on leftovers. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "A SHA256 output digest revokes the mounted credentials",
+          "rationale": "Content identification does not change access to sensitive host filesystem material."
+        },
+        {
+          "key": "D",
+          "text": "The directory becomes safe when the job is ephemeral",
+          "rationale": "Short lifetime does not prevent active code from reading exposed mounted credentials."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Build execution does not require broad administrative authority. The selected answer is run the agent under the least-privileged suitable identity.",
+      "explanation": "Secret isolation must address mounted files and machine context beyond selected process variables. The limited fixture result cannot prove all mounted storage lacks sensitive values. Content identification does not change access to sensitive host filesystem material. Short lifetime does not prevent active code from reading exposed mounted credentials.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q027",
-      "checkpointId": "CP5",
-      "caseId": "L12-C06",
-      "task": "diagnosis",
-      "caseContext": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports.",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D3.3.7"
+      ],
+      "difficulty": "applied",
+      "question": "A private agent reaches the database IP but TLS hostname validation fails. Which prerequisite should be examined?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only the number of agent capability labels",
+          "rationale": "Scheduling labels do not change the TLS identity presented by the database endpoint."
+        },
+        {
+          "key": "B",
+          "text": "The intended DNS name and valid service certificate chain",
+          "rationale": "Network reachability alone does not establish authenticated encrypted connectivity to the intended service."
+        },
+        {
+          "key": "C",
+          "text": "Only the artifact archive compression format",
+          "rationale": "Packaging choices do not repair certificate identity or trust validation."
+        },
+        {
+          "key": "D",
+          "text": "Only the work item acceptance text",
+          "rationale": "Planning documentation does not make an invalid certificate trust path succeed."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Network reachability alone does not establish authenticated encrypted connectivity to the intended service. Packaging choices do not repair certificate identity or trust validation. Scheduling labels do not change the TLS identity presented by the database endpoint. Planning documentation does not make an invalid certificate trust path succeed.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L12-Q028",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The runner advertises .NET 10 but global.json requests a missing exact feature band. What should the capability check use?",
       "options": [
         {
           "key": "A",
-          "text": "The operating-system identity exceeds the task's needs",
-          "rationale": "Any executed build code inherits that authority. This directly addresses the constraint stated in this case."
+          "text": "The actual SDK resolution under the repository contract",
+          "rationale": "A broad advertised major version does not guarantee the requested SDK can be selected."
         },
         {
           "key": "B",
-          "text": "The workflow assumed an unchanging preinstalled tool inventory",
-          "rationale": "Hosted images evolve independently of repository changes. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Only the application friendly display name",
+          "rationale": "Naming does not determine installed SDK feature bands or resolution behavior."
         },
         {
           "key": "C",
-          "text": "Persistent workspace state masks an undeclared dependency",
-          "rationale": "The repository alone cannot reproduce the build. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "Only a static label written months earlier",
+          "rationale": "A historical label can drift from actual currently installed executable tooling."
+        },
+        {
+          "key": "D",
+          "text": "Only the presence of a dotnet-named directory",
+          "rationale": "A directory alone does not establish a functioning compatible installed SDK."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Any executed build code inherits that authority. The selected answer is the operating-system identity exceeds the task's needs.",
+      "explanation": "A broad advertised major version does not guarantee the requested SDK can be selected. A historical label can drift from actual currently installed executable tooling. Naming does not determine installed SDK feature bands or resolution behavior. A directory alone does not establish a functioning compatible installed SDK.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q028",
-      "checkpointId": "CP5",
-      "caseId": "L12-C06",
-      "task": "verification",
-      "caseContext": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A clean selected image installs and reports required tools",
-          "rationale": "The declared setup should reproduce the environment. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "A fresh isolated worker builds the same source successfully",
-          "rationale": "Clean execution reveals hidden state dependencies. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "The build succeeds while prohibited administrative actions fail",
-          "rationale": "Useful capability and denied excess demonstrate least privilege. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Useful capability and denied excess demonstrate least privilege. The selected answer is the build succeeds while prohibited administrative actions fail.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q029",
       "checkpointId": "CP5",
-      "caseId": "L12-C06",
-      "task": "safeguard",
-      "caseContext": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports.",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A worker downloads a release artifact before receiving approval and exposes its privileged deployment credential to every step. Which improvement is most direct?",
       "options": [
         {
           "key": "A",
-          "text": "Keep caches separate from correctness-critical build outputs",
-          "rationale": "Cached data should accelerate rather than define the result. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "Retain all credentials after the job for faster retries",
+          "rationale": "Persistent credential state expands exposure beyond the intended short authorized execution lifetime."
         },
         {
           "key": "B",
-          "text": "Inventory tool and filesystem access before changing the account",
-          "rationale": "Hidden dependencies may rely on unnecessary elevation. This directly addresses the constraint stated in this case."
+          "text": "Mask all step names while retaining broad credential availability",
+          "rationale": "Hiding labels does not prevent executable code from using an available credential."
         },
         {
           "key": "C",
-          "text": "Review image deprecation notices and test updates",
-          "rationale": "Explicit labels still have a support lifecycle. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Limit credential exposure to the authorized consuming execution boundary",
+          "rationale": "Artifact availability does not justify exposing deployment authority before the intended approval gate."
+        },
+        {
+          "key": "D",
+          "text": "Rename the runner to protected-production",
+          "rationale": "A friendly name does not enforce approval or credential access boundaries."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Hidden dependencies may rely on unnecessary elevation. The selected answer is inventory tool and filesystem access before changing the account.",
+      "explanation": "Artifact availability does not justify exposing deployment authority before the intended approval gate. Hiding labels does not prevent executable code from using an available credential. A friendly name does not enforce approval or credential access boundaries. Persistent credential state expands exposure beyond the intended short authorized execution lifetime.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q030",
-      "checkpointId": "CP5",
-      "caseId": "L12-C06",
-      "task": "tradeoff",
-      "caseContext": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Overpowered account: A self-hosted agent runs as a domain administrator although it only compiles source and uploads reports. The team selects this remedy: \"Run the agent under the least-privileged suitable identity.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "An agent is online but already executing another job. How should capacity planning interpret its availability for a new request?",
       "options": [
         {
           "key": "A",
-          "text": "Cleaning can increase build duration",
-          "rationale": "Reproducibility may require trading some cache convenience. That addresses a different requirement: Dirty workspace. It does not directly resolve this case's stated constraint."
+          "text": "A different artifact name makes the busy agent idle",
+          "rationale": "Output naming does not alter current worker occupancy or scheduling capacity."
         },
         {
           "key": "B",
-          "text": "Some installations need a separate privileged preparation step",
-          "rationale": "Routine jobs should not retain installation-level authority. This directly addresses the constraint stated in this case."
+          "text": "Queueing guarantees the new job has already passed tests",
+          "rationale": "Scheduling does not execute assertions or establish their successful outcome."
         },
         {
           "key": "C",
-          "text": "Image control is less granular on hosted workers",
-          "rationale": "Self-hosting offers more control with more maintenance. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Assume online always means unlimited concurrent execution",
+          "rationale": "A connected worker can still be busy or subject to execution slot limits."
+        },
+        {
+          "key": "D",
+          "text": "Consider its current busy state and permitted parallel capacity",
+          "rationale": "Connectivity does not imply an immediately available slot for another job."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Connectivity does not imply an immediately available slot for another job. A connected worker can still be busy or subject to execution slot limits. Scheduling does not execute assertions or establish their successful outcome. Output naming does not alter current worker occupancy or scheduling capacity.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Agent: online\nCurrent job: active\nFree worker slot: false"
+      }
+    },
+    {
+      "id": "L12-Q031",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "applied",
+      "question": "The fixture reports jobExitCode seven but the outer script returns zero. What required lifecycle signal has been lost?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The actual source commit SHA automatically changes",
+          "rationale": "Process termination does not rewrite repository source identity or commit history."
+        },
+        {
+          "key": "B",
+          "text": "Failure propagation from job to invoking operation",
+          "rationale": "A failed child result must remain observable to the caller and validation gate."
+        },
+        {
+          "key": "C",
+          "text": "Provider billing information for the organization",
+          "rationale": "An exit code wrapper does not establish organization pricing or entitlement state."
+        },
+        {
+          "key": "D",
+          "text": "The output hash must now identify another algorithm",
+          "rationale": "Failure propagation and digest algorithm selection are separate lifecycle properties."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Routine jobs should not retain installation-level authority. The selected answer is some installations need a separate privileged preparation step.",
+      "explanation": "A failed child result must remain observable to the caller and validation gate. An exit code wrapper does not establish organization pricing or entitlement state. Process termination does not rewrite repository source identity or commit history. Failure propagation and digest algorithm selection are separate lifecycle properties.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q031",
-      "checkpointId": "CP3",
-      "caseId": "L12-C07",
-      "task": "remedy",
-      "caseContext": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "foundational",
-      "question": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Use host isolation and restricted trust-specific pools",
-          "rationale": "Containers do not erase host-level execution risks. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Run the agent under the least-privileged suitable identity",
-          "rationale": "Build execution does not require broad administrative authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Declare toolchain setup and select a supported image intentionally",
-          "rationale": "Image contents are maintained service dependencies. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Image contents are maintained service dependencies. The selected answer is declare toolchain setup and select a supported image intentionally.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q032",
-      "checkpointId": "CP3",
-      "caseId": "L12-C07",
-      "task": "diagnosis",
-      "caseContext": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh.",
+      "checkpointId": "CP2",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "applied",
+      "question": "A self-hosted runner executes public fork code because workflow labels match. What additional boundary is needed beyond labels?",
       "options": [
         {
           "key": "A",
-          "text": "The workflow assumed an unchanging preinstalled tool inventory",
-          "rationale": "Hosted images evolve independently of repository changes. This directly addresses the constraint stated in this case."
+          "text": "Add only an artifact retention rule",
+          "rationale": "Storage retention does not prevent untrusted code reaching a privileged execution machine."
         },
         {
           "key": "B",
-          "text": "Containerization was mistaken for a complete trust boundary",
-          "rationale": "Shared hosts and mounted resources can remain exposed. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Restrict which trusted workloads may use the privileged runner",
+          "rationale": "Labels route jobs but do not by themselves establish acceptable contributor trust."
         },
         {
           "key": "C",
-          "text": "The operating-system identity exceeds the task's needs",
-          "rationale": "Any executed build code inherits that authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Make the runner label longer and harder to spell",
+          "rationale": "Obscure labels are not a reliable authorization boundary for executable workflow content."
+        },
+        {
+          "key": "D",
+          "text": "Allow secrets only after checkout has executed attacker code",
+          "rationale": "The trust boundary may already be crossed before later credential exposure controls."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Hosted images evolve independently of repository changes. The selected answer is the workflow assumed an unchanging preinstalled tool inventory.",
+      "explanation": "Labels route jobs but do not by themselves establish acceptable contributor trust. Obscure labels are not a reliable authorization boundary for executable workflow content. Storage retention does not prevent untrusted code reaching a privileged execution machine. The trust boundary may already be crossed before later credential exposure controls.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q033",
-      "checkpointId": "CP3",
-      "caseId": "L12-C07",
-      "task": "verification",
-      "caseContext": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh.",
+      "checkpointId": "CP5",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "An ephemeral worker is disposed, but its provider registration remains online and points to a stale machine. What separate lifecycle action is needed?",
       "options": [
         {
           "key": "A",
-          "text": "Contributor execution cannot access privileged host resources",
-          "rationale": "The proof must test the actual isolation boundary. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Only delete the disposed machine local registration configuration",
+          "rationale": "Removing local state does not verify that the provider registration record was actually removed or reconciled."
         },
         {
           "key": "B",
-          "text": "The build succeeds while prohibited administrative actions fail",
-          "rationale": "Useful capability and denied excess demonstrate least privilege. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Only increase the provider job timeout",
+          "rationale": "Longer waiting does not repair stale registration or prove the machine exists."
         },
         {
           "key": "C",
-          "text": "A clean selected image installs and reports required tools",
-          "rationale": "The declared setup should reproduce the environment. This directly addresses the constraint stated in this case."
+          "text": "Only change the application version label",
+          "rationale": "Application metadata does not deregister a provider execution worker."
+        },
+        {
+          "key": "D",
+          "text": "Verify deregistration and reconcile the provider worker record",
+          "rationale": "Machine disposal and provider registration cleanup are distinct state transitions needing evidence."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The declared setup should reproduce the environment. The selected answer is a clean selected image installs and reports required tools.",
+      "explanation": "Longer waiting does not repair stale registration or prove the machine exists. Machine disposal and provider registration cleanup are distinct state transitions needing evidence. Removing local state does not verify that the provider registration record was actually removed or reconciled. Application metadata does not deregister a provider execution worker.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q034",
-      "checkpointId": "CP3",
-      "caseId": "L12-C07",
-      "task": "safeguard",
-      "caseContext": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.2"
+        "D3.3.7"
       ],
       "difficulty": "applied",
-      "question": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "An approved worker must download packages, contact the provider and reach private SQL. How should connectivity evidence be scoped?",
       "options": [
         {
           "key": "A",
-          "text": "Avoid mounting sensitive host paths or privileged sockets",
-          "rationale": "Such mounts can defeat intended container isolation. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Use a successful browser session from the developer laptop",
+          "rationale": "Another machine route does not establish the worker required service connectivity."
         },
         {
           "key": "B",
-          "text": "Inventory tool and filesystem access before changing the account",
-          "rationale": "Hidden dependencies may rely on unnecessary elevation. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Use the number of registered workers as a network metric",
+          "rationale": "Inventory counts do not measure actual endpoint reachability from any selected worker."
         },
         {
           "key": "C",
-          "text": "Review image deprecation notices and test updates",
-          "rationale": "Explicit labels still have a support lifecycle. This directly addresses the constraint stated in this case."
+          "text": "Test each required endpoint and protocol from that worker",
+          "rationale": "Different network dependencies need observations from the actual executing network context."
+        },
+        {
+          "key": "D",
+          "text": "Test only DNS then infer every service is authorized",
+          "rationale": "Name resolution does not prove routing, TLS or application authorization."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Explicit labels still have a support lifecycle. The selected answer is review image deprecation notices and test updates.",
+      "explanation": "Different network dependencies need observations from the actual executing network context. Another machine route does not establish the worker required service connectivity. Name resolution does not prove routing, TLS or application authorization. Inventory counts do not measure actual endpoint reachability from any selected worker.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q035",
-      "checkpointId": "CP3",
-      "caseId": "L12-C07",
-      "task": "tradeoff",
-      "caseContext": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh.",
+      "checkpointId": "CP1",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Hosted image churn: A pipeline relies on software implicitly installed on a moving hosted image and fails after an image refresh. The team selects this remedy: \"Declare toolchain setup and select a supported image intentionally.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A container job requires Docker access, but the selected agent lacks a functioning container runtime. What should preflight establish?",
       "options": [
         {
           "key": "A",
-          "text": "Image control is less granular on hosted workers",
-          "rationale": "Self-hosting offers more control with more maintenance. This directly addresses the constraint stated in this case."
+          "text": "The actual required runtime and its executable capability",
+          "rationale": "Job execution needs the working tool rather than a decorative capability label."
         },
         {
           "key": "B",
-          "text": "Stronger isolation may require separate workers or virtual machines",
-          "rationale": "Container convenience alone is not sufficient for hostile workloads. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Only the operating-system marketing name",
+          "rationale": "The OS label does not prove an installed functioning container runtime exists."
         },
         {
           "key": "C",
-          "text": "Some installations need a separate privileged preparation step",
-          "rationale": "Routine jobs should not retain installation-level authority. That addresses a different requirement: Overpowered account. It does not directly resolve this case's stated constraint."
+          "text": "Only the repository branch review status",
+          "rationale": "Code review cannot install or verify the selected worker required runtime."
+        },
+        {
+          "key": "D",
+          "text": "Only the total artifact size from earlier builds",
+          "rationale": "Previous output size does not establish present executable container engine readiness."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Self-hosting offers more control with more maintenance. The selected answer is image control is less granular on hosted workers.",
+      "explanation": "Job execution needs the working tool rather than a decorative capability label. The OS label does not prove an installed functioning container runtime exists. Code review cannot install or verify the selected worker required runtime. Previous output size does not establish present executable container engine readiness.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q036",
       "checkpointId": "CP5",
-      "caseId": "L12-C08",
-      "task": "remedy",
-      "caseContext": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host.",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "applied",
+      "question": "A worker stores a package cache across jobs. What should the design distinguish from its disposable job workspace?",
       "options": [
         {
           "key": "A",
-          "text": "Use host isolation and restricted trust-specific pools",
-          "rationale": "Containers do not erase host-level execution risks. This directly addresses the constraint stated in this case."
+          "text": "Every cached package is an approved production artifact",
+          "rationale": "Cache presence does not establish source approval or immutable release validation."
         },
         {
           "key": "B",
-          "text": "Evaluate on-demand workers or a scheduled safe lifecycle",
-          "rationale": "Capacity should follow actual execution demand. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
+          "text": "Deleting one workspace necessarily deletes every shared cache",
+          "rationale": "Separate storage lifetimes do not automatically follow the workspace cleanup operation."
         },
         {
           "key": "C",
-          "text": "Declare toolchain setup and select a supported image intentionally",
-          "rationale": "Image contents are maintained service dependencies. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Reusable cache trust from single-job workspace cleanup",
+          "rationale": "Persistence for performance remains a separate input boundary even when workspaces are removed."
+        },
+        {
+          "key": "D",
+          "text": "A cache key grants deployment authorization",
+          "rationale": "Lookup identity does not confer permission to modify application resources."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Containers do not erase host-level execution risks. The selected answer is use host isolation and restricted trust-specific pools.",
+      "explanation": "Persistence for performance remains a separate input boundary even when workspaces are removed. Cache presence does not establish source approval or immutable release validation. Separate storage lifetimes do not automatically follow the workspace cleanup operation. Lookup identity does not confer permission to modify application resources.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q037",
-      "checkpointId": "CP5",
-      "caseId": "L12-C08",
-      "task": "diagnosis",
-      "caseContext": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host.",
+      "checkpointId": "CP3",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which explanation best accounts for the behavior or constraint described?",
+      "question": "An agent pool appears in an organization inventory but its network is unknown. What evidence is still needed before using it for migrations?",
       "options": [
         {
           "key": "A",
-          "text": "The workflow assumed an unchanging preinstalled tool inventory",
-          "rationale": "Hosted images evolve independently of repository changes. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Only evidence that the agent has the required SDK installed",
+          "rationale": "Tool readiness does not establish pipeline authorization or the private database network route."
         },
         {
           "key": "B",
-          "text": "Containerization was mistaken for a complete trust boundary",
-          "rationale": "Shared hosts and mounted resources can remain exposed. This directly addresses the constraint stated in this case."
+          "text": "Only an online status for the first listed agent",
+          "rationale": "Connectivity to the provider does not demonstrate the required database route or pipeline resource authorization."
         },
         {
           "key": "C",
-          "text": "Always-on provisioning wastes idle compute capacity",
-          "rationale": "The resource remains billable between jobs. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
+          "text": "Authorized job access and observed private database connectivity",
+          "rationale": "Pool visibility does not establish either execution permission or the required SQL route."
+        },
+        {
+          "key": "D",
+          "text": "Only a successful compilation from the same agent pool",
+          "rationale": "Compilation may require neither the SQL network path nor the permissions needed by a migration."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Shared hosts and mounted resources can remain exposed. The selected answer is containerization was mistaken for a complete trust boundary.",
+      "explanation": "Compilation may require neither the SQL network path nor the permissions needed by a migration. Connectivity to the provider does not demonstrate the required database route or pipeline resource authorization. Pool visibility does not establish either execution permission or the required SQL route. Tool readiness does not establish pipeline authorization or the private database network route.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q038",
       "checkpointId": "CP5",
-      "caseId": "L12-C08",
-      "task": "verification",
-      "caseContext": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host.",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
       "difficulty": "applied",
-      "question": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A failed cleanup reports workspaceRemoved false but the job produced the expected artifact hash. What should lifecycle validation conclude?",
       "options": [
         {
           "key": "A",
-          "text": "Contributor execution cannot access privileged host resources",
-          "rationale": "The proof must test the actual isolation boundary. This directly addresses the constraint stated in this case."
+          "text": "Ignore cleanup whenever a job has a nonempty output",
+          "rationale": "Output existence does not reduce the risk from retained execution state."
         },
         {
           "key": "B",
-          "text": "Builds still start within the agreed time with less idle runtime",
-          "rationale": "Cost reduction must preserve service expectations. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
+          "text": "Replace false with true in the evidence file",
+          "rationale": "Changing the report conceals actual residual state rather than removing it."
         },
         {
           "key": "C",
-          "text": "A clean selected image installs and reports required tools",
-          "rationale": "The declared setup should reproduce the environment. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Artifact production passed while disposable cleanup failed",
+          "rationale": "Output identity and residual-state removal are separate required worker lifecycle observations."
+        },
+        {
+          "key": "D",
+          "text": "Pass everything because output content was correct",
+          "rationale": "A correct artifact does not satisfy the independent workspace removal requirement."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "The proof must test the actual isolation boundary. The selected answer is contributor execution cannot access privileged host resources.",
+      "explanation": "Output identity and residual-state removal are separate required worker lifecycle observations. A correct artifact does not satisfy the independent workspace removal requirement. Changing the report conceals actual residual state rather than removing it. Output existence does not reduce the risk from retained execution state.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "json",
+        "code": "{\"jobExitCode\":0,\"workspaceRemoved\":false,\"outputSha256\":\"expected\"}"
+      }
     },
     {
       "id": "L12-Q039",
-      "checkpointId": "CP5",
-      "caseId": "L12-C08",
-      "task": "safeguard",
-      "caseContext": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host.",
+      "checkpointId": "CP4",
       "objectiveIds": [
         "D3.3.7"
       ],
       "difficulty": "applied",
-      "question": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A control-plane endpoint returns HTTP 403 promptly. What has the connectivity observation established without proving job authorization?",
       "options": [
         {
           "key": "A",
-          "text": "Avoid mounting sensitive host paths or privileged sockets",
-          "rationale": "Such mounts can defeat intended container isolation. This directly addresses the constraint stated in this case."
+          "text": "The workload has permission to perform every provider mutation",
+          "rationale": "An access denial does not establish authorization for protected resource operations."
         },
         {
           "key": "B",
-          "text": "Drain active jobs before shutting down workers",
-          "rationale": "Stopping an occupied host can corrupt execution. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
+          "text": "The private SQL identity has the right database role",
+          "rationale": "A provider endpoint response does not inspect unrelated SQL permission grants."
         },
         {
           "key": "C",
-          "text": "Review image deprecation notices and test updates",
-          "rationale": "Explicit labels still have a support lifecycle. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "The network route is necessarily unavailable",
+          "rationale": "A received HTTP response demonstrates communication with a responding endpoint."
+        },
+        {
+          "key": "D",
+          "text": "HTTPS reached a responding service but access was denied",
+          "rationale": "An application denial differs from a missing route or unresponsive TCP connection."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Such mounts can defeat intended container isolation. The selected answer is avoid mounting sensitive host paths or privileged sockets.",
+      "explanation": "An application denial differs from a missing route or unresponsive TCP connection. A received HTTP response demonstrates communication with a responding endpoint. An access denial does not establish authorization for protected resource operations. A provider endpoint response does not inspect unrelated SQL permission grants.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q040",
       "checkpointId": "CP5",
-      "caseId": "L12-C08",
-      "task": "tradeoff",
-      "caseContext": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host.",
       "objectiveIds": [
-        "D3.3.7"
+        "D3.3.2"
       ],
-      "difficulty": "advanced",
-      "question": "Container assumption: A job container is expected to remove every security risk from executing arbitrary contributor code on a privileged host. The team selects this remedy: \"Use host isolation and restricted trust-specific pools.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "difficulty": "applied",
+      "question": "A local process fixture passes both lifecycle paths, but no adversarial code or hypervisor boundary was tested. Which claim is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Image control is less granular on hosted workers",
-          "rationale": "Self-hosting offers more control with more maintenance. That addresses a different requirement: Hosted image churn. It does not directly resolve this case's stated constraint."
+          "text": "Every host secret is guaranteed inaccessible forever",
+          "rationale": "A bounded fixture cannot prove universal future absence of credential access paths."
         },
         {
           "key": "B",
-          "text": "Stronger isolation may require separate workers or virtual machines",
-          "rationale": "Container convenience alone is not sufficient for hostile workloads. This directly addresses the constraint stated in this case."
+          "text": "Observed lifecycle behavior passed; hostile-code containment remains unproven",
+          "rationale": "The exercised process assertions do not establish isolation against arbitrary malicious execution."
         },
         {
           "key": "C",
-          "text": "On-demand capacity increases startup latency",
-          "rationale": "Lower idle cost may mean longer initial queues. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
+          "text": "The fixture proves perfect multitenant operating-system isolation",
+          "rationale": "No such boundary was exercised or established by the local lifecycle test."
+        },
+        {
+          "key": "D",
+          "text": "Provider registration and production approvals also passed",
+          "rationale": "Local process observations do not invoke those independent remote authorization mechanisms."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Container convenience alone is not sufficient for hostile workloads. The selected answer is stronger isolation may require separate workers or virtual machines.",
+      "explanation": "The exercised process assertions do not establish isolation against arbitrary malicious execution. No such boundary was exercised or established by the local lifecycle test. Local process observations do not invoke those independent remote authorization mechanisms. A bounded fixture cannot prove universal future absence of credential access paths.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q041",
       "checkpointId": "CP5",
-      "caseId": "L12-C09",
-      "task": "remedy",
-      "caseContext": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week.",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which next change most directly satisfies the stated requirement?",
+      "difficulty": "advanced",
+      "question": "Untrusted PR and SQL migration jobs share a persistent worker, caches and network route. Which redesign best preserves the migration trust boundary?",
       "options": [
         {
           "key": "A",
-          "text": "Evaluate on-demand workers or a scheduled safe lifecycle",
-          "rationale": "Capacity should follow actual execution demand. This directly addresses the constraint stated in this case."
+          "text": "Mask SQL strings while letting every job retain the host",
+          "rationale": "Masking does not stop earlier untrusted code from reading or intercepting available authority."
         },
         {
           "key": "B",
-          "text": "Identify required endpoints and allow the minimum supported connectivity",
-          "rationale": "Agent operation needs specific rather than unrestricted egress. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
+          "text": "Separate disposable trusted private workers from untrusted contribution execution",
+          "rationale": "Job lifetime alone cannot protect a shared privileged host from earlier hostile workloads."
         },
         {
           "key": "C",
-          "text": "Use host isolation and restricted trust-specific pools",
-          "rationale": "Containers do not erase host-level execution risks. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Rely only on a successful contribution test result",
+          "rationale": "Passing functional tests does not prove contributor code is safe for privileged execution."
+        },
+        {
+          "key": "D",
+          "text": "Keep the shared machine but rename migration labels",
+          "rationale": "Routing names do not isolate retained state or privileged network access."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Capacity should follow actual execution demand. The selected answer is evaluate on-demand workers or a scheduled safe lifecycle.",
+      "explanation": "Job lifetime alone cannot protect a shared privileged host from earlier hostile workloads. Routing names do not isolate retained state or privileged network access. Masking does not stop earlier untrusted code from reading or intercepting available authority. Passing functional tests does not prove contributor code is safe for privileged execution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q042",
-      "checkpointId": "CP5",
-      "caseId": "L12-C09",
-      "task": "diagnosis",
-      "caseContext": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week.",
+      "checkpointId": "CP3",
       "objectiveIds": [
         "D3.3.2"
       ],
-      "difficulty": "foundational",
-      "question": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which explanation best accounts for the behavior or constraint described?",
+      "difficulty": "advanced",
+      "question": "A pool has six online agents, two allowed parallel jobs and three jobs waiting on an unavailable capability. Which intervention targets the real bottleneck?",
       "options": [
         {
           "key": "A",
-          "text": "Always-on provisioning wastes idle compute capacity",
-          "rationale": "The resource remains billable between jobs. This directly addresses the constraint stated in this case."
+          "text": "Register ten more agents with the same missing capability",
+          "rationale": "Increasing ineligible inventory does not create a suitable executable worker."
         },
         {
           "key": "B",
-          "text": "A narrow download failure was generalized into unlimited access",
-          "rationale": "Connectivity diagnosis should identify the actual dependency. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
+          "text": "Assume all queued jobs can run because six exceeds three",
+          "rationale": "Agent count does not establish matching capability or allowed parallel capacity."
         },
         {
           "key": "C",
-          "text": "Containerization was mistaken for a complete trust boundary",
-          "rationale": "Shared hosts and mounted resources can remain exposed. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Reduce test execution duration without supplying the missing capability",
+          "rationale": "Shorter requested work still cannot run on an agent lacking the actual required executable capability."
+        },
+        {
+          "key": "D",
+          "text": "Supply eligible authorized capability within the permitted execution slots",
+          "rationale": "Raw online counts do not solve a specific missing matching worker capability."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Shorter requested work still cannot run on an agent lacking the actual required executable capability. Agent count does not establish matching capability or allowed parallel capacity. Raw online counts do not solve a specific missing matching worker capability. Increasing ineligible inventory does not create a suitable executable worker.",
+      "sourceIds": [
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Online agents: 6\nParallel entitlement: 2\nRequired capability: absent\nQueued jobs: 3"
+      }
+    },
+    {
+      "id": "L12-Q043",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A one-job runner is removed after failure, but an external deployment token issued to it is still valid. What must recovery consider?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Credential revocation or expiry independently from machine cleanup",
+          "rationale": "Disposing the worker does not itself revoke every token already issued externally."
+        },
+        {
+          "key": "B",
+          "text": "A new runner name automatically invalidates all old tokens",
+          "rationale": "Friendly machine identity does not perform remote token lifecycle revocation."
+        },
+        {
+          "key": "C",
+          "text": "Deleting test reports proves the old token cannot be reused",
+          "rationale": "Evidence removal does not control external credential authorization or expiry."
+        },
+        {
+          "key": "D",
+          "text": "A SHA256 of the output automatically expires credentials",
+          "rationale": "Content digests do not change identity provider token validity or grants."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The resource remains billable between jobs. The selected answer is always-on provisioning wastes idle compute capacity.",
+      "explanation": "Disposing the worker does not itself revoke every token already issued externally. Friendly machine identity does not perform remote token lifecycle revocation. Content digests do not change identity provider token validity or grants. Evidence removal does not control external credential authorization or expiry.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q043",
-      "checkpointId": "CP5",
-      "caseId": "L12-C09",
-      "task": "verification",
-      "caseContext": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week.",
-      "objectiveIds": [
-        "D3.3.2"
-      ],
-      "difficulty": "applied",
-      "question": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Required job operations work while unrelated destinations remain restricted",
-          "rationale": "Positive and negative network checks establish scope. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Contributor execution cannot access privileged host resources",
-          "rationale": "The proof must test the actual isolation boundary. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Builds still start within the agreed time with less idle runtime",
-          "rationale": "Cost reduction must preserve service expectations. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Cost reduction must preserve service expectations. The selected answer is builds still start within the agreed time with less idle runtime.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L12-Q044",
-      "checkpointId": "CP5",
-      "caseId": "L12-C09",
-      "task": "safeguard",
-      "caseContext": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week.",
+      "checkpointId": "CP4",
       "objectiveIds": [
-        "D3.3.2"
+        "D3.3.7"
       ],
-      "difficulty": "applied",
-      "question": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. Which execution safeguard most directly addresses the risk in this case?",
+      "difficulty": "advanced",
+      "question": "Private SQL migration fails only on hosted workers; private agents pass, and the artifact is identical. What should diagnosis examine first?",
       "options": [
         {
           "key": "A",
-          "text": "Maintain documented endpoint requirements and update procedures",
-          "rationale": "Service dependencies can change over time. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
+          "text": "The execution network, DNS, firewall and identity differences",
+          "rationale": "Identical application bytes can behave differently across distinct network and authorization contexts."
         },
         {
           "key": "B",
-          "text": "Avoid mounting sensitive host paths or privileged sockets",
-          "rationale": "Such mounts can defeat intended container isolation. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Only the organization permitted parallel job count",
+          "rationale": "Capacity controls when work runs rather than why an executing worker cannot reach or authenticate to SQL."
         },
         {
           "key": "C",
-          "text": "Drain active jobs before shutting down workers",
-          "rationale": "Stopping an occupied host can corrupt execution. This directly addresses the constraint stated in this case."
+          "text": "Only whether both workers use the same pipeline display name",
+          "rationale": "A shared label does not equalize their private DNS, routes, firewall rules or effective database identities."
+        },
+        {
+          "key": "D",
+          "text": "Only the source and artifact checksums shared by both workers",
+          "rationale": "Identical bytes are already established and do not explain different network or identity access outcomes."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Stopping an occupied host can corrupt execution. The selected answer is drain active jobs before shutting down workers.",
+      "explanation": "Identical bytes are already established and do not explain different network or identity access outcomes. Capacity controls when work runs rather than why an executing worker cannot reach or authenticate to SQL. Identical application bytes can behave differently across distinct network and authorization contexts. A shared label does not equalize their private DNS, routes, firewall rules or effective database identities.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L12-Q045",
       "checkpointId": "CP5",
-      "caseId": "L12-C09",
-      "task": "tradeoff",
-      "caseContext": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week.",
       "objectiveIds": [
         "D3.3.2"
       ],
       "difficulty": "advanced",
-      "question": "Idle runner cost: A dedicated lab VM runs continuously even though builds occur only twice each week. The team selects this remedy: \"Evaluate on-demand workers or a scheduled safe lifecycle.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A fixture must retain evidence while deleting its job workspace even when execution throws. Which implementation pattern fits both requirements?",
       "options": [
         {
           "key": "A",
-          "text": "Tighter egress increases configuration maintenance",
-          "rationale": "The restriction provides a clearer network trust boundary. That addresses a different requirement: Network maintenance. It does not directly resolve this case's stated constraint."
+          "text": "Return success immediately whenever the child throws",
+          "rationale": "Suppressing the failure conceals the actual job outcome and lifecycle problem."
         },
         {
           "key": "B",
-          "text": "Stronger isolation may require separate workers or virtual machines",
-          "rationale": "Container convenience alone is not sufficient for hostile workloads. That addresses a different requirement: Container assumption. It does not directly resolve this case's stated constraint."
+          "text": "Delete evidence before running the job to avoid failure records",
+          "rationale": "Removing observations prevents rather than establishes truthful lifecycle validation."
         },
         {
           "key": "C",
-          "text": "On-demand capacity increases startup latency",
-          "rationale": "Lower idle cost may mean longer initial queues. This directly addresses the constraint stated in this case."
+          "text": "Run cleanup only after a successful child exit",
+          "rationale": "That leaves residual workspaces on the failure path the contract must handle."
+        },
+        {
+          "key": "D",
+          "text": "Write bounded evidence and clean resources in finally paths",
+          "rationale": "Guaranteed finalization preserves diagnostic results while handling both success and failure cleanup."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Guaranteed finalization preserves diagnostic results while handling both success and failure cleanup. Removing observations prevents rather than establishes truthful lifecycle validation. That leaves residual workspaces on the failure path the contract must handle. Suppressing the failure conceals the actual job outcome and lifecycle problem.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q046",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A repository has restricted runner groups, but a trusted workflow checks out untrusted PR code on the privileged group. What remains unsafe?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Workload code trust still crosses the privileged execution boundary",
+          "rationale": "Repository-level access restrictions do not make every checked-out contribution safe to execute."
+        },
+        {
+          "key": "B",
+          "text": "A successful checkout proves independent production approval",
+          "rationale": "Source retrieval does not establish owner authorization for a privileged release transition."
+        },
+        {
+          "key": "C",
+          "text": "The group restriction automatically sanitizes all source code",
+          "rationale": "Access configuration cannot prove arbitrary contributor source lacks malicious behavior."
+        },
+        {
+          "key": "D",
+          "text": "The runner label prevents code from opening network connections",
+          "rationale": "Labels select workers rather than enforce process-level network security isolation."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Repository-level access restrictions do not make every checked-out contribution safe to execute. Access configuration cannot prove arbitrary contributor source lacks malicious behavior. Labels select workers rather than enforce process-level network security isolation. Source retrieval does not establish owner authorization for a privileged release transition.",
+      "sourceIds": [
+        "S2"
+      ]
+    },
+    {
+      "id": "L12-Q047",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "An agent image update changes tool versions while a mutable capability label stays constant. How should repeatability be assessed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Trust the label and delete previous version evidence",
+          "rationale": "Removing actual observations hides the environment change rather than verifies compatibility."
+        },
+        {
+          "key": "B",
+          "text": "Use artifact file size as the only environment fingerprint",
+          "rationale": "Output size does not identify the actual installed compiler and execution toolchain."
+        },
+        {
+          "key": "C",
+          "text": "Assume hosted worker updates cannot affect builds",
+          "rationale": "Toolchain changes can alter restore, compilation and test behavior for unchanged source."
+        },
+        {
+          "key": "D",
+          "text": "Record actual versions and validate against pinned repository requirements",
+          "rationale": "A stable label cannot establish that executable tools remained compatible or unchanged."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "A stable label cannot establish that executable tools remained compatible or unchanged. Removing actual observations hides the environment change rather than verifies compatibility. Toolchain changes can alter restore, compilation and test behavior for unchanged source. Output size does not identify the actual installed compiler and execution toolchain.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L12-Q048",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "The worker fixture claims no credential variables leaked, but its test never seeds a credential-like variable. What evidence improvement is needed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Seed a nonsecret credential-shaped sentinel and assert it is absent",
+          "rationale": "A deliberate negative fixture proves the filtering behavior was exercised on relevant input."
+        },
+        {
+          "key": "B",
+          "text": "Use a real production token as the sentinel",
+          "rationale": "A clearly nonsecret marker can test filtering without exposing actual privileged credentials."
+        },
+        {
+          "key": "C",
+          "text": "Remove the filtering assertion because the healthy job passed",
+          "rationale": "Job success does not establish that sensitive environment propagation was prevented."
+        },
+        {
+          "key": "D",
+          "text": "Infer filtering from workspaceRemoved true",
+          "rationale": "Directory removal and process environment filtering are distinct lifecycle behaviors."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "A deliberate negative fixture proves the filtering behavior was exercised on relevant input. A clearly nonsecret marker can test filtering without exposing actual privileged credentials. Job success does not establish that sensitive environment propagation was prevented. Directory removal and process environment filtering are distinct lifecycle behaviors.",
+      "sourceIds": [
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Filter test environment: no token-like names present\nObserved result: credentialEnvironmentPresent=false"
+      }
+    },
+    {
+      "id": "L12-Q049",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A team autoscaling private agents can reach zero idle workers, but provisioning takes minutes. What tradeoff should capacity planning include?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Idle cost savings versus cold-start delay and bounded queue objectives",
+          "rationale": "Reducing idle capacity can increase startup latency while preserving deliberate cost control."
+        },
+        {
+          "key": "B",
+          "text": "Autoscaling automatically grants unlimited licensed parallelism",
+          "rationale": "Machine count and provider parallel execution entitlement remain separate capacity constraints."
+        },
+        {
+          "key": "C",
+          "text": "Zero idle workers guarantees instantaneous execution",
+          "rationale": "No ready worker can require provisioning time before a queued job executes."
+        },
+        {
+          "key": "D",
+          "text": "Larger workspace cleanup intervals remove provisioning latency",
+          "rationale": "Filesystem cleanup timing does not establish how quickly a missing worker can be provisioned and registered."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "Reducing idle capacity can increase startup latency while preserving deliberate cost control. No ready worker can require provisioning time before a queued job executes. Machine count and provider parallel execution entitlement remain separate capacity constraints. Filesystem cleanup timing does not establish how quickly a missing worker can be provisioned and registered.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L12-Q050",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D3.3.2"
+      ],
+      "difficulty": "advanced",
+      "question": "The failed fixture removes its workspace but leaves an executable child alive with inherited credentials. Which final assertions are incomplete?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A successful parent exit proves all children terminated",
+          "rationale": "Child process lifetime can outlast the parent without additional lifecycle control."
+        },
+        {
+          "key": "B",
+          "text": "A shorter workspace pathname would have prevented execution",
+          "rationale": "Naming cannot enforce process termination or revoke inherited credential access."
+        },
+        {
+          "key": "C",
+          "text": "Process termination and credential lifetime need separate verification",
+          "rationale": "Filesystem removal alone cannot establish that active execution and authority have ended."
+        },
+        {
+          "key": "D",
+          "text": "The artifact digest is the only required cleanup proof",
+          "rationale": "Output identity does not show that spawned processes or credentials stopped existing."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Lower idle cost may mean longer initial queues. The selected answer is on-demand capacity increases startup latency.",
+      "explanation": "Filesystem removal alone cannot establish that active execution and authority have ended. Output identity does not show that spawned processes or credentials stopped existing. Naming cannot enforce process termination or revoke inherited credential access. Child process lifetime can outlast the parent without additional lifecycle control.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q046",
-      "checkpointId": "CP4",
-      "caseId": "L12-C10",
-      "task": "remedy",
-      "caseContext": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails.",
-      "objectiveIds": [
-        "D3.3.2",
-        "D3.3.7"
-      ],
-      "difficulty": "foundational",
-      "question": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Identify required endpoints and allow the minimum supported connectivity",
-          "rationale": "Agent operation needs specific rather than unrestricted egress. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Use an appropriately connected agent with restricted network access",
-          "rationale": "Execution needs a route to the private target. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Evaluate on-demand workers or a scheduled safe lifecycle",
-          "rationale": "Capacity should follow actual execution demand. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Agent operation needs specific rather than unrestricted egress. The selected answer is identify required endpoints and allow the minimum supported connectivity.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q047",
-      "checkpointId": "CP4",
-      "caseId": "L12-C10",
-      "task": "diagnosis",
-      "caseContext": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails.",
-      "objectiveIds": [
-        "D3.3.2",
-        "D3.3.7"
-      ],
-      "difficulty": "applied",
-      "question": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A narrow download failure was generalized into unlimited access",
-          "rationale": "Connectivity diagnosis should identify the actual dependency. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "The hosted worker lacks the required private connectivity",
-          "rationale": "Credentials alone cannot establish a network route. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Always-on provisioning wastes idle compute capacity",
-          "rationale": "The resource remains billable between jobs. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Connectivity diagnosis should identify the actual dependency. The selected answer is a narrow download failure was generalized into unlimited access.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q048",
-      "checkpointId": "CP4",
-      "caseId": "L12-C10",
-      "task": "verification",
-      "caseContext": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails.",
-      "objectiveIds": [
-        "D3.3.2",
-        "D3.3.7"
-      ],
-      "difficulty": "applied",
-      "question": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Builds still start within the agreed time with less idle runtime",
-          "rationale": "Cost reduction must preserve service expectations. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Required job operations work while unrelated destinations remain restricted",
-          "rationale": "Positive and negative network checks establish scope. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "The agent reaches only the intended private test endpoint",
-          "rationale": "Connectivity must match the required network boundary. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Positive and negative network checks establish scope. The selected answer is required job operations work while unrelated destinations remain restricted.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q049",
-      "checkpointId": "CP4",
-      "caseId": "L12-C10",
-      "task": "safeguard",
-      "caseContext": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails.",
-      "objectiveIds": [
-        "D3.3.2",
-        "D3.3.7"
-      ],
-      "difficulty": "applied",
-      "question": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Maintain documented endpoint requirements and update procedures",
-          "rationale": "Service dependencies can change over time. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "B",
-          "text": "Avoid exposing the private service publicly as a shortcut",
-          "rationale": "A network workaround should preserve the access design. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Drain active jobs before shutting down workers",
-          "rationale": "Stopping an occupied host can corrupt execution. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Service dependencies can change over time. The selected answer is maintain documented endpoint requirements and update procedures.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L12-Q050",
-      "checkpointId": "CP4",
-      "caseId": "L12-C10",
-      "task": "tradeoff",
-      "caseContext": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails.",
-      "objectiveIds": [
-        "D3.3.2",
-        "D3.3.7"
-      ],
-      "difficulty": "advanced",
-      "question": "Network maintenance: Security proposes broad outbound internet access for every self-hosted runner because one tool download fails. The team selects this remedy: \"Identify required endpoints and allow the minimum supported connectivity.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "On-demand capacity increases startup latency",
-          "rationale": "Lower idle cost may mean longer initial queues. That addresses a different requirement: Idle runner cost. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Tighter egress increases configuration maintenance",
-          "rationale": "The restriction provides a clearer network trust boundary. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Self-managed connectivity adds infrastructure operations",
-          "rationale": "Agent placement introduces patching and capacity responsibilities. That addresses a different requirement: Private endpoint. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The restriction provides a clearer network trust boundary. The selected answer is tighter egress increases configuration maintenance.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     }
   ]

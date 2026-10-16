@@ -15,8 +15,8 @@ Learner role: **Release approver**. Outcome: Gate environments with approvals an
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification status | not-run |
-| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair passed in CourseReleaseSequences.Tests.ps1. Local .NET publishing/tests, EF SQL generation and Bicep compilation are real; GitHub, Azure and readiness HTTP responses are explicit fail-closed doubles. Live release, SQL authentication and traffic routing have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -50,7 +50,7 @@ Official objective topic IDs: `D3.2.1`, `D3.3.9`
 | [CP1](#task-1) | Prepare an environment approval policy |
 | [CP2](#task-2) | Create the sandbox GitHub environment |
 | [CP3](#task-3) | Stage the dormant deployment workflow |
-| [CP4](#task-4) | Model Azure Pipelines checks outside YAML author control |
+| [CP4](#task-4) | Exercise owner-controlled approval and exclusive-lock decisions |
 | [CP5](#task-5) | Evaluate an explicit denied release request |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
@@ -206,7 +206,7 @@ Common failure and safe retry: Replace the dormant template environment name wit
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 4 — Model Azure Pipelines checks outside YAML author control
+## Task 4 — Exercise owner-controlled approval and exclusive-lock decisions
 
 <a id="task-4"></a>
 
@@ -217,15 +217,24 @@ Foundation/supporting task; no additional exam-objective coverage is claimed.
 ```powershell
 $checks=[ordered]@{resource='environment';project=$AdoProject;approver='separate-owner';branchControl='refs/heads/main';exclusiveLock=$true;definitionSource='resource-owner configuration';yamlCanBypass=$false}
  $checks|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'ado-checks.json')
+$requests=@(@{id='healthy';branch='refs/heads/main';requester='author';approver='separate-owner';approved=$true;lockAvailable=$true;expected=$true},@{id='self-approval';branch='refs/heads/main';requester='separate-owner';approver='separate-owner';approved=$true;lockAvailable=$true;expected=$false},@{id='wrong-branch';branch='refs/heads/feature';requester='author';approver='separate-owner';approved=$true;lockAvailable=$true;expected=$false},@{id='locked';branch='refs/heads/main';requester='author';approver='separate-owner';approved=$true;lockAvailable=$false;expected=$false},@{id='unapproved';branch='refs/heads/main';requester='author';approver='separate-owner';approved=$false;lockAvailable=$true;expected=$false})
+$evaluated=foreach($request in $requests){
+ $allowed=$request.branch -ceq $checks.branchControl -and $request.approved -and $request.approver -ceq $checks.approver -and $request.requester -cne $request.approver -and $request.lockAvailable
+ if($allowed -ne $request.expected){throw "Protected resource model failed: $($request.id)"}
+ @{id=$request.id;allowed=$allowed}
+}
+@{fixtureOnly=$true;results=@($evaluated);providerChecksConfigured=$false}|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'resource-check-decisions.json')
 ```
 
-Expected state: The approval contract separates protected resource checks from editable pipeline YAML.
+Expected state: A local five-case resource policy model accepts an independently approved main release and rejects self-approval, a feature branch, an unavailable lock and missing approval. Real Azure DevOps resource checks still require bootstrap.
 
 Positive validation:
 
 ```powershell
 $c=Get-Content (Join-Path $WorkRoot 'ado-checks.json') -Raw|ConvertFrom-Json
  if(-not $c.exclusiveLock -or $c.approver -ne 'separate-owner'){throw 'Environment checks incomplete.'}
+$r=Get-Content (Join-Path $WorkRoot 'resource-check-decisions.json') -Raw|ConvertFrom-Json
+if(@($r.results).Count -ne 5 -or @($r.results|Where-Object allowed).Count -ne 1 -or -not ($r.results|Where-Object id -eq 'healthy').allowed){throw 'Approval/branch/lock decisions failed.'}
 ```
 
 Negative validation:
@@ -233,9 +242,11 @@ Negative validation:
 ```powershell
 $c=Get-Content (Join-Path $WorkRoot 'ado-checks.json') -Raw|ConvertFrom-Json
  if($c.yamlCanBypass){throw 'YAML author cannot own bypassable release approval.'}
+$r=Get-Content (Join-Path $WorkRoot 'resource-check-decisions.json') -Raw|ConvertFrom-Json
+if($r.providerChecksConfigured -or @($r.results|Where-Object {$_.id -ne 'healthy' -and $_.allowed}).Count){throw 'Local model cannot claim provider enforcement or allow a negative case.'}
 ```
 
-Evidence to retain: Protected-resource check specification and owner.
+Evidence to retain: Computed decisions for all five requests, policy owner and explicit provider verification limitation.
 
 Common failure and safe retry: Configure real checks through the separate privileged resource bootstrap; reading a YAML environment name alone does not prove approval enforcement.
 

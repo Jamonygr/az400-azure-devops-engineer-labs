@@ -10,498 +10,583 @@ Choose the single best answer for every question. Use [the answer guide](ANSWERS
 
 Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which next change most directly satisfies the stated requirement?
+A request is created Monday, enters active work Thursday, and finishes Friday. Which interval measures its lead time under the Azure Boards definition?
 
-- **A.** Investigate intake queues and work-in-progress limits
-- **B.** Normalize definitions before comparing team outcomes
-- **C.** Measure lead time from creation through completion
+- **A.** Active work to completion
+- **B.** First commit to deployment
+- **C.** Creation to first assignment
+- **D.** Creation to completion
 
 ## L02-Q002
 
 Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which explanation best accounts for the behavior or constraint described?
+Lead time increases while cycle time remains stable for comparable work items. Which investigation should receive the first attention?
 
-- **A.** The delay occurs before work starts
-- **B.** The populations and state transitions are not comparable
-- **C.** Cycle time omits the initial queue interval
+- **A.** Test-agent CPU during active validation
+- **B.** Longer deployment execution after work is completed
+- **C.** Waiting before active work begins
+- **D.** Compiler optimization during development
 
 ## L02-Q003
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
 
-Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which observation provides the strongest evidence that the requested result was achieved?
+A planning chart counts one epic and one small task as equivalent completed units. What is the main interpretive problem?
 
-- **A.** The reported interval includes Monday through Friday
-- **B.** Queue age falls while cycle time remains stable
-- **C.** Both teams reproduce the same metric from documented rules
+- **A.** Completed items can never be counted for planning
+- **B.** An epic must always take exactly one sprint
+- **C.** The units describe materially different work sizes and lifecycle levels
+- **D.** The two work-item types use different numeric identifiers
 
 ## L02-Q004
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which execution safeguard most directly addresses the risk in this case?
+Which event starts cycle-time measurement for a work item that waits several days in the backlog before implementation?
 
-- **A.** Standardize state mappings and timestamp definitions
-- **B.** Compare similar work-item types and reporting windows
-- **C.** Publish query definitions and data freshness with the chart
+- **A.** Initial creation of the work item
+- **B.** Creation of the first linked pull request
+- **C.** Assignment of the release version label
+- **D.** Transition into an active work state
 
 ## L02-Q005
 
-Advanced · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. The team selects this remedy: "Measure lead time from creation through completion." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A team completes work quickly once started, but requests wait weeks for assignment. Which metric directly reveals this queue contribution?
 
-- **A.** Uniform metrics can miss legitimate workflow differences
-- **B.** Lead time can rise without slower active development
-- **C.** Lower queue age may require accepting less concurrent work
+- **A.** Average active coding duration
+- **B.** Mean build-agent queue duration
+- **C.** Lead time minus cycle time for consistently defined items
+- **D.** Mean time to restore a failed deployment
 
 ## L02-Q006
 
-Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
 
-Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which next change most directly satisfies the stated requirement?
+Which dashboard annotation makes a weekly throughput chart reproducible for another project analyst?
 
-- **A.** Separate planning metrics by comparable work-item class
-- **B.** Measure lead time from creation through completion
-- **C.** Investigate intake queues and work-in-progress limits
+- **A.** Work-item type filters, completion-state definition, and reporting window
+- **B.** Only the current total of visible work items
+- **C.** The sum of story points without its query definition
+- **D.** Only the date on which the dashboard was created
 
 ## L02-Q007
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which explanation best accounts for the behavior or constraint described?
+An item is created at 09:00, starts work at 11:00, and completes at 15:00 on the same day. What are lead time and cycle time?
 
-- **A.** Heterogeneous work units distort count-based comparisons
-- **B.** Cycle time omits the initial queue interval
-- **C.** The delay occurs before work starts
+```text
+Created: 2026-10-12T09: 00: 00Z
+Active: 2026-10-12T11: 00: 00Z
+Completed: 2026-10-12T15: 00: 00Z
+```
+
+- **A.** Six hours lead time and four hours cycle time
+- **B.** Four hours lead time and six hours cycle time
+- **C.** Two hours lead time and four hours cycle time
+- **D.** Six hours lead time and two hours cycle time
 
 ## L02-Q008
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which observation provides the strongest evidence that the requested result was achieved?
+After an intake-policy change, which observation most directly supports a reduction in queue delay without changing execution speed?
 
-- **A.** Queue age falls while cycle time remains stable
-- **B.** Forecasts show consistent definitions and comparable historical cohorts
-- **C.** The reported interval includes Monday through Friday
+```text
+Cohort: standard completed tasks
+Before: mean lead 12 days; mean cycle 4 days
+After:  mean lead7 days;  mean cycle 4 days
+```
+
+- **A.** Fewer visible backlog items after hiding old requests
+- **B.** Lower lead time with similar cycle time for equivalent cohorts
+- **C.** Higher pull-request count with no time measurements
+- **D.** Lower cycle time and unchanged lead time
 
 ## L02-Q009
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.2](../../docs/objective-map.md)
 
-Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which execution safeguard most directly addresses the risk in this case?
+A team creates 20 tasks, completes 12, and carries 8 forward. Which weekly count describes completed-item throughput under that definition?
 
-- **A.** Compare similar work-item types and reporting windows
-- **B.** Document filters and excluded work-item types
-- **C.** Standardize state mappings and timestamp definitions
+```text
+Created this week: 20 tasks
+Completed this week: 12 tasks
+Carried into next week: 8 tasks
+```
+
+- **A.** Thirty-two tasks
+- **B.** Twelve completed tasks
+- **C.** Twenty created tasks
+- **D.** Eight carried tasks
 
 ## L02-Q010
 
-Advanced · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. The team selects this remedy: "Investigate intake queues and work-in-progress limits." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A team changes its workflow so Approved is a proposed state and Implementing is active. What must a cycle-time dashboard use consistently?
 
-- **A.** Lower queue age may require accepting less concurrent work
-- **B.** Item counts do not measure delivered customer value
-- **C.** Lead time can rise without slower active development
+- **A.** The date a pull request title first mentions the item
+- **B.** The state-category mapping for when work actually becomes active
+- **C.** The alphabetically first state in each team's board
+- **D.** The date a reviewer first opens the dashboard
 
 ## L02-Q011
 
-Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which next change most directly satisfies the stated requirement?
+A team proposes excluding every item older than 30 days before publishing lead-time improvement. Why is that method risky?
 
-- **A.** Separate planning metrics by comparable work-item class
-- **B.** Measure review waiting time and rebalance reviewer capacity
-- **C.** Investigate intake queues and work-in-progress limits
+- **A.** Azure Boards cannot calculate lead time for completed items
+- **B.** Long-running items must always represent invalid data
+- **C.** It removes precisely the long-waiting items the metric should expose
+- **D.** It will necessarily overstate the duration of every recent item
 
 ## L02-Q012
 
 Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
 
-Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which explanation best accounts for the behavior or constraint described?
+A dashboard presents a delivery forecast from three unusually quiet weeks without showing sample size. Which correction is most useful?
 
-- **A.** The development bottleneck is reviewer availability
-- **B.** The delay occurs before work starts
-- **C.** Heterogeneous work units distort count-based comparisons
+- **A.** Show the sample period and uncertainty before treating the forecast as reliable
+- **B.** Hide the dates so readers focus on the forecast
+- **C.** Increase displayed precision from days to seconds
+- **D.** Treat the last week's throughput as a guaranteed future capacity
 
 ## L02-Q013
 
-Applied · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which observation provides the strongest evidence that the requested result was achieved?
+Two teams report cycle time, but one starts at triage and the other at coding. Their dashboards rank one faster. Which comparison plan is defensible?
 
-- **A.** Forecasts show consistent definitions and comparable historical cohorts
-- **B.** Time awaiting first meaningful review decreases
-- **C.** Queue age falls while cycle time remains stable
+- **A.** Use the smaller reported number as the organization's target for both teams
+- **B.** Publish the state definitions, compare equivalent cohorts, and explain remaining workflow differences
+- **C.** Average both dashboards and use the combined number as a common baseline
+- **D.** Normalize only by developer headcount and keep the different start states
 
 ## L02-Q014
 
-Applied · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
+Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which execution safeguard most directly addresses the risk in this case?
+A queue policy appears to lower average lead time, but unfinished requests are accumulating. What additional analysis prevents a misleading success claim?
 
-- **A.** Avoid evaluating individual developers by raw commit counts
-- **B.** Compare similar work-item types and reporting windows
-- **C.** Document filters and excluded work-item types
+- **A.** Review aging work-in-progress and completion cohorts alongside completed-item lead time
+- **B.** Compare only the most recently completed five requests
+- **C.** Exclude blocked work from every dashboard without reporting the exclusion
+- **D.** Replace all time measures with the number of items created
 
 ## L02-Q015
 
-Advanced · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
+Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
 
-Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. The team selects this remedy: "Separate planning metrics by comparable work-item class." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Leadership wants to compare teams using task counts. One team splits work into dozens of small tasks while another uses a few large stories. What is the soundest action?
 
-- **A.** Lower queue age may require accepting less concurrent work
-- **B.** Item counts do not measure delivered customer value
-- **C.** Review speed must preserve review quality
+- **A.** Explain the noncomparable units and use comparable definitions before drawing performance conclusions
+- **B.** Rank the first team higher because more completed records always means more value
+- **C.** Force both teams to create equal numbers of records without changing work
+- **D.** Divide both counts by the number of repositories
 
 ## L02-Q016
 
-Foundational · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
 
-Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which next change most directly satisfies the stated requirement?
+A service's coding time is short, but pull requests wait four days before first review. Which measure locates that development bottleneck?
 
-- **A.** Measure review waiting time and rebalance reviewer capacity
-- **B.** Track critical-path coverage and escaped defects together
-- **C.** Separate planning metrics by comparable work-item class
+- **A.** Time between the production deployments
+- **B.** Elapsed time awaiting first meaningful review
+- **C.** End-to-end work-item lead time
+- **D.** Time spent executing the build tests
 
 ## L02-Q017
 
-Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which explanation best accounts for the behavior or constraint described?
+All executed unit tests pass, but no test exercises checkout against its database. What does the pass rate establish?
 
-- **A.** Heterogeneous work units distort count-based comparisons
-- **B.** The development bottleneck is reviewer availability
-- **C.** The dashboard measures executed tests rather than absent tests
+- **A.** Only that the tests actually executed did not fail
+- **B.** That every customer-critical workflow has been tested
+- **C.** That the database schema matches every deployed application
+- **D.** That no production regression can escape
 
 ## L02-Q018
 
-Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which observation provides the strongest evidence that the requested result was achieved?
+An alert count falls after all findings are dismissed without investigation. Which conclusion is justified?
 
-- **A.** Forecasts show consistent definitions and comparable historical cohorts
-- **B.** Time awaiting first meaningful review decreases
-- **C.** Checkout integration failures are detected before release
+- **A.** The report's state changed without proving reduced exposure
+- **B.** Security risk necessarily fell by the same percentage
+- **C.** Every dismissed finding was automatically patched
+- **D.** The scanner can no longer inspect the repository
 
 ## L02-Q019
 
-Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.6](../../docs/objective-map.md)
 
-Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which execution safeguard most directly addresses the risk in this case?
+Deployments increase from 10 to 20 per week, while failures increase from 1 to 8. Which additional measure exposes the reliability deterioration?
 
-- **A.** Document filters and excluded work-item types
-- **B.** Avoid evaluating individual developers by raw commit counts
-- **C.** Keep test failure classification separate from infrastructure faults
+- **A.** Unit-test pass percentage alone
+- **B.** Change failure rate
+- **C.** Deployment frequency alone
+- **D.** Mean source-to-release lead time alone
 
 ## L02-Q020
 
-Advanced · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. The team selects this remedy: "Measure review waiting time and rebalance reviewer capacity." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A deployment succeeds, but users immediately receive errors. Which signal directly reports the operational outcome rather than automation completion?
 
-- **A.** More tests can increase runtime and maintenance
-- **B.** Item counts do not measure delivered customer value
-- **C.** Review speed must preserve review quality
+- **A.** User-facing error rate
+- **B.** Pipeline task pass rate
+- **C.** Count of artifact upload steps
+- **D.** Number of pull-request approvals
 
 ## L02-Q021
 
-Foundational · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
 
-Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which next change most directly satisfies the stated requirement?
+Why would commit count be a weak sole measure of an individual engineer's development contribution?
 
-- **A.** Measure remediation age and justified risk dispositions
-- **B.** Measure review waiting time and rebalance reviewer capacity
-- **C.** Track critical-path coverage and escaped defects together
+- **A.** Commit count directly records how much customer value was accepted
+- **B.** Every commit represents an equal amount of reviewed implementation
+- **C.** It counts activity without establishing complexity quality or customer outcome
+- **D.** Commit count automatically normalizes squash and nonsquash workflows
 
 ## L02-Q022
 
-Foundational · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which explanation best accounts for the behavior or constraint described?
+Which dashboard pairing is most useful when assessing whether tests protect a critical customer workflow?
 
-- **A.** The metric rewards changing alert state rather than fixing exposure
-- **B.** The development bottleneck is reviewer availability
-- **C.** The dashboard measures executed tests rather than absent tests
+```text
+Unit tests: 412 passed
+Checkout-to-database tests: 0
+Last three escaped defects: checkout schema mismatch
+```
+
+- **A.** Build runtime and agent cost only
+- **B.** Overall coverage and total source lines only
+- **C.** Critical-path test coverage and defects escaping into that workflow
+- **D.** Test pass percentage and total test count only
 
 ## L02-Q023
 
-Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which observation provides the strongest evidence that the requested result was achieved?
+Which metric reveals whether critical security findings remain unresolved for long periods?
 
-- **A.** Critical findings have verified fixes or documented accepted risk
-- **B.** Time awaiting first meaningful review decreases
-- **C.** Checkout integration failures are detected before release
+- **A.** Percentage of alerts closed including unreviewed dismissals
+- **B.** Number of packages inventoried regardless of findings
+- **C.** Age of unresolved critical findings with accountable dispositions
+- **D.** Total findings discovered during the latest scan
 
 ## L02-Q024
 
-Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.6](../../docs/objective-map.md)
 
-Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which execution safeguard most directly addresses the risk in this case?
+A week contains twenty deployments and four failed changes under the team's documented definition. What is that week's change failure rate?
 
-- **A.** Require review of dismissal reasons and exceptions
-- **B.** Avoid evaluating individual developers by raw commit counts
-- **C.** Keep test failure classification separate from infrastructure faults
+```text
+Deployment window: one week
+Total changes deployed: 20
+Changes meeting documented failure definition: 4
+```
+
+- **A.** Four percent
+- **B.** Five percent
+- **C.** Eighty percent
+- **D.** Twenty percent
 
 ## L02-Q025
 
-Advanced · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. The team selects this remedy: "Track critical-path coverage and escaped defects together." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Which operational measure is most appropriate when users complain about slow responses rather than outright request failures?
 
-- **A.** Risk acceptance can leave exposure intentionally unresolved
-- **B.** Review speed must preserve review quality
-- **C.** More tests can increase runtime and maintenance
+- **A.** Latency distribution for the affected operations
+- **B.** Request volume without response-time measurements
+- **C.** HTTP error percentage without timing data
+- **D.** Build-pipeline duration for the latest commit
 
 ## L02-Q026
 
-Foundational · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
 
-Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which next change most directly satisfies the stated requirement?
+After adding reviewer capacity, what outcome most directly verifies improvement to the reported review queue?
 
-- **A.** Measure remediation age and justified risk dispositions
-- **B.** Pair delivery frequency with change failure and recovery metrics
-- **C.** Track critical-path coverage and escaped defects together
+- **A.** More people receive notification emails
+- **B.** The total duration of automated unit tests falls
+- **C.** The same class of changes waits less time for substantive review
+- **D.** The team writes longer pull-request descriptions
 
 ## L02-Q027
 
-Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which explanation best accounts for the behavior or constraint described?
+A deliberately broken checkout behavior fails the new integration test before release. What conclusion is supported?
 
-- **A.** A single throughput metric hides failed-change consequences
-- **B.** The dashboard measures executed tests rather than absent tests
-- **C.** The metric rewards changing alert state rather than fixing exposure
+- **A.** The suite's pass rate must now remain permanently 100 percent
+- **B.** The added test can detect that specific regression
+- **C.** Every possible checkout failure is now covered
+- **D.** Database outages can no longer affect the service
 
 ## L02-Q028
 
 Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which observation provides the strongest evidence that the requested result was achieved?
+A critical dependency alert closes after a reviewed version update and a clean rescan of the delivered dependency graph. What evidence supports genuine remediation?
 
-- **A.** Checkout integration failures are detected before release
-- **B.** Critical findings have verified fixes or documented accepted risk
-- **C.** Frequency improves without higher failure rate or recovery duration
+- **A.** The affected version is absent from the verified release inputs
+- **B.** The alert was dismissed by a repository administrator
+- **C.** The direct package declaration changed but no resolved graph was checked
+- **D.** The dashboard reports fewer open findings without remediation evidence
 
 ## L02-Q029
 
-Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
 
-Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which execution safeguard most directly addresses the risk in this case?
+What observation supports sustainable delivery improvement rather than merely shipping more frequently?
 
-- **A.** Keep test failure classification separate from infrastructure faults
-- **B.** Require review of dismissal reasons and exceptions
-- **C.** Use consistent definitions for failed changes and recovery
+- **A.** More pipeline runs regardless of whether anything is delivered
+- **B.** More emergency patches after every release
+- **C.** Shorter deployment duration while failed changes increase
+- **D.** Higher useful delivery frequency without worse failure or recovery outcomes
 
 ## L02-Q030
 
-Advanced · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. The team selects this remedy: "Measure remediation age and justified risk dispositions." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A production dashboard is healthy only because telemetry stopped arriving. Which additional indicator prevents that false interpretation?
 
-- **A.** More frequent releases can increase operational overhead
-- **B.** More tests can increase runtime and maintenance
-- **C.** Risk acceptance can leave exposure intentionally unresolved
+- **A.** The last successful pipeline completion state
+- **B.** Telemetry freshness or collection health
+- **C.** The number of errors in an unverified empty stream
+- **D.** The availability percentage from the last reporting period
 
 ## L02-Q031
 
-Foundational · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
 
-Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which next change most directly satisfies the stated requirement?
+A team halves review waiting time by removing required review from sensitive changes. Which extra signal is needed before calling this an improvement?
 
-- **A.** Add user-facing availability latency and error indicators
-- **B.** Measure remediation age and justified risk dispositions
-- **C.** Pair delivery frequency with change failure and recovery metrics
+- **A.** Only the median review waiting time after the policy change
+- **B.** The total number of requested reviews
+- **C.** Defect and risk outcomes for the now-faster changes
+- **D.** The number of merged pull requests alone
 
 ## L02-Q032
 
-Foundational · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which explanation best accounts for the behavior or constraint described?
+A test reporting chart groups product assertion failures together with runner outages. What classification improves diagnosis?
 
-- **A.** A single throughput metric hides failed-change consequences
-- **B.** Build health was being mistaken for service health
-- **C.** The metric rewards changing alert state rather than fixing exposure
+- **A.** Classify every failed run as a product defect
+- **B.** Exclude every infrastructure failure from all reporting
+- **C.** Count retried tests only after they eventually pass
+- **D.** Separate product failures infrastructure failures and known flakes
 
 ## L02-Q033
 
-Applied · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which observation provides the strongest evidence that the requested result was achieved?
+Which exception record makes an accepted security risk distinguishable from an unreviewed suppressed alert?
 
-- **A.** Frequency improves without higher failure rate or recovery duration
-- **B.** A production regression appears in the operations dashboard
-- **C.** Critical findings have verified fixes or documented accepted risk
+- **A.** The label false-positive applied to every alert
+- **B.** A private note known only to the dismissing engineer
+- **C.** Named owner rationale scope and review or expiry date
+- **D.** A green dashboard screenshot without the finding details
 
 ## L02-Q034
 
 Applied · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
 
-Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which execution safeguard most directly addresses the risk in this case?
+Why should a team document what qualifies as a failed change before comparing quarterly release metrics?
 
-- **A.** Define ownership and response actions for breached indicators
-- **B.** Require review of dismissal reasons and exceptions
-- **C.** Use consistent definitions for failed changes and recovery
+- **A.** The deployment system otherwise cannot count any runs
+- **B.** Different inclusion rules can change the rate without changing actual service behavior
+- **C.** A written definition makes every change succeed
+- **D.** Only failed changes may have source commit identities
 
 ## L02-Q035
 
-Advanced · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. The team selects this remedy: "Pair delivery frequency with change failure and recovery metrics." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A team labels every request with a unique customer identifier and sees telemetry costs grow sharply. Which design review is most relevant?
 
-- **A.** High-cardinality operational labels increase cost and complexity
-- **B.** Risk acceptance can leave exposure intentionally unresolved
-- **C.** More frequent releases can increase operational overhead
+- **A.** Increase chart resolution to one-second intervals without changing collection
+- **B.** Move the same unique identifiers into every metric dimension
+- **C.** Increase raw telemetry retention to make the chart more complete
+- **D.** Review diagnostic value privacy and cardinality before retaining that dimension
 
 ## L02-Q036
 
-Foundational · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
+Applied · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md)
 
-Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which next change most directly satisfies the stated requirement?
+An organization wants to reduce review delay without making security-sensitive changes less reliable. Which intervention and evaluation fit both goals?
 
-- **A.** Pair delivery frequency with change failure and recovery metrics
-- **B.** Add user-facing availability latency and error indicators
-- **C.** Show distributions and severe outliers alongside the mean
+- **A.** Add qualified review capacity or smaller review batches, then compare waiting time and escaped defects
+- **B.** Remove all approvals and compare only merge frequency
+- **C.** Reward reviewers only for approving the largest number of requests
+- **D.** Ignore low-volume sensitive changes because they weaken the overall average
 
 ## L02-Q037
 
-Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which explanation best accounts for the behavior or constraint described?
+The suite grows from 100 to 1000 tests, but checkout defects continue escaping and CI takes much longer. Which assessment best avoids a misleading coverage claim?
 
-- **A.** A long-tail incident strongly influences the arithmetic average
-- **B.** A single throughput metric hides failed-change consequences
-- **C.** Build health was being mistaken for service health
+- **A.** Delete all integration tests to restore the old execution time
+- **B.** Use only the final pass percentage as the release-quality indicator
+- **C.** Examine risk-relevant scenarios assertion quality and escaped-defect trends alongside runtime
+- **D.** Declare success because the larger suite has more tests
 
 ## L02-Q038
 
-Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
+Applied · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which observation provides the strongest evidence that the requested result was achieved?
+A team must report reduced exposure while some high-impact findings cannot be patched before release. Which dashboard approach is most honest?
 
-- **A.** The dashboard exposes median tail and exceptional incidents
-- **B.** Frequency improves without higher failure rate or recovery duration
-- **C.** A production regression appears in the operations dashboard
+- **A.** Rank teams only by how quickly they click Dismiss
+- **B.** Separate verified fixes accepted risks and unresolved findings, showing severity and age
+- **C.** Combine all closed dismissed and fixed findings into one remediation success number
+- **D.** Remove the unpatchable findings from both numerator and denominator
 
 ## L02-Q039
 
-Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
 
-Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which execution safeguard most directly addresses the risk in this case?
+Frequency improves after removing gates, but customer-facing rollback incidents rise. Which next evaluation addresses the apparent tradeoff?
 
-- **A.** Define ownership and response actions for breached indicators
-- **B.** Keep incident inclusion rules consistent over time
-- **C.** Use consistent definitions for failed changes and recovery
+- **A.** Replace incident reporting with the number of passing unit tests
+- **B.** Compare change failure recovery time and user impact for equivalent release cohorts
+- **C.** Celebrate the frequency increase and omit the new incidents
+- **D.** Restore every historical gate without examining which failures occurred
 
 ## L02-Q040
 
-Advanced · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
+Applied · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. The team selects this remedy: "Add user-facing availability latency and error indicators." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+The pipeline team reports green automation while operations reports sustained customer errors. Which combined review best resolves the disagreement?
 
-- **A.** Percentiles are unstable with very small samples
-- **B.** More frequent releases can increase operational overhead
-- **C.** High-cardinality operational labels increase cost and complexity
+- **A.** Keep delivery-system health and runtime service health distinct, correlate by release identity, and act on user impact
+- **B.** Treat successful automation as authoritative and discard runtime signals
+- **C.** Treat every runtime incident as proof that the build failed
+- **D.** Average pipeline pass percentage and HTTP error percentage into one health number
 
 ## L02-Q041
 
-Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
 
-Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which next change most directly satisfies the stated requirement?
+A team reports shorter completed-item lead time after prioritizing easy new requests. The unfinished queue doubled, and its oldest requests aged from 20 to 60 days. Which conclusion best fits all evidence?
 
-- **A.** Add user-facing availability latency and error indicators
-- **B.** Show distributions and severe outliers alongside the mean
-- **C.** Normalize definitions before comparing team outcomes
+- **A.** The oldest item should be excluded because it distorts the improved cohort
+- **B.** Completed work became faster for the selected cohort, while backlog aging undermines an overall responsiveness claim
+- **C.** The lower completed-item mean proves every customer now waits less
+- **D.** The larger queue proves cycle time necessarily increased
 
 ## L02-Q042
 
-Foundational · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
 
-Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which explanation best accounts for the behavior or constraint described?
+The shown data compares two release periods. Management says reliability improved because incidents per pipeline run fell. Which assessment uses a consistent delivery population?
 
-- **A.** A long-tail incident strongly influences the arithmetic average
-- **B.** The populations and state transitions are not comparable
-- **C.** Build health was being mistaken for service health
+```text
+Period A: deployments=20; failed changes=2; pipeline runs=40
+Period B: deployments=30; failed changes=6; pipeline runs=300
+```
+
+- **A.** Reliability stayed constant because there were 10 more deployments
+- **B.** Recovery necessarily improved because more pipeline runs completed
+- **C.** Change failure rate worsened from 10 to 20 percent; build-run growth should not dilute the deployment denominator
+- **D.** Reliability improved because 6/300 is lower than 2/40
 
 ## L02-Q043
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.2.6](../../docs/objective-map.md)
 
-Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which observation provides the strongest evidence that the requested result was achieved?
+Team A has one 300-minute outage; Team B has twenty two-minute outages. Management wants to compare recovery skill and customer disruption using one mean. Which reporting design is strongest?
 
-- **A.** Both teams reproduce the same metric from documented rules
-- **B.** A production regression appears in the operations dashboard
-- **C.** The dashboard exposes median tail and exceptional incidents
+- **A.** Rank B better solely because its average recovery is two minutes
+- **B.** Rank A better solely because it has fewer incidents
+- **C.** Combine all durations into one company mean and rank both teams equally
+- **D.** Show per-incident recovery distributions, incident counts, and affected-user impact separately
 
 ## L02-Q044
 
-Applied · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Advanced · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md)
 
-Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which execution safeguard most directly addresses the risk in this case?
+A delivery forecast combines one team's stories and another team's subtasks. Historical records omit reopened work, and leadership requests a precise date. What should the analyst do first?
 
-- **A.** Publish query definitions and data freshness with the chart
-- **B.** Define ownership and response actions for breached indicators
-- **C.** Keep incident inclusion rules consistent over time
+- **A.** Align the unit and completion/reopening rules, then communicate a forecast range and remaining uncertainty
+- **B.** Use the combined raw count and publish the date with the most decimal precision
+- **C.** Drop the team with lower counts without documenting why
+- **D.** Convert each story into ten tasks by assumption
 
 ## L02-Q045
 
-Advanced · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md)
+Advanced · [CP4](README.md#task-4) · [D1.2.3](../../docs/objective-map.md), [D1.2.2](../../docs/objective-map.md)
 
-Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. The team selects this remedy: "Show distributions and severe outliers alongside the mean." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+Review waiting fell from four days to one after small low-risk changes were split into separate requests. Sensitive changes still wait four days. Which evaluation can establish whether reviewer capacity improved?
 
-- **A.** Percentiles are unstable with very small samples
-- **B.** Uniform metrics can miss legitimate workflow differences
-- **C.** High-cardinality operational labels increase cost and complexity
+- **A.** Conclude capacity quadrupled from the aggregate average alone
+- **B.** Combine sensitive and low-risk requests because risk classification is subjective
+- **C.** Count the increased number of requests as direct proof of developer productivity
+- **D.** Compare waiting within comparable risk and size cohorts, and show the changed work mix
 
 ## L02-Q046
 
-Foundational · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md), [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.2.7](../../docs/objective-map.md)
 
-Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which next change most directly satisfies the stated requirement?
+A service dashboard shows zero errors after a release, but request volume and telemetry ingestion both drop to zero while the external probe fails. What should the incident reviewer infer?
 
-- **A.** Show distributions and severe outliers alongside the mean
-- **B.** Normalize definitions before comparing team outcomes
-- **C.** Measure lead time from creation through completion
+- **A.** The release improved efficiency because the system processed fewer requests
+- **B.** The probe must be wrong because pipeline deployment completed
+- **C.** The missing telemetry invalidates the zero-error health inference; investigate collection and user-visible availability
+- **D.** The service is healthy because the observed error count is zero
 
 ## L02-Q047
 
-Applied · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md), [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D1.2.4](../../docs/objective-map.md)
 
-Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which explanation best accounts for the behavior or constraint described?
+A suite's pass rate rises after infrastructure failures are excluded. Product failures remain unchanged, and 15 percent of required tests never ran. What should the quality report distinguish?
 
-- **A.** Cycle time omits the initial queue interval
-- **B.** A long-tail incident strongly influences the arithmetic average
-- **C.** The populations and state transitions are not comparable
+- **A.** Report only the new pass rate because the excluded failures were not product defects
+- **B.** Count every unexecuted test as passed because no assertion failed
+- **C.** Count all infrastructure failures as confirmed product regressions
+- **D.** Executed product outcomes, infrastructure failures, and missing required execution
 
 ## L02-Q048
 
-Applied · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md), [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
+Advanced · [CP2](README.md#task-2) · [D1.2.1](../../docs/objective-map.md), [D1.2.2](../../docs/objective-map.md)
 
-Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which observation provides the strongest evidence that the requested result was achieved?
+Cycle time improves after Approved is reclassified from active to proposed. No item timestamps change, and customer completion dates stay the same. Which explanation is best supported?
 
-- **A.** The dashboard exposes median tail and exceptional incidents
-- **B.** Both teams reproduce the same metric from documented rules
-- **C.** The reported interval includes Monday through Friday
+- **A.** Engineering execution accelerated because the displayed average fell
+- **B.** Lead time must fall by exactly the same amount
+- **C.** The original measurements should be deleted because the new definition is always superior
+- **D.** The metric boundary changed; recompute comparable history before attributing the change to execution improvement
 
 ## L02-Q049
 
-Applied · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md), [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
+Advanced · [CP3](README.md#task-3) · [D1.2.5](../../docs/objective-map.md)
 
-Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which execution safeguard most directly addresses the risk in this case?
+The security dashboard shows 70 fewer open findings after 50 verified fixes, 15 risk acceptances, and five unreviewed dismissals. Leadership asks for the reduction in demonstrated exposure. Which response is sound?
 
-- **A.** Keep incident inclusion rules consistent over time
-- **B.** Publish query definitions and data freshness with the chart
-- **C.** Standardize state mappings and timestamp definitions
+- **A.** Report 70 remediated findings because the open count fell by 70
+- **B.** Report zero improvement because some findings were only accepted
+- **C.** Exclude all accepted and dismissed rows from historical reporting
+- **D.** Report the 50 verified fixes separately, with the remaining dispositions and evidence limits visible
 
 ## L02-Q050
 
-Advanced · [CP1](README.md#task-1) · [D1.2.2](../../docs/objective-map.md), [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.6](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
+Advanced · [CP5](README.md#task-5) · [D1.2.3](../../docs/objective-map.md), [D1.2.4](../../docs/objective-map.md), [D1.2.5](../../docs/objective-map.md), [D1.2.7](../../docs/objective-map.md)
 
-Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. The team selects this remedy: "Normalize definitions before comparing team outcomes." In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?
+A quarterly score rewards commits, test count, alert closures, and low error count. Teams can split commits, add weak tests, dismiss findings, and stop telemetry. Which redesign most directly addresses this incentive problem?
 
-- **A.** Percentiles are unstable with very small samples
-- **B.** Uniform metrics can miss legitimate workflow differences
-- **C.** Lead time can rise without slower active development
+- **A.** Weight the same four totals equally to remove disagreement about importance
+- **B.** Publish only one combined rank so individual metrics cannot be challenged
+- **C.** Increase the target for each activity count every quarter
+- **D.** Use decision-specific outcome and evidence measures with stable definitions and explicit completeness checks
