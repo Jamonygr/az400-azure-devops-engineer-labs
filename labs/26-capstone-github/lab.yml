@@ -4,99 +4,25 @@
   "slug": "26-capstone-github",
   "title": "Capstone: deliver securely through GitHub",
   "domain": "capstone",
-  "minutes": 180,
-  "cost": "none",
+  "minutes": 240,
+  "cost": "approved hosted CI allowance plus explicitly acknowledged B1 App Service and telemetry; external SQL prerequisite billed separately",
   "platforms": [
     "local",
-    "github"
+    "github",
+    "azure"
   ],
   "objectives": [
-    "D1.1.1",
-    "D1.1.2",
     "D1.1.3",
     "D1.1.4",
-    "D1.2.1",
-    "D1.2.2",
-    "D1.2.3",
-    "D1.2.4",
-    "D1.2.5",
-    "D1.2.6",
-    "D1.2.7",
-    "D1.3.1",
-    "D1.3.2",
-    "D1.3.3",
-    "D1.3.4",
-    "D1.3.5",
-    "D1.3.6",
-    "D2.1.1",
-    "D2.1.2",
-    "D2.1.3",
-    "D2.2.1",
-    "D2.2.2",
-    "D2.2.3",
-    "D2.2.4",
-    "D2.2.5",
-    "D2.2.6",
-    "D3.1.1",
-    "D3.1.2",
-    "D3.1.3",
     "D3.1.4",
-    "D3.2.1",
-    "D3.2.2",
     "D3.2.3",
-    "D3.2.4",
-    "D3.3.1",
-    "D3.3.2",
-    "D3.3.3",
-    "D3.3.4",
     "D3.3.5",
-    "D3.3.6",
-    "D3.3.7",
-    "D3.3.8",
     "D3.3.9",
-    "D3.4.1",
     "D3.4.2",
-    "D3.4.3",
-    "D3.4.4",
-    "D3.4.5",
-    "D3.4.6",
-    "D3.4.7",
     "D3.4.8",
-    "D3.5.1",
-    "D3.5.2",
-    "D3.5.3",
-    "D3.5.4",
-    "D3.5.5",
-    "D3.6.1",
-    "D3.6.2",
-    "D3.6.3",
-    "D3.6.4",
-    "D3.6.5",
-    "D4.1.1",
-    "D4.1.2",
-    "D4.1.3",
-    "D4.1.4",
-    "D4.1.5",
-    "D4.1.6",
-    "D4.1.7",
-    "D4.2.1",
     "D4.2.2",
-    "D4.2.3",
-    "D4.2.4",
-    "D4.3.1",
-    "D4.3.2",
-    "D4.3.3",
-    "D4.3.4",
-    "D4.3.5",
-    "D4.3.6",
     "D5.1.1",
-    "D5.1.2",
-    "D5.1.3",
-    "D5.1.4",
-    "D5.2.1",
-    "D5.2.2",
-    "D5.2.3",
-    "D5.2.4"
+    "D5.2.3"
   ],
   "scenario": "Deliver the sample through a fresh GitHub repository with accepted work, local gates, hosted provenance, reviewed deployment controls, and a recovery dossier.",
   "role": "GitHub delivery owner",
@@ -105,13 +31,20 @@
     {
       "id": "CP1",
       "title": "Establish GitHub source and accepted work traceability",
-      "commands": "$p=Join-Path $WorkRoot 'capstone'\nif(Test-Path (Join-Path $p '.git')){\n $origin=git -C $p remote get-url origin\n $expected='^(https://github\\.com/|git@github\\.com:)'+[regex]::Escape($GhRepo)+'(?:\\.git)?$'\n if($origin -notmatch $expected){throw 'Existing working copy points to a different GitHub repository; refusing to reuse it.'}\n}else{gh repo clone $GhRepo $p}\ngit -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n $source=Join-Path $RepoRoot 'samples'\n Get-ChildItem $source -File -Recurse|Where-Object FullName -NotMatch '[\\/](bin|obj)[\\/]'|ForEach-Object { $rel=[IO.Path]::GetRelativePath($RepoRoot,$_.FullName);$dest=Join-Path $p $rel;New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null;Copy-Item $_.FullName $dest }\n foreach ($name in @('global.json','Directory.Build.props')) { if (Test-Path (Join-Path $RepoRoot $name)) { Copy-Item (Join-Path $RepoRoot $name) $p } }\n @('**/bin/','**/obj/','.state/')|Set-Content (Join-Path $p '.gitignore')\n $issueTitle=\"[$RunId] Ship observable todo API\"\n$existing=@(gh issue list --repo $GhRepo --state all --limit 100 --json number,title,url|ConvertFrom-Json|Where-Object title -eq $issueTitle)\nif($existing.Count -gt 1){throw 'Duplicate run-owned issue titles; inspect before retrying.'}\n$issueUrl=if($existing.Count -eq 1){$existing[0].url}else{gh issue create --repo $GhRepo --title $issueTitle --body 'Acceptance: locked dependencies, passing API tests, measured coverage, successful CI for exact commit, reviewed gated deployment contract, rollback and cleanup evidence.'}\n$issueUrl|Set-Content (Join-Path $WorkRoot 'capstone-issue.txt')\n",
-      "expected": "The disposable GitHub repository has source and a measurable work item.",
+      "commands": "$p=Join-Path $WorkRoot 'capstone'\nif(Test-Path (Join-Path $p '.git')){\n $origin=git -C $p remote get-url origin\n $expected='^(https://github\\.com/|git@github\\.com:)'+[regex]::Escape($GhRepo)+'(?:\\.git)?$'\n if($origin -notmatch $expected){throw 'Existing working copy points to a different GitHub repository; refusing to reuse it.'}\n}else{gh repo clone $GhRepo $p}\ngit -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\npython (Join-Path $RepoRoot 'tools/package_capstone.py') --platform github --destination $p\nif($LASTEXITCODE -ne 0){throw 'Self-contained capstone packaging failed.'}\n@('**/bin/','**/obj/','.state/')|Set-Content (Join-Path $p '.gitignore')\n $issueTitle=\"[$RunId] Ship observable todo API\"\n$existing=@(gh issue list --repo $GhRepo --state all --limit 100 --json number,title,url|ConvertFrom-Json|Where-Object title -eq $issueTitle)\nif($existing.Count -gt 1){throw 'Duplicate run-owned issue titles; inspect before retrying.'}\n$issueUrl=if($existing.Count -eq 1){$existing[0].url}else{gh issue create --repo $GhRepo --title $issueTitle --body 'Acceptance: locked dependencies, passing API tests, measured coverage, successful CI for exact commit, reviewed gated deployment contract, rollback and cleanup evidence.'}\n$issueUrl|Set-Content (Join-Path $WorkRoot 'capstone-issue.txt')\n",
+      "expected": "The disposable GitHub repository has source and a measurable work item. The package includes all deployment templates, scripts and inactive release definitions; CI alone is active.",
       "positive": "$url=Get-Content (Join-Path $WorkRoot 'capstone-issue.txt');$i=gh issue view $url --repo $GhRepo --json body,state|ConvertFrom-Json\n if($i.state -ne 'OPEN' -or $i.body -notmatch 'exact commit'){throw 'Capstone acceptance/issue absent.'}\n",
       "negative": "$p=Join-Path $WorkRoot 'capstone'\n if((git -C $p remote get-url origin) -notmatch [regex]::Escape($GhRepo)){throw 'Capstone source escaped sandbox repository.'}\n",
       "validate": "$url=Get-Content (Join-Path $WorkRoot 'capstone-issue.txt');$i=gh issue view $url --repo $GhRepo --json body,state|ConvertFrom-Json\n if($i.state -ne 'OPEN' -or $i.body -notmatch 'exact commit'){throw 'Capstone acceptance/issue absent.'}\n\n$p=Join-Path $WorkRoot 'capstone'\n if((git -C $p remote get-url origin) -notmatch [regex]::Escape($GhRepo)){throw 'Capstone source escaped sandbox repository.'}\n",
       "evidence": "Issue, repository boundary, and copied source allowlist.",
-      "fix": "Use a new sandbox; integrate work tracking before delivery evidence is produced."
+      "fix": "Use a new sandbox; integrate work tracking before delivery evidence is produced.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.3",
+          "level": "practiced",
+          "reference": "Record the run-owned issue and exact source acceptance context."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -122,18 +55,32 @@
       "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0 -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Capstone tests not passing.'}\n",
       "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([double]$x.coverage.'line-rate' -lt 0.65){throw 'Capstone coverage insufficient.'}\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'quality') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0 -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Capstone tests not passing.'}\n",
       "evidence": "TRX counts, coverage, lock hashes, and SDK.",
-      "fix": "Repair failures without suppressing tests or weakening coverage; check the code under test is in the measured scope."
+      "fix": "Repair failures without suppressing tests or weakening coverage; check the code under test is in the measured scope.",
+      "coverage": [
+        {
+          "objectiveId": "D3.2.3",
+          "level": "practiced",
+          "reference": "Execute local test/coverage gates before hosted CI."
+        }
+      ]
     },
     {
       "id": "CP3",
       "title": "Publish CI while preserving the dormant deployment gate",
-      "commands": "$p=Join-Path $WorkRoot 'capstone';$wf=Join-Path $p '.github/workflows';New-Item -ItemType Directory -Force $wf|Out-Null\n Copy-Item (Join-Path $LabRoot 'artifacts/capstone-ci.yml') (Join-Path $wf 'ci.yml')\n New-Item -ItemType Directory -Force (Join-Path $p 'deployment-review')|Out-Null\n Copy-Item (Join-Path $LabRoot 'artifacts/capstone-github.yml') (Join-Path $p 'deployment-review/capstone-github.yml')\n git -C $p add .;$staged=@(git -C $p diff --cached --name-only)\nif($staged.Count -gt 0){git -C $p commit -m \"[$RunId] Deliver tested observable API and gated deployment review\"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'};git -C $p branch -M main;git -C $p push -u origin main\n (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'capstone-sha.txt')\n",
+      "commands": "$p=Join-Path $WorkRoot 'capstone'\npython (Join-Path $RepoRoot 'tools/package_capstone.py') --platform github --destination $p\nif($LASTEXITCODE -ne 0){throw 'Self-contained capstone packaging failed.'}\n git -C $p add .;$staged=@(git -C $p diff --cached --name-only)\nif($staged.Count -gt 0){git -C $p commit -m \"[$RunId] Deliver tested observable API and gated deployment review\"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'};git -C $p branch -M main;git -C $p push -u origin main\n (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'capstone-sha.txt')\n",
       "expected": "A reviewed commit enables CI; cloud deployment remains outside the active workflow directory.",
-      "positive": "$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -notmatch 'dotnet' -or $t -notmatch 'contents: read'){throw 'Capstone CI lacks build/read permission contract.'}\n",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -notmatch 'dotnet' -or $t -notmatch 'contents: read'){throw 'Capstone CI lacks build/read permission contract.'}\n$m=Get-Content (Join-Path $WorkRoot 'capstone/deployment/package-manifest.json') -Raw|ConvertFrom-Json\nif($m.releaseActivated -or -not (Test-Path (Join-Path $WorkRoot 'capstone/deployment/scripts/Verify-Release.ps1'))){throw 'Default package must be complete and keep release activation explicit.'}\n",
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -match 'azure/login|az deployment|pull_request_target'){throw 'Publishing capstone CI must not start cloud deployment.'}\n",
-      "validate": "$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -notmatch 'dotnet' -or $t -notmatch 'contents: read'){throw 'Capstone CI lacks build/read permission contract.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -match 'azure/login|az deployment|pull_request_target'){throw 'Publishing capstone CI must not start cloud deployment.'}\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -notmatch 'dotnet' -or $t -notmatch 'contents: read'){throw 'Capstone CI lacks build/read permission contract.'}\n$m=Get-Content (Join-Path $WorkRoot 'capstone/deployment/package-manifest.json') -Raw|ConvertFrom-Json\nif($m.releaseActivated -or -not (Test-Path (Join-Path $WorkRoot 'capstone/deployment/scripts/Verify-Release.ps1'))){throw 'Default package must be complete and keep release activation explicit.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'capstone/.github/workflows/ci.yml') -Raw\n if($t -match 'azure/login|az deployment|pull_request_target'){throw 'Publishing capstone CI must not start cloud deployment.'}\n",
       "evidence": "Exact commit SHA and active-versus-dormant file locations.",
-      "fix": "Activate a separately reviewed deployment only after federation, SQL/network prerequisites, environment approval, and costs are authorized."
+      "fix": "Activate a separately reviewed deployment only after federation, SQL/network prerequisites, environment approval, and costs are authorized.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.5",
+          "level": "practiced",
+          "reference": "Publish CI plus a dependency-complete dormant deployment bundle."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -144,24 +91,70 @@
       "negative": "$id=Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt');$r=gh run view $id --repo $GhRepo --json status|ConvertFrom-Json\n if($r.status -ne 'completed'){throw 'In-flight capstone cannot pass.'}\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt');$r=gh run view $id --repo $GhRepo --json conclusion,headSha|ConvertFrom-Json\n if($r.conclusion -ne 'success' -or $r.headSha -ne (Get-Content (Join-Path $WorkRoot 'capstone-sha.txt'))){throw 'Capstone provenance gate failed.'}\n\n$id=Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt');$r=gh run view $id --repo $GhRepo --json status|ConvertFrom-Json\n if($r.status -ne 'completed'){throw 'In-flight capstone cannot pass.'}\n",
       "evidence": "Run URL, commit SHA, test artifact, and final result.",
-      "fix": "Check runner availability, permissions, and task failure; canceled/skipped runs are not completion."
+      "fix": "Check runner availability, permissions, and task failure; canceled/skipped runs are not completion.",
+      "coverage": [
+        {
+          "objectiveId": "D3.1.4",
+          "level": "integrated",
+          "reference": "Select the successful exact-revision CI artifact and retain its run identity."
+        }
+      ]
     },
     {
       "id": "CP5",
       "title": "Produce the operational release and recovery dossier",
       "commands": "$sha=Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')\n $d=[ordered]@{issue=(Get-Content (Join-Path $WorkRoot 'capstone-issue.txt'));commit=$sha;run=(Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt'));deploymentTemplateSha=(Get-FileHash (Join-Path $LabRoot 'artifacts/capstone-github.yml')).Hash;rollback='redeploy last compatible immutable artifact';telemetry='trace spans and health endpoints tested locally';cloudDeployed=$false;cleanupRequired=$true}\n $d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
-      "expected": "The dossier connects work, source, CI, deployment review, recovery, and cleanup without inventing a deployment.",
-      "positive": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if(-not $d.issue -or $d.commit.Length -ne 40 -or -not $d.cleanupRequired){throw 'Release traceability dossier incomplete.'}\n",
-      "negative": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.cloudDeployed){throw 'This core capstone validates CI; optional cloud deployment must supply separate evidence.'}\n",
-      "validate": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if(-not $d.issue -or $d.commit.Length -ne 40 -or -not $d.cleanupRequired){throw 'Release traceability dossier incomplete.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\n if($d.cloudDeployed){throw 'This core capstone validates CI; optional cloud deployment must supply separate evidence.'}\n",
+      "expected": "A provenance dossier records the CI milestone. Full completion remains partial until the separate protected Integration operation records both measured deployment and rollback.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$sha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()\nif($d.commit -cne $sha -or $d.commit -notmatch '^[0-9a-f]{40}$'){throw 'AZ400-L26-FAULT'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\nif(-not $d.cleanupRequired){throw 'Cleanup obligation missing.'}\nif($d.cloudDeployed -and -not (Test-Path (Join-Path $WorkRoot 'integration-evidence.json'))){throw 'Live deployment claim lacks separate integration evidence.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$sha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()\nif($d.commit -cne $sha -or $d.commit -notmatch '^[0-9a-f]{40}$'){throw 'AZ400-L26-FAULT'}\n\n$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json\nif(-not $d.cleanupRequired){throw 'Cleanup obligation missing.'}\nif($d.cloudDeployed -and -not (Test-Path (Join-Path $WorkRoot 'integration-evidence.json'))){throw 'Live deployment claim lacks separate integration evidence.'}\n",
       "evidence": "release-dossier.json, recovery reasoning, and final cleanup audit.",
-      "fix": "State verified and pending integration behavior separately; preserve evidence until sandbox deletion is proven."
+      "fix": "State verified and pending integration behavior separately; preserve evidence until sandbox deletion is proven.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.4",
+          "level": "integrated",
+          "reference": "Join issue, CI revision/artifact, measured protected release, compatible rollback and cleanup records; integration is required."
+        },
+        {
+          "objectiveId": "D3.3.9",
+          "level": "integrated",
+          "reference": "Integration requires provider-configured database/application environment approvals and observed protected release runs."
+        },
+        {
+          "objectiveId": "D3.4.2",
+          "level": "integrated",
+          "reference": "Integration executes verified artifact → protected migration → application → revision/telemetry gate."
+        },
+        {
+          "objectiveId": "D3.4.8",
+          "level": "integrated",
+          "reference": "Integration executes the already-built SQL migration bundle with a separate federated identity."
+        },
+        {
+          "objectiveId": "D4.2.2",
+          "level": "integrated",
+          "reference": "Integration exchanges GitHub environment OIDC for narrowly scoped Azure identities."
+        },
+        {
+          "objectiveId": "D5.1.1",
+          "level": "integrated",
+          "reference": "Integration joins the owned app with its Application Insights workspace and measures tagged release requests."
+        },
+        {
+          "objectiveId": "D5.2.3",
+          "level": "integrated",
+          "reference": "Integration checks the assembly revision and observed release telemetry, then repeats verification for the retained baseline."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$d.commit='0'*40;$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
     "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$id=$d.run;gh run view $id --repo $GhRepo --json headSha,conclusion;Get-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
-    "repair": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$d.commit=Get-Content (Join-Path $WorkRoot 'capstone-sha.txt');$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n"
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$d.commit=Get-Content (Join-Path $WorkRoot 'capstone-sha.txt');$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'release-dossier.json')\n",
+    "assert": "$d=Get-Content (Join-Path $WorkRoot 'release-dossier.json') -Raw|ConvertFrom-Json;$sha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()\nif($d.commit -cne $sha -or $d.commit -notmatch '^[0-9a-f]{40}$'){throw 'AZ400-L26-FAULT'}\n",
+    "expectedFailure": "AZ400-L26-FAULT"
   },
   "challenge": "Complete the dormant GitHub deployment with approved WIF, protected environment, SQL identity/network prerequisites, an observed canary, trace correlation, rollback, and complete residual audit. Each unavailable gate remains partial.",
   "sources": [
@@ -169,7 +162,7 @@
     "https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-azure",
     "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments"
   ],
-  "primer": "End-to-end evidence links accepted work, exact source, immutable artifacts, execution identity, environment authorization, telemetry, and cleanup. The core proves CI; optional live release has explicit integration gates.",
+  "primer": "End-to-end evidence links accepted work, exact source, immutable artifacts, execution identity, environment authorization, telemetry, and cleanup. The five checkpoints prove CI; complete delivery additionally requires the explicit protected Integration operation.\n\nA CI milestone proves tests, measured coverage and artifact construction for one exact source revision. It leaves deployment identity, protected approvals, SQL migration, application delivery, telemetry and rollback unproven. The five checkpoints preserve this partial result explicitly.\n\nCompletion requires the separate Integration operation. Prepare the owned Bicep workload, private ephemeral runner, compatible baseline, narrow SQL grants, exact environment federation and provider approvals first. Activate the self-contained release only after reviewing its diff. Promote an immutable CI artifact, verify actual assembly revision and tagged telemetry, then redeploy a retained compatible baseline without reversing schema. Both release runs and their measured evidence must pass.",
   "architecture": {
     "title": "GitHub delivery evidence and the protected live extension",
     "nodes": [
@@ -245,6 +238,28 @@
         "style": "dashed"
       }
     ],
-    "topology": "The core connects accepted GitHub work to the exact sandbox source revision, passing hosted CI, and retained quality/artifact provenance. The protected environment and workload federation form the boundary for the optional live extension. App/SQL/telemetry deployment, progressive rollout, and recovery need their explicit prerequisites and evidence; the core dossier reports cloudDeployed=false."
+    "topology": "The core connects accepted GitHub work to the exact sandbox source revision, passing hosted CI, and retained quality/artifact provenance. The protected environment and workload federation form the boundary for the separate required integration lane for full completion. App deployment, protected SQL migration, measured telemetry, and compatible binary rollback need their explicit prerequisites and evidence; the core dossier reports cloudDeployed=false."
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The dossier cannot convert a Boolean into integration proof. Read hosted run conclusions and exact artifact revisions, retain deployment and rollback evidence, then use the ownership journal for cleanup.",
+  "integration": {
+    "requiredForCompletion": true,
+    "prerequisites": [
+      "Initial Setup must include the Azure subscription and create the journal-owned resource group. CI checkpoints and the named BreakFix operation must pass first.",
+      "Review deployment/README.md in the staged sandbox. Explicitly accept B1 compute/telemetry cost; use an existing owner-approved Entra SQL database with reviewed private DNS/routing and compatible expand-only schema. That external database is never adopted or deleted by cleanup.",
+      "Run the preparation commands below inside the owned resource group. The database owner must grant the template appPrincipalId the documented runtime SELECT/INSERT/UPDATE permissions and grant a distinct migration identity reviewed DDL permissions. Do not use SQL passwords.",
+      "Prepare an ephemeral Linux x64 private runner/agent with SQL routing, the pinned SDK/CLI dependencies and log-analytics extension. Deny untrusted fork jobs. Registration, pool authorization and eventual deregistration remain separately owner-approved account prerequisites.",
+      "Configure production-database and production protected environments with independent reviewers, main-branch restrictions and exclusive release concurrency. Verify paid/private-repository entitlement before enabling required reviewers. Keep the author unable to self-approve.",
+      "Create separate migration/application workload-federated identities or service connections. Scope application deployment to this run-owned app/resource group and Log Analytics Reader to this exact workspace; authorize only the release workflow/pipeline.",
+      "Set AZ400_SQL_MIGRATION_CONNECTION in the current shell using an approved secret-loading method; it must use Entra authentication and match the template database. Never transcript this operation. The lane transfers it to provider secret storage without echoing its value.",
+      "The original core CI artifact is the retained compatible baseline. Activation creates a distinct source revision and CI artifact with the same database model. The lane deploys that new revision, then proves application rollback to the baseline without issuing SQL Down migrations."
+    ],
+    "preparationCommands": "$p=Join-Path $WorkRoot 'capstone'\nif(-not $env:AZ400_SQL_SERVER_FQDN){throw 'Set the separately approved Entra SQL FQDN before workload preparation.'}\n$parameters=@('labId=26',\"labRunId=$RunId\",\"sqlServerFqdn=$env:AZ400_SQL_SERVER_FQDN\",'sku=B1')\naz deployment group what-if --subscription $SubscriptionId --resource-group $ResourceGroup --template-file (Join-Path $p 'deployment/templates/main.bicep') --parameters @parameters\n# Execute only after reviewing the owned-scope preview and accepting cost.\naz deployment group create --subscription $SubscriptionId --resource-group $ResourceGroup --name capstone-workload --template-file (Join-Path $p 'deployment/templates/main.bicep') --parameters @parameters\n$outputs=az deployment group show --subscription $SubscriptionId --resource-group $ResourceGroup --name capstone-workload --query properties.outputs -o json|ConvertFrom-Json\n$prefix=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/\"\nif(-not $outputs.appResourceId.value.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Workload escaped the run-owned resource group.'}\n$outputs|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'workload-outputs.json')\n# Stop here until the database owner grants the returned runtime identity and\n# account owners complete federation, environment checks and private-worker setup.\n",
+    "commands": "$p=Join-Path $WorkRoot 'capstone'\nif(-not $env:AZ400_SQL_MIGRATION_CONNECTION){throw 'Load the reviewed Entra SQL connection through approved secret handling first.'}\n$o=Get-Content (Join-Path $WorkRoot 'workload-outputs.json') -Raw|ConvertFrom-Json\n$prefix=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/\"\nif(-not $o.appResourceId.value.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Application ID is outside the journal-owned group.'}\n$appName=$o.appName.value;$appUrl=$o.appUrl.value;$workspace=$o.workspaceCustomerId.value\n& (Join-Path $p 'deployment/scripts/Assert-OwnedWorkload.ps1') -SubscriptionId $SubscriptionId -ResourceGroup $ResourceGroup -RunId $RunId -AppName $appName -WorkspaceId $workspace\n$baselineSha=(Get-Content (Join-Path $WorkRoot 'capstone-sha.txt')).Trim()\nif($baselineSha -notmatch '^[a-f0-9]{40}$' -or $baselineSha -match '^0{40}$'){throw 'Baseline revision is invalid.'}\n$baselineRun=(Get-Content (Join-Path $WorkRoot 'capstone-run-id.txt')).Trim()\nforeach($name in @('production-database','production')){\n $e=gh api \"repos/$GhRepo/environments/$name\"|ConvertFrom-Json\n $review=@($e.protection_rules|Where-Object type -eq 'required_reviewers')\n if($review.Count -ne 1 -or -not $review[0].prevent_self_review -or @($review[0].reviewers).Count -lt 1){throw \"Protected independent reviewers missing from $name.\"}\n}\nforeach($name in @('AZ400_MIGRATION_CLIENT_ID','AZ400_DEPLOYMENT_CLIENT_ID','AZ400_TENANT_ID')){\n if(-not [Environment]::GetEnvironmentVariable($name)){throw \"Bootstrap input $name is missing.\"}\n}\nforeach($scope in @('production-database','production')){\n $values=@{AZURE_TENANT_ID=$env:AZ400_TENANT_ID;AZURE_SUBSCRIPTION_ID=$SubscriptionId;AZURE_RESOURCE_GROUP=$ResourceGroup;LAB_RUN_ID=$RunId;AZURE_WEBAPP_NAME=$appName;LOG_ANALYTICS_WORKSPACE_ID=$workspace}\n if($scope -eq 'production-database'){$values.AZURE_MIGRATION_CLIENT_ID=$env:AZ400_MIGRATION_CLIENT_ID}else{$values.AZURE_CLIENT_ID=$env:AZ400_DEPLOYMENT_CLIENT_ID}\n foreach($key in $values.Keys){gh variable set $key --repo $GhRepo --env $scope --body $values[$key]}\n}\n$env:AZ400_SQL_MIGRATION_CONNECTION|gh secret set SQL_MIGRATION_CONNECTION --repo $GhRepo --env production-database\npython (Join-Path $RepoRoot 'tools/package_capstone.py') --platform github --destination $p --activate-release\nif($LASTEXITCODE -ne 0){throw 'Release package activation failed.'}\ngit -C $p add .github/workflows/release.yml deployment/package-manifest.json\nif(@(git -C $p diff --cached --name-only).Count -gt 0){git -C $p commit -m \"[$RunId] Activate reviewed protected immutable release\"}\ngit -C $p push origin main\n$currentSha=(git -C $p rev-parse HEAD).Trim()\nif($currentSha -eq $baselineSha){throw 'Activation must produce a distinct artifact revision for rollback practice.'}\n$current=$null\nfor($attempt=0;$attempt -lt 60 -and -not $current;$attempt++){\n $current=@(gh run list --repo $GhRepo --workflow ci.yml --commit $currentSha --event push --json databaseId,status,conclusion|ConvertFrom-Json)|Select-Object -First 1\n if(-not $current){Start-Sleep -Seconds 5}\n}\nif(-not $current){throw 'Activation CI run was not observed within five minutes.'}\ngh run watch $current.databaseId --repo $GhRepo --exit-status\nif($LASTEXITCODE -ne 0){throw 'Activation CI must pass before artifact promotion.'}\n$releases=@()\nforeach($action in @('deploy','rollback')){\n $seen=@(gh run list --repo $GhRepo --workflow release.yml --event workflow_dispatch --json databaseId|ConvertFrom-Json|ForEach-Object databaseId)\n gh workflow run release.yml --repo $GhRepo --ref main -f \"action=$action\" -f \"artifactRunId=$($current.databaseId)\" -f \"expectedRevision=$currentSha\" -f \"baselineArtifactRunId=$baselineRun\" -f \"baselineRevision=$baselineSha\"\n $run=$null\n for($attempt=0;$attempt -lt 60 -and -not $run;$attempt++){\n  $fresh=@(gh run list --repo $GhRepo --workflow release.yml --event workflow_dispatch --commit $currentSha --json databaseId,headSha|ConvertFrom-Json|Where-Object databaseId -NotIn $seen)\n  if($fresh.Count -gt 1){throw 'Ambiguous concurrent release dispatch; inspect exact run IDs.'}\n  $run=$fresh|Select-Object -First 1\n  if(-not $run){Start-Sleep -Seconds 5}\n }\n if(-not $run){throw \"Protected $action run was not observed.\"}\n gh run watch $run.databaseId --repo $GhRepo --exit-status\n if($LASTEXITCODE -ne 0){throw \"$action failed. Preserve logs/evidence; use the documented protected rollback dispatch to recover, then retry integration.\"}\n $directory=Join-Path $WorkRoot \"integration-$action\"\n if(Test-Path $directory){throw 'Release evidence directory exists; preserve it and use a reviewed fresh evidence destination before retrying.'}\n gh run download $run.databaseId --repo $GhRepo --name release-evidence --dir $directory\n $file=@(Get-ChildItem $directory -Filter release-evidence.json -Recurse)\n if($file.Count -ne 1){throw 'Expected exactly one measured release-evidence.json.'}\n $report=Get-Content $file[0].FullName -Raw|ConvertFrom-Json\n $revision=if($action -eq 'deploy'){$currentSha}else{$baselineSha}\n if($report.status -ne 'passed' -or $report.revision -cne $revision -or -not $report.healthPassed -or -not $report.telemetryPassed){throw 'Release evidence does not prove the selected revision/health/telemetry.'}\n $releases+=@{action=$action;runId=$run.databaseId;revision=$revision;evidencePath=$file[0].FullName}\n}\n@{platform='github';currentRevision=$currentSha;baselineRevision=$baselineSha;currentArtifactRun=$current.databaseId;baselineArtifactRun=$baselineRun;releases=$releases}|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'integration-evidence.json')\n",
+    "validate": "$i=Get-Content (Join-Path $WorkRoot 'integration-evidence.json') -Raw|ConvertFrom-Json\nif($i.currentRevision -eq $i.baselineRevision -or @($i.releases).Count -ne 2){throw 'Both distinct current and baseline evidence are required.'}\nforeach($action in @('deploy','rollback')){\n $row=@($i.releases|Where-Object action -eq $action)\n if($row.Count -ne 1){throw 'Missing or duplicate release action evidence.'}\n $expected=if($action -eq 'deploy'){$i.currentRevision}else{$i.baselineRevision}\n $e=Get-Content $row[0].evidencePath -Raw|ConvertFrom-Json\n if($row[0].revision -cne $expected -or $e.revision -cne $expected -or $e.status -ne 'passed' -or -not $e.healthPassed -or -not $e.telemetryPassed){throw 'Release/rollback evidence is unverified.'}\n if($e.telemetry.requests -lt 10 -or $e.telemetry.failureRate -gt 0.02 -or $e.telemetry.p95Ms -gt 1000){throw 'Observed release telemetry violates the training gate.'}\n$run=gh run view $row[0].runId --repo $GhRepo --json conclusion,headSha,workflowName|ConvertFrom-Json\n if($run.conclusion -ne 'success' -or $run.headSha -cne $i.currentRevision -or $run.workflowName -ne 'Protected immutable release'){throw 'Provider release result/source identity differs from local evidence.'}\n}\n",
+    "expected": "Two successful protected runs promote the selected current immutable artifact and the compatible baseline. Each has exact revision, observed health, at least ten tagged requests, failure rate <=2%, and p95 <=1000 ms. Missing approvals, networking, entitlement, SQL or telemetry leaves the capstone partial."
   }
 }

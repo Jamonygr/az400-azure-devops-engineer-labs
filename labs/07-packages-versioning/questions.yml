@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "07",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -14,1912 +14,1968 @@
     {
       "id": "S3",
       "url": "https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/nuget/concepts/package-versioning"
+    },
+    {
+      "id": "S5",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400"
+    },
+    {
+      "id": "S6",
+      "url": "https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#locking-dependencies"
+    },
+    {
+      "id": "S7",
+      "url": "https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages"
+    },
+    {
+      "id": "S8",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops"
     }
   ],
   "questions": [
     {
       "id": "L07-Q001",
       "checkpointId": "CP5",
-      "caseId": "L07-C01",
-      "task": "remedy",
-      "caseContext": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries. Which next change most directly satisfies the stated requirement?",
+      "question": "An Azure DevOps team needs a private package feed plus controlled consumption of public dependencies. Which service capability fits?",
       "options": [
         {
           "key": "A",
-          "text": "Bind source tag build run and package identity in provenance",
-          "rationale": "Release labels should identify the actual delivered bytes. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "A wiki page linking directly to whichever public version is newest",
+          "rationale": "Documentation links do not establish a controlled private feed or reproducible resolution."
         },
         {
           "key": "B",
-          "text": "Use an Azure Artifacts feed with appropriate upstream sources",
-          "rationale": "The feed supports governed local and upstream consumption. This directly addresses the constraint stated in this case."
+          "text": "Azure Artifacts with configured upstream sources",
+          "rationale": "A feed can host local packages and save supported upstream dependencies through one governed endpoint."
         },
         {
           "key": "C",
-          "text": "Use feed views to expose promoted validated versions",
-          "rationale": "Views distinguish lifecycle stages without rebuilding packages. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "An Azure Repos branch containing only package names",
+          "rationale": "A source branch is not the package registry and upstream-consumption mechanism."
+        },
+        {
+          "key": "D",
+          "text": "A pipeline run display number without a feed",
+          "rationale": "A human-readable run label does not provide package distribution or access controls."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The feed supports governed local and upstream consumption. The selected answer is use an Azure Artifacts feed with appropriate upstream sources.",
+      "explanation": "A feed can host local packages and save supported upstream dependencies through one governed endpoint. A source branch is not the package registry and upstream-consumption mechanism. A human-readable run label does not provide package distribution or access controls. Documentation links do not establish a controlled private feed or reproducible resolution.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q002",
       "checkpointId": "CP5",
-      "caseId": "L07-C01",
-      "task": "diagnosis",
-      "caseContext": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What is the benefit of restoring approved upstream packages through a configured feed rather than independently querying public registries every time?",
       "options": [
         {
           "key": "A",
-          "text": "Source and package metadata were assigned independently",
-          "rationale": "Matching names do not establish a shared build origin. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "The feed guarantees that every upstream package is vulnerability free",
+          "rationale": "Caching and distribution do not prove the dependency's security."
         },
         {
           "key": "B",
-          "text": "A source repository is not a package feed",
-          "rationale": "Code storage and dependency distribution serve different purposes. This directly addresses the constraint stated in this case."
+          "text": "The feed converts every upstream package into source code",
+          "rationale": "Package caching does not imply decompilation or source conversion."
         },
         {
           "key": "C",
-          "text": "Publication was being confused with release approval",
-          "rationale": "A package can exist before it is approved for consumers. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "The feed removes the need to define any dependency version",
+          "rationale": "A registry path does not replace deliberate version selection."
+        },
+        {
+          "key": "D",
+          "text": "The feed can save consumed upstream versions and provide a managed consumption path",
+          "rationale": "Supported upstream caching and feed governance reduce dependence on repeated direct public retrieval."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Code storage and dependency distribution serve different purposes. The selected answer is a source repository is not a package feed.",
+      "explanation": "Supported upstream caching and feed governance reduce dependence on repeated direct public retrieval. Caching and distribution do not prove the dependency's security. Package caching does not imply decompilation or source conversion. A registry path does not replace deliberate version selection.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q003",
       "checkpointId": "CP5",
-      "caseId": "L07-C01",
-      "task": "verification",
-      "caseContext": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "applied",
-      "question": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A build can download packages but cannot publish a new internal package. Which permission distinction should be checked?",
       "options": [
         {
           "key": "A",
-          "text": "The release view contains only deliberately promoted versions",
-          "rationale": "Consumer visibility should follow validation status. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "Only repository branch protection on an unrelated project",
+          "rationale": "That does not establish the build identity's feed publishing rights."
         },
         {
           "key": "B",
-          "text": "The package records the same commit referenced by the tag",
-          "rationale": "Consistent provenance ties source to distribution. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the package name contains a release version",
+          "rationale": "Version syntax does not grant write access."
         },
         {
           "key": "C",
-          "text": "The pipeline restores an approved package through the feed",
-          "rationale": "Restoration demonstrates the intended consumption path. This directly addresses the constraint stated in this case."
+          "text": "Only whether an engineer can open the registry homepage",
+          "rationale": "Human page access does not establish the workflow identity's publish permission."
+        },
+        {
+          "key": "D",
+          "text": "Package read or restore access versus package publishing access",
+          "rationale": "Consumption and mutation are distinct capabilities in package authorization."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Restoration demonstrates the intended consumption path. The selected answer is the pipeline restores an approved package through the feed.",
+      "explanation": "Consumption and mutation are distinct capabilities in package authorization. That does not establish the build identity's feed publishing rights. Version syntax does not grant write access. Human page access does not establish the workflow identity's publish permission.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L07-Q004",
       "checkpointId": "CP5",
-      "caseId": "L07-C01",
-      "task": "safeguard",
-      "caseContext": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "applied",
-      "question": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team selects a feed for training. What should it review before assuming package storage is unlimited and free?",
       "options": [
         {
           "key": "A",
-          "text": "Verify provenance before promotion rather than trusting filenames",
-          "rationale": "Artifact names can be reused or assigned incorrectly. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "The current service's storage licensing and retention terms",
+          "rationale": "Managed package distribution has operational and commercial limits to understand."
         },
         {
           "key": "B",
-          "text": "Scope feed access to consuming and publishing identities",
-          "rationale": "A working registry should not grant universal write access. This directly addresses the constraint stated in this case."
+          "text": "Only whether the registry URL uses HTTPS",
+          "rationale": "Transport encryption does not establish cost or capacity terms."
         },
         {
           "key": "C",
-          "text": "Control who can promote packages into trusted views",
-          "rationale": "Promotion is part of the release trust boundary. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "Only whether one package was successfully restored",
+          "rationale": "A successful request does not prove unrestricted future usage."
+        },
+        {
+          "key": "D",
+          "text": "Only the number of public repositories owned by the learner",
+          "rationale": "Unrelated repository inventory does not define feed billing or storage policy."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "A working registry should not grant universal write access. The selected answer is scope feed access to consuming and publishing identities.",
+      "explanation": "Managed package distribution has operational and commercial limits to understand. Transport encryption does not establish cost or capacity terms. A successful request does not prove unrestricted future usage. Unrelated repository inventory does not define feed billing or storage policy.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q005",
       "checkpointId": "CP5",
-      "caseId": "L07-C01",
-      "task": "tradeoff",
-      "caseContext": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "advanced",
-      "question": "Registry selection: A team needs private packages integrated with its Azure DevOps project and upstream dependencies from public registries. The team selects this remedy: \"Use an Azure Artifacts feed with appropriate upstream sources.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team needs private publishing, approved public dependencies, repeatable restores, and controlled promotion. Which design covers these separate needs?",
       "options": [
         {
           "key": "A",
-          "text": "Hosted feeds have storage and licensing considerations",
-          "rationale": "Package convenience does not imply unlimited free storage. This directly addresses the constraint stated in this case."
+          "text": "Scoped feed roles, approved upstreams, recorded dependency versions, and validation-driven view promotion",
+          "rationale": "Access, source provenance, version resolution, and release quality each need an explicit mechanism."
         },
         {
           "key": "B",
-          "text": "Views add lifecycle administration",
-          "rationale": "Teams must maintain clear promotion and consumption conventions. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "One shared administrator credential and direct latest-version restores from every public registry",
+          "rationale": "That broadens authority and leaves both reproducibility and upstream governance uncontrolled."
         },
         {
           "key": "C",
-          "text": "Provenance collection adds release metadata management",
-          "rationale": "It enables audit and reliable rollback decisions. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Copy every dependency into each repository without source or version records",
+          "rationale": "Independent untraceable copies make updates and provenance difficult to govern."
+        },
+        {
+          "key": "D",
+          "text": "Use a release view alone and assume it automatically scans licenses and locks all transitive dependencies",
+          "rationale": "A view is not a substitute for separate validation and dependency-resolution controls."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Package convenience does not imply unlimited free storage. The selected answer is hosted feeds have storage and licensing considerations.",
+      "explanation": "Access, source provenance, version resolution, and release quality each need an explicit mechanism. That broadens authority and leaves both reproducibility and upstream governance uncontrolled. Independent untraceable copies make updates and provenance difficult to govern. A view is not a substitute for separate validation and dependency-resolution controls.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q006",
       "checkpointId": "CP5",
-      "caseId": "L07-C02",
-      "task": "remedy",
-      "caseContext": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready. Which next change most directly satisfies the stated requirement?",
+      "question": "A package is published successfully but has not passed release validation. What prevents normal release consumers from treating it as approved?",
       "options": [
         {
           "key": "A",
-          "text": "Use feed views to expose promoted validated versions",
-          "rationale": "Views distinguish lifecycle stages without rebuilding packages. This directly addresses the constraint stated in this case."
+          "text": "Rebuild the package with the same version after each test",
+          "rationale": "Rebuilding can change the deliverable and conflicts with immutable package-version expectations."
         },
         {
           "key": "B",
-          "text": "Evaluate upstream caching through the managed feed",
-          "rationale": "Saved upstream packages can improve repeat consumption resilience. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Ask consumers to infer readiness from package upload time",
+          "rationale": "Chronology is not a release-quality decision."
         },
         {
           "key": "C",
-          "text": "Use an Azure Artifacts feed with appropriate upstream sources",
-          "rationale": "The feed supports governed local and upstream consumption. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Expose validated versions through an appropriate release view",
+          "rationale": "Feed views can distinguish availability from deliberate lifecycle promotion."
+        },
+        {
+          "key": "D",
+          "text": "Rename the build's display label to approved",
+          "rationale": "A human label does not necessarily change which versions consumers can access."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Views distinguish lifecycle stages without rebuilding packages. The selected answer is use feed views to expose promoted validated versions.",
+      "explanation": "Feed views can distinguish availability from deliberate lifecycle promotion. A human label does not necessarily change which versions consumers can access. Rebuilding can change the deliverable and conflicts with immutable package-version expectations. Chronology is not a release-quality decision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L07-Q007",
       "checkpointId": "CP5",
-      "caseId": "L07-C02",
-      "task": "diagnosis",
-      "caseContext": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What does promotion into a feed view normally represent in this design?",
       "options": [
         {
           "key": "A",
-          "text": "Publication was being confused with release approval",
-          "rationale": "A package can exist before it is approved for consumers. This directly addresses the constraint stated in this case."
+          "text": "A guarantee that the version contains no possible runtime defect",
+          "rationale": "A lifecycle label cannot establish universal correctness."
         },
         {
           "key": "B",
-          "text": "Direct external restores depend on live upstream availability",
-          "rationale": "A public endpoint becomes part of every build path. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "A requirement to regenerate identical source with different compiler inputs",
+          "rationale": "Promotion is intended to avoid treating an unverified rebuild as the tested package."
         },
         {
           "key": "C",
-          "text": "A source repository is not a package feed",
-          "rationale": "Code storage and dependency distribution serve different purposes. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Automatic permission for every organization user to administer the feed",
+          "rationale": "View promotion does not universally grant registry administration."
+        },
+        {
+          "key": "D",
+          "text": "A lifecycle decision to make that existing package version visible through the view",
+          "rationale": "Promotion separates package quality stage from the version's compatibility meaning."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "A package can exist before it is approved for consumers. The selected answer is publication was being confused with release approval.",
+      "explanation": "Promotion separates package quality stage from the version's compatibility meaning. A lifecycle label cannot establish universal correctness. Promotion is intended to avoid treating an unverified rebuild as the tested package. View promotion does not universally grant registry administration.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L07-Q008",
       "checkpointId": "CP5",
-      "caseId": "L07-C02",
-      "task": "verification",
-      "caseContext": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which evidence confirms that a release view serves the intended validation boundary?",
       "options": [
         {
           "key": "A",
-          "text": "The release view contains only deliberately promoted versions",
-          "rationale": "Consumer visibility should follow validation status. This directly addresses the constraint stated in this case."
+          "text": "A development restore succeeds against the unfiltered local view",
+          "rationale": "That does not verify the separate release-view boundary."
         },
         {
           "key": "B",
-          "text": "Previously saved approved dependencies restore through the feed",
-          "rationale": "The test must distinguish cached content from new requests. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Only approved package versions appear through the release-consumption path",
+          "rationale": "The test should examine what the relevant consumers can actually resolve."
         },
         {
           "key": "C",
-          "text": "The pipeline restores an approved package through the feed",
-          "rationale": "Restoration demonstrates the intended consumption path. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Every package in the feed has a similar filename",
+          "rationale": "Names do not establish promotion status or access scope."
+        },
+        {
+          "key": "D",
+          "text": "The package was created on the same day as a release meeting",
+          "rationale": "A date does not prove the intended approval took place."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Consumer visibility should follow validation status. The selected answer is the release view contains only deliberately promoted versions.",
+      "explanation": "The test should examine what the relevant consumers can actually resolve. Names do not establish promotion status or access scope. A date does not prove the intended approval took place. That does not verify the separate release-view boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Feed@Local:1.1.0-ci.12,1.1.0-rc.1,1.1.0\nFeed@Release:1.1.0\nConsumer restore source:Feed@Release"
+      }
     },
     {
       "id": "L07-Q009",
       "checkpointId": "CP5",
-      "caseId": "L07-C02",
-      "task": "safeguard",
-      "caseContext": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Who should be able to promote packages into a trusted release-consumption view?",
       "options": [
         {
           "key": "A",
-          "text": "Pin dependencies and review upstream provenance",
-          "rationale": "Caching does not establish that a dependency is safe. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Only whichever developer first created the feed",
+          "rationale": "Ownership should follow accountable policy rather than accidental setup history."
         },
         {
           "key": "B",
-          "text": "Scope feed access to consuming and publishing identities",
-          "rationale": "A working registry should not grant universal write access. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "The authorized release or package-governance identities required by policy",
+          "rationale": "Promotion changes the set of versions considered acceptable for release consumption."
         },
         {
           "key": "C",
-          "text": "Control who can promote packages into trusted views",
-          "rationale": "Promotion is part of the release trust boundary. This directly addresses the constraint stated in this case."
+          "text": "Every anonymous user who can browse public package metadata",
+          "rationale": "Read visibility does not justify mutating trusted release eligibility."
+        },
+        {
+          "key": "D",
+          "text": "Every source-code author regardless of release duties",
+          "rationale": "Authoring permission does not automatically justify promotion authority."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Promotion is part of the release trust boundary. The selected answer is control who can promote packages into trusted views.",
+      "explanation": "Promotion changes the set of versions considered acceptable for release consumption. Read visibility does not justify mutating trusted release eligibility. Authoring permission does not automatically justify promotion authority. Ownership should follow accountable policy rather than accidental setup history.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L07-Q010",
       "checkpointId": "CP5",
-      "caseId": "L07-C02",
-      "task": "tradeoff",
-      "caseContext": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Premature package: Consumers accidentally install an unvalidated build because every published package is treated as release ready. The team selects this remedy: \"Use feed views to expose promoted validated versions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A package passed testing before promotion. A proposal rebuilds it with the same version and publishes that rebuild to the release feed. What is the stronger release pattern?",
       "options": [
         {
           "key": "A",
-          "text": "Hosted feeds have storage and licensing considerations",
-          "rationale": "Package convenience does not imply unlimited free storage. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Approve whichever file has the newest creation timestamp",
+          "rationale": "Recency does not connect the artifact to its prior validation evidence."
         },
         {
           "key": "B",
-          "text": "Views add lifecycle administration",
-          "rationale": "Teams must maintain clear promotion and consumption conventions. This directly addresses the constraint stated in this case."
+          "text": "Promote the exact validated package version and retain its provenance instead of substituting a rebuild",
+          "rationale": "The tested bytes should remain the release candidate rather than a potentially different output."
         },
         {
           "key": "C",
-          "text": "A cache cannot supply packages never saved",
-          "rationale": "New versions may still require the upstream service. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Rebuild with unpinned dependencies because the source commit is unchanged",
+          "rationale": "The same source can produce different inputs or outputs when dependencies vary."
+        },
+        {
+          "key": "D",
+          "text": "Delete the first version and reuse its number for the new contents",
+          "rationale": "Version reuse undermines identity and is not supported by immutable-version behavior in Azure Artifacts."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Teams must maintain clear promotion and consumption conventions. The selected answer is views add lifecycle administration.",
+      "explanation": "The tested bytes should remain the release candidate rather than a potentially different output. The same source can produce different inputs or outputs when dependencies vary. Version reuse undermines identity and is not supported by immutable-version behavior in Azure Artifacts. Recency does not connect the artifact to its prior validation evidence.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L07-Q011",
       "checkpointId": "CP5",
-      "caseId": "L07-C03",
-      "task": "remedy",
-      "caseContext": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed. Which next change most directly satisfies the stated requirement?",
+      "question": "The public registry is temporarily unavailable. Which dependency can an upstream-enabled feed potentially continue to serve?",
       "options": [
         {
           "key": "A",
-          "text": "Publish a major-version change under the stated SemVer contract",
-          "rationale": "Incompatible public API changes require an explicit compatibility signal. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "A version known only from a release-note title",
+          "rationale": "A textual reference is not the package content."
         },
         {
           "key": "B",
-          "text": "Use feed views to expose promoted validated versions",
-          "rationale": "Views distinguish lifecycle stages without rebuilding packages. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "A dependency excluded from every allowed source and absent from the feed",
+          "rationale": "No configured available content path exists for that version."
         },
         {
           "key": "C",
-          "text": "Evaluate upstream caching through the managed feed",
-          "rationale": "Saved upstream packages can improve repeat consumption resilience. This directly addresses the constraint stated in this case."
+          "text": "A required version already saved through that feed",
+          "rationale": "A saved package can remain available even when its upstream cannot be reached."
+        },
+        {
+          "key": "D",
+          "text": "Any never-requested version that exists only on the offline upstream",
+          "rationale": "The feed cannot supply bytes it has never saved or otherwise received."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Saved upstream packages can improve repeat consumption resilience. The selected answer is evaluate upstream caching through the managed feed.",
+      "explanation": "A saved package can remain available even when its upstream cannot be reached. The feed cannot supply bytes it has never saved or otherwise received. A textual reference is not the package content. No configured available content path exists for that version.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q012",
       "checkpointId": "CP5",
-      "caseId": "L07-C03",
-      "task": "diagnosis",
-      "caseContext": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why is upstream caching not a substitute for reviewing dependency provenance?",
       "options": [
         {
           "key": "A",
-          "text": "The version label understates the change's compatibility impact",
-          "rationale": "A patch label should not promise incompatible behavior. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "Cached packages necessarily lose all version metadata",
+          "rationale": "Saving packages does not inherently discard their identity."
         },
         {
           "key": "B",
-          "text": "Publication was being confused with release approval",
-          "rationale": "A package can exist before it is approved for consumers. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "A cache transforms untrusted packages into trusted Microsoft-authored code",
+          "rationale": "Distribution through a feed does not change original authorship or risk."
         },
         {
           "key": "C",
-          "text": "Direct external restores depend on live upstream availability",
-          "rationale": "A public endpoint becomes part of every build path. This directly addresses the constraint stated in this case."
+          "text": "Upstream caching prevents all dependency-name collisions automatically",
+          "rationale": "Source governance and resolution choices still require deliberate design."
+        },
+        {
+          "key": "D",
+          "text": "The cache preserves packages rather than proving the publisher and contents are acceptable",
+          "rationale": "A consistently available dependency can still be unsafe or unintended."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A public endpoint becomes part of every build path. The selected answer is direct external restores depend on live upstream availability.",
+      "explanation": "A consistently available dependency can still be unsafe or unintended. Saving packages does not inherently discard their identity. Distribution through a feed does not change original authorship or risk. Source governance and resolution choices still require deliberate design.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Required package:Contoso.Logging2.1.0\nSaved in feed:yes\nPublic upstream:temporarily unavailable\nPrivate feed:available"
+      }
     },
     {
       "id": "L07-Q013",
       "checkpointId": "CP5",
-      "caseId": "L07-C03",
-      "task": "verification",
-      "caseContext": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A clean build restores a previously saved dependency through the feed during an upstream outage. What is the supported conclusion?",
       "options": [
         {
           "key": "A",
-          "text": "The release view contains only deliberately promoted versions",
-          "rationale": "Consumer visibility should follow validation status. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "Every future unseen dependency version is now guaranteed available offline",
+          "rationale": "The test did not provide bytes for versions never saved."
         },
         {
           "key": "B",
-          "text": "Previously saved approved dependencies restore through the feed",
-          "rationale": "The test must distinguish cached content from new requests. This directly addresses the constraint stated in this case."
+          "text": "The dependency is proven free of security advisories",
+          "rationale": "Availability evidence does not establish vulnerability status."
         },
         {
           "key": "C",
-          "text": "Consumers can identify the breaking release before adopting it",
-          "rationale": "The version should communicate the agreed compatibility semantics. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "The public registry can be removed from every project without inventory",
+          "rationale": "Other projects may still need content absent from the saved feed."
+        },
+        {
+          "key": "D",
+          "text": "That saved dependency's consumption path survived this outage",
+          "rationale": "The test demonstrates the specific saved content rather than universal offline availability."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The test must distinguish cached content from new requests. The selected answer is previously saved approved dependencies restore through the feed.",
+      "explanation": "The test demonstrates the specific saved content rather than universal offline availability. The test did not provide bytes for versions never saved. Availability evidence does not establish vulnerability status. Other projects may still need content absent from the saved feed.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q014",
       "checkpointId": "CP5",
-      "caseId": "L07-C03",
-      "task": "safeguard",
-      "caseContext": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What configuration change can alter trusted dependency resolution even when the application manifest remains unchanged?",
       "options": [
         {
           "key": "A",
-          "text": "Pin dependencies and review upstream provenance",
-          "rationale": "Caching does not establish that a dependency is safe. This directly addresses the constraint stated in this case."
+          "text": "Changing the terminal prompt color",
+          "rationale": "Shell styling does not alter a configured feed's dependency provenance."
         },
         {
           "key": "B",
-          "text": "Document migration steps and test supported consumer scenarios",
-          "rationale": "A correct version number does not repair callers automatically. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "Adding or changing upstream package sources or their resolution policy",
+          "rationale": "The source path is part of how package names and versions are obtained."
         },
         {
           "key": "C",
-          "text": "Control who can promote packages into trusted views",
-          "rationale": "Promotion is part of the release trust boundary. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "Changing only the README's heading font",
+          "rationale": "Presentation does not change the restore source configuration."
+        },
+        {
+          "key": "D",
+          "text": "Renaming a local screenshot file outside build inputs",
+          "rationale": "An unrelated asset rename does not establish a different package source."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Caching does not establish that a dependency is safe. The selected answer is pin dependencies and review upstream provenance.",
+      "explanation": "The source path is part of how package names and versions are obtained. Presentation does not change the restore source configuration. An unrelated asset rename does not establish a different package source. Shell styling does not alter a configured feed's dependency provenance.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q015",
       "checkpointId": "CP5",
-      "caseId": "L07-C03",
-      "task": "tradeoff",
-      "caseContext": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Upstream outage: The build repeatedly fails when a public registry is unavailable even though approved dependencies were previously consumed. The team selects this remedy: \"Evaluate upstream caching through the managed feed.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team wants resilience to an upstream outage but also must onboard a new version tomorrow. Which preparation is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "A cache cannot supply packages never saved",
-          "rationale": "New versions may still require the upstream service. This directly addresses the constraint stated in this case."
+          "text": "Increase retry count indefinitely when the upstream is offline",
+          "rationale": "Unbounded retries do not supply missing package content and can stall delivery."
         },
         {
           "key": "B",
-          "text": "SemVer depends on a clearly defined public API",
-          "rationale": "Ambiguous compatibility contracts undermine version meaning. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "Verify required versions are approved and saved through the feed, then test restores with upstream access unavailable",
+          "rationale": "The rehearsal establishes actual content availability for the intended dependency set."
         },
         {
           "key": "C",
-          "text": "Views add lifecycle administration",
-          "rationale": "Teams must maintain clear promotion and consumption conventions. That addresses a different requirement: Premature package. It does not directly resolve this case's stated constraint."
+          "text": "Assume one successful cached restore proves every package and future version is saved",
+          "rationale": "Caching behavior is version and content specific."
+        },
+        {
+          "key": "D",
+          "text": "Remove the lock file so restore can choose any available cached version",
+          "rationale": "That trades reproducibility and compatibility for accidental availability."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "New versions may still require the upstream service. The selected answer is a cache cannot supply packages never saved.",
+      "explanation": "The rehearsal establishes actual content availability for the intended dependency set. Caching behavior is version and content specific. That trades reproducibility and compatibility for accidental availability. Unbounded retries do not supply missing package content and can stall delivery.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q016",
       "checkpointId": "CP2",
-      "caseId": "L07-C04",
-      "task": "remedy",
-      "caseContext": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update. Which next change most directly satisfies the stated requirement?",
+      "question": "Under a documented SemVer contract, a release removes a public method that existing callers use. Which version change communicates that incompatibility?",
       "options": [
         {
           "key": "A",
-          "text": "Publish a major-version change under the stated SemVer contract",
-          "rationale": "Incompatible public API changes require an explicit compatibility signal. This directly addresses the constraint stated in this case."
+          "text": "Change only build metadata after a plus sign",
+          "rationale": "Build metadata is not the compatibility-major signal."
         },
         {
           "key": "B",
-          "text": "Adopt a documented CalVer convention",
-          "rationale": "Calendar versions communicate release timing by agreement. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Retain the identical version and update its contents",
+          "rationale": "Reusing one identity for different package contents undermines reliable distribution."
         },
         {
           "key": "C",
-          "text": "Evaluate upstream caching through the managed feed",
-          "rationale": "Saved upstream packages can improve repeat consumption resilience. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Increase the major version",
+          "rationale": "An incompatible public API change requires the major compatibility signal under that contract."
+        },
+        {
+          "key": "D",
+          "text": "Increase only the patch version",
+          "rationale": "A patch version should not imply a breaking public API removal."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Incompatible public API changes require an explicit compatibility signal. The selected answer is publish a major-version change under the stated SemVer contract.",
+      "explanation": "An incompatible public API change requires the major compatibility signal under that contract. A patch version should not imply a breaking public API removal. Build metadata is not the compatibility-major signal. Reusing one identity for different package contents undermines reliable distribution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L07-Q017",
       "checkpointId": "CP2",
-      "caseId": "L07-C04",
-      "task": "diagnosis",
-      "caseContext": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A package adds a backward-compatible public capability under SemVer. Which component normally changes?",
       "options": [
         {
           "key": "A",
-          "text": "Direct external restores depend on live upstream availability",
-          "rationale": "A public endpoint becomes part of every build path. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "The minor version",
+          "rationale": "A compatible feature addition is distinct from a breaking major change and a corrective patch."
         },
         {
           "key": "B",
-          "text": "The version label understates the change's compatibility impact",
-          "rationale": "A patch label should not promise incompatible behavior. This directly addresses the constraint stated in this case."
+          "text": "Only the patch version because every code change is a bug fix",
+          "rationale": "A new public capability is not merely a compatible defect correction."
         },
         {
           "key": "C",
-          "text": "Release chronology is the requested version signal",
-          "rationale": "The stakeholders are not asking for API compatibility encoding. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Only the build metadata because public features do not affect versions",
+          "rationale": "Consumers need the documented compatibility and feature progression signal."
+        },
+        {
+          "key": "D",
+          "text": "The major version for every added method regardless of compatibility",
+          "rationale": "A compatible addition does not inherently require a breaking-version increment."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "A patch label should not promise incompatible behavior. The selected answer is the version label understates the change's compatibility impact.",
+      "explanation": "A compatible feature addition is distinct from a breaking major change and a corrective patch. A new public capability is not merely a compatible defect correction. Consumers need the documented compatibility and feature progression signal. A compatible addition does not inherently require a breaking-version increment.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L07-Q018",
       "checkpointId": "CP2",
-      "caseId": "L07-C04",
-      "task": "verification",
-      "caseContext": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which version label identifies a prerelease candidate rather than ordinary stable version1.0.0under SemVer-style NuGet versioning?",
       "options": [
         {
           "key": "A",
-          "text": "The published version resolves unambiguously to its release period",
-          "rationale": "The convention must be consistent and documented. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "1.0.0-rc.1",
+          "rationale": "The hyphen suffix identifies prerelease information in the version."
         },
         {
           "key": "B",
-          "text": "Previously saved approved dependencies restore through the feed",
-          "rationale": "The test must distinguish cached content from new requests. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "1.0.0",
+          "rationale": "That is the stable version without a prerelease suffix."
         },
         {
           "key": "C",
-          "text": "Consumers can identify the breaking release before adopting it",
-          "rationale": "The version should communicate the agreed compatibility semantics. This directly addresses the constraint stated in this case."
+          "text": "1.0.0+rc.1",
+          "rationale": "Build metadata is not the same syntactic prerelease marker."
+        },
+        {
+          "key": "D",
+          "text": "The package display name followed by release-candidate in a description",
+          "rationale": "Descriptive prose does not change the actual version identifier."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The version should communicate the agreed compatibility semantics. The selected answer is consumers can identify the breaking release before adopting it.",
+      "explanation": "The hyphen suffix identifies prerelease information in the version. That is the stable version without a prerelease suffix. Build metadata is not the same syntactic prerelease marker. Descriptive prose does not change the actual version identifier.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "xml",
+        "code": "<PropertyGroup>\n  <Version>1.0.0-rc.1</Version>\n</PropertyGroup>"
+      }
     },
     {
       "id": "L07-Q019",
       "checkpointId": "CP2",
-      "caseId": "L07-C04",
-      "task": "safeguard",
-      "caseContext": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should a package's public API contract be defined before applying SemVer compatibility rules?",
       "options": [
         {
           "key": "A",
-          "text": "Define uniqueness for multiple releases in one period",
-          "rationale": "A calendar prefix alone may collide during hotfixes. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "A major version is determined only by the number of changed lines",
+          "rationale": "Diff size does not define consumer compatibility."
         },
         {
           "key": "B",
-          "text": "Pin dependencies and review upstream provenance",
-          "rationale": "Caching does not establish that a dependency is safe. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Every private refactor must be treated as a public breaking change",
+          "rationale": "Internal changes need not alter the documented public contract."
         },
         {
           "key": "C",
-          "text": "Document migration steps and test supported consumer scenarios",
-          "rationale": "A correct version number does not repair callers automatically. This directly addresses the constraint stated in this case."
+          "text": "The date of publication alone determines API compatibility",
+          "rationale": "Chronology does not establish whether callers remain compatible."
+        },
+        {
+          "key": "D",
+          "text": "Compatibility depends on what consumers are entitled to rely on",
+          "rationale": "Version meaning is weak when the supported public surface is ambiguous."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A correct version number does not repair callers automatically. The selected answer is document migration steps and test supported consumer scenarios.",
+      "explanation": "Version meaning is weak when the supported public surface is ambiguous. Diff size does not define consumer compatibility. Internal changes need not alter the documented public contract. Chronology does not establish whether callers remain compatible.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L07-Q020",
       "checkpointId": "CP2",
-      "caseId": "L07-C04",
-      "task": "tradeoff",
-      "caseContext": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Breaking library change: Version 1.4.2 removes a public API method and existing consumers fail after an apparently safe update. The team selects this remedy: \"Publish a major-version change under the stated SemVer contract.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "An internal refactor changes many files but preserves the documented public API; a one-line method removal breaks callers. Which release policy is defensible?",
       "options": [
         {
           "key": "A",
-          "text": "SemVer depends on a clearly defined public API",
-          "rationale": "Ambiguous compatibility contracts undermine version meaning. This directly addresses the constraint stated in this case."
+          "text": "Classify version impact by the public compatibility contract and document the breaking migration",
+          "rationale": "Change size and compatibility impact are different dimensions."
         },
         {
           "key": "B",
-          "text": "CalVer does not inherently express breaking compatibility",
-          "rationale": "Consumers need a separate compatibility policy. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Assign the major increment to whichever change has the largest diff",
+          "rationale": "Large internal work can be compatible while a small edit breaks callers."
         },
         {
           "key": "C",
-          "text": "A cache cannot supply packages never saved",
-          "rationale": "New versions may still require the upstream service. That addresses a different requirement: Upstream outage. It does not directly resolve this case's stated constraint."
+          "text": "Use only the publication day to infer backward compatibility",
+          "rationale": "A date-based label does not define which APIs remain supported."
+        },
+        {
+          "key": "D",
+          "text": "Reissue the same version for both because tests can reveal differences later",
+          "rationale": "Consumers need stable package identity and a meaningful change contract before adoption."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Ambiguous compatibility contracts undermine version meaning. The selected answer is semVer depends on a clearly defined public API.",
+      "explanation": "Change size and compatibility impact are different dimensions. Large internal work can be compatible while a small edit breaks callers. A date-based label does not define which APIs remain supported. Consumers need stable package identity and a meaningful change contract before adoption.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L07-Q021",
       "checkpointId": "CP1",
-      "caseId": "L07-C05",
-      "task": "remedy",
-      "caseContext": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period. Which next change most directly satisfies the stated requirement?",
+      "question": "An internal tool uses the explicitly documented CalVer patternYYYY.MM.SEQUENCE. What does its2026.10.2label communicate directly?",
       "options": [
         {
           "key": "A",
-          "text": "Publish a major-version change under the stated SemVer contract",
-          "rationale": "Incompatible public API changes require an explicit compatibility signal. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "That the package has passed every security scan",
+          "rationale": "A version label does not establish validation outcomes."
         },
         {
           "key": "B",
-          "text": "Adopt a documented CalVer convention",
-          "rationale": "Calendar versions communicate release timing by agreement. This directly addresses the constraint stated in this case."
+          "text": "That all2026versions have identical public interfaces",
+          "rationale": "Calendar placement does not guarantee compatibility."
         },
         {
           "key": "C",
-          "text": "Use immutable artifact identity tied to the producing run",
-          "rationale": "Retries should retrieve the same tested deliverable. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Calendar versions communicate release timing by agreement. The selected answer is adopt a documented CalVer convention.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L07-Q022",
-      "checkpointId": "CP1",
-      "caseId": "L07-C05",
-      "task": "diagnosis",
-      "caseContext": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period.",
-      "objectiveIds": [
-        "D3.1.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The release input is a mutable alias",
-          "rationale": "A stable label does not guarantee stable content. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "The October2026release period and second sequence under that convention",
+          "rationale": "The date-based meaning follows the team's published format rather than a SemVer compatibility promise."
         },
         {
-          "key": "B",
-          "text": "The version label understates the change's compatibility impact",
-          "rationale": "A patch label should not promise incompatible behavior. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Release chronology is the requested version signal",
-          "rationale": "The stakeholders are not asking for API compatibility encoding. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "That exactly two incompatible public methods were removed",
+          "rationale": "The sequence has no such API-change meaning under this convention."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The stakeholders are not asking for API compatibility encoding. The selected answer is release chronology is the requested version signal.",
+      "explanation": "The date-based meaning follows the team's published format rather than a SemVer compatibility promise. The sequence has no such API-change meaning under this convention. A version label does not establish validation outcomes. Calendar placement does not guarantee compatibility.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Documented format:YYYY.MM.SEQUENCE\nPublished version:2026.10.2"
+      }
+    },
+    {
+      "id": "L07-Q022",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.1.3"
+      ],
+      "difficulty": "foundational",
+      "question": "The team ships two hotfixes in one calendar month. Why does aYYYY.MM-only convention need an additional uniqueness rule?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The month automatically changes after every package upload",
+          "rationale": "Publication does not alter the actual calendar."
+        },
+        {
+          "key": "B",
+          "text": "A calendar label cryptographically identifies the binary contents",
+          "rationale": "A readable version is not automatically a content digest."
+        },
+        {
+          "key": "C",
+          "text": "Several distinct outputs can otherwise receive the same version identity",
+          "rationale": "A release period alone may not distinguish multiple packages in that period."
+        },
+        {
+          "key": "D",
+          "text": "Calendar versions are prohibited from describing hotfixes",
+          "rationale": "The team can define an appropriate date-based convention."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A release period alone may not distinguish multiple packages in that period. The team can define an appropriate date-based convention. Publication does not alter the actual calendar. A readable version is not automatically a content digest.",
+      "sourceIds": [
+        "S5"
       ]
     },
     {
       "id": "L07-Q023",
       "checkpointId": "CP1",
-      "caseId": "L07-C05",
-      "task": "verification",
-      "caseContext": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which policy should accompany CalVer when callers need to understand breaking API changes?",
       "options": [
         {
           "key": "A",
-          "text": "The published version resolves unambiguously to its release period",
-          "rationale": "The convention must be consistent and documented. This directly addresses the constraint stated in this case."
+          "text": "Assume every new month is necessarily incompatible",
+          "rationale": "A date transition does not itself prove a breaking API change."
         },
         {
           "key": "B",
-          "text": "A retried release downloads the identical recorded artifact digest",
-          "rationale": "Content identity proves reproducible promotion. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "Use the release sequence as the number of affected consumers",
+          "rationale": "That is not the meaning of the documented date-based format."
         },
         {
           "key": "C",
-          "text": "Consumers can identify the breaking release before adopting it",
-          "rationale": "The version should communicate the agreed compatibility semantics. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "An explicit compatibility and migration policy separate from the date signal",
+          "rationale": "The calendar convention alone does not state backward-compatibility guarantees."
+        },
+        {
+          "key": "D",
+          "text": "Assume every later month is always backward compatible",
+          "rationale": "Chronological order does not establish caller compatibility."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "The convention must be consistent and documented. The selected answer is the published version resolves unambiguously to its release period.",
+      "explanation": "The calendar convention alone does not state backward-compatibility guarantees. Chronological order does not establish caller compatibility. A date transition does not itself prove a breaking API change. That is not the meaning of the documented date-based format.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L07-Q024",
       "checkpointId": "CP1",
-      "caseId": "L07-C05",
-      "task": "safeguard",
-      "caseContext": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A CalVer release record contains only2026.10and two different binaries were uploaded during that month. What traceability improvement is needed?",
       "options": [
         {
           "key": "A",
-          "text": "Retain the artifact and its provenance for required rollback windows",
-          "rationale": "An immutable identifier is useless if its content is deleted. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "A unique release identity with source and content provenance for each output",
+          "rationale": "One period label cannot unambiguously select between different delivered bytes."
         },
         {
           "key": "B",
-          "text": "Document migration steps and test supported consumer scenarios",
-          "rationale": "A correct version number does not repair callers automatically. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "Only a longer human-readable title for the month",
+          "rationale": "A description without unique identity can retain the ambiguity."
         },
         {
           "key": "C",
-          "text": "Define uniqueness for multiple releases in one period",
-          "rationale": "A calendar prefix alone may collide during hotfixes. This directly addresses the constraint stated in this case."
+          "text": "Only the author's display name on both uploads",
+          "rationale": "One author can produce several distinct outputs."
+        },
+        {
+          "key": "D",
+          "text": "Only a note saying both builds are recent",
+          "rationale": "Recency does not identify which content a consumer received."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "A calendar prefix alone may collide during hotfixes. The selected answer is define uniqueness for multiple releases in one period.",
+      "explanation": "One period label cannot unambiguously select between different delivered bytes. A description without unique identity can retain the ambiguity. One author can produce several distinct outputs. Recency does not identify which content a consumer received.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L07-Q025",
       "checkpointId": "CP1",
-      "caseId": "L07-C05",
-      "task": "tradeoff",
-      "caseContext": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Calendar release: An internal tool ships every month and stakeholders need the version to identify its release period. The team selects this remedy: \"Adopt a documented CalVer convention.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A service uses CalVer for operational chronology but promises deterministic rollback and explicit breaking-change notices. Which release record meets all three goals?",
       "options": [
         {
           "key": "A",
-          "text": "CalVer does not inherently express breaking compatibility",
-          "rationale": "Consumers need a separate compatibility policy. This directly addresses the constraint stated in this case."
+          "text": "A content digest alone and no user-facing compatibility guidance",
+          "rationale": "A digest identifies bytes but does not explain release timing or breaking migration."
         },
         {
           "key": "B",
-          "text": "Immutable versioning increases retained artifact volume",
-          "rationale": "Retention must balance recovery needs and storage cost. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "A new month number treated as proof that no API changed",
+          "rationale": "Calendar progression cannot establish the promised compatibility information."
         },
         {
           "key": "C",
-          "text": "SemVer depends on a clearly defined public API",
-          "rationale": "Ambiguous compatibility contracts undermine version meaning. That addresses a different requirement: Breaking library change. It does not directly resolve this case's stated constraint."
+          "text": "A unique calendar version plus immutable artifact and source identities with a separate compatibility notice",
+          "rationale": "Date, exact content, and caller impact are distinct information requirements."
+        },
+        {
+          "key": "D",
+          "text": "A monthly label reused for every rebuild with no retained source identity",
+          "rationale": "That preserves chronology while losing deterministic content selection."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Consumers need a separate compatibility policy. The selected answer is calVer does not inherently express breaking compatibility.",
+      "explanation": "Date, exact content, and caller impact are distinct information requirements. That preserves chronology while losing deterministic content selection. A digest identifies bytes but does not explain release timing or breaking migration. Calendar progression cannot establish the promised compatibility information.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5",
+        "S8"
       ]
     },
     {
       "id": "L07-Q026",
       "checkpointId": "CP4",
-      "caseId": "L07-C06",
-      "task": "remedy",
-      "caseContext": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried.",
       "objectiveIds": [
         "D3.1.4"
       ],
       "difficulty": "foundational",
-      "question": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried. Which next change most directly satisfies the stated requirement?",
+      "question": "A deployment selects an artifact named latest and receives different bytes on retry. What input should replace the moving selector?",
       "options": [
         {
           "key": "A",
-          "text": "Adopt a documented CalVer convention",
-          "rationale": "Calendar versions communicate release timing by agreement. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Whichever successful run completed most recently on any branch",
+          "rationale": "The newest unrelated run may not be the approved candidate."
         },
         {
           "key": "B",
-          "text": "Use immutable artifact identity tied to the producing run",
-          "rationale": "Retries should retrieve the same tested deliverable. This directly addresses the constraint stated in this case."
+          "text": "The current default branch rebuilt during every deployment",
+          "rationale": "Rebuilding introduces another potentially different output rather than promoting the tested artifact."
         },
         {
           "key": "C",
-          "text": "Grant the workflow the specific package permission it needs",
-          "rationale": "Package publication is a separate permission capability. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "The approved producing run and immutable artifact identity",
+          "rationale": "Retries should select the same validated deliverable rather than a mutable alias."
+        },
+        {
+          "key": "D",
+          "text": "The artifact with the shortest filename",
+          "rationale": "Filename length does not establish intended release content."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Retries should retrieve the same tested deliverable. The selected answer is use immutable artifact identity tied to the producing run.",
+      "explanation": "Retries should select the same validated deliverable rather than a mutable alias. Filename length does not establish intended release content. The newest unrelated run may not be the approved candidate. Rebuilding introduces another potentially different output rather than promoting the tested artifact.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q027",
       "checkpointId": "CP4",
-      "caseId": "L07-C06",
-      "task": "diagnosis",
-      "caseContext": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried.",
       "objectiveIds": [
         "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why can rebuilding the same commit during promotion produce a different release candidate?",
       "options": [
         {
           "key": "A",
-          "text": "Release chronology is the requested version signal",
-          "rationale": "The stakeholders are not asking for API compatibility encoding. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "External dependencies toolchains or other build inputs can differ",
+          "rationale": "Source identity alone does not fix every input or resulting output."
         },
         {
           "key": "B",
-          "text": "The release input is a mutable alias",
-          "rationale": "A stable label does not guarantee stable content. This directly addresses the constraint stated in this case."
+          "text": "A commit hash changes automatically when another run starts",
+          "rationale": "Starting a build does not rewrite an existing commit object."
         },
         {
           "key": "C",
-          "text": "Repository checkout authorization does not imply package write access",
-          "rationale": "Token permissions must match the registry operation. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Promotion necessarily changes every source file",
+          "rationale": "The risk is different build inputs, not an inevitable source rewrite."
+        },
+        {
+          "key": "D",
+          "text": "A pipeline artifact can never retain a content identity",
+          "rationale": "Artifacts can be associated with their producing run and verification metadata."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "A stable label does not guarantee stable content. The selected answer is the release input is a mutable alias.",
+      "explanation": "Source identity alone does not fix every input or resulting output. Starting a build does not rewrite an existing commit object. The risk is different build inputs, not an inevitable source rewrite. Artifacts can be associated with their producing run and verification metadata.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q028",
       "checkpointId": "CP4",
-      "caseId": "L07-C06",
-      "task": "verification",
-      "caseContext": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried.",
       "objectiveIds": [
         "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What evidence best verifies that production received the exact tested package?",
       "options": [
         {
           "key": "A",
-          "text": "A retried release downloads the identical recorded artifact digest",
-          "rationale": "Content identity proves reproducible promotion. This directly addresses the constraint stated in this case."
+          "text": "The production filename includes the same friendly release word",
+          "rationale": "A human label can be reused for different contents."
         },
         {
           "key": "B",
-          "text": "The scoped workflow token publishes the intended package",
-          "rationale": "The positive result should not require a broad personal token. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "The deployment happened shortly after tests",
+          "rationale": "Temporal proximity does not prove equal build output."
         },
         {
           "key": "C",
-          "text": "The published version resolves unambiguously to its release period",
-          "rationale": "The convention must be consistent and documented. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "The same engineer clicked both buttons",
+          "rationale": "Actor identity does not establish the artifact's content identity."
+        },
+        {
+          "key": "D",
+          "text": "The deployed content identity matches the approved artifact from the producing run",
+          "rationale": "The comparison binds validation evidence to the actual delivered bytes."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Content identity proves reproducible promotion. The selected answer is a retried release downloads the identical recorded artifact digest.",
+      "explanation": "The comparison binds validation evidence to the actual delivered bytes. A human label can be reused for different contents. Temporal proximity does not prove equal build output. Actor identity does not establish the artifact's content identity.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q029",
       "checkpointId": "CP4",
-      "caseId": "L07-C06",
-      "task": "safeguard",
-      "caseContext": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried.",
       "objectiveIds": [
         "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What retention requirement follows from promising redeployment of a supported release?",
       "options": [
         {
           "key": "A",
-          "text": "Restrict publish workflows to trusted events and branches",
-          "rationale": "Package credentials must not run on untrusted contributions. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Keep its identified deployable artifact and required provenance for the support window",
+          "rationale": "An immutable name cannot supply content that retention has removed."
         },
         {
           "key": "B",
-          "text": "Define uniqueness for multiple releases in one period",
-          "rationale": "A calendar prefix alone may collide during hotfixes. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Retain only the most recent artifact across every branch",
+          "rationale": "A supported older release can still need its own candidate."
         },
         {
           "key": "C",
-          "text": "Retain the artifact and its provenance for required rollback windows",
-          "rationale": "An immutable identifier is useless if its content is deleted. This directly addresses the constraint stated in this case."
+          "text": "Keep only the pipeline display number and delete its output immediately",
+          "rationale": "A record without the deployable bytes cannot fulfill redeployment by itself."
+        },
+        {
+          "key": "D",
+          "text": "Assume source rebuilds are always byte-identical without controlling inputs",
+          "rationale": "That is not established merely by retaining source."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "An immutable identifier is useless if its content is deleted. The selected answer is retain the artifact and its provenance for required rollback windows.",
+      "explanation": "An immutable name cannot supply content that retention has removed. A supported older release can still need its own candidate. A record without the deployable bytes cannot fulfill redeployment by itself. That is not established merely by retaining source.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q030",
       "checkpointId": "CP4",
-      "caseId": "L07-C06",
-      "task": "tradeoff",
-      "caseContext": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried.",
       "objectiveIds": [
         "D3.1.4"
       ],
       "difficulty": "advanced",
-      "question": "Mutable deployment input: A release downloads an artifact named latest and receives different bytes when the run is retried. The team selects this remedy: \"Use immutable artifact identity tied to the producing run.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The approved release must be retried after a failure, and main has advanced with newer dependencies. Which promotion plan maintains the approved candidate?",
       "options": [
         {
           "key": "A",
-          "text": "CalVer does not inherently express breaking compatibility",
-          "rationale": "Consumers need a separate compatibility policy. That addresses a different requirement: Calendar release. It does not directly resolve this case's stated constraint."
+          "text": "Retrieve the retained approved artifact by exact producing identity, verify it, and redeploy without rebuilding from main",
+          "rationale": "The same candidate preserves the relationship between review, tests, and delivery."
         },
         {
           "key": "B",
-          "text": "Immutable versioning increases retained artifact volume",
-          "rationale": "Retention must balance recovery needs and storage cost. This directly addresses the constraint stated in this case."
+          "text": "Build current main and keep the old display version so the retry looks consistent",
+          "rationale": "The new bytes would not be the approved release input."
         },
         {
           "key": "C",
-          "text": "Registry permission behavior varies by package type",
-          "rationale": "Check the supported registry authentication model. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Select the newest successful build and assume later is always safer",
+          "rationale": "Approval and compatibility do not follow chronology alone."
+        },
+        {
+          "key": "D",
+          "text": "Republish different bytes under the old package version after deleting its record",
+          "rationale": "That destroys stable identity rather than preserving a retryable candidate."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Retention must balance recovery needs and storage cost. The selected answer is immutable versioning increases retained artifact volume.",
+      "explanation": "The same candidate preserves the relationship between review, tests, and delivery. The new bytes would not be the approved release input. Approval and compatibility do not follow chronology alone. That destroys stable identity rather than preserving a retryable candidate.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q031",
       "checkpointId": "CP5",
-      "caseId": "L07-C07",
-      "task": "remedy",
-      "caseContext": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "foundational",
-      "question": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace. Which next change most directly satisfies the stated requirement?",
+      "question": "A GitHub workflow can read source but cannot publish to GitHub Packages. Which token capability is normally relevant to publishing?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the workflow the specific package permission it needs",
-          "rationale": "Package publication is a separate permission capability. This directly addresses the constraint stated in this case."
+          "text": "Appropriate packages write permission and package access for the workflow repository",
+          "rationale": "Package publication is a distinct authorization capability from source checkout."
         },
         {
           "key": "B",
-          "text": "Control feed sources and package resolution precedence",
-          "rationale": "Source design should avoid ambiguous dependency provenance. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Only contents read permission",
+          "rationale": "Read-only source access does not authorize package mutation."
         },
         {
           "key": "C",
-          "text": "Use immutable artifact identity tied to the producing run",
-          "rationale": "Retries should retrieve the same tested deliverable. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "Only issues write permission",
+          "rationale": "Issue updates do not grant package publishing access."
+        },
+        {
+          "key": "D",
+          "text": "Only permission to upload a workflow log artifact",
+          "rationale": "Workflow artifact storage and package-registry publication are separate capabilities."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Package publication is a separate permission capability. The selected answer is grant the workflow the specific package permission it needs.",
+      "explanation": "Package publication is a distinct authorization capability from source checkout. Read-only source access does not authorize package mutation. Issue updates do not grant package publishing access. Workflow artifact storage and package-registry publication are separate capabilities.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S7"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "permissions:\n  contents: read\n  packages: read\n#Trusted job attempts to publish a new package version."
+      }
     },
     {
       "id": "L07-Q032",
       "checkpointId": "CP5",
-      "caseId": "L07-C07",
-      "task": "diagnosis",
-      "caseContext": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "foundational",
-      "question": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why can a workflow token with a packages scope still fail to access a package with granular permissions?",
       "options": [
         {
           "key": "A",
-          "text": "Repository checkout authorization does not imply package write access",
-          "rationale": "Token permissions must match the registry operation. This directly addresses the constraint stated in this case."
+          "text": "The scope automatically makes every private package public",
+          "rationale": "A token permission does not inherently change package visibility."
         },
         {
           "key": "B",
-          "text": "Identical names can resolve to unintended package origins",
-          "rationale": "A successful restore does not prove the expected publisher. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Every package registry ignores repository association",
+          "rationale": "Supported registries can have repository or granular access relationships."
         },
         {
           "key": "C",
-          "text": "The release input is a mutable alias",
-          "rationale": "A stable label does not guarantee stable content. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "The workflow's branch name must equal the package name",
+          "rationale": "A matching name is not the package authorization mechanism."
+        },
+        {
+          "key": "D",
+          "text": "The package must also permit the workflow repository's relevant access",
+          "rationale": "Token capability and the package's consumer authorization both affect access."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Token permissions must match the registry operation. The selected answer is repository checkout authorization does not imply package write access.",
+      "explanation": "Token capability and the package's consumer authorization both affect access. A token permission does not inherently change package visibility. Supported registries can have repository or granular access relationships. A matching name is not the package authorization mechanism.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L07-Q033",
       "checkpointId": "CP5",
-      "caseId": "L07-C07",
-      "task": "verification",
-      "caseContext": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "applied",
-      "question": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which test demonstrates appropriately scoped GitHub package publishing?",
       "options": [
         {
           "key": "A",
-          "text": "Resolved packages show the approved source and version",
-          "rationale": "Provenance evidence detects unintended substitution. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "The trusted workflow publishes the intended package while unrelated package operations remain denied",
+          "rationale": "A useful positive path should coexist with limited excess authority."
         },
         {
           "key": "B",
-          "text": "A retried release downloads the identical recorded artifact digest",
-          "rationale": "Content identity proves reproducible promotion. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "The workflow obtains an organization-owner token",
+          "rationale": "That proves broad authority rather than the required narrow package task."
         },
         {
           "key": "C",
-          "text": "The scoped workflow token publishes the intended package",
-          "rationale": "The positive result should not require a broad personal token. This directly addresses the constraint stated in this case."
+          "text": "A maintainer can upload manually from their own machine",
+          "rationale": "Human access does not establish the workflow identity's effective permissions."
+        },
+        {
+          "key": "D",
+          "text": "The workflow can create issues in a different repository",
+          "rationale": "That is unrelated to the required package publishing boundary."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The positive result should not require a broad personal token. The selected answer is the scoped workflow token publishes the intended package.",
+      "explanation": "A useful positive path should coexist with limited excess authority. That proves broad authority rather than the required narrow package task. Human access does not establish the workflow identity's effective permissions. That is unrelated to the required package publishing boundary.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L07-Q034",
       "checkpointId": "CP5",
-      "caseId": "L07-C07",
-      "task": "safeguard",
-      "caseContext": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "applied",
-      "question": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "An external pull request can execute arbitrary build commands. How should the release-publishing credential be handled?",
       "options": [
         {
           "key": "A",
-          "text": "Retain the artifact and its provenance for required rollback windows",
-          "rationale": "An immutable identifier is useless if its content is deleted. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "Allow the pull request to change the publishing permissions before running",
+          "rationale": "That lets untrusted content define the authority it receives."
         },
         {
           "key": "B",
-          "text": "Restrict publish workflows to trusted events and branches",
-          "rationale": "Package credentials must not run on untrusted contributions. This directly addresses the constraint stated in this case."
+          "text": "Keep package write authority out of the untrusted contribution execution path",
+          "rationale": "Contributor-controlled code should not inherit the trusted package publication capability."
         },
         {
           "key": "C",
-          "text": "Review upstream additions and restrict package publishing rights",
-          "rationale": "Uncontrolled source changes can alter trusted resolution behavior. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Expose the same credential but hide its variable name",
+          "rationale": "Untrusted code can inspect execution inputs regardless of the friendly name."
+        },
+        {
+          "key": "D",
+          "text": "Grant write access whenever the pull request title includes release",
+          "rationale": "Caller-controlled text is not a trust decision."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Package credentials must not run on untrusted contributions. The selected answer is restrict publish workflows to trusted events and branches.",
+      "explanation": "Contributor-controlled code should not inherit the trusted package publication capability. Untrusted code can inspect execution inputs regardless of the friendly name. Caller-controlled text is not a trust decision. That lets untrusted content define the authority it receives.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L07-Q035",
       "checkpointId": "CP5",
-      "caseId": "L07-C07",
-      "task": "tradeoff",
-      "caseContext": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace.",
       "objectiveIds": [
         "D3.1.1"
       ],
       "difficulty": "advanced",
-      "question": "GitHub package access: A workflow can read source but fails to publish a package to the repository's registry namespace. The team selects this remedy: \"Grant the workflow the specific package permission it needs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A repository builds public pull requests and publishes private packages after trusted release approval. Which authorization design fits?",
       "options": [
         {
           "key": "A",
-          "text": "Centralized source control can reduce package availability",
-          "rationale": "New dependencies need deliberate onboarding and review. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Assume a successful pull-request build alone authorizes publication of any package",
+          "rationale": "Build success does not establish release approval or package scope."
         },
         {
           "key": "B",
-          "text": "Immutable versioning increases retained artifact volume",
-          "rationale": "Retention must balance recovery needs and storage cost. That addresses a different requirement: Mutable deployment input. It does not directly resolve this case's stated constraint."
+          "text": "Use minimally privileged contribution CI and a separately trusted publishing path with the required package access",
+          "rationale": "The design separates code evaluation from a credentialed mutation step."
         },
         {
           "key": "C",
-          "text": "Registry permission behavior varies by package type",
-          "rationale": "Check the supported registry authentication model. This directly addresses the constraint stated in this case."
+          "text": "Give every contribution job the publishing token and rely on log masking",
+          "rationale": "Masking does not prevent executed code from using an available credential."
+        },
+        {
+          "key": "D",
+          "text": "Replace the repository token with an employee's unrestricted token in all jobs",
+          "rationale": "That broadens access and introduces personal credential lifecycle dependence."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Check the supported registry authentication model. The selected answer is registry permission behavior varies by package type.",
+      "explanation": "The design separates code evaluation from a credentialed mutation step. Masking does not prevent executed code from using an available credential. That broadens access and introduces personal credential lifecycle dependence. Build success does not establish release approval or package scope.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L07-Q036",
       "checkpointId": "CP3",
-      "caseId": "L07-C08",
-      "task": "remedy",
-      "caseContext": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package. Which next change most directly satisfies the stated requirement?",
+      "question": "An internal package name also exists on a public upstream. What must the dependency design make explicit?",
       "options": [
         {
           "key": "A",
-          "text": "Lock resolved dependency versions for reproducible builds",
-          "rationale": "The build should record its actual dependency graph. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Approved sources resolution behavior and expected package provenance",
+          "rationale": "A successful name match does not prove the intended publisher supplied the content."
         },
         {
           "key": "B",
-          "text": "Grant the workflow the specific package permission it needs",
-          "rationale": "Package publication is a separate permission capability. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Only the package name's capitalization in documentation",
+          "rationale": "Presentation alone does not govern registry resolution."
         },
         {
           "key": "C",
-          "text": "Control feed sources and package resolution precedence",
-          "rationale": "Source design should avoid ambiguous dependency provenance. This directly addresses the constraint stated in this case."
+          "text": "Only which developer first requested the package",
+          "rationale": "Request ownership does not establish the restore source."
+        },
+        {
+          "key": "D",
+          "text": "Only the size of the package icon",
+          "rationale": "Visual metadata does not identify trusted package content."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Source design should avoid ambiguous dependency provenance. The selected answer is control feed sources and package resolution precedence.",
+      "explanation": "A successful name match does not prove the intended publisher supplied the content. Presentation alone does not govern registry resolution. Request ownership does not establish the restore source. Visual metadata does not identify trusted package content.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q037",
       "checkpointId": "CP3",
-      "caseId": "L07-C08",
-      "task": "diagnosis",
-      "caseContext": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why is pinning only a dependency name insufficient to avoid unintended package substitution?",
       "options": [
         {
           "key": "A",
-          "text": "Repository checkout authorization does not imply package write access",
-          "rationale": "Token permissions must match the registry operation. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "A private package can never share a name with a public package",
+          "rationale": "Namespace overlap can be part of the dependency risk."
         },
         {
           "key": "B",
-          "text": "Identical names can resolve to unintended package origins",
-          "rationale": "A successful restore does not prove the expected publisher. This directly addresses the constraint stated in this case."
+          "text": "The same name can exist in different sources and versions",
+          "rationale": "Name identity needs an approved source and deliberate resolution strategy."
         },
         {
           "key": "C",
-          "text": "A compatible range can select newer published versions",
-          "rationale": "The same source revision can therefore produce different inputs. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Package names cryptographically guarantee publisher identity across all registries",
+          "rationale": "Names are not a universal trust certificate."
+        },
+        {
+          "key": "D",
+          "text": "Every package client resolves all sources in the same order",
+          "rationale": "Resolution behavior depends on the client and configuration."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A successful restore does not prove the expected publisher. The selected answer is identical names can resolve to unintended package origins.",
+      "explanation": "Name identity needs an approved source and deliberate resolution strategy. Names are not a universal trust certificate. Resolution behavior depends on the client and configuration. Namespace overlap can be part of the dependency risk.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q038",
       "checkpointId": "CP3",
-      "caseId": "L07-C08",
-      "task": "verification",
-      "caseContext": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which restore evidence most directly verifies the intended package origin?",
       "options": [
         {
           "key": "A",
-          "text": "The scoped workflow token publishes the intended package",
-          "rationale": "The positive result should not require a broad personal token. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "The resolved package source version and expected content identity",
+          "rationale": "The evidence should identify what the build actually consumed."
         },
         {
           "key": "B",
-          "text": "Resolved packages show the approved source and version",
-          "rationale": "Provenance evidence detects unintended substitution. This directly addresses the constraint stated in this case."
+          "text": "Only a source-code comment containing the package name",
+          "rationale": "Intent text does not establish the resolved dependency."
         },
         {
           "key": "C",
-          "text": "A clean restore uses the recorded versions consistently",
-          "rationale": "Repeatability requires stable transitive as well as direct inputs. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Only the registry homepage's availability",
+          "rationale": "Reachability does not show which package was selected."
+        },
+        {
+          "key": "D",
+          "text": "Only the top-level project display name",
+          "rationale": "Project naming does not determine publisher provenance."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Provenance evidence detects unintended substitution. The selected answer is resolved packages show the approved source and version.",
+      "explanation": "The evidence should identify what the build actually consumed. Intent text does not establish the resolved dependency. Reachability does not show which package was selected. Project naming does not determine publisher provenance.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q039",
       "checkpointId": "CP3",
-      "caseId": "L07-C08",
-      "task": "safeguard",
-      "caseContext": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "applied",
-      "question": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A new upstream source is added to a trusted feed. What review should accompany the change?",
       "options": [
         {
           "key": "A",
-          "text": "Restrict publish workflows to trusted events and branches",
-          "rationale": "Package credentials must not run on untrusted contributions. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Assume new sources can add availability but never change trust",
+          "rationale": "Every allowed source affects the dependency supply boundary."
         },
         {
           "key": "B",
-          "text": "Review upstream additions and restrict package publishing rights",
-          "rationale": "Uncontrolled source changes can alter trusted resolution behavior. This directly addresses the constraint stated in this case."
+          "text": "Give every feed reader publishing rights to avoid future restore errors",
+          "rationale": "Read and publish roles serve different needs and should not be conflated."
         },
         {
           "key": "C",
-          "text": "Update locks through reviewed dependency change workflows",
-          "rationale": "Permanent pinning can leave known vulnerabilities unpatched. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Assess how it affects dependency resolution and approved provenance",
+          "rationale": "A source change can alter consumed inputs without modifying application code."
+        },
+        {
+          "key": "D",
+          "text": "Review only the order of links in the README",
+          "rationale": "Documentation presentation does not establish the actual restore policy."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Uncontrolled source changes can alter trusted resolution behavior. The selected answer is review upstream additions and restrict package publishing rights.",
+      "explanation": "A source change can alter consumed inputs without modifying application code. Documentation presentation does not establish the actual restore policy. Every allowed source affects the dependency supply boundary. Read and publish roles serve different needs and should not be conflated.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L07-Q040",
       "checkpointId": "CP3",
-      "caseId": "L07-C08",
-      "task": "tradeoff",
-      "caseContext": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package.",
       "objectiveIds": [
         "D3.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Dependency substitution: A private package name also exists upstream, and builds must consistently choose the organization's approved package. The team selects this remedy: \"Control feed sources and package resolution precedence.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A build must consume internal packages from an approved feed and restore repeatably. A public package shares an internal name, and transitive versions can float. Which control set is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Centralized source control can reduce package availability",
-          "rationale": "New dependencies need deliberate onboarding and review. This directly addresses the constraint stated in this case."
+          "text": "Govern allowed sources and package provenance, record the resolved graph, and review deliberate updates",
+          "rationale": "Source trust and exact version resolution address different paths to unintended input change."
         },
         {
           "key": "B",
-          "text": "Reproducibility and automatic freshness need a controlled balance",
-          "rationale": "Locked dependencies require intentional update maintenance. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Lock only the top-level name while retaining unrestricted public source selection",
+          "rationale": "That can preserve a name without establishing origin or all resolved versions."
         },
         {
           "key": "C",
-          "text": "Registry permission behavior varies by package type",
-          "rationale": "Check the supported registry authentication model. That addresses a different requirement: GitHub package access. It does not directly resolve this case's stated constraint."
+          "text": "Use whichever package downloads fastest during each build",
+          "rationale": "Performance is not an acceptable provenance or compatibility selector."
+        },
+        {
+          "key": "D",
+          "text": "Mirror every public package into the internal namespace and treat the mirror as automatically approved",
+          "rationale": "Copying content does not itself provide a trust or review decision."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "New dependencies need deliberate onboarding and review. The selected answer is centralized source control can reduce package availability.",
+      "explanation": "Source trust and exact version resolution address different paths to unintended input change. That can preserve a name without establishing origin or all resolved versions. Performance is not an acceptable provenance or compatibility selector. Copying content does not itself provide a trust or review decision.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L07-Q041",
       "checkpointId": "CP3",
-      "caseId": "L07-C09",
-      "task": "remedy",
-      "caseContext": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates. Which next change most directly satisfies the stated requirement?",
+      "question": "Two clean builds of one commit resolve different dependency versions under a floating range. Which record improves deterministic restore?",
       "options": [
         {
           "key": "A",
-          "text": "Bind source tag build run and package identity in provenance",
-          "rationale": "Release labels should identify the actual delivered bytes. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only the dependency's unqualified display name",
+          "rationale": "The name alone does not identify the direct and transitive versions used."
         },
         {
           "key": "B",
-          "text": "Control feed sources and package resolution precedence",
-          "rationale": "Source design should avoid ambiguous dependency provenance. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "A committed dependency lock file with the resolved graph under the client’s supported workflow",
+          "rationale": "The lock records selected inputs rather than leaving every restore to choose anew."
         },
         {
           "key": "C",
-          "text": "Lock resolved dependency versions for reproducible builds",
-          "rationale": "The build should record its actual dependency graph. This directly addresses the constraint stated in this case."
+          "text": "Only the source commit's human-readable message",
+          "rationale": "The message does not enumerate the resolved dependency versions."
+        },
+        {
+          "key": "D",
+          "text": "Only a screenshot of a successful build",
+          "rationale": "A screenshot does not supply the restore graph."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "The build should record its actual dependency graph. The selected answer is lock resolved dependency versions for reproducible builds.",
+      "explanation": "The lock records selected inputs rather than leaving every restore to choose anew. The message does not enumerate the resolved dependency versions. A screenshot does not supply the restore graph. The name alone does not identify the direct and transitive versions used.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L07-Q042",
       "checkpointId": "CP3",
-      "caseId": "L07-C09",
-      "task": "diagnosis",
-      "caseContext": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What is the purpose of a locked restore mode in a pipeline that maintains a reviewed lock file?",
       "options": [
         {
           "key": "A",
-          "text": "Source and package metadata were assigned independently",
-          "rationale": "Matching names do not establish a shared build origin. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Skip all package integrity and resolution work forever",
+          "rationale": "The pipeline still needs the actual required dependency inputs."
         },
         {
           "key": "B",
-          "text": "Identical names can resolve to unintended package origins",
-          "rationale": "A successful restore does not prove the expected publisher. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Remove the lock file after every successful run",
+          "rationale": "That would discard the reviewed graph needed by later builds."
         },
         {
           "key": "C",
-          "text": "A compatible range can select newer published versions",
-          "rationale": "The same source revision can therefore produce different inputs. This directly addresses the constraint stated in this case."
+          "text": "Detect an unexpected mismatch rather than silently accepting a changed graph",
+          "rationale": "The run should respect the intended recorded resolution state."
+        },
+        {
+          "key": "D",
+          "text": "Automatically upgrade every package to its newest major version",
+          "rationale": "Locked restoration is not an unconditional dependency update operation."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The same source revision can therefore produce different inputs. The selected answer is a compatible range can select newer published versions.",
+      "explanation": "The run should respect the intended recorded resolution state. Locked restoration is not an unconditional dependency update operation. The pipeline still needs the actual required dependency inputs. That would discard the reviewed graph needed by later builds.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S6"
+      ],
+      "exhibit": {
+        "language": "bash",
+        "code": "dotnet restore samples/DevOps.slnx --locked-mode\n#The reviewed packages.lock.json is part of source control."
+      }
     },
     {
       "id": "L07-Q043",
       "checkpointId": "CP3",
-      "caseId": "L07-C09",
-      "task": "verification",
-      "caseContext": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A direct package version remains unchanged, but its resolved transitive graph changes. Which inspection is needed?",
       "options": [
         {
           "key": "A",
-          "text": "The package records the same commit referenced by the tag",
-          "rationale": "Consistent provenance ties source to distribution. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Only the root package's display title",
+          "rationale": "A title does not expose all transitive resolution details."
         },
         {
           "key": "B",
-          "text": "Resolved packages show the approved source and version",
-          "rationale": "Provenance evidence detects unintended substitution. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Only the application's executable filename",
+          "rationale": "The name does not record the underlying dependency graph."
         },
         {
           "key": "C",
-          "text": "A clean restore uses the recorded versions consistently",
-          "rationale": "Repeatability requires stable transitive as well as direct inputs. This directly addresses the constraint stated in this case."
+          "text": "Only the default branch's protection description",
+          "rationale": "Merge policy does not show what dependency versions were resolved."
+        },
+        {
+          "key": "D",
+          "text": "The lock file or equivalent resolved dependency graph",
+          "rationale": "Direct declarations alone do not enumerate every actual consumed version."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Repeatability requires stable transitive as well as direct inputs. The selected answer is a clean restore uses the recorded versions consistently.",
+      "explanation": "Direct declarations alone do not enumerate every actual consumed version. A title does not expose all transitive resolution details. The name does not record the underlying dependency graph. Merge policy does not show what dependency versions were resolved.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L07-Q044",
       "checkpointId": "CP3",
-      "caseId": "L07-C09",
-      "task": "safeguard",
-      "caseContext": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "applied",
-      "question": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What maintenance process should accompany pinned dependency versions?",
       "options": [
         {
           "key": "A",
-          "text": "Verify provenance before promotion rather than trusting filenames",
-          "rationale": "Artifact names can be reused or assigned incorrectly. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Delete the lock whenever a security alert appears and accept any newer graph",
+          "rationale": "Uncontrolled changes can introduce unrelated incompatibility or provenance problems."
         },
         {
           "key": "B",
-          "text": "Review upstream additions and restrict package publishing rights",
-          "rationale": "Uncontrolled source changes can alter trusted resolution behavior. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Update only the display version without changing the actual resolved package",
+          "rationale": "A label change does not remediate the vulnerable input."
         },
         {
           "key": "C",
-          "text": "Update locks through reviewed dependency change workflows",
-          "rationale": "Permanent pinning can leave known vulnerabilities unpatched. This directly addresses the constraint stated in this case."
+          "text": "Reviewed updates with security and compatibility validation",
+          "rationale": "Repeatability does not remove the need to adopt relevant fixes deliberately."
+        },
+        {
+          "key": "D",
+          "text": "Never update any package because every pin is permanently safe",
+          "rationale": "Known vulnerabilities and support requirements can change over time."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Permanent pinning can leave known vulnerabilities unpatched. The selected answer is update locks through reviewed dependency change workflows.",
+      "explanation": "Repeatability does not remove the need to adopt relevant fixes deliberately. Known vulnerabilities and support requirements can change over time. Uncontrolled changes can introduce unrelated incompatibility or provenance problems. A label change does not remediate the vulnerable input.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L07-Q045",
       "checkpointId": "CP3",
-      "caseId": "L07-C09",
-      "task": "tradeoff",
-      "caseContext": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates.",
       "objectiveIds": [
         "D3.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Floating dependency: Two builds of the same commit resolve different minor versions because the dependency specification permits updates. The team selects this remedy: \"Lock resolved dependency versions for reproducible builds.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team requires reproducible builds and timely security updates. How can it meet both without silently changing release inputs?",
       "options": [
         {
           "key": "A",
-          "text": "Provenance collection adds release metadata management",
-          "rationale": "It enables audit and reliable rollback decisions. That addresses a different requirement: Tag artifact mismatch. It does not directly resolve this case's stated constraint."
+          "text": "Always float every dependency so no update review is needed",
+          "rationale": "Each restore can change the candidate without the required deliberate validation."
         },
         {
           "key": "B",
-          "text": "Centralized source control can reduce package availability",
-          "rationale": "New dependencies need deliberate onboarding and review. That addresses a different requirement: Dependency substitution. It does not directly resolve this case's stated constraint."
+          "text": "Freeze the graph permanently and dismiss all future advisories",
+          "rationale": "That preserves repeatability by abandoning timely risk treatment."
         },
         {
           "key": "C",
-          "text": "Reproducibility and automatic freshness need a controlled balance",
-          "rationale": "Locked dependencies require intentional update maintenance. This directly addresses the constraint stated in this case."
+          "text": "Replace published bytes under the existing artifact identity after each package update",
+          "rationale": "A changed graph should produce a distinguishable new candidate rather than mutate an approved one."
+        },
+        {
+          "key": "D",
+          "text": "Keep a reviewed resolved graph, create explicit dependency update changes, validate them, and publish a new identified artifact",
+          "rationale": "Controlled change preserves reproducibility while making freshness an intentional tested workflow."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Locked dependencies require intentional update maintenance. The selected answer is reproducibility and automatic freshness need a controlled balance.",
+      "explanation": "Controlled change preserves reproducibility while making freshness an intentional tested workflow. Each restore can change the candidate without the required deliberate validation. That preserves repeatability by abandoning timely risk treatment. A changed graph should produce a distinguishable new candidate rather than mutate an approved one.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6",
+        "S2"
       ]
     },
     {
       "id": "L07-Q046",
       "checkpointId": "CP4",
-      "caseId": "L07-C10",
-      "task": "remedy",
-      "caseContext": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head.",
       "objectiveIds": [
         "D2.2.4",
         "D3.1.4"
       ],
       "difficulty": "foundational",
-      "question": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head. Which next change most directly satisfies the stated requirement?",
+      "question": "Release tagv2.3identifies one commit while its package was built from another. What relationship must be repaired?",
       "options": [
         {
           "key": "A",
-          "text": "Bind source tag build run and package identity in provenance",
-          "rationale": "Release labels should identify the actual delivered bytes. This directly addresses the constraint stated in this case."
+          "text": "Only the timestamp format used in the release notes",
+          "rationale": "Formatting dates does not connect the binary to the intended commit."
         },
         {
           "key": "B",
-          "text": "Use an Azure Artifacts feed with appropriate upstream sources",
-          "rationale": "The feed supports governed local and upstream consumption. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "The release's source build and artifact provenance",
+          "rationale": "Matching a friendly version label does not establish shared source origin."
         },
         {
           "key": "C",
-          "text": "Lock resolved dependency versions for reproducible builds",
-          "rationale": "The build should record its actual dependency graph. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Release labels should identify the actual delivered bytes. The selected answer is bind source tag build run and package identity in provenance.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L07-Q047",
-      "checkpointId": "CP4",
-      "caseId": "L07-C10",
-      "task": "diagnosis",
-      "caseContext": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head.",
-      "objectiveIds": [
-        "D2.2.4",
-        "D3.1.4"
-      ],
-      "difficulty": "applied",
-      "question": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A compatible range can select newer published versions",
-          "rationale": "The same source revision can therefore produce different inputs. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Only the alphabetical ordering of package metadata",
+          "rationale": "Metadata order does not resolve the differing source identities."
         },
         {
-          "key": "B",
-          "text": "Source and package metadata were assigned independently",
-          "rationale": "Matching names do not establish a shared build origin. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "A source repository is not a package feed",
-          "rationale": "Code storage and dependency distribution serve different purposes. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Only the package owner's display name",
+          "rationale": "One owner can publish artifacts from several different revisions."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Matching names do not establish a shared build origin. The selected answer is source and package metadata were assigned independently.",
+      "explanation": "Matching a friendly version label does not establish shared source origin. Metadata order does not resolve the differing source identities. One owner can publish artifacts from several different revisions. Formatting dates does not connect the binary to the intended commit.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Approved tagv2.3 commit:4ab91fc\nPackage producing run commit:9d823ee\nPackage display version:2.3"
+      }
+    },
+    {
+      "id": "L07-Q047",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.4",
+        "D3.1.4"
+      ],
+      "difficulty": "applied",
+      "question": "Which source field should be retained alongside a package's producing run?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Only the moving branch name",
+          "rationale": "A branch can advance after the package was created."
+        },
+        {
+          "key": "B",
+          "text": "Only the author's name",
+          "rationale": "An author is not a unique source revision."
+        },
+        {
+          "key": "C",
+          "text": "Only the tag's current display text",
+          "rationale": "A readable name can be reused or moved without identifying the original target."
+        },
+        {
+          "key": "D",
+          "text": "The exact commit identity used by that run",
+          "rationale": "An immutable source reference supports an unambiguous provenance chain."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "An immutable source reference supports an unambiguous provenance chain. A branch can advance after the package was created. An author is not a unique source revision. A readable name can be reused or moved without identifying the original target.",
+      "sourceIds": [
+        "S8"
       ]
     },
     {
       "id": "L07-Q048",
       "checkpointId": "CP4",
-      "caseId": "L07-C10",
-      "task": "verification",
-      "caseContext": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head.",
       "objectiveIds": [
         "D2.2.4",
         "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What check should occur before promoting a candidate whose name matches the requested release?",
       "options": [
         {
           "key": "A",
-          "text": "The package records the same commit referenced by the tag",
-          "rationale": "Consistent provenance ties source to distribution. This directly addresses the constraint stated in this case."
+          "text": "Promote immediately because equal names guarantee equal bytes",
+          "rationale": "Human-assigned labels do not provide that guarantee."
         },
         {
           "key": "B",
-          "text": "The pipeline restores an approved package through the feed",
-          "rationale": "Restoration demonstrates the intended consumption path. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Rebuild from the current branch to make its name more recent",
+          "rationale": "That creates another output instead of checking the existing approved one."
         },
         {
           "key": "C",
-          "text": "A clean restore uses the recorded versions consistently",
-          "rationale": "Repeatability requires stable transitive as well as direct inputs. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "Delete its original run record once the file is copied",
+          "rationale": "That removes provenance needed to assess the candidate."
+        },
+        {
+          "key": "D",
+          "text": "Verify its producing source and content identity against the approved candidate",
+          "rationale": "A matching name is weaker evidence than the intended immutable inputs."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Consistent provenance ties source to distribution. The selected answer is the package records the same commit referenced by the tag.",
+      "explanation": "A matching name is weaker evidence than the intended immutable inputs. Human-assigned labels do not provide that guarantee. That creates another output instead of checking the existing approved one. That removes provenance needed to assess the candidate.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L07-Q049",
       "checkpointId": "CP4",
-      "caseId": "L07-C10",
-      "task": "safeguard",
-      "caseContext": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head.",
       "objectiveIds": [
         "D2.2.4",
         "D3.1.4"
       ],
       "difficulty": "applied",
-      "question": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should an artifact checksum be compared with a trusted release record rather than any checksum attached by the uploader?",
       "options": [
         {
           "key": "A",
-          "text": "Scope feed access to consuming and publishing identities",
-          "rationale": "A working registry should not grant universal write access. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "text": "Matching upload timestamps prove both files came from one source commit",
+          "rationale": "Temporal proximity does not establish source identity."
         },
         {
           "key": "B",
-          "text": "Update locks through reviewed dependency change workflows",
-          "rationale": "Permanent pinning can leave known vulnerabilities unpatched. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "The reference must bind the expected approved content to the verification",
+          "rationale": "An attacker or mistaken producer can supply a checksum for the wrong bytes."
         },
         {
           "key": "C",
-          "text": "Verify provenance before promotion rather than trusting filenames",
-          "rationale": "Artifact names can be reused or assigned incorrectly. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Artifact names can be reused or assigned incorrectly. The selected answer is verify provenance before promotion rather than trusting filenames.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L07-Q050",
-      "checkpointId": "CP4",
-      "caseId": "L07-C10",
-      "task": "tradeoff",
-      "caseContext": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head.",
-      "objectiveIds": [
-        "D2.2.4",
-        "D3.1.4"
-      ],
-      "difficulty": "advanced",
-      "question": "Tag artifact mismatch: Release v2.3 points to one commit while the uploaded package was built from a different branch head. The team selects this remedy: \"Bind source tag build run and package identity in provenance.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Reproducibility and automatic freshness need a controlled balance",
-          "rationale": "Locked dependencies require intentional update maintenance. That addresses a different requirement: Floating dependency. It does not directly resolve this case's stated constraint."
+          "text": "A checksum automatically proves the artifact passed every test",
+          "rationale": "Content identity does not encode validation outcomes."
         },
         {
-          "key": "B",
-          "text": "Provenance collection adds release metadata management",
-          "rationale": "It enables audit and reliable rollback decisions. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Hosted feeds have storage and licensing considerations",
-          "rationale": "Package convenience does not imply unlimited free storage. That addresses a different requirement: Registry selection. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "The uploader's filename always provides stronger content evidence than a digest",
+          "rationale": "Names are more easily reused for different content."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "It enables audit and reliable rollback decisions. The selected answer is provenance collection adds release metadata management.",
+      "explanation": "An attacker or mistaken producer can supply a checksum for the wrong bytes. Content identity does not encode validation outcomes. Names are more easily reused for different content. Temporal proximity does not establish source identity.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
+      ]
+    },
+    {
+      "id": "L07-Q050",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.2.4",
+        "D3.1.4"
+      ],
+      "difficulty": "advanced",
+      "question": "A package in a release view has the right version label but its run record points to a different commit from the approved tag. Which release decision is defensible?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keep both source records but omit the mismatch from release notes",
+          "rationale": "Hiding the discrepancy does not establish that the artifact is the approved one."
+        },
+        {
+          "key": "B",
+          "text": "Stop promotion, reconcile the source-to-package identity, and validate the actual candidate before release",
+          "rationale": "Lifecycle promotion and labels cannot substitute for consistent provenance of the deliverable."
+        },
+        {
+          "key": "C",
+          "text": "Assume the release view proves the package necessarily came from the intended tag",
+          "rationale": "A view expresses lifecycle eligibility rather than inferring the source relationship."
+        },
+        {
+          "key": "D",
+          "text": "Move the tag to match whichever package was uploaded most recently",
+          "rationale": "That changes the approved source reference to fit an unverified candidate."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Lifecycle promotion and labels cannot substitute for consistent provenance of the deliverable. A view expresses lifecycle eligibility rather than inferring the source relationship. That changes the approved source reference to fit an unverified candidate. Hiding the discrepancy does not establish that the artifact is the approved one.",
+      "sourceIds": [
+        "S8",
+        "S1"
       ]
     }
   ]

@@ -15,7 +15,8 @@ Learner role: **Resilience engineer**. Outcome: Control feature exposure and dep
 | Platforms | local, azure |
 | Cost | Developer store; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.4.5`, `D3.4.6`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Deployment and feature exposure are independent. Cohort policy needs ownership/expiry; circuit breakers reduce amplification while bounded retries address transient failures.
 
+A deployed capability can remain disabled until the owner authorizes exposure. Feature flags need expiry, audit and a safe default; a kill switch should preserve essential read behavior while stopping the risky write path. Bounded retries and circuit breakers address different failure amplification patterns.
+
+The sample tests demonstrate writes rejected when TodoWrites is disabled while reads remain healthy. Azure App Configuration separately exercises Entra-based CLI management of the actual run-owned flag. This does not imply the sample is automatically consuming that remote store: the local application test and cloud flag-control operation are distinct observations until configured together.
+
 ## Task 1 — Inspect the sample feature-management defaults
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $config=Get-Content (Join-Path $RepoRoot 'samples/DevOps.Api/appsettings.json') -Raw|ConvertFrom-Json
@@ -124,6 +136,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --filter 'FullyQualifiedName~DisabledFlagRejectsWritesWhileReadsRemainHealthy' --logger "trx;LogFileName=feature.trx" --results-directory (Join-Path $WorkRoot 'features')
  if($LASTEXITCODE -ne 0){throw 'Feature tests failed.'}
@@ -156,6 +170,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $name="flags-l16-$RunId"
@@ -195,6 +211,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.6` | practiced | Create, enable, query, and disable the run-owned Azure App Configuration feature flag. |
+
 ```powershell
 $name="flags-l16-$RunId"
  az appconfig feature set --subscription $SubscriptionId --name $name --feature TodoWrites --auth-mode login --yes -o json
@@ -230,6 +250,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.5` | practiced | Observe the sample feature-disabled test preserve reads while rejecting writes. |
+
 ```powershell
 az appconfig feature disable --subscription $SubscriptionId --name "flags-l16-$RunId" --feature TodoWrites --auth-mode login --yes -o json
  $exposure=[ordered]@{flag='TodoWrites';rings=@(5,20,100);killSwitchEnabled=$true;owner='release-engineer';expiresAfterDays=14}
@@ -262,7 +286,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/16-feature-flags-resilience/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L16-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$f=az appconfig feature show --subscription $SubscriptionId --name "flags-l16-$RunId" --feature TodoWrites --auth-mode login -o json|ConvertFrom-Json
+if($f.state -ne 'off'){throw 'AZ400-L16-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 az appconfig feature enable --subscription $SubscriptionId --name "flags-l16-$RunId" --feature TodoWrites --auth-mode login --yes -o none
@@ -274,7 +313,7 @@ Diagnose the precise difference:
 az appconfig feature show --subscription $SubscriptionId --name "flags-l16-$RunId" --feature TodoWrites --auth-mode login --query state -o tsv
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 az appconfig feature disable --subscription $SubscriptionId --name "flags-l16-$RunId" --feature TodoWrites --auth-mode login --yes -o none
@@ -290,7 +329,7 @@ Connect an approved disposable App Configuration store, toggle one flag using En
 & './labs/16-feature-flags-resilience/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -322,4 +361,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

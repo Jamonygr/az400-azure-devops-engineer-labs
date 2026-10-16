@@ -72,19 +72,25 @@ distribution. Questions are original practice material, not recalled exam items.
 
 ## Documentation and progress
 
-The Material for MkDocs site includes blue/cyan light and dark themes, search,
-domain navigation, a glossary, and browser-local progress with JSON import/export.
-Completion requires successful validation and cleanup. Progress exports contain
-no account, subscription, resource identifiers, or credentials.
+The Material for MkDocs site includes a filterable lab explorer, interactive
+quizzes, blue/cyan light and dark themes, search, and private browser progress.
+Full quiz attempts record a score; focused practice does not overwrite it.
+Practical completion requires validation, break/fix, and cleanup. Imports preview
+changes and merge by default; earlier completion history is retained for review.
+Progress exports contain no account, subscription, resource identifiers, or credentials.
 
 ```powershell
-python -m pip install -r requirements-dev.txt -r requirements-docs.txt
-python tools/build_docs_site.py
-python -m mkdocs serve --strict
+python -m pip install -r requirements.lock.txt
+python tools/preview_docs.py
 ```
 
 See the [study plan](docs/study-plan.md), [command cheatsheet](docs/command-cheatsheet.md),
 [troubleshooting guide](docs/troubleshooting.md), and [validation status](docs/validation-status.md).
+
+The preview rebuilds when authoritative files change. Refresh the browser after
+the successful build message. Use `python tools/preview_docs.py --once` for a
+single strict build. [Practice quizzes](docs/practice.md) also retain the
+Markdown question and answer pages for offline reading.
 
 ## Current-service notes
 

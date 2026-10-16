@@ -15,7 +15,8 @@ Learner role: **Repository maintainer**. Outcome: Protect branches and review pu
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D2.1.1`, `D2.1.2`, `D2.1.3`
 
@@ -86,11 +92,19 @@ packages and write ignored build output.
 
 Short-lived branches reduce integration distance. Required reviews and force-push restrictions protect shared history; the author cannot supply independent approval.
 
+Choose a branch model around integration frequency, review requirements and supported release lines. A short-lived feature branch reduces divergence, while a maintained release branch can isolate a supported version. The pull request connects the proposed diff with an independently reviewable test plan.
+
+Protection is a provider-enforced policy, not prose in a README. Required reviews, expected checks and force-push restrictions should be queried after creation. The author cannot manufacture an independent reviewer; if the account plan or second reviewer is unavailable, the affected checkpoint remains gated. The exercise inspects readiness without bypassing the policy.
+
 ## Task 1 — Create a local trunk and short-lived feature branch
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D2.1.1` | practiced | Create a feature branch in the disposable GitHub working copy. |
 
 ```powershell
 $gitRoot=Join-Path $WorkRoot 'branching';New-Item -ItemType Directory -Force $gitRoot|Out-Null
@@ -128,6 +142,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $p=Join-Path $WorkRoot 'branching'
  git -C $p remote add origin "https://github.com/$GhRepo.git"
@@ -163,6 +179,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D2.1.2` | integrated | Open the run-owned pull request and correlate its branch and exact source commit. |
+
 ```powershell
 $url=gh pr create --repo $GhRepo --base main --head "feature/$RunId" --title "[$RunId] Add health contract" --body 'Acceptance: contract states readiness status. Test: review contract and run dotnet test. Rollback: revert merge commit.'
  $url|Set-Content (Join-Path $WorkRoot 'pull-request-url.txt')
@@ -195,6 +215,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D2.1.3` | practiced | Configure and query main-branch required-review/status-check protection; entitlement is a visible gate. |
 
 ```powershell
 $policy=@{required_status_checks=$null;enforce_admins=$true;required_pull_request_reviews=@{required_approving_review_count=1;dismiss_stale_reviews=$true};restrictions=$null;allow_force_pushes=$false;allow_deletions=$false}
@@ -230,6 +254,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt')
  gh pr view $url --repo $GhRepo --json mergeStateStatus,reviewDecision,statusCheckRollup|Set-Content (Join-Path $WorkRoot 'merge-readiness.json')
@@ -260,22 +286,37 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
 
 ```powershell
-$p=Join-Path $WorkRoot 'branching';git -C $p config branch.main.description 'fault: long-lived unreviewed work'
+& './labs/04-branching-pull-requests/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L04-BRANCH-APPROVAL`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$p=gh api "repos/$GhRepo/branches/main/protection/required_pull_request_reviews"|ConvertFrom-Json
+if($p.required_approving_review_count -lt 1){throw 'AZ400-L04-BRANCH-APPROVAL'}
+```
+
+Fault trigger (executed by BreakFix):
+
+```powershell
+gh api --method PATCH "repos/$GhRepo/branches/main/protection/required_pull_request_reviews" -F required_approving_review_count=0
 ```
 
 Diagnose the precise difference:
 
 ```powershell
-$p=Join-Path $WorkRoot 'branching';git -C $p log --graph --oneline --all;git -C $p config --get branch.main.description
+gh api "repos/$GhRepo/branches/main/protection/required_pull_request_reviews"
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
-$p=Join-Path $WorkRoot 'branching';git -C $p config --unset branch.main.description
+gh api --method PATCH "repos/$GhRepo/branches/main/protection/required_pull_request_reviews" -F required_approving_review_count=1
 ```
 
 ## Optional job-style challenge
@@ -288,7 +329,7 @@ Add a required CI status context after a real successful run, then show how stal
 & './labs/04-branching-pull-requests/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -320,4 +361,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

@@ -27,6 +27,21 @@ public sealed class TitleTests
     }
 }
 
+public sealed class ReleaseTelemetryTests
+{
+    [Theory]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", true)]
+    [InlineData("a-credential-must-never-be-recorded", false)]
+    [InlineData("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", false)]
+    [InlineData("", false)]
+    public void ReleaseTraceTagsAcceptOnlyNonsecretCommitIdentifiers(string marker, bool expected)
+    {
+        using var activity = new Activity("release request").Start();
+        ApiTelemetry.TagRelease(activity, marker);
+        Assert.Equal(expected ? marker : null, activity.GetTagItem("az400.release"));
+    }
+}
+
 public sealed class SqlMigrationTests
 {
     [Fact] public void SqlServerMigrationProducesAnIdempotentSchemaWithoutAConnection()

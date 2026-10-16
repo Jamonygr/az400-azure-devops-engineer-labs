@@ -29,7 +29,8 @@
       "negative": "$p=Get-Content (Join-Path $WorkRoot 'plan.json') -Raw|ConvertFrom-Json\n if($p.sku.name -ne 'S1'){throw 'Unexpected billable SKU; do not accept silent tier changes.'}\n",
       "validate": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $w=az webapp show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json\n if($w.state -ne 'Running'){throw 'Web app is not running.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'plan.json') -Raw|ConvertFrom-Json\n if($p.sku.name -ne 'S1'){throw 'Unexpected billable SKU; do not accept silent tier changes.'}\n",
       "evidence": "Plan SKU, app ID, and reviewed same-session cleanup cost.",
-      "fix": "Review current pricing/quotas before -Execute; never silently replace S1 with a larger SKU."
+      "fix": "Review current pricing/quotas before -Execute; never silently replace S1 with a larger SKU.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -40,7 +41,8 @@
       "negative": "$h=Get-Content (Join-Path $WorkRoot 'release-hash.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'release.zip')).Hash -ne $h.Hash){throw 'Release ZIP changed.'}\n",
       "validate": "if(-not (Test-Path (Join-Path $WorkRoot 'release.zip'))){throw 'Deployment ZIP missing.'}\n\n$h=Get-Content (Join-Path $WorkRoot 'release-hash.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'release.zip')).Hash -ne $h.Hash){throw 'Release ZIP changed.'}\n",
       "evidence": "ZIP digest and app revision.",
-      "fix": "Zip the published file contents, not their enclosing directory."
+      "fix": "Zip the published file contents, not their enclosing directory.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -51,7 +53,14 @@
       "negative": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $s=@(az webapp deployment slot list --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json)\n if(@($s|Where-Object name -like '*/production').Count){throw 'Production is not an independently created slot.'}\n",
       "validate": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $s=@(az webapp deployment slot list --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json)\n if(@($s|Where-Object name -like '*/staging').Count -ne 1){throw 'Staging slot absent.'}\n\n$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $s=@(az webapp deployment slot list --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json)\n if(@($s|Where-Object name -like '*/production').Count){throw 'Production is not an independently created slot.'}\n",
       "evidence": "Deployment IDs and slot list.",
-      "fix": "Wait for deployment completion and review startup logs before routing traffic."
+      "fix": "Wait for deployment completion and review startup logs before routing traffic.",
+      "coverage": [
+        {
+          "objectiveId": "D3.4.3",
+          "level": "practiced",
+          "reference": "Deploy and probe a staging slot separately from production."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -62,7 +71,14 @@
       "negative": "$c=@(Get-Content (Join-Path $WorkRoot 'readiness.json') -Raw|ConvertFrom-Json)\n if(@($c.host|Select-Object -Unique).Count -ne 2){throw 'Both checks accidentally targeted the same slot.'}\n",
       "validate": "$c=@(Get-Content (Join-Path $WorkRoot 'readiness.json') -Raw|ConvertFrom-Json)\n if($c.Count -ne 2 -or @($c|Where-Object status -ne 200).Count){throw 'Readiness gate failed.'}\n\n$c=@(Get-Content (Join-Path $WorkRoot 'readiness.json') -Raw|ConvertFrom-Json)\n if(@($c.host|Select-Object -Unique).Count -ne 2){throw 'Both checks accidentally targeted the same slot.'}\n",
       "evidence": "Two hostname/status pairs without cookies or authorization headers.",
-      "fix": "Retry the read-only readiness request after warmup; a running process alone is not readiness."
+      "fix": "Retry the read-only readiness request after warmup; a running process alone is not readiness.",
+      "coverage": [
+        {
+          "objectiveId": "D3.4.7",
+          "level": "practiced",
+          "reference": "Compare healthy slot probes and inspect the run-owned deployment contract."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -73,13 +89,27 @@
       "negative": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $r=az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json\n if($r.staging -ge 100){throw 'Canary accidentally received full exposure.'}\n",
       "validate": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $r=az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json\n if($r.staging -ne 10){throw 'Expected10percent canary routing.'}\n\n$app=Get-Content (Join-Path $WorkRoot 'app-name.txt')\n $r=az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json\n if($r.staging -ge 100){throw 'Canary accidentally received full exposure.'}\n",
       "evidence": "Routing distribution, artifact digest, and promotion preview.",
-      "fix": "Clear traffic routing to return to production; promote only after health/error/latency review."
+      "fix": "Clear traffic routing to return to production; promote only after health/error/latency review.",
+      "coverage": [
+        {
+          "objectiveId": "D3.4.1",
+          "level": "integrated",
+          "reference": "Set and query the actual owned App Service staging traffic percentage."
+        },
+        {
+          "objectiveId": "D3.4.4",
+          "level": "explained",
+          "reference": "Reason about a compatible hotfix/rollback path; patching a production branch is not a separate executed task."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=100 -o none\n",
     "diagnose": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json\n",
-    "repair": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=10 -o none\n"
+    "repair": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=10 -o none\n",
+    "assert": "$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');$r=az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json\nif($r.staging -ne 10){throw 'AZ400-L15-FAULT'}\n",
+    "expectedFailure": "AZ400-L15-FAULT"
   },
   "challenge": "Implement an observed canary abort threshold and an emergency hotfix route; compare slot swap, rolling deployment, rings, and A/B experiments.",
   "sources": [
@@ -87,7 +117,7 @@
     "https://learn.microsoft.com/en-us/cli/azure/webapp/traffic-routing",
     "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments"
   ],
-  "primer": "A canary controls risk through limited exposure; A/B testing measures experiment outcomes. This synthetic core uses Development plus per-slot SQLite in /tmp only; real deployments use the protected SQL and identity lane.",
+  "primer": "A canary controls risk through limited exposure; A/B testing measures experiment outcomes. This synthetic core uses Development plus per-slot SQLite in /tmp only; real deployments use the protected SQL and identity lane.\n\nProgressive exposure needs both a healthy candidate and a measurable stop condition. A canary changes traffic percentage; a slot swap changes which deployment serves production; A/B experimentation asks a different product question. Neither technique automatically supplies database compatibility.\n\nThis standalone exercise deliberately configures Development and per-slot SQLite in /tmp to avoid an external SQL dependency. It is training-only state and can disappear on recycle. Production-style SQL, runtime identities and private migration routing belong to the protected capstone lane. Compare the exact same package on production/staging, inspect readiness and then query the actual ten-percent routing state.",
   "providers": [
     "Microsoft.Web"
   ],
@@ -180,5 +210,10 @@
       }
     ],
     "topology": "One reviewed ZIP is deployed to production and staging in the same S1 Linux App Service plan. The router sends90%to production and10%to staging, while separate HTTPS probes establish readiness before promotion. Each synthetic training slot uses its own temporary SQLite database in Development; the advanced production-style lane uses separately protected SQL and identity prerequisites."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The drift assertion reads the real staging traffic percentage. Do not treat a successful routing command as proof that the candidate has the expected revision or acceptable telemetry."
 }

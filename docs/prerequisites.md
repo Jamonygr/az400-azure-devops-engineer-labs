@@ -9,6 +9,7 @@ certification prerequisites; completing this repository does not award it.
 |---|---|---|
 | PowerShell | 7.4+; native command failure handling | [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) |
 | Git | Branches, tags, worktrees; LFS/Scalar for their specific exercises | [Git](https://git-scm.com/downloads) |
+| git-filter-repo | 2.47.0 for disposable history-rewrite practice in Lab 06; included in repository Python requirements | [Official project](https://github.com/newren/git-filter-repo) |
 | GitHub CLI | Authenticated personal sandbox owner; Projects scope for Projects exercises | [GitHub CLI](https://cli.github.com/manual/installation) |
 | Azure CLI | `az`, `az rest`, Bicep, explicit subscription arguments | [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) |
 | Azure DevOps extension | Explicit organization and project on every command | [Extension](https://learn.microsoft.com/en-us/azure/devops/cli/) |

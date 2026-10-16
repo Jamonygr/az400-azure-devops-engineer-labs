@@ -1,0 +1,12 @@
+// Execute in an approved Kusto/Log Analytics query context. All rows are synthetic.
+let requests = datatable(operationId:string,name:string,durationMs:real,success:bool)
+['op1','GET /todos',10,true,'op2','POST /todos',100,false,'op3','GET /version',30,true];
+requests | summarize requests=count(), failures=countif(success == false), p95Ms=percentile(durationMs,95)
+;
+let requests = datatable(operationId:string,name:string)['op1','GET /todos','op2','POST /todos','op3','GET /version'];
+let dependencies = datatable(operationId:string,target:string,dependencyDurationMs:real)['op1','sqlite',4,'op2','sql-server',80];
+requests | join kind=leftouter dependencies on operationId | project operationId,name,target,dependencyDurationMs
+;
+datatable(cpuPercent:real,memoryBytes:long,memoryPercent:real,diskLatencyMs:real,networkBytesPerSecond:long,networkErrorRate:real)
+[25,67108864,33,2,1024,0.0,75,134217728,67,12,4096,0.02]
+| summarize maxCpuPercent=max(cpuPercent),maxMemoryBytes=max(memoryBytes),maxMemoryPercent=max(memoryPercent),maxDiskLatencyMs=max(diskLatencyMs),maxNetworkBytesPerSecond=max(networkBytesPerSecond),maxNetworkErrorRate=max(networkErrorRate)

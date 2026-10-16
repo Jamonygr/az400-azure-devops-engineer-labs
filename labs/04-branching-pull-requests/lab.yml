@@ -28,7 +28,14 @@
       "negative": "$p=Join-Path $WorkRoot 'branching'\n if (@(git -C $p status --porcelain).Count -gt 0) { throw 'Unexpected uncommitted changes.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p branch --show-current) -ne \"feature/$RunId\") { throw 'Expected feature branch.' }\n\n$p=Join-Path $WorkRoot 'branching'\n if (@(git -C $p status --porcelain).Count -gt 0) { throw 'Unexpected uncommitted changes.' }\n",
       "evidence": "Branch names and commit graph.",
-      "fix": "Set identity only in the sandbox repository; never change global Git settings."
+      "fix": "Set identity only in the sandbox repository; never change global Git settings.",
+      "coverage": [
+        {
+          "objectiveId": "D2.1.1",
+          "level": "practiced",
+          "reference": "Create a feature branch in the disposable GitHub working copy."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -39,7 +46,8 @@
       "negative": "$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p remote get-url origin) -ne \"https://github.com/$GhRepo.git\") { throw 'Remote ownership mismatch.' }\n",
       "validate": "$b=gh api \"repos/$GhRepo/branches/feature%2F$RunId\"|ConvertFrom-Json\n if ($b.name -ne \"feature/$RunId\") { throw 'Remote feature branch absent.' }\n\n$p=Join-Path $WorkRoot 'branching'\n if ((git -C $p remote get-url origin) -ne \"https://github.com/$GhRepo.git\") { throw 'Remote ownership mismatch.' }\n",
       "evidence": "Commit SHA and sandbox remote.",
-      "fix": "Check the derived sandbox owner/name before pushing; retry only after ownership matches."
+      "fix": "Check the derived sandbox owner/name before pushing; retry only after ownership matches.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -50,7 +58,14 @@
       "negative": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json headRefName|ConvertFrom-Json\n if ($p.headRefName -eq 'main') { throw 'PR must not review main against itself.' }\n",
       "validate": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json state,baseRefName,body|ConvertFrom-Json\n if ($p.state -ne 'OPEN' -or $p.baseRefName -ne 'main' -or $p.body -notmatch 'Test:') { throw 'Review contract incomplete.' }\n\n$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json headRefName|ConvertFrom-Json\n if ($p.headRefName -eq 'main') { throw 'PR must not review main against itself.' }\n",
       "evidence": "PR URL, changed-file count, and test plan.",
-      "fix": "A second authorized reviewer is needed to satisfy an approval; the author cannot approve their own PR."
+      "fix": "A second authorized reviewer is needed to satisfy an approval; the author cannot approve their own PR.",
+      "coverage": [
+        {
+          "objectiveId": "D2.1.2",
+          "level": "integrated",
+          "reference": "Open the run-owned pull request and correlate its branch and exact source commit."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -61,7 +76,14 @@
       "negative": "$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.allow_force_pushes.enabled -or $p.allow_deletions.enabled) { throw 'Destructive branch updates remain enabled.' }\n",
       "validate": "$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.required_pull_request_reviews.required_approving_review_count -lt 1) { throw 'Approval requirement absent.' }\n\n$p=gh api \"repos/$GhRepo/branches/main/protection\"|ConvertFrom-Json\n if ($p.allow_force_pushes.enabled -or $p.allow_deletions.enabled) { throw 'Destructive branch updates remain enabled.' }\n",
       "evidence": "Protection settings; do not attempt destructive force pushes to test denial.",
-      "fix": "Use the sandbox public repository; plan/license availability may gate equivalent controls in private repos."
+      "fix": "Use the sandbox public repository; plan/license availability may gate equivalent controls in private repos.",
+      "coverage": [
+        {
+          "objectiveId": "D2.1.3",
+          "level": "practiced",
+          "reference": "Configure and query main-branch required-review/status-check protection; entitlement is a visible gate."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -72,13 +94,16 @@
       "negative": "$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json mergedAt|ConvertFrom-Json\n if ($p.mergedAt) { throw 'This exercise should retain the unapproved PR.' }\n",
       "validate": "$p=Get-Content (Join-Path $WorkRoot 'merge-readiness.json') -Raw|ConvertFrom-Json\n if (-not $p.mergeStateStatus) { throw 'Merge readiness was not reported.' }\n\n$url=Get-Content (Join-Path $WorkRoot 'pull-request-url.txt');$p=gh pr view $url --repo $GhRepo --json mergedAt|ConvertFrom-Json\n if ($p.mergedAt) { throw 'This exercise should retain the unapproved PR.' }\n",
       "evidence": "Review decision and branch protection result.",
-      "fix": "Request an authorized second reviewer rather than using --admin or lowering policy."
+      "fix": "Request an authorized second reviewer rather than using --admin or lowering policy.",
+      "coverage": []
     }
   ],
   "breakFix": {
-    "trigger": "$p=Join-Path $WorkRoot 'branching';git -C $p config branch.main.description 'fault: long-lived unreviewed work'\n",
-    "diagnose": "$p=Join-Path $WorkRoot 'branching';git -C $p log --graph --oneline --all;git -C $p config --get branch.main.description\n",
-    "repair": "$p=Join-Path $WorkRoot 'branching';git -C $p config --unset branch.main.description\n"
+    "trigger": "gh api --method PATCH \"repos/$GhRepo/branches/main/protection/required_pull_request_reviews\" -F required_approving_review_count=0\n",
+    "diagnose": "gh api \"repos/$GhRepo/branches/main/protection/required_pull_request_reviews\"\n",
+    "repair": "gh api --method PATCH \"repos/$GhRepo/branches/main/protection/required_pull_request_reviews\" -F required_approving_review_count=1\n",
+    "assert": "$p=gh api \"repos/$GhRepo/branches/main/protection/required_pull_request_reviews\"|ConvertFrom-Json\nif($p.required_approving_review_count -lt 1){throw 'AZ400-L04-BRANCH-APPROVAL'}\n",
+    "expectedFailure": "AZ400-L04-BRANCH-APPROVAL"
   },
   "challenge": "Add a required CI status context after a real successful run, then show how stale approvals and failed checks affect merge readiness.",
   "sources": [
@@ -86,7 +111,7 @@
     "https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies",
     "https://git-scm.com/docs/git-switch"
   ],
-  "primer": "Short-lived branches reduce integration distance. Required reviews and force-push restrictions protect shared history; the author cannot supply independent approval.",
+  "primer": "Short-lived branches reduce integration distance. Required reviews and force-push restrictions protect shared history; the author cannot supply independent approval.\n\nChoose a branch model around integration frequency, review requirements and supported release lines. A short-lived feature branch reduces divergence, while a maintained release branch can isolate a supported version. The pull request connects the proposed diff with an independently reviewable test plan.\n\nProtection is a provider-enforced policy, not prose in a README. Required reviews, expected checks and force-push restrictions should be queried after creation. The author cannot manufacture an independent reviewer; if the account plan or second reviewer is unavailable, the affected checkpoint remains gated. The exercise inspects readiness without bypassing the policy.",
   "requiresPaidFeatures": true,
   "architecture": {
     "title": "Protected-branch pull request architecture",
@@ -168,5 +193,10 @@
       }
     ],
     "topology": "A local feature branch is pushed only to the run-owned GitHub repository. Main is protected against force pushes and deletion and requires independent pull-request review. CI status contexts can be added after their real workflow names exist; an author cannot supply their own independent approval or infer checks from a pushed commit."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The deterministic fault reduces the actual required-review count. Its named assertion must reject that provider state, and repair must restore the original requirement."
 }

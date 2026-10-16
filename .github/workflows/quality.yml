@@ -24,12 +24,17 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
       - name: Install locked authoring dependencies
         run: python -m pip install -r requirements.lock.txt
       - name: Check authoritative sources and generated files
         run: python tools/check_all.py
+      - name: Test staged capstone closure, artifact rejection and preview refresh
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Test progress import, completion and privacy rules
-        run: node --test tests/progress.test.cjs
+        run: node --test tests/*.test.cjs
       - name: Check documentation style and spelling
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
@@ -41,7 +46,7 @@ jobs:
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
           Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force
           Install-Module PSScriptAnalyzer -RequiredVersion 1.25.0 -Scope CurrentUser -Force
-          $scripts = @(Get-ChildItem tools,labs -Recurse -File | Where-Object Extension -in '.ps1','.psm1')
+          $scripts = @(Get-ChildItem tools,labs,samples -Recurse -File | Where-Object { $_.Extension -in '.ps1','.psm1' -and $_.FullName -notmatch '/(bin|obj)/' })
           $findings = @($scripts | ForEach-Object { Invoke-ScriptAnalyzer -Path $_.FullName -Severity Warning,Error })
           if ($findings.Count) { $findings | Format-Table -AutoSize; throw 'PowerShell analysis failed.' }
           ./tools/Test-LabCommands.ps1
@@ -52,6 +57,15 @@ jobs:
           python tools/build_docs_site.py
           python -m mkdocs build --strict --clean
           python tools/build_docs_site.py --check-built-site site
+
+      - name: Install the pinned browser runtime
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: '0'
+        run: npx playwright install --with-deps chromium --only-shell
+      - name: Test built documentation in desktop and mobile browsers
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: '0'
+        run: npx playwright test --workers=2
 
   sample:
     name: Application and container
@@ -64,9 +78,32 @@ jobs:
       - name: Restore pinned packages
         run: dotnet restore samples/DevOps.slnx --locked-mode
       - name: Build and run application tests with coverage
-        run: dotnet test samples/DevOps.slnx --configuration Release --no-restore --collect:'XPlat Code Coverage' --settings samples/coverage.runsettings
+        run: dotnet test samples/DevOps.slnx --configuration Release --no-restore --collect:'XPlat Code Coverage' --settings samples/coverage.runsettings --results-directory .cache/TestResults
+      - name: Enforce the documented line coverage threshold
+        shell: pwsh
+        run: |
+          $coverage = @(Get-ChildItem .cache/TestResults -Recurse -Filter coverage.cobertura.xml)
+          if ($coverage.Count -ne 1) { throw 'Expected one current coverage report.' }
+          ./samples/Test-Coverage.ps1 -CoverageFile $coverage[0].FullName
+      - name: Build and verify an immutable application and migration artifact
+        shell: pwsh
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          ./samples/Build-Release.ps1 -Revision $env:SOURCE_REVISION -OutputPath .cache/immutable-release -SkipTests
+          python labs/26-capstone-github/artifacts/deployment/scripts/release_artifact.py --platform local --directory .cache/immutable-release --output .cache/immutable-release --expected-revision $env:SOURCE_REVISION
+      - name: Restore and test both isolated learner packages
+        shell: pwsh
+        run: ./tools/Test-CapstonePackages.ps1
       - name: Build the non-root container
-        run: docker build --file samples/Dockerfile --tag az400-sample:ci .
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: docker build --file samples/Dockerfile --build-arg SOURCE_REVISION="$SOURCE_REVISION" --tag az400-sample:ci .
+      - name: Run application container and isolated SQL identity tests
+        shell: pwsh
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: ./samples/Test-Containers.ps1 -Application -SqlServer -ExpectedRevision $env:SOURCE_REVISION
 
   artifacts:
     name: Static YAML, Bicep and secret checks
@@ -83,7 +120,11 @@ jobs:
       - name: Check GitHub workflow syntax
         run: |
           /tmp/actionlint -shellcheck= -pyflakes=
-          find labs -path '*/artifacts/*' -name '*.yml' -exec grep -l 'runs-on:' {} + | xargs -r /tmp/actionlint -shellcheck= -pyflakes=
+          find labs -path '*/artifacts/*' -name '*.yml' ! -name 'consumer-github.yml' -exec grep -l 'runs-on:' {} + | xargs -r /tmp/actionlint -shellcheck= -pyflakes=
+          mkdir -p /tmp/az400-reusable/.github/workflows /tmp/az400-reusable/.git
+          cp labs/11-reusable-yaml/artifacts/templates/reusable-dotnet.yml /tmp/az400-reusable/.github/workflows/reusable-dotnet.yml
+          cp labs/11-reusable-yaml/artifacts/consumer-github.yml /tmp/az400-reusable/.github/workflows/consumer.yml
+          (cd /tmp/az400-reusable && /tmp/actionlint -shellcheck= -pyflakes= .github/workflows/*.yml)
       - name: Scan the tracked tree for secrets
         run: /tmp/gitleaks dir . --redact --no-banner
       - name: Compile and lint Bicep offline

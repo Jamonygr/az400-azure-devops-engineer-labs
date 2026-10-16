@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "2.0.0",
+  "synthetic": true,
+  "requests": [
+    {
+      "operationId": "op1",
+      "name": "GET /todos",
+      "durationMs": 10,
+      "success": true
+    },
+    {
+      "operationId": "op2",
+      "name": "POST /todos",
+      "durationMs": 100,
+      "success": false
+    },
+    {
+      "operationId": "op3",
+      "name": "GET /version",
+      "durationMs": 30,
+      "success": true
+    }
+  ],
+  "dependencies": [
+    {
+      "operationId": "op1",
+      "target": "sqlite",
+      "durationMs": 4
+    },
+    {
+      "operationId": "op2",
+      "target": "sql-server",
+      "durationMs": 80
+    }
+  ],
+  "resources": [
+    {
+      "cpuPercent": 25,
+      "memoryBytes": 67108864,
+      "diskLatencyMs": 2,
+      "networkBytesPerSecond": 1024,
+      "memoryPercent": 33,
+      "networkErrorRate": 0.0
+    },
+    {
+      "cpuPercent": 75,
+      "memoryBytes": 134217728,
+      "diskLatencyMs": 12,
+      "networkBytesPerSecond": 4096,
+      "memoryPercent": 67,
+      "networkErrorRate": 0.02
+    }
+  ],
+  "expected": {
+    "requests": 3,
+    "failures": 1,
+    "p95Ms": 100,
+    "joinedRows": 3,
+    "dependencyRows": 2,
+    "maxCpuPercent": 75,
+    "maxMemoryBytes": 134217728,
+    "maxDiskLatencyMs": 12,
+    "maxNetworkBytesPerSecond": 4096
+  }
+}

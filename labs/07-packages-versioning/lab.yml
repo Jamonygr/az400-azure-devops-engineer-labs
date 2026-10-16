@@ -29,7 +29,8 @@
       "negative": "if (Get-ChildItem (Join-Path $WorkRoot 'feed') -Filter '*SNAPSHOT*') { throw 'Mutable snapshot naming in immutable release feed.' }\n",
       "validate": "if (-not (Test-Path (Join-Path $WorkRoot 'feed/Versioned.Library.1.2.0.nupkg'))) { throw 'Expected package absent.' }\n\nif (Get-ChildItem (Join-Path $WorkRoot 'feed') -Filter '*SNAPSHOT*') { throw 'Mutable snapshot naming in immutable release feed.' }\n",
       "evidence": "Package name/version and SHA256.",
-      "fix": "Use semantic versions for compatibility; reserve new versions for changed bytes."
+      "fix": "Use semantic versions for compatibility; reserve new versions for changed bytes.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -40,7 +41,8 @@
       "negative": "$n=Get-Content (Join-Path $WorkRoot 'package-files.txt')\n if ($n -match '\\.(pfx|pem)$') { throw 'Private key material must not enter package.' }\n",
       "validate": "$n=Get-Content (Join-Path $WorkRoot 'package-files.txt')\n if ($n -notmatch '\\.nuspec$' -or $n -notmatch 'lib/net10.0/') { throw 'Package metadata/framework missing.' }\n\n$n=Get-Content (Join-Path $WorkRoot 'package-files.txt')\n if ($n -match '\\.(pfx|pem)$') { throw 'Private key material must not enter package.' }\n",
       "evidence": "nuspec file list and SHA256 digest.",
-      "fix": "Correct package inclusion rules before publishing; do not publish signing keys."
+      "fix": "Correct package inclusion rules before publishing; do not publish signing keys.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -51,7 +53,14 @@
       "negative": "$text=Get-Content (Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj') -Raw\n if ($text -match 'Version=\"\\*\"') { throw 'Floating dependency version is not reproducible.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'Package.Consumer'\n if (-not (Test-Path (Join-Path $p 'packages.lock.json'))) { throw 'Dependency lock absent.' }\n\n$text=Get-Content (Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj') -Raw\n if ($text -match 'Version=\"\\*\"') { throw 'Floating dependency version is not reproducible.' }\n",
       "evidence": "Consumer project and packages.lock.json.",
-      "fix": "Use an explicit feed and version; investigate feed precedence rather than accepting a similarly named upstream package."
+      "fix": "Use an explicit feed and version; investigate feed precedence rather than accepting a similarly named upstream package.",
+      "coverage": [
+        {
+          "objectiveId": "D3.1.3",
+          "level": "practiced",
+          "reference": "Restore the explicitly pinned library version from the local feed."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -62,7 +71,19 @@
       "negative": "$old=Get-Content (Join-Path $WorkRoot 'package-hash.json') -Raw|ConvertFrom-Json\n if ((Get-FileHash (Join-Path $WorkRoot 'feed/Versioned.Library.1.2.0.nupkg')).Hash -ne $old.Hash) { throw 'Published stable artifact changed.' }\n",
       "validate": "if (-not (Test-Path (Join-Path $WorkRoot 'feed/Versioned.Library.1.3.0-beta.1.nupkg'))) { throw 'Prerelease artifact absent.' }\n\n$old=Get-Content (Join-Path $WorkRoot 'package-hash.json') -Raw|ConvertFrom-Json\n if ((Get-FileHash (Join-Path $WorkRoot 'feed/Versioned.Library.1.2.0.nupkg')).Hash -ne $old.Hash) { throw 'Published stable artifact changed.' }\n",
       "evidence": "Both versions and stable digest preservation.",
-      "fix": "Promote the same package to a feed view; avoid rebuilding after approval."
+      "fix": "Promote the same package to a feed view; avoid rebuilding after approval.",
+      "coverage": [
+        {
+          "objectiveId": "D2.2.4",
+          "level": "explained",
+          "reference": "Compare semantic package versions with Git tag/revision identity; no remote tag publication occurs."
+        },
+        {
+          "objectiveId": "D3.1.4",
+          "level": "practiced",
+          "reference": "Inspect the package version and dependency lock information as separate artifact identifiers."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -73,13 +94,27 @@
       "negative": "$p=Get-Content (Join-Path $WorkRoot 'feed-plan.json') -Raw|ConvertFrom-Json\n if ($p.published -or $p.azureArtifacts.upstreamPolicy -ne 'approved-only') { throw 'Publication/upstream gate violated.' }\n",
       "validate": "$p=Get-Content (Join-Path $WorkRoot 'feed-plan.json') -Raw|ConvertFrom-Json\n if ($p.github.permission -ne 'packages:write' -or '@Release' -notin $p.azureArtifacts.views) { throw 'Feed contract incomplete.' }\n\n$p=Get-Content (Join-Path $WorkRoot 'feed-plan.json') -Raw|ConvertFrom-Json\n if ($p.published -or $p.azureArtifacts.upstreamPolicy -ne 'approved-only') { throw 'Publication/upstream gate violated.' }\n",
       "evidence": "Feed plan; registry credentials remain outside Git.",
-      "fix": "Complete feed creation/permissions bootstrap before an explicitly authorized publication."
+      "fix": "Complete feed creation/permissions bootstrap before an explicitly authorized publication.",
+      "coverage": [
+        {
+          "objectiveId": "D3.1.1",
+          "level": "explained",
+          "reference": "Compare private/public feed selection and authorization using the feed decision record."
+        },
+        {
+          "objectiveId": "D3.1.2",
+          "level": "explained",
+          "reference": "Describe upstream/feed promotion topology; the concrete exercise uses a local NuGet folder."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';(Get-Content $p -Raw).Replace('Version=\"1.2.0\"','Version=\"9.9.9\"')|Set-Content $p\n",
     "diagnose": "dotnet restore (Join-Path $WorkRoot 'Package.Consumer') --source (Join-Path $WorkRoot 'feed');'Expected: package version not found.'\n",
-    "repair": "$p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';(Get-Content $p -Raw).Replace('Version=\"9.9.9\"','Version=\"1.2.0\"')|Set-Content $p\ndotnet restore (Join-Path $WorkRoot 'Package.Consumer')\n"
+    "repair": "$p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';(Get-Content $p -Raw).Replace('Version=\"9.9.9\"','Version=\"1.2.0\"')|Set-Content $p\ndotnet restore (Join-Path $WorkRoot 'Package.Consumer')\n",
+    "assert": "$p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';$x=[xml](Get-Content $p -Raw)\n$pkg=@($x.SelectNodes('/Project/ItemGroup/PackageReference')|Where-Object Include -eq 'Versioned.Library')\nif($pkg.Count -ne 1 -or $pkg[0].Version -ne '1.2.0'){throw 'AZ400-L07-FAULT'}\n",
+    "expectedFailure": "AZ400-L07-FAULT"
   },
   "challenge": "Create an approved upstream-feed policy and promotion strategy that preserves the package digest; compare SemVer with a dated CalVer release.",
   "sources": [
@@ -87,7 +122,7 @@
     "https://learn.microsoft.com/en-us/azure/devops/artifacts/concepts/views",
     "https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry"
   ],
-  "primer": "SemVer communicates compatibility; CalVer communicates release dates. Feed promotion preserves bytes, upstream feeds add trust boundaries, and lock files constrain resolution.",
+  "primer": "SemVer communicates compatibility; CalVer communicates release dates. Feed promotion preserves bytes, upstream feeds add trust boundaries, and lock files constrain resolution.\n\nSemantic versioning communicates compatibility only when maintainers follow its contract. A prerelease label separates an unstable candidate from the stable version; an immutable package version must continue to identify the same bytes. A source tag and a package version are related identifiers rather than substitutes.\n\nThe local folder feed makes packing, metadata inspection and exact restore observable without publishing externally. GitHub Packages and Azure Artifacts add identity, upstream-source trust, retention and promotion decisions. Feed topology is explained in the comparison record; no remote publication or protected feed promotion is claimed by the local exercise.",
   "architecture": {
     "title": "Versioned NuGet package production and consumption",
     "nodes": [
@@ -163,5 +198,10 @@
       }
     ],
     "topology": "dotnet pack builds immutable stable and prerelease nupkg files into a local feed. The consumer restores an explicit version and records its dependency graph in a lock file. GitHub Packages and Azure Artifacts are publication contracts reviewed separately; the core does not upload a package or grant registry credentials."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The consumer must resolve Versioned.Library 1.2.0 from the intended feed. A successful restore of an unintended version fails the learning goal even if compilation succeeds."
 }

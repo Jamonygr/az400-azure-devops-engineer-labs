@@ -14,11 +14,19 @@ foreach ($lab in $source.labs) {
             $checked++
         }
     }
-    foreach ($field in @('trigger','diagnose','repair')) {
+    foreach ($field in @('trigger','diagnose','repair','assert')) {
         $tokens = $null; $parseErrors = $null
         [void][Management.Automation.Language.Parser]::ParseInput($lab.breakFix.$field, [ref]$tokens, [ref]$parseErrors)
         foreach ($problem in $parseErrors) { $failures += "$($lab.id)/breakFix/${field}: $($problem.Message)" }
         $checked++
+    }
+    if ($lab.PSObject.Properties.Name -contains 'integration') {
+        foreach ($field in @('commands','validate')) {
+            $tokens = $null; $parseErrors = $null
+            [void][Management.Automation.Language.Parser]::ParseInput($lab.integration.$field, [ref]$tokens, [ref]$parseErrors)
+            foreach ($problem in $parseErrors) { $failures += "$($lab.id)/integration/${field}: $($problem.Message)" }
+            $checked++
+        }
     }
 }
 if ($failures.Count) { throw ($failures -join "`n") }

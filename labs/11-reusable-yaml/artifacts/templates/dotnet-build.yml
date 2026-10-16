@@ -8,11 +8,10 @@ steps:
     inputs:
       packageType: sdk
       useGlobalJson: true
-  - script: dotnet restore samples/DevOps.slnx --locked-mode
-    displayName: Restore
-  - script: dotnet test samples/DevOps.slnx --configuration ${{ parameters.configuration }} --no-restore
-    displayName: Test
-  - script: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration ${{ parameters.configuration }} --no-restore --output $(Build.ArtifactStagingDirectory)/api /p:UseAppHost=false
-    displayName: Publish
-  - publish: $(Build.ArtifactStagingDirectory)/api
+  - pwsh: ./samples/Build-Release.ps1 -Revision $env:SOURCE_REVISION -Configuration $env:BUILD_CONFIGURATION -OutputPath '$(Build.ArtifactStagingDirectory)/release'
+    displayName: Locked build, tests, coverage and immutable packaging
+    env:
+      SOURCE_REVISION: $(Build.SourceVersion)
+      BUILD_CONFIGURATION: ${{ parameters.configuration }}
+  - publish: $(Build.ArtifactStagingDirectory)/release
     artifact: todo-api

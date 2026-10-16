@@ -30,7 +30,8 @@
       "negative": "$w=Get-Content (Join-Path $WorkRoot 'query-workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Query workspace escaped run boundary.'}\n",
       "validate": "$w=az monitor log-analytics workspace show --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name \"query-$RunId\" -o json|ConvertFrom-Json\n if($w.customerId -ne (Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt'))){throw 'Query workspace identity mismatch.'}\n\n$w=Get-Content (Join-Path $WorkRoot 'query-workspace.json') -Raw|ConvertFrom-Json\n if($w.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Query workspace escaped run boundary.'}\n",
       "evidence": "Workspace ID locally and declared synthetic-data scope.",
-      "fix": "Wait for workspace query availability and confirm Log Analytics Reader/query permission before retrying."
+      "fix": "Wait for workspace query availability and confirm Log Analytics Reader/query permission before retrying.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -41,7 +42,19 @@
       "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if([double]$r[0].p95Ms -lt 30){throw 'Percentile lost the slow operation.'}\n",
       "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 1 -or [int]$r[0].requests -ne 3 -or [int]$r[0].failures -ne 1){throw 'KQL aggregation mismatch.'}\n\n$r=@(Get-Content (Join-Path $WorkRoot 'latency-results.json') -Raw|ConvertFrom-Json)\n if([double]$r[0].p95Ms -lt 30){throw 'Percentile lost the slow operation.'}\n",
       "evidence": "Query text, synthetic row count, and result; real small-sample percentiles need caution.",
-      "fix": "Use countif on a Boolean comparison and retain units in metric names."
+      "fix": "Use countif on a Boolean comparison and retain units in metric names.",
+      "coverage": [
+        {
+          "objectiveId": "D5.2.2",
+          "level": "practiced",
+          "reference": "Run a KQL datatable aggregation in the selected workspace and compare exact requests/failures/p95 outputs."
+        },
+        {
+          "objectiveId": "D5.2.4",
+          "level": "practiced",
+          "reference": "Execute and assert Kusto aggregation results; Python fixture output is only a reference calculation."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -52,7 +65,14 @@
       "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Trace propagation regression.'}\n",
       "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'No trace test selected.'}\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'trace-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\n if([int]$x.TestRun.ResultSummary.Counters.failed -gt 0){throw 'Trace propagation regression.'}\n",
       "evidence": "Span test name/result; test instrumentation is distinct from a live Azure export.",
-      "fix": "Ensure ActivitySource names match listeners/exporters and propagate W3C trace context across services."
+      "fix": "Ensure ActivitySource names match listeners/exporters and propagate W3C trace context across services.",
+      "coverage": [
+        {
+          "objectiveId": "D5.1.2",
+          "level": "practiced",
+          "reference": "Execute the local ActivityListener trace test and distinguish local span creation from exporter ingestion."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -63,24 +83,40 @@
       "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if('op2' -notin $r.operation_Id){throw 'An inner join incorrectly dropped an unlinked request.'}\n",
       "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object target -eq 'sqlite').Count -ne 1){throw 'Trace correlation mismatch.'}\n\n$r=@(Get-Content (Join-Path $WorkRoot 'correlation-results.json') -Raw|ConvertFrom-Json)\n if('op2' -notin $r.operation_Id){throw 'An inner join incorrectly dropped an unlinked request.'}\n",
       "evidence": "Operation IDs, join kind, and retained unmatched request count.",
-      "fix": "Use trace/operation identity rather than timestamp coincidence; account for sampling and missing instrumentation."
+      "fix": "Use trace/operation identity rather than timestamp coincidence; account for sampling and missing instrumentation.",
+      "coverage": [
+        {
+          "objectiveId": "D5.2.3",
+          "level": "practiced",
+          "reference": "Use a leftouter KQL join to retain requests with no dependency span; local span test is separate evidence."
+        }
+      ]
     },
     {
       "id": "CP5",
-      "title": "Review production query tables and infrastructure signals",
-      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/operations.kql') (Join-Path $WorkRoot 'operations.kql')\n $signals=[ordered]@{CPU='percentage';memory='bytes or percent; identify source';disk='latency and free capacity';network='throughput and failures';application='requests, dependencies, exceptions';exportVerified=$false}\n $signals|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'signal-interpretation.json')\n",
-      "expected": "Real-table queries and infrastructure signal units are reviewable without inventing ingested data.",
-      "positive": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.application -notmatch 'dependencies' -or $s.disk -notmatch 'latency'){throw 'Signal interpretation incomplete.'}\n",
-      "negative": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.exportVerified){throw 'Local span/KQL datatable tests do not prove live export.'}\n",
-      "validate": "$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.application -notmatch 'dependencies' -or $s.disk -notmatch 'latency'){throw 'Signal interpretation incomplete.'}\n\n$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\n if($s.exportVerified){throw 'Local span/KQL datatable tests do not prove live export.'}\n",
-      "evidence": "Query digest, table schema, signal units, and explicitly pending export verification.",
-      "fix": "Workspace-based tables can use AppRequests/AppDependencies; adapt query schema using actual tables rather than assuming classic names."
+      "title": "Analyze numeric infrastructure and request evidence",
+      "commands": "python (Join-Path $LabRoot 'artifacts/query_fixtures.py') --input (Join-Path $LabRoot 'artifacts/telemetry-fixtures.json') --output (Join-Path $WorkRoot 'query-results.json')\nif($LASTEXITCODE -ne 0){throw 'Reference telemetry calculations failed.'}\n$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json\n$hypothesis=if($r.resourceMaxima.cpuPercent -ge 70 -and $r.resourceMaxima.diskLatencyMs -ge 10){'Investigate CPU and disk contention during the request window; correlation is not causation.'}else{'No threshold exceeded in this fixture; retain the raw window.'}\n@{fixtureOnly=$true;hypothesis=$hypothesis;requests=$r.counts.requests;failures=$r.counts.failures;liveExporterVerified=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'signal-interpretation.json')\nCopy-Item (Join-Path $LabRoot 'artifacts/operations.kql') (Join-Path $WorkRoot 'operations.kql')\n",
+      "expected": "Reference calculations produce3requests,1failure, p95=100ms and resource maxima supporting a bounded contention hypothesis.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json\nif($r.counts.requests -ne 3 -or $r.counts.failures -ne 1 -or $r.counts.p95Ms -ne 100 -or $r.resourceMaxima.cpuPercent -ne 75){throw 'Telemetry calculation mismatch.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json\n$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\nif(@($r.correlations).Count -ne 3 -or $s.liveExporterVerified -or $r.resourceMaxima.networkErrorRate -gt 1){throw 'Correlation/unit/verification boundary violated.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json\nif($r.counts.requests -ne 3 -or $r.counts.failures -ne 1 -or $r.counts.p95Ms -ne 100 -or $r.resourceMaxima.cpuPercent -ne 75){throw 'Telemetry calculation mismatch.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json\n$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json\nif(@($r.correlations).Count -ne 3 -or $s.liveExporterVerified -or $r.resourceMaxima.networkErrorRate -gt 1){throw 'Correlation/unit/verification boundary violated.'}\n",
+      "evidence": "Raw synthetic observation window, calculations, units and hypothesis. Python reference results are distinct from actual KQL-engine results inCP2/CP4.",
+      "fix": "Compare the same operation IDs and time window. CPU/memory/disk/network saturation can support a hypothesis; it does not prove causation or live exporter operation.",
+      "coverage": [
+        {
+          "objectiveId": "D5.2.1",
+          "level": "practiced",
+          "reference": "Calculate CPU, memory, disk, and network maxima from raw local telemetry measurements."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('leftouter','inner')|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n",
     "diagnose": "$id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt');az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query (Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw) -o json\n",
-    "repair": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('kind=inner','kind=leftouter')|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n"
+    "repair": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('kind=inner','kind=leftouter')|Set-Content (Join-Path $WorkRoot 'correlation.kql')\n",
+    "assert": "$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt')\n$r=@(az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query $q -o json|ConvertFrom-Json)\nif($r.Count -ne 2 -or 'op2' -notin $r.operation_Id){throw 'AZ400-L25-FAULT'}\n",
+    "expectedFailure": "AZ400-L25-FAULT"
   },
   "challenge": "With approved real telemetry, find one slow request, follow its dependency span, relate infrastructure saturation, and write a hypothesis supported by exact query results.",
   "sources": [
@@ -88,7 +124,7 @@
     "https://learn.microsoft.com/en-us/azure/azure-monitor/app/distributed-trace-data",
     "https://learn.microsoft.com/en-us/kusto/query/join-leftouter"
   ],
-  "primer": "Trace identity correlates a request with dependencies; timestamp proximity does not. Sampling and unmatched rows affect joins; units and observed windows matter when interpreting infrastructure signals.",
+  "primer": "Trace identity correlates a request with dependencies; timestamp proximity does not. Sampling and unmatched rows affect joins; units and observed windows matter when interpreting infrastructure signals.\n\nRequest and dependency spans correlate through a shared operation identity, not merely similar timestamps. A leftouter join retains a request with no dependency, while an inner join silently removes it. Sampling and missing telemetry should influence the interpretation rather than be hidden.\n\nThe KQL datatable tasks execute deterministic aggregates in an actual selected workspace; the local ActivityListener test proves span creation without proving export. A separate Python reference calculation reads raw CPU, memory, disk and network samples and must state that it is not a KQL engine. Compare units, windows and exact numeric expectations before accepting an operational hypothesis.",
   "extensions": [
     "log-analytics"
   ],
@@ -169,5 +205,10 @@
   },
   "providers": [
     "Microsoft.OperationalInsights"
-  ]
+  ],
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run."
+  },
+  "solutionNotes": "The named fault changes leftouter to inner and must lose the unmatched request. Diagnose that row loss before discussing performance; CPU75% and disk12ms are fixture observations rather than universal incident thresholds."
 }

@@ -30,7 +30,8 @@
       "negative": "$p=Join-Path $WorkRoot 'github-ci'\n if ((git -C $p remote get-url origin) -notmatch [regex]::Escape($GhRepo)) { throw 'Wrong GitHub sandbox remote.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'github-ci'\n if (-not (Test-Path (Join-Path $p 'samples/DevOps.slnx'))) { throw 'Sample was not copied.' }\n\n$p=Join-Path $WorkRoot 'github-ci'\n if ((git -C $p remote get-url origin) -notmatch [regex]::Escape($GhRepo)) { throw 'Wrong GitHub sandbox remote.' }\n",
       "evidence": "Working-copy remote and allowlisted copied paths.",
-      "fix": "Authenticate Git through the separate bootstrap; copy source files without bin/obj or credentials."
+      "fix": "Authenticate Git through the separate bootstrap; copy source files without bin/obj or credentials.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -41,7 +42,19 @@
       "negative": "$text=Get-Content (Join-Path $WorkRoot 'github-ci/.github/workflows/ci.yml') -Raw\n if ($text -match 'azure/login|az deployment|pull_request_target') { throw 'CI-only workflow contains an unsafe deployment trigger.' }\n",
       "validate": "$text=Get-Content (Join-Path $WorkRoot 'github-ci/.github/workflows/ci.yml') -Raw\n if ($text -notmatch 'dotnet' -or $text -notmatch 'pull_request') { throw 'CI build/PR trigger absent.' }\n\n$text=Get-Content (Join-Path $WorkRoot 'github-ci/.github/workflows/ci.yml') -Raw\n if ($text -match 'azure/login|az deployment|pull_request_target') { throw 'CI-only workflow contains an unsafe deployment trigger.' }\n",
       "evidence": "Workflow digest and event/permissions review.",
-      "fix": "Keep deployment workflows dormant in the course; sandbox CI uses read-only repository permission."
+      "fix": "Keep deployment workflows dormant in the course; sandbox CI uses read-only repository permission.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.1",
+          "level": "practiced",
+          "reference": "Stage and parse an event-driven GitHub Actions CI workflow."
+        },
+        {
+          "objectiveId": "D3.3.5",
+          "level": "practiced",
+          "reference": "Inspect jobs, steps, permissions, locked restore, tests, and package output in authored YAML."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -52,7 +65,8 @@
       "negative": "$x=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'local-ci') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$x.TestRun.ResultSummary.Counters.failed -gt 0) { throw 'Local baseline failed.' }\n",
       "validate": "if (-not (Get-ChildItem (Join-Path $WorkRoot 'local-ci') -Filter '*.trx' -Recurse)) { throw 'Local CI result missing.' }\n\n$x=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'local-ci') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$x.TestRun.ResultSummary.Counters.failed -gt 0) { throw 'Local baseline failed.' }\n",
       "evidence": "Local TRX and selected SDK.",
-      "fix": "Match the SDK pin and restore sources used by hosted CI."
+      "fix": "Match the SDK pin and restore sources used by hosted CI.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -63,7 +77,14 @@
       "negative": "$p=Join-Path $WorkRoot 'github-ci'\n if ((git -C $p ls-files) -match '(^|/)bin/|(^|/)obj/') { throw 'Build output was committed.' }\n",
       "validate": "$sha=Get-Content (Join-Path $WorkRoot 'ci-commit.txt')\n $head=gh api \"repos/$GhRepo/commits/main\" --jq .sha\n if ($head -ne $sha) { throw 'Remote main differs from reviewed CI commit.' }\n\n$p=Join-Path $WorkRoot 'github-ci'\n if ((git -C $p ls-files) -match '(^|/)bin/|(^|/)obj/') { throw 'Build output was committed.' }\n",
       "evidence": "Pushed SHA and workflow name.",
-      "fix": "Review staged files before push; the destination must be the derived disposable repo."
+      "fix": "Review staged files before push; the destination must be the derived disposable repo.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.4",
+          "level": "practiced",
+          "reference": "Push the owned main branch and observe the matching trigger/run."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -74,20 +95,34 @@
       "negative": "$sha=Get-Content (Join-Path $WorkRoot 'ci-commit.txt')\n $r=@(gh run list --repo $GhRepo --commit $sha --json headSha|ConvertFrom-Json)\n if (@($r|Where-Object headSha -ne $sha).Count) { throw 'Run provenance mismatch.' }\n",
       "validate": "$sha=Get-Content (Join-Path $WorkRoot 'ci-commit.txt')\n $r=@(gh run list --repo $GhRepo --commit $sha --json headSha,status,conclusion|ConvertFrom-Json)\n if (@($r|Where-Object { $_.status -eq 'completed' -and $_.conclusion -eq 'success' }).Count -lt 1) { throw 'Successful CI run absent.' }\n\n$sha=Get-Content (Join-Path $WorkRoot 'ci-commit.txt')\n $r=@(gh run list --repo $GhRepo --commit $sha --json headSha|ConvertFrom-Json)\n if (@($r|Where-Object headSha -ne $sha).Count) { throw 'Run provenance mismatch.' }\n",
       "evidence": "Run URL/SHA/conclusion and artifact inventory.",
-      "fix": "Check hosted minutes and Actions permissions; never treat queued or skipped runs as success."
+      "fix": "Check hosted minutes and Actions permissions; never treat queued or skipped runs as success.",
+      "coverage": [
+        {
+          "objectiveId": "D3.1.4",
+          "level": "integrated",
+          "reference": "Correlate the immutable hosted build artifact with the exact source SHA."
+        },
+        {
+          "objectiveId": "D3.2.3",
+          "level": "integrated",
+          "reference": "Read the exact GitHub Actions run result for the tested source commit."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$p=Join-Path $WorkRoot 'github-ci';'fault'|Set-Content (Join-Path $p 'samples/DevOps.Api/Broken.cs')\n",
     "diagnose": "dotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx');'Expected: compiler error names Broken.cs.'\n",
-    "repair": "Remove-Item -LiteralPath (Join-Path $WorkRoot 'github-ci/samples/DevOps.Api/Broken.cs')\ndotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx')\n"
+    "repair": "Remove-Item -LiteralPath (Join-Path $WorkRoot 'github-ci/samples/DevOps.Api/Broken.cs')\ndotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx')\n",
+    "assert": "$saved=$PSNativeCommandUseErrorActionPreference\ntry{$PSNativeCommandUseErrorActionPreference=$false;dotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx') --configuration Release --no-restore|Out-Null;$code=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}\nif($code -ne 0){throw 'AZ400-L09-FAULT'}\n",
+    "expectedFailure": "AZ400-L09-FAULT"
   },
   "challenge": "Add a branch-only CI trigger and path filter; prove the selected commit, test artifacts, permissions, and concurrency cancellation remain correct.",
   "sources": [
     "https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net",
     "https://cli.github.com/manual/gh_run_watch"
   ],
-  "primer": "Triggers choose when jobs exist, permissions choose what a token may do, and headSha ties results to source. Hosted success must be observed rather than inferred from a push.",
+  "primer": "Triggers choose when jobs exist, permissions choose what a token may do, and headSha ties results to source. Hosted success must be observed rather than inferred from a push.\n\nA GitHub Actions workflow has three related contracts: events create runs, jobs execute under a runner identity, and token permissions constrain access. A successful local test does not establish hosted-run success, and a push does not prove the intended workflow ran.\n\nCI restores locked dependencies, tests and packages the same source revision. Inspect headSha, conclusion and artifact presence together. An artifact name alone is mutable context; the run ID, revision and digest provide a reproducible promotion input. Keep untrusted pull requests away from privileged deployment identities and use a separate protected release workflow.",
   "architecture": {
     "title": "GitHub Actions continuous integration",
     "nodes": [
@@ -167,5 +202,10 @@
       }
     ],
     "topology": "A sandbox source revision triggers an ephemeral GitHub Actions runner with read-only repository permission. The pinned .NET SDK restores locked dependencies, builds, tests, and produces coverage/artifact evidence. The final run/check result is tied to headSha. This active CI workflow has no Azure login or deployment action."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The compiler fault must break the actual build. After repair, correlate the hosted run with capstone/source SHA rather than the newest run in an unrelated branch."
 }

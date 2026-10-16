@@ -15,7 +15,8 @@ Learner role: **Release approver**. Outcome: Gate environments with approvals an
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.2.1`, `D3.3.9`
 
@@ -86,11 +92,17 @@ packages and write ignored build output.
 
 Approval authorizes an environment transition, not a code review. GitHub environment subjects must match federation exactly; Azure resource checks live outside editable YAML.
 
+A code review authorizes a source change; an environment approval authorizes its promotion. Keep both boundaries. GitHub environment reviewers, branch restrictions and prevent-self-review are provider settings. Azure DevOps approvals and checks also live on protected resources outside author-editable YAML.
+
+The local denied-request fixture models why an author cannot approve their own release. The actual GitHub environment read confirms configured protection, but enforcement is demonstrated only when a protected job runs. Review plan entitlements before enabling required reviewers on private repositories; absence of a licensed capability remains a visible gate.
+
 ## Task 1 — Prepare an environment approval policy
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $u=gh api user|ConvertFrom-Json
@@ -126,6 +138,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.2.1` | practiced | Configure and query the GitHub environment review and self-review policy. |
+| `D3.3.9` | practiced | Query the owned GitHub environment protection; compare Azure DevOps checks separately without claiming its provider enforcement. |
+
 ```powershell
 $name="release-$RunId";$file=Join-Path $WorkRoot 'environment-policy.json'
  gh api --method PUT "repos/$GhRepo/environments/$name" --input $file|Set-Content (Join-Path $WorkRoot 'environment.json')
@@ -158,6 +175,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $text=Get-Content (Join-Path $LabRoot 'artifacts/github-deploy.yml') -Raw
@@ -193,6 +212,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $checks=[ordered]@{resource='environment';project=$AdoProject;approver='separate-owner';branchControl='refs/heads/main';exclusiveLock=$true;definitionSource='resource-owner configuration';yamlCanBypass=$false}
  $checks|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'ado-checks.json')
@@ -226,6 +247,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $request=[ordered]@{branch='refs/heads/feature';reviewerApproved=$false;testsPassed=$true}
  $allowed=$request.branch -eq 'refs/heads/main' -and $request.reviewerApproved -and $request.testsPassed
@@ -256,7 +279,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/13-environments-approvals/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L13-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json
+if(-not $p.prevent_self_review -or @($p.reviewers).Count -lt 1){throw 'AZ400-L13-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json;$p.prevent_self_review=$false;$p|ConvertTo-Json -Depth 7|Set-Content (Join-Path $WorkRoot 'environment-policy.json')
@@ -268,7 +306,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'environment-policy.json')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json;$p.prevent_self_review=$true;$p|ConvertTo-Json -Depth 7|Set-Content (Join-Path $WorkRoot 'environment-policy.json')
@@ -284,7 +322,7 @@ With an authorized second reviewer, demonstrate a denied request and a successfu
 & './labs/13-environments-approvals/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -315,4 +353,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

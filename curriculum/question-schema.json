@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "labId", "verifiedDate", "sources", "questions"],
   "properties": {
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"const": 2},
     "labId": {"type": "string", "pattern": "^(0[1-9]|1[0-9]|2[0-5])$"},
     "verifiedDate": {"const": "2026-10-16"},
     "sources": {
@@ -21,25 +21,29 @@
       "type": "array", "minItems": 50, "maxItems": 50,
       "items": {
         "type": "object", "additionalProperties": false,
-        "required": ["id", "checkpointId", "caseId", "task", "caseContext", "objectiveIds", "difficulty", "question", "options", "correctAnswers", "explanation", "sourceIds"],
+        "required": ["id", "checkpointId", "objectiveIds", "difficulty", "question", "options", "correctAnswers", "explanation", "sourceIds"],
         "properties": {
           "id": {"type": "string", "pattern": "^L(0[1-9]|1[0-9]|2[0-5])-Q0(0[1-9]|[1-4][0-9]|50)$"},
           "checkpointId": {"enum": ["CP1", "CP2", "CP3", "CP4", "CP5"]},
           "caseId": {"type": "string", "pattern": "^L[0-9]{2}-C(0[1-9]|10)$"},
           "task": {"enum": ["remedy", "diagnosis", "verification", "safeguard", "tradeoff"]},
           "caseContext": {"type": "string", "minLength": 40},
+          "exhibit": {
+            "type": "object", "additionalProperties": false, "required": ["language", "code"],
+            "properties": {"language": {"type": "string", "pattern": "^[a-zA-Z0-9_+#-]+$"}, "code": {"type": "string", "minLength": 10}}
+          },
           "objectiveIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^D[1-5]\\.[1-6]\\.[1-9]$"}},
           "difficulty": {"enum": ["foundational", "applied", "advanced"]},
           "question": {"type": "string", "minLength": 80},
           "options": {
-            "type": "array", "minItems": 3, "maxItems": 3,
+            "type": "array", "minItems": 4, "maxItems": 4,
             "items": {
               "type": "object", "additionalProperties": false,
               "required": ["key", "text", "rationale"],
-              "properties": {"key": {"enum": ["A", "B", "C"]}, "text": {"type": "string", "minLength": 10}, "rationale": {"type": "string", "minLength": 50}}
+              "properties": {"key": {"enum": ["A", "B", "C", "D"]}, "text": {"type": "string", "minLength": 5}, "rationale": {"type": "string", "minLength": 30}}
             }
           },
-          "correctAnswers": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"enum": ["A", "B", "C"]}},
+          "correctAnswers": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"enum": ["A", "B", "C", "D"]}},
           "explanation": {"type": "string", "minLength": 40},
           "sourceIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^S[1-9][0-9]*$"}}
         }

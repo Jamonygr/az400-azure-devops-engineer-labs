@@ -15,7 +15,8 @@ Learner role: **Platform learner**. Outcome: Safe DevOps sandbox bootstrap.
 | Platforms | local, github, azure-devops, azure |
 | Cost | none or approved hosted-run allowance — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: Foundation or cross-domain capstone; see the objective map.
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Tool readiness, authentication, authorization, and permission to mutate are separate gates. A local success cannot authorize cloud execution.
 
+Read version output before authenticating. A successful login establishes identity, while a role assignment establishes a particular permission at a particular scope. Neither authorizes a different subscription or existing repository. The run journal records the boundary that later validators and cleanup must use.
+
+Retain tool versions, exact sandbox object IDs and redacted results. A test report without a source revision is difficult to reproduce; a cleanup report without residual reads is only an intention. Treat a missing external account as an explicit prerequisite and keep local validation distinct from hosted execution.
+
 ## Task 1 — Inspect the local toolchain
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $toolReport = [ordered]@{ powershell=$PSVersionTable.PSVersion.ToString(); git=(git --version); github=(gh --version | Select-Object -First 1); dotnet=(dotnet --version); azure=(az version --query '"azure-cli"' -o tsv) }
@@ -124,6 +136,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 gh api user --jq '{login:.login,id:.id}' | Set-Content (Join-Path $WorkRoot 'github-context.json')
  az account show --subscription $SubscriptionId --query '{subscription:id,tenant:tenantId,cloud:environmentName}' -o json | Set-Content (Join-Path $WorkRoot 'azure-context.json')
@@ -158,6 +172,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $boundary=[ordered]@{ runId=$RunId; localRoot=$WorkRoot; purpose='az400-learning'; cloudExecutionApproved=$false }
  $boundary|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')
@@ -191,6 +207,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 dotnet restore (Join-Path $RepoRoot 'samples/DevOps.slnx')
@@ -227,6 +245,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $policy=[ordered]@{ retain=@('checkpoint results','test counts','cleanup status'); exclude=@('tokens','connection strings','private keys'); cleanupOrder=@('workloads','connections','top-level sandbox') }
  $policy|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'evidence-policy.json')
@@ -257,7 +277,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/00-safe-bootstrap/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L00-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json
+if($b.runId -ne $RunId){throw 'AZ400-L00-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json
@@ -271,7 +306,7 @@ Get-Content (Join-Path $WorkRoot 'boundary.json')
  'Compare runId with the explicitly selected $RunId.'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json
@@ -288,7 +323,7 @@ Run readiness from a second terminal and demonstrate that no authentication cont
 & './labs/00-safe-bootstrap/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -320,4 +355,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

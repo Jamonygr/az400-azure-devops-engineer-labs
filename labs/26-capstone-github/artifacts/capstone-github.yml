@@ -1,77 +1,144 @@
-name: GitHub capstone ordered release
+name: Protected immutable release
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        options: [deploy, rollback]
+        default: deploy
+      artifactRunId:
+        description: Successful main-branch CI run to promote
+        required: true
+        type: string
+      expectedRevision:
+        description: Exact reviewed CI commit SHA
+        required: true
+        type: string
+      baselineArtifactRunId:
+        description: Retained compatible baseline CI run, required for rollback
+        required: false
+        type: string
+      baselineRevision:
+        description: Exact baseline commit SHA, required for rollback
+        required: false
+        type: string
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: todo-production
   cancel-in-progress: false
 jobs:
-  build:
+  select:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
+    outputs:
+      revision: ${{ steps.choose.outputs.revision }}
+      action: ${{ steps.choose.outputs.action }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          global-json-file: global.json
-      - run: dotnet restore samples/DevOps.slnx --locked-mode
-      - run: dotnet test samples/DevOps.slnx --configuration Release --no-restore --settings samples/coverage.runsettings --collect:"XPlat Code Coverage" --results-directory TestResults
-      - name: Coverage gate
+          persist-credentials: false
+      - name: Select the reviewed current or baseline artifact
+        id: choose
         shell: pwsh
-        run: ./samples/Test-Coverage.ps1 -CoverageFile (Get-ChildItem TestResults -Filter coverage.cobertura.xml -Recurse | Select-Object -First 1 -ExpandProperty FullName)
-      - run: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration Release --no-restore --output publish /p:UseAppHost=false
+        env:
+          RELEASE_ACTION: ${{ inputs.action }}
+          SOURCE_RUN: ${{ inputs.artifactRunId }}
+          SOURCE_REVISION: ${{ inputs.expectedRevision }}
+          BASELINE_RUN: ${{ inputs.baselineArtifactRunId }}
+          BASELINE_REVISION: ${{ inputs.baselineRevision }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $run = if ($env:RELEASE_ACTION -eq 'rollback') { $env:BASELINE_RUN } else { $env:SOURCE_RUN }
+          $sha = if ($env:RELEASE_ACTION -eq 'rollback') { $env:BASELINE_REVISION } else { $env:SOURCE_REVISION }
+          if ($run -notmatch '^[1-9][0-9]*$' -or $sha -notmatch '^[a-f0-9]{40}$') { throw 'Select a retained successful CI run and exact reviewed revision.' }
+          python deployment/scripts/release_artifact.py --platform github --run-id $run --expected-revision $sha --output release
+          "revision=$sha" >> $env:GITHUB_OUTPUT
+          "action=$env:RELEASE_ACTION" >> $env:GITHUB_OUTPUT
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: todo-api
-          path: publish/
+          name: verified-release
+          path: release/
+          retention-days: 7
   migrate:
-    needs: build
-    if: github.ref == 'refs/heads/main'
+    needs: select
+    if: needs.select.outputs.action == 'deploy'
     environment: production-database
     runs-on: [self-hosted, linux, az400-private]
     permissions:
       contents: read
+      actions: read
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          global-json-file: global.json
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: verified-release
+          path: release/
       - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
         with:
           client-id: ${{ vars.AZURE_MIGRATION_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      - name: Expand database schema before application deployment
+      - name: Apply the already-built database bundle
         shell: pwsh
         env:
           ConnectionStrings__Todos: ${{ secrets.SQL_MIGRATION_CONNECTION }}
-        run: ./labs/14-ordered-releases-databases/artifacts/migrate.ps1 -Apply
+          EXPECTED_REVISION: ${{ needs.select.outputs.revision }}
+        run: ./deployment/scripts/Apply-Migration.ps1 -ReleasePath release -ExpectedRevision $env:EXPECTED_REVISION
   deploy:
-    needs: migrate
+    needs: [select, migrate]
+    if: always() && needs.select.result == 'success' && (needs.select.outputs.action == 'rollback' || needs.migrate.result == 'success')
     environment: production
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, linux, az400-private]
     permissions:
       contents: read
+      actions: read
       id-token: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: todo-api
-          path: publish/
+          name: verified-release
+          path: release/
+      - name: Recheck downloaded release integrity
+        env:
+          EXPECTED_REVISION: ${{ needs.select.outputs.revision }}
+        run: python deployment/scripts/release_artifact.py --platform local --directory release --output release --expected-revision "$EXPECTED_REVISION"
       - uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Refuse workload outside the journal-owned resource group
+        shell: pwsh
+        env:
+          SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          LAB_RUN_ID: ${{ vars.LAB_RUN_ID }}
+          APP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
+          WORKSPACE_ID: ${{ vars.LOG_ANALYTICS_WORKSPACE_ID }}
+        run: ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
       - uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383 # v3
         with:
           app-name: ${{ vars.AZURE_WEBAPP_NAME }}
-          package: publish/
-      - name: Post-deployment readiness gate
+          package: release/app/
+      - name: Verify immutable revision, health and observed telemetry
         shell: pwsh
         env:
           APP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
-        run: |
-          $response = Invoke-WebRequest "https://$env:APP_NAME.azurewebsites.net/health/ready" -TimeoutSec 30
-          if ($response.StatusCode -ne 200) { throw 'Deployment readiness failed. Follow the rollback runbook.' }
+          WORKSPACE_ID: ${{ vars.LOG_ANALYTICS_WORKSPACE_ID }}
+          EXPECTED_REVISION: ${{ needs.select.outputs.revision }}
+        run: ./deployment/scripts/Verify-Release.ps1 -AppUrl "https://$env:APP_NAME.azurewebsites.net" -ExpectedRevision $env:EXPECTED_REVISION -WorkspaceId $env:WORKSPACE_ID
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: release-evidence
+          include-hidden-files: true
+          path: .state/release-evidence.json
+          retention-days: 7

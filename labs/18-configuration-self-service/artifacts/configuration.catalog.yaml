@@ -2,15 +2,15 @@ schemaVersion: 1
 catalog:
   - name: todo-api-small
     description: Approved disposable training workload
-    template: labs/17-bicep-infrastructure/artifacts/main.bicep
+    template: artifacts/core.bicep
     owner: platform-training
-    allowedSkus: [B1, S1]
-    defaultSku: B1
+    allowedSkus: [Standard_LRS]
+    defaultSku: Standard_LRS
     requires:
       - explicit-subscription-and-resource-group
       - ownership-manifest
-      - existing-entra-sql-and-network-route
-      - cost-acknowledgement-for-S1
+      - reviewed-resource-group-and-provider-registration
+      - cost-acknowledgement-for-storage
     configuration:
       featureFlag: TodoWrites
       source: Azure-App-Configuration
@@ -27,3 +27,5 @@ retirements:
   - service: Azure Automation State Configuration
     guidance: Use Azure Machine Configuration for audit/assignment-based guest configuration; review capabilities and limits before migrating DSC workloads.
     source: https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview
+
+

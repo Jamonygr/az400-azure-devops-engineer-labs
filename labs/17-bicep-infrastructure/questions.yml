@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "17",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -20,1900 +20,1909 @@
     {
       "id": "L17-Q001",
       "checkpointId": "CP2",
-      "caseId": "L17-C01",
-      "task": "remedy",
-      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which next change most directly satisfies the stated requirement?",
+      "question": "A pull request changes a Bicep property and must fail before any Azure authentication. Which check fits?",
       "options": [
         {
           "key": "A",
-          "text": "Run validation and review the what-if result",
-          "rationale": "Planned changes should be visible before applying them. This directly addresses the constraint stated in this case."
+          "text": "Run production what-if only",
+          "rationale": "What-if requires Azure context rather than purely offline validation."
         },
         {
           "key": "B",
-          "text": "Use secure parameter handling and avoid secret outputs",
-          "rationale": "Sensitive values need protection across input and output paths. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Review resource names only",
+          "rationale": "Name inspection cannot validate the declaration's property types or syntax."
         },
         {
           "key": "C",
-          "text": "Output a nonsensitive reference rather than the secret value",
-          "rationale": "Downstream configuration should minimize secret transport. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Compile and lint locally",
+          "rationale": "Local compilation catches source mistakes without contacting Azure services."
+        },
+        {
+          "key": "D",
+          "text": "Deploy and read errors",
+          "rationale": "Deployment can change resources before exposing the source mistake."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Planned changes should be visible before applying them. The selected answer is run validation and review the what-if result.",
+      "explanation": "Local compilation catches source mistakes without contacting Azure services. Deployment can change resources before exposing the source mistake. What-if requires Azure context rather than purely offline validation. Name inspection cannot validate the declaration's property types or syntax.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L17-Q002",
       "checkpointId": "CP2",
-      "caseId": "L17-C01",
-      "task": "diagnosis",
-      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Three environments need the same resource declarations but different locations and account names. How should the team organize them?",
       "options": [
         {
           "key": "A",
-          "text": "Template validity does not establish an acceptable resource diff",
-          "rationale": "A valid deployment can still weaken access. This directly addresses the constraint stated in this case."
+          "text": "Use a parameterized module",
+          "rationale": "Modules share declarations while explicit parameters capture environment specific choices."
         },
         {
           "key": "B",
-          "text": "Infrastructure metadata can expose plain configuration values",
-          "rationale": "A parameter's purpose alone does not make it secure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Copy all declarations three times",
+          "rationale": "Duplicated declarations can drift when security changes reach fewer copies."
         },
         {
           "key": "C",
-          "text": "Infrastructure output was used as an unrestricted secret channel",
-          "rationale": "Artifact publication expands the exposure boundary. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Hardcode production settings everywhere",
+          "rationale": "Hardcoded values prevent callers selecting the intended environment configuration."
+        },
+        {
+          "key": "D",
+          "text": "Patch generated JSON with regex",
+          "rationale": "Text replacement obscures typed inputs and the intended source contract."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "A valid deployment can still weaken access. The selected answer is template validity does not establish an acceptable resource diff.",
+      "explanation": "Modules share declarations while explicit parameters capture environment specific choices. Duplicated declarations can drift when security changes reach fewer copies. Hardcoded values prevent callers selecting the intended environment configuration. Text replacement obscures typed inputs and the intended source contract.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q003",
       "checkpointId": "CP2",
-      "caseId": "L17-C01",
-      "task": "verification",
-      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A reviewer needs to see proposed changes to existing resources before approving this template. Which operation provides that evidence?",
       "options": [
         {
           "key": "A",
-          "text": "Deployment records do not reveal the sensitive value",
-          "rationale": "Verification must include logs and outputs. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Compile without Azure context",
+          "rationale": "Compilation checks source rather than comparing deployed resource configuration."
         },
         {
           "key": "B",
-          "text": "The public artifact contains only the permitted reference",
-          "rationale": "The test must inspect the published content. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Run deployment before review",
+          "rationale": "Applying changes first defeats review of the planned resource modifications."
         },
         {
           "key": "C",
-          "text": "The reviewed plan identifies the intended access change",
-          "rationale": "The evidence should show actual target impact. This directly addresses the constraint stated in this case."
+          "text": "Run scoped what-if",
+          "rationale": "What-if predicts changes using the selected template, parameters and scope."
+        },
+        {
+          "key": "D",
+          "text": "Read deployment history only",
+          "rationale": "Historical records do not evaluate the newly proposed infrastructure declaration."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The evidence should show actual target impact. The selected answer is the reviewed plan identifies the intended access change.",
+      "explanation": "What-if predicts changes using the selected template, parameters and scope. Historical records do not evaluate the newly proposed infrastructure declaration. Compilation checks source rather than comparing deployed resource configuration. Applying changes first defeats review of the planned resource modifications.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q004",
       "checkpointId": "CP2",
-      "caseId": "L17-C01",
-      "task": "safeguard",
-      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A consumer module needs the exact resource ID created by another module. Which interface avoids duplicated naming logic?",
       "options": [
         {
           "key": "A",
-          "text": "Prefer references to a secret store where appropriate",
-          "rationale": "Reducing copied secret material lowers exposure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Parse a deployment display name",
+          "rationale": "An operation name is not the created resource's complete identifier."
         },
         {
           "key": "B",
-          "text": "Restrict secret resolution to the task that actually needs it",
-          "rationale": "A reference should not grant broad retrieval capability. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Search every subscription by prefix",
+          "rationale": "Prefix discovery can select unrelated resources outside the intended deployment scope."
         },
         {
           "key": "C",
-          "text": "Verify subscription resource group and parameters before deployment",
-          "rationale": "Correct code can affect an incorrect target. This directly addresses the constraint stated in this case."
+          "text": "Expose a resource ID output",
+          "rationale": "Explicit outputs provide a stable reference between dependent infrastructure modules."
+        },
+        {
+          "key": "D",
+          "text": "Duplicate its name algorithm",
+          "rationale": "Duplicated naming logic couples consumers to the producer's implementation details."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Correct code can affect an incorrect target. The selected answer is verify subscription resource group and parameters before deployment.",
+      "explanation": "Explicit outputs provide a stable reference between dependent infrastructure modules. Duplicated naming logic couples consumers to the producer's implementation details. An operation name is not the created resource's complete identifier. Prefix discovery can select unrelated resources outside the intended deployment scope.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q005",
       "checkpointId": "CP2",
-      "caseId": "L17-C01",
-      "task": "tradeoff",
-      "caseContext": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Unreviewed infrastructure: A developer changes a public-access setting and proposes deploying the Bicep file without inspecting the planned changes. The team selects this remedy: \"Run validation and review the what-if result.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Approval covered test parameters, but the queued job changes both subscription and SKU. Which action preserves a meaningful production gate?",
       "options": [
         {
           "key": "A",
-          "text": "What-if is a planning aid with limitations",
-          "rationale": "It does not guarantee every runtime outcome. This directly addresses the constraint stated in this case."
+          "text": "Review a fresh production preview",
+          "rationale": "Approval must cover the actual artifact, target scope and parameter choices."
         },
         {
           "key": "B",
-          "text": "Secure parameters do not make every downstream use safe",
-          "rationale": "Scripts and resource settings can still disclose values. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Reuse approval for identical source",
+          "rationale": "Different parameters and scopes can materially change resources and spending."
         },
         {
           "key": "C",
-          "text": "Reference-based designs depend on runtime identity access",
-          "rationale": "Consumers need scoped authorization to resolve protected values. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Deploy then attach old approval",
+          "rationale": "Earlier unrelated evidence cannot authorize newly selected production resource changes."
+        },
+        {
+          "key": "D",
+          "text": "Rename the test preview file",
+          "rationale": "Renaming a document does not evaluate the production deployment's effects."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "It does not guarantee every runtime outcome. The selected answer is what-if is a planning aid with limitations.",
+      "explanation": "Approval must cover the actual artifact, target scope and parameter choices. Different parameters and scopes can materially change resources and spending. Earlier unrelated evidence cannot authorize newly selected production resource changes. Renaming a document does not evaluate the production deployment's effects.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q006",
       "checkpointId": "CP3",
-      "caseId": "L17-C02",
-      "task": "remedy",
-      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "foundational",
-      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which next change most directly satisfies the stated requirement?",
+      "question": "The app module supports optional private networking, and development callers have no subnet. Which input contract best supports both topologies?",
       "options": [
         {
           "key": "A",
-          "text": "Use secure parameter handling and avoid secret outputs",
-          "rationale": "Sensitive values need protection across input and output paths. This directly addresses the constraint stated in this case."
+          "text": "Hide a fixed subnet ID",
+          "rationale": "A hidden environment dependency prevents safe reuse across deployment scopes."
         },
         {
           "key": "B",
-          "text": "Make the required static validation enforce pipeline failure",
-          "rationale": "A quality signal needs an execution gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "Choose the first existing subnet",
+          "rationale": "List order cannot identify the caller's intended network integration target."
         },
         {
           "key": "C",
-          "text": "Run validation and review the what-if result",
-          "rationale": "Planned changes should be visible before applying them. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Make subnet optional and conditional",
+          "rationale": "An explicit optional input supports callers with and without integration infrastructure."
+        },
+        {
+          "key": "D",
+          "text": "Require a placeholder production subnet",
+          "rationale": "A placeholder introduces unnecessary dependencies and can select incorrect network context."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Sensitive values need protection across input and output paths. The selected answer is use secure parameter handling and avoid secret outputs.",
+      "explanation": "An explicit optional input supports callers with and without integration infrastructure. A placeholder introduces unnecessary dependencies and can select incorrect network context. A hidden environment dependency prevents safe reuse across deployment scopes. List order cannot identify the caller's intended network integration target.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q007",
       "checkpointId": "CP3",
-      "caseId": "L17-C02",
-      "task": "diagnosis",
-      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Refactoring left an unused Bicep parameter that no caller needs. Which change improves the public module contract?",
       "options": [
         {
           "key": "A",
-          "text": "Template validity does not establish an acceptable resource diff",
-          "rationale": "A valid deployment can still weaken access. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Mention it in a comment",
+          "rationale": "Comments cannot make an unused parameter affect the deployed resources."
         },
         {
           "key": "B",
-          "text": "Infrastructure metadata can expose plain configuration values",
-          "rationale": "A parameter's purpose alone does not make it secure. This directly addresses the constraint stated in this case."
+          "text": "Pass different values per environment",
+          "rationale": "Changing unused values still has no effect on resource declarations."
         },
         {
           "key": "C",
-          "text": "The wrapper ignores validation failure status",
-          "rationale": "Visible findings do not prevent deployment by themselves. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "A parameter's purpose alone does not make it secure. The selected answer is infrastructure metadata can expose plain configuration values.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L17-Q008",
-      "checkpointId": "CP3",
-      "caseId": "L17-C02",
-      "task": "verification",
-      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
-      "objectiveIds": [
-        "D3.5.4"
-      ],
-      "difficulty": "applied",
-      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which observation provides the strongest evidence that the requested result was achieved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "A known invalid fixture blocks the deployment path",
-          "rationale": "A negative probe demonstrates the gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "Remove the unused input",
+          "rationale": "Removing obsolete inputs makes the intended deployment interface easier to understand."
         },
         {
-          "key": "B",
-          "text": "The reviewed plan identifies the intended access change",
-          "rationale": "The evidence should show actual target impact. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Deployment records do not reveal the sensitive value",
-          "rationale": "Verification must include logs and outputs. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Disable the complete analyzer",
+          "rationale": "Global suppression hides unrelated warnings without improving the module contract."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Verification must include logs and outputs. The selected answer is deployment records do not reveal the sensitive value.",
+      "explanation": "Removing obsolete inputs makes the intended deployment interface easier to understand. Global suppression hides unrelated warnings without improving the module contract. Comments cannot make an unused parameter affect the deployed resources. Changing unused values still has no effect on resource declarations.",
       "sourceIds": [
-        "S1",
-        "S2",
+        "S2"
+      ]
+    },
+    {
+      "id": "L17-Q008",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "applied",
+      "question": "Storage names must stay stable on retries but differ across resource groups. Which suffix input supports that requirement?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use one fixed global name",
+          "rationale": "A fixed name can collide across independently deployed resource groups."
+        },
+        {
+          "key": "B",
+          "text": "Generate a random suffix each run",
+          "rationale": "Random names prevent straightforward reconciliation with previously created owned resources."
+        },
+        {
+          "key": "C",
+          "text": "Use the resource group ID",
+          "rationale": "A scoped stable identifier supports repeatable names across deployment retries."
+        },
+        {
+          "key": "D",
+          "text": "Use the current timestamp",
+          "rationale": "Time changes on retries and creates additional resource identities instead."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "A scoped stable identifier supports repeatable names across deployment retries. Time changes on retries and creates additional resource identities instead. A fixed name can collide across independently deployed resource groups. Random names prevent straightforward reconciliation with previously created owned resources.",
+      "sourceIds": [
         "S3"
       ]
     },
     {
       "id": "L17-Q009",
       "checkpointId": "CP3",
-      "caseId": "L17-C02",
-      "task": "safeguard",
-      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The team wants one Bicep linter finding to fail pull requests consistently. Where should its enforcement severity be set?",
       "options": [
         {
           "key": "A",
-          "text": "Prefer references to a secret store where appropriate",
-          "rationale": "Reducing copied secret material lowers exposure. This directly addresses the constraint stated in this case."
+          "text": "In an informal README note",
+          "rationale": "Documentation describes policy without making the source build fail automatically."
         },
         {
           "key": "B",
-          "text": "Keep diagnostic output while preserving nonzero status",
-          "rationale": "Failure visibility and enforcement should work together. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "In the template file name",
+          "rationale": "File naming does not alter the analyzer's configured finding severity."
         },
         {
           "key": "C",
-          "text": "Verify subscription resource group and parameters before deployment",
-          "rationale": "Correct code can affect an incorrect target. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "In repository bicepconfig.json",
+          "rationale": "Repository configuration makes the selected analysis rule an enforceable build gate."
+        },
+        {
+          "key": "D",
+          "text": "In the resource group location",
+          "rationale": "Azure location does not configure a local source analysis rule's severity."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Reducing copied secret material lowers exposure. The selected answer is prefer references to a secret store where appropriate.",
+      "explanation": "Repository configuration makes the selected analysis rule an enforceable build gate. Azure location does not configure a local source analysis rule's severity. Documentation describes policy without making the source build fail automatically. File naming does not alter the analyzer's configured finding severity.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L17-Q010",
       "checkpointId": "CP3",
-      "caseId": "L17-C02",
-      "task": "tradeoff",
-      "caseContext": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "advanced",
-      "question": "Secret parameter: A Bicep parameter carries a credential and appears in deployment output because it is treated as ordinary configuration. The team selects this remedy: \"Use secure parameter handling and avoid secret outputs.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Compilation succeeds, but provider validation rejects the selected regional SKU. Which interpretation and action are both justified?",
       "options": [
         {
           "key": "A",
-          "text": "What-if is a planning aid with limitations",
-          "rationale": "It does not guarantee every runtime outcome. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Review a supported region or SKU",
+          "rationale": "Local compilation does not establish provider availability in the target region."
         },
         {
           "key": "B",
-          "text": "Secure parameters do not make every downstream use safe",
-          "rationale": "Scripts and resource settings can still disclose values. This directly addresses the constraint stated in this case."
+          "text": "Trust compilation and force deployment",
+          "rationale": "Source validity cannot make an unavailable provider configuration become deployable."
         },
         {
           "key": "C",
-          "text": "Static checks cannot prove service behavior",
-          "rationale": "Runtime validation still matters after a valid template. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Scripts and resource settings can still disclose values. The selected answer is secure parameters do not make every downstream use safe.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L17-Q011",
-      "checkpointId": "CP1",
-      "caseId": "L17-C03",
-      "task": "remedy",
-      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
-      "objectiveIds": [
-        "D3.5.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Make the required static validation enforce pipeline failure",
-          "rationale": "A quality signal needs an execution gate. This directly addresses the constraint stated in this case."
+          "text": "Wait for a linter warning",
+          "rationale": "The reported issue concerns live availability rather than local source analysis."
         },
         {
-          "key": "B",
-          "text": "Express the resource relationship through declarative references",
-          "rationale": "The deployment engine can order explicit dependencies. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Use secure parameter handling and avoid secret outputs",
-          "rationale": "Sensitive values need protection across input and output paths. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Remove validation and retain SKU",
+          "rationale": "Skipping the check does not resolve the provider's actual availability restriction."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "A quality signal needs an execution gate. The selected answer is make the required static validation enforce pipeline failure.",
+      "explanation": "Local compilation does not establish provider availability in the target region. Source validity cannot make an unavailable provider configuration become deployable. The reported issue concerns live availability rather than local source analysis. Skipping the check does not resolve the provider's actual availability restriction.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
+      ]
+    },
+    {
+      "id": "L17-Q011",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.5.3"
+      ],
+      "difficulty": "foundational",
+      "question": "The learner changed their default subscription after creating the journal-owned group. How should the preview command retain its intended scope?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Choose the first listed subscription",
+          "rationale": "List ordering cannot establish the learner's intended resource ownership context."
+        },
+        {
+          "key": "B",
+          "text": "Run only a local compiler",
+          "rationale": "Local compilation does not validate an actual Azure deployment scope."
+        },
+        {
+          "key": "C",
+          "text": "Pass subscription and group explicitly",
+          "rationale": "Explicit scope prevents ambient account defaults redirecting the deployment preview."
+        },
+        {
+          "key": "D",
+          "text": "Pass only the group name",
+          "rationale": "Identically named groups can exist in different accessible Azure subscriptions."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Explicit scope prevents ambient account defaults redirecting the deployment preview. Identically named groups can exist in different accessible Azure subscriptions. List ordering cannot establish the learner's intended resource ownership context. Local compilation does not validate an actual Azure deployment scope.",
+      "sourceIds": [
+        "S1"
       ]
     },
     {
       "id": "L17-Q012",
       "checkpointId": "CP1",
-      "caseId": "L17-C03",
-      "task": "diagnosis",
-      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A what-if Modify record contains an unresolved runtime reference expression. How should the reviewer interpret that result before approval?",
       "options": [
         {
           "key": "A",
-          "text": "Infrastructure metadata can expose plain configuration values",
-          "rationale": "A parameter's purpose alone does not make it secure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Inspect the expression and live state",
+          "rationale": "Runtime evaluation limitations can produce differences that need additional review."
         },
         {
           "key": "B",
-          "text": "The wrapper ignores validation failure status",
-          "rationale": "Visible findings do not prevent deployment by themselves. This directly addresses the constraint stated in this case."
+          "text": "Assume destructive replacement is certain",
+          "rationale": "A modification record does not always mean a resource replacement occurs."
         },
         {
           "key": "C",
-          "text": "The script hides a required provisioning relationship",
-          "rationale": "Parallel execution can access an unavailable resource. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Delete the existing resource immediately",
+          "rationale": "Deleting changes state without explaining the unresolved expression's actual meaning."
+        },
+        {
+          "key": "D",
+          "text": "Suppress every future preview",
+          "rationale": "Blanket suppression hides genuine changes unrelated to the evaluation limitation."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Visible findings do not prevent deployment by themselves. The selected answer is the wrapper ignores validation failure status.",
+      "explanation": "Runtime evaluation limitations can produce differences that need additional review. A modification record does not always mean a resource replacement occurs. Deleting changes state without explaining the unresolved expression's actual meaning. Blanket suppression hides genuine changes unrelated to the evaluation limitation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q013",
       "checkpointId": "CP1",
-      "caseId": "L17-C03",
-      "task": "verification",
-      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Part of a large nested what-if expansion is marked Ignore. What does that mean for the deployment review?",
       "options": [
         {
           "key": "A",
-          "text": "The dependent resource deploys only after its prerequisite is ready",
-          "rationale": "The verification must inspect the actual resource state. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Those resources can never change",
+          "rationale": "An unanalyzed resource is not a verified promise of unchanged behavior."
         },
         {
           "key": "B",
-          "text": "Deployment records do not reveal the sensitive value",
-          "rationale": "Verification must include logs and outputs. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Those resources are already deleted",
+          "rationale": "Ignore describes preview evaluation rather than an executed resource deletion operation."
         },
         {
           "key": "C",
-          "text": "A known invalid fixture blocks the deployment path",
-          "rationale": "A negative probe demonstrates the gate. This directly addresses the constraint stated in this case."
+          "text": "The deployment already succeeded there",
+          "rationale": "Preview output does not mean resource deployment operations have been executed."
+        },
+        {
+          "key": "D",
+          "text": "Some resources lack complete analysis",
+          "rationale": "Expansion limitations can leave parts of the proposed deployment insufficiently evaluated."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A negative probe demonstrates the gate. The selected answer is a known invalid fixture blocks the deployment path.",
+      "explanation": "Expansion limitations can leave parts of the proposed deployment insufficiently evaluated. An unanalyzed resource is not a verified promise of unchanged behavior. Ignore describes preview evaluation rather than an executed resource deletion operation. Preview output does not mean resource deployment operations have been executed.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q014",
       "checkpointId": "CP1",
-      "caseId": "L17-C03",
-      "task": "safeguard",
-      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Auditors need machine-readable planned changes linked to the exact reviewed template and parameter revision. What should CI retain?",
       "options": [
         {
           "key": "A",
-          "text": "Prefer references to a secret store where appropriate",
-          "rationale": "Reducing copied secret material lowers exposure. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Only the mutable source filename",
+          "rationale": "A filename cannot identify the exact version of its infrastructure contents."
         },
         {
           "key": "B",
-          "text": "Keep diagnostic output while preserving nonzero status",
-          "rationale": "Failure visibility and enforcement should work together. This directly addresses the constraint stated in this case."
+          "text": "Only command elapsed time",
+          "rationale": "Duration provides no evidence about selected resources or proposed configuration changes."
         },
         {
           "key": "C",
-          "text": "Avoid unnecessary dependencies that serialize independent resources",
-          "rationale": "Correct ordering should not prevent safe parallelism. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Structured what-if and revision metadata",
+          "rationale": "Structured changes plus revision linkage support reproducible review of deployment intent."
+        },
+        {
+          "key": "D",
+          "text": "Only the terminal window title",
+          "rationale": "A window title omits the proposed resources and selected parameter values."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Failure visibility and enforcement should work together. The selected answer is keep diagnostic output while preserving nonzero status.",
+      "explanation": "Structured changes plus revision linkage support reproducible review of deployment intent. A window title omits the proposed resources and selected parameter values. A filename cannot identify the exact version of its infrastructure contents. Duration provides no evidence about selected resources or proposed configuration changes.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q015",
       "checkpointId": "CP1",
-      "caseId": "L17-C03",
-      "task": "tradeoff",
-      "caseContext": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Lint ignored: A pipeline reports Bicep lint errors but continues deploying the same infrastructure files. The team selects this remedy: \"Make the required static validation enforce pipeline failure.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A current CLI reviewer needs provider checks without resource write permissions. Which mode supports that review while keeping deployment separately authorized?",
       "options": [
         {
           "key": "A",
-          "text": "Declared dependencies do not solve every readiness condition",
-          "rationale": "Some services need additional application-level checks. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Permanent subscription Owner for review",
+          "rationale": "Broad permanent ownership exceeds the stated read-only provider review access requirement."
         },
         {
           "key": "B",
-          "text": "Secure parameters do not make every downstream use safe",
-          "rationale": "Scripts and resource settings can still disclose values. That addresses a different requirement: Secret parameter. It does not directly resolve this case's stated constraint."
+          "text": "Skip validation and certify deployment rights",
+          "rationale": "An omitted check cannot prove provider compatibility or effective deployment permissions."
         },
         {
           "key": "C",
-          "text": "Static checks cannot prove service behavior",
-          "rationale": "Runtime validation still matters after a valid template. This directly addresses the constraint stated in this case."
+          "text": "ProviderNoRbac validation",
+          "rationale": "This mode checks provider configuration while validating read rather than write permissions."
+        },
+        {
+          "key": "D",
+          "text": "Template validation as full availability proof",
+          "rationale": "Template validation omits provider preflight checks and live resource availability validation."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Runtime validation still matters after a valid template. The selected answer is static checks cannot prove service behavior.",
+      "explanation": "This mode checks provider configuration while validating read rather than write permissions. Template validation omits provider preflight checks and live resource availability validation. Broad permanent ownership exceeds the stated read-only provider review access requirement. An omitted check cannot prove provider compatibility or effective deployment permissions.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q016",
       "checkpointId": "CP1",
-      "caseId": "L17-C04",
-      "task": "remedy",
-      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "foundational",
-      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which next change most directly satisfies the stated requirement?",
+      "question": "A secure deployment input is needed later by application configuration. Which output avoids exposing its secret value in deployment history?",
       "options": [
         {
           "key": "A",
-          "text": "Compare desired configuration and reconcile through a reviewed change",
-          "rationale": "Source-controlled intent should govern intentional infrastructure updates. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "A nonsensitive resource reference",
+          "rationale": "References avoid copying secret contents into deployment outputs and downstream logs."
         },
         {
           "key": "B",
-          "text": "Make the required static validation enforce pipeline failure",
-          "rationale": "A quality signal needs an execution gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "The secret as ordinary output",
+          "rationale": "Ordinary outputs may expose sensitive values through deployment history and consumers."
         },
         {
           "key": "C",
-          "text": "Express the resource relationship through declarative references",
-          "rationale": "The deployment engine can order explicit dependencies. This directly addresses the constraint stated in this case."
+          "text": "The secret encoded as Base64",
+          "rationale": "Base64 is reversible encoding and does not provide secret value protection."
+        },
+        {
+          "key": "D",
+          "text": "The secret inside a resource name",
+          "rationale": "Resource names are visible metadata unsuitable for transporting secret values."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The deployment engine can order explicit dependencies. The selected answer is express the resource relationship through declarative references.",
+      "explanation": "References avoid copying secret contents into deployment outputs and downstream logs. Ordinary outputs may expose sensitive values through deployment history and consumers. Base64 is reversible encoding and does not provide secret value protection. Resource names are visible metadata unsuitable for transporting secret values.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q017",
       "checkpointId": "CP1",
-      "caseId": "L17-C04",
-      "task": "diagnosis",
-      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What-if completed successfully and no create command ran afterward. Which status accurately describes the infrastructure's execution evidence?",
       "options": [
         {
           "key": "A",
-          "text": "The script hides a required provisioning relationship",
-          "rationale": "Parallel execution can access an unavailable resource. This directly addresses the constraint stated in this case."
+          "text": "Preview completed; deployment unexecuted",
+          "rationale": "A successful preview evaluates intended changes without applying resource operations."
         },
         {
           "key": "B",
-          "text": "Out-of-band changes bypassed the normal declaration workflow",
-          "rationale": "Repository content no longer explains the deployed state. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Deployment completed through preview",
+          "rationale": "What-if deliberately does not create or update the declared Azure resources."
         },
         {
           "key": "C",
-          "text": "The wrapper ignores validation failure status",
-          "rationale": "Visible findings do not prevent deployment by themselves. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "Cleanup completed through preview",
+          "rationale": "Previewing changes does not audit or remove previously created owned resources."
+        },
+        {
+          "key": "D",
+          "text": "Application readiness fully verified",
+          "rationale": "Infrastructure preview cannot exercise application runtime identity and database dependencies."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Parallel execution can access an unavailable resource. The selected answer is the script hides a required provisioning relationship.",
+      "explanation": "A successful preview evaluates intended changes without applying resource operations. What-if deliberately does not create or update the declared Azure resources. Previewing changes does not audit or remove previously created owned resources. Infrastructure preview cannot exercise application runtime identity and database dependencies.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q018",
       "checkpointId": "CP1",
-      "caseId": "L17-C04",
-      "task": "verification",
-      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A second run uses the same resource identities and desired settings. What should a declarative infrastructure deployment aim to do?",
       "options": [
         {
           "key": "A",
-          "text": "The deployed configuration matches the approved desired state",
-          "rationale": "The comparison should cover the changed property. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Create an additional copy",
+          "rationale": "Repeated duplication indicates changing identities instead of desired-state resource convergence."
         },
         {
           "key": "B",
-          "text": "A known invalid fixture blocks the deployment path",
-          "rationale": "A negative probe demonstrates the gate. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "Skip property checks forever",
+          "rationale": "Existing resources can drift and still require comparison with desired configuration."
         },
         {
           "key": "C",
-          "text": "The dependent resource deploys only after its prerequisite is ready",
-          "rationale": "The verification must inspect the actual resource state. This directly addresses the constraint stated in this case."
+          "text": "Rename every existing resource",
+          "rationale": "Renaming changes resource identities and obstructs straightforward idempotent configuration reconciliation."
+        },
+        {
+          "key": "D",
+          "text": "Converge to the same state",
+          "rationale": "Stable resource identities allow retries to reconcile intended configuration without duplication."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The verification must inspect the actual resource state. The selected answer is the dependent resource deploys only after its prerequisite is ready.",
+      "explanation": "Stable resource identities allow retries to reconcile intended configuration without duplication. Repeated duplication indicates changing identities instead of desired-state resource convergence. Existing resources can drift and still require comparison with desired configuration. Renaming changes resource identities and obstructs straightforward idempotent configuration reconciliation.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q019",
       "checkpointId": "CP1",
-      "caseId": "L17-C04",
-      "task": "safeguard",
-      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The selected group has a different run's ownership marker although the current identity can write there. What should execution do?",
       "options": [
         {
           "key": "A",
-          "text": "Keep diagnostic output while preserving nonzero status",
-          "rationale": "Failure visibility and enforcement should work together. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
+          "text": "Deploy and repair ownership later",
+          "rationale": "Postdeployment metadata changes cannot establish the original resource ownership authorization."
         },
         {
           "key": "B",
-          "text": "Avoid unnecessary dependencies that serialize independent resources",
-          "rationale": "Correct ordering should not prevent safe parallelism. This directly addresses the constraint stated in this case."
+          "text": "Change only the local run ID",
+          "rationale": "Changing local metadata does not authorize adopting the existing resource group."
         },
         {
           "key": "C",
-          "text": "Determine whether the manual change was an emergency correction",
-          "rationale": "Blindly reverting can undo a needed operational fix. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Correct ordering should not prevent safe parallelism. The selected answer is avoid unnecessary dependencies that serialize independent resources.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L17-Q020",
-      "checkpointId": "CP1",
-      "caseId": "L17-C04",
-      "task": "tradeoff",
-      "caseContext": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation.",
-      "objectiveIds": [
-        "D3.5.4"
-      ],
-      "difficulty": "advanced",
-      "question": "Implicit dependency: Two resources reference each other's outputs, but a manual deployment script races their creation. The team selects this remedy: \"Express the resource relationship through declarative references.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Strict reconciliation needs an exception and feedback process",
-          "rationale": "Operational discoveries should return to source control. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Refuse the mismatched context",
+          "rationale": "Write authorization does not establish ownership under this run's lifecycle journal."
         },
         {
-          "key": "B",
-          "text": "Static checks cannot prove service behavior",
-          "rationale": "Runtime validation still matters after a valid template. That addresses a different requirement: Lint ignored. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Declared dependencies do not solve every readiness condition",
-          "rationale": "Some services need additional application-level checks. This directly addresses the constraint stated in this case."
+          "key": "D",
+          "text": "Overwrite the ownership marker",
+          "rationale": "Replacing another run's evidence silently adopts resources outside this lifecycle's ownership."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Some services need additional application-level checks. The selected answer is declared dependencies do not solve every readiness condition.",
+      "explanation": "Write authorization does not establish ownership under this run's lifecycle journal. Replacing another run's evidence silently adopts resources outside this lifecycle's ownership. Postdeployment metadata changes cannot establish the original resource ownership authorization. Changing local metadata does not authorize adopting the existing resource group.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L17-Q020",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D3.5.4"
+      ],
+      "difficulty": "advanced",
+      "question": "Module code changed after approval while the parameter file stayed unchanged. Which control binds execution to the reviewed infrastructure rather than current branch contents?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reuse the deployment display name",
+          "rationale": "Operation naming does not prove template contents match the approved revision."
+        },
+        {
+          "key": "B",
+          "text": "Compare only generated file sizes",
+          "rationale": "Equal file sizes do not establish equivalent infrastructure declarations or behavior."
+        },
+        {
+          "key": "C",
+          "text": "Deploy the immutable approved artifact",
+          "rationale": "Both source and parameters determine the resource changes requiring explicit approval."
+        },
+        {
+          "key": "D",
+          "text": "Approve the moving branch name",
+          "rationale": "Branch names move and cannot identify an immutable reviewed infrastructure artifact."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Both source and parameters determine the resource changes requiring explicit approval. Branch names move and cannot identify an immutable reviewed infrastructure artifact. Operation naming does not prove template contents match the approved revision. Equal file sizes do not establish equivalent infrastructure declarations or behavior.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q021",
       "checkpointId": "CP5",
-      "caseId": "L17-C05",
-      "task": "remedy",
-      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which next change most directly satisfies the stated requirement?",
+      "question": "The low-cost core has no SQL dependency, but the advanced workload requires existing SQL networking. Which default execution path is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Compare desired configuration and reconcile through a reviewed change",
-          "rationale": "Source-controlled intent should govern intentional infrastructure updates. This directly addresses the constraint stated in this case."
+          "text": "Deploy advanced and ignore readiness",
+          "rationale": "Ignoring a required data dependency misrepresents the application as fully functional."
         },
         {
           "key": "B",
-          "text": "Extract a reusable versioned module with explicit parameters",
-          "rationale": "Modules centralize reviewed infrastructure behavior. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Create unplanned publicly accessible SQL",
+          "rationale": "Unreviewed database provisioning adds cost and changes approved security requirements."
         },
         {
           "key": "C",
-          "text": "Express the resource relationship through declarative references",
-          "rationale": "The deployment engine can order explicit dependencies. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Call compilation successful SQL integration",
+          "rationale": "Compilation cannot demonstrate remote identity, networking, schema or application connectivity."
+        },
+        {
+          "key": "D",
+          "text": "Deploy core; gate advanced prerequisites",
+          "rationale": "Independent core practice is runnable without claiming external SQL integration succeeded."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Source-controlled intent should govern intentional infrastructure updates. The selected answer is compare desired configuration and reconcile through a reviewed change.",
+      "explanation": "Independent core practice is runnable without claiming external SQL integration succeeded. Ignoring a required data dependency misrepresents the application as fully functional. Unreviewed database provisioning adds cost and changes approved security requirements. Compilation cannot demonstrate remote identity, networking, schema or application connectivity.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q022",
       "checkpointId": "CP5",
-      "caseId": "L17-C05",
-      "task": "diagnosis",
-      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A deployment operation is renamed while resource type, name and scope remain unchanged. What primarily determines the actual Azure resource identity?",
       "options": [
         {
           "key": "A",
-          "text": "Out-of-band changes bypassed the normal declaration workflow",
-          "rationale": "Repository content no longer explains the deployed state. This directly addresses the constraint stated in this case."
+          "text": "Pipeline run number alone",
+          "rationale": "Pipeline execution identifiers do not automatically become resource identifiers in ARM."
         },
         {
           "key": "B",
-          "text": "Copies are maintained as independent implementations",
-          "rationale": "Repeated text does not provide shared governance. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Type, name and scope",
+          "rationale": "ARM resource addressing follows these components rather than deployment operation labels."
         },
         {
           "key": "C",
-          "text": "The script hides a required provisioning relationship",
-          "rationale": "Parallel execution can access an unavailable resource. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Deployment operation name alone",
+          "rationale": "Deployment history names identify operations rather than replacing resource address components."
+        },
+        {
+          "key": "D",
+          "text": "Bicep source filename alone",
+          "rationale": "Source filenames do not independently define the created Azure resource identities."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Repository content no longer explains the deployed state. The selected answer is out-of-band changes bypassed the normal declaration workflow.",
+      "explanation": "ARM resource addressing follows these components rather than deployment operation labels. Deployment history names identify operations rather than replacing resource address components. Source filenames do not independently define the created Azure resource identities. Pipeline execution identifiers do not automatically become resource identifiers in ARM.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q023",
       "checkpointId": "CP5",
-      "caseId": "L17-C05",
-      "task": "verification",
-      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Deployment failed after storage creation but before another resource completed. What should a retry inspect before assuming no state remains?",
       "options": [
         {
           "key": "A",
-          "text": "The dependent resource deploys only after its prerequisite is ready",
-          "rationale": "The verification must inspect the actual resource state. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Every subscription's storage accounts for deletion",
+          "rationale": "Broad subscription discovery and deletion exceed the exact recorded ownership scope."
         },
         {
           "key": "B",
-          "text": "The deployed configuration matches the approved desired state",
-          "rationale": "The comparison should cover the changed property. This directly addresses the constraint stated in this case."
+          "text": "A new random naming prefix",
+          "rationale": "Changing names can orphan existing resources and unnecessarily duplicate partial state."
         },
         {
           "key": "C",
-          "text": "Each environment resolves the approved module version",
-          "rationale": "The evidence should verify module adoption and parameters. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Actual resources under recorded ownership",
+          "rationale": "Overall failure does not imply rollback of every previously completed resource operation."
+        },
+        {
+          "key": "D",
+          "text": "Only the final error string",
+          "rationale": "An error alone cannot establish which preceding resources were successfully created."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "The comparison should cover the changed property. The selected answer is the deployed configuration matches the approved desired state.",
+      "explanation": "Overall failure does not imply rollback of every previously completed resource operation. An error alone cannot establish which preceding resources were successfully created. Broad subscription discovery and deletion exceed the exact recorded ownership scope. Changing names can orphan existing resources and unnecessarily duplicate partial state.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q024",
       "checkpointId": "CP5",
-      "caseId": "L17-C05",
-      "task": "safeguard",
-      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The module consumes an identity that already exists and must not create a replacement. Which declaration expresses the intended relationship?",
       "options": [
         {
           "key": "A",
-          "text": "Determine whether the manual change was an emergency correction",
-          "rationale": "Blindly reverting can undo a needed operational fix. This directly addresses the constraint stated in this case."
+          "text": "String containing the deployment name",
+          "rationale": "An operation display name is not the identity's Azure resource reference."
         },
         {
           "key": "B",
-          "text": "Review module updates against representative environments",
-          "rationale": "A central change can affect many deployments. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Existing resource with explicit scope",
+          "rationale": "An existing declaration identifies a deployed resource without requesting its new creation."
         },
         {
           "key": "C",
-          "text": "Avoid unnecessary dependencies that serialize independent resources",
-          "rationale": "Correct ordering should not prevent safe parallelism. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "New identity with timestamp name",
+          "rationale": "A newly named identity creates a different principal from the intended existing one."
+        },
+        {
+          "key": "D",
+          "text": "First identity returned by inventory",
+          "rationale": "Implicit list selection does not preserve the caller's exact existing identity reference."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Blindly reverting can undo a needed operational fix. The selected answer is determine whether the manual change was an emergency correction.",
+      "explanation": "An existing declaration identifies a deployed resource without requesting its new creation. A newly named identity creates a different principal from the intended existing one. Implicit list selection does not preserve the caller's exact existing identity reference. An operation display name is not the identity's Azure resource reference.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q025",
       "checkpointId": "CP5",
-      "caseId": "L17-C05",
-      "task": "tradeoff",
-      "caseContext": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Environment drift: Production was edited manually and now differs from the reviewed Bicep configuration. The team selects this remedy: \"Compare desired configuration and reconcile through a reviewed change.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Storage was created, but role assignment failed because the caller lacks assignment rights. How should recovery retain ownership while avoiding permanent broad privileges?",
       "options": [
         {
           "key": "A",
-          "text": "Strict reconciliation needs an exception and feedback process",
-          "rationale": "Operational discoveries should return to source control. This directly addresses the constraint stated in this case."
+          "text": "Discard the journal and rename everything",
+          "rationale": "Discarding ownership evidence can orphan resources and obstruct safe partial recovery."
         },
         {
           "key": "B",
-          "text": "Reusable modules need interface and version discipline",
-          "rationale": "Overly generic modules can become hard to maintain. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Grant every pipeline permanent Owner",
+          "rationale": "Permanent subscription ownership exceeds the scoped role assignment recovery requirement."
         },
         {
           "key": "C",
-          "text": "Declared dependencies do not solve every readiness condition",
-          "rationale": "Some services need additional application-level checks. That addresses a different requirement: Implicit dependency. It does not directly resolve this case's stated constraint."
+          "text": "Ignore the assignment and certify integration",
+          "rationale": "Missing required authorization can prevent runtime access despite successful resource creation."
+        },
+        {
+          "key": "D",
+          "text": "Inspect partial state and authorize narrowly",
+          "rationale": "Keep exact recorded IDs and obtain only justified rights for the failed operation."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Operational discoveries should return to source control. The selected answer is strict reconciliation needs an exception and feedback process.",
+      "explanation": "Keep exact recorded IDs and obtain only justified rights for the failed operation. Discarding ownership evidence can orphan resources and obstruct safe partial recovery. Permanent subscription ownership exceeds the scoped role assignment recovery requirement. Missing required authorization can prevent runtime access despite successful resource creation.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q026",
       "checkpointId": "CP1",
-      "caseId": "L17-C06",
-      "task": "remedy",
-      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "foundational",
-      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which next change most directly satisfies the stated requirement?",
+      "question": "A team varies account SKU using parameters rather than editing shared Bicep declarations. What benefit does that design provide?",
       "options": [
         {
           "key": "A",
-          "text": "Match deployment scope and identity permissions to the required operation",
-          "rationale": "Resource scope determines the necessary authorization. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Prevent all expensive input choices",
+          "rationale": "Only explicit allowed values and governance controls restrict those parameter choices."
         },
         {
           "key": "B",
-          "text": "Compare desired configuration and reconcile through a reviewed change",
-          "rationale": "Source-controlled intent should govern intentional infrastructure updates. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Separate environment choices from reusable logic",
+          "rationale": "Parameters support reviewed environment variation without duplicating the module's resource definitions."
         },
         {
           "key": "C",
-          "text": "Extract a reusable versioned module with explicit parameters",
-          "rationale": "Modules centralize reviewed infrastructure behavior. This directly addresses the constraint stated in this case."
+          "text": "Guarantee every regional SKU exists",
+          "rationale": "Parameterization does not override provider availability or subscription quota restrictions."
+        },
+        {
+          "key": "D",
+          "text": "Remove the need for previews",
+          "rationale": "Parameter changes can affect resources and cost and still require review."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Modules centralize reviewed infrastructure behavior. The selected answer is extract a reusable versioned module with explicit parameters.",
+      "explanation": "Parameters support reviewed environment variation without duplicating the module's resource definitions. Parameterization does not override provider availability or subscription quota restrictions. Parameter changes can affect resources and cost and still require review. Only explicit allowed values and governance controls restrict those parameter choices.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q027",
       "checkpointId": "CP1",
-      "caseId": "L17-C06",
-      "task": "diagnosis",
-      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Compilation reports a string argument where the module expects an integer parameter. Which correction directly addresses the reported defect?",
       "options": [
         {
           "key": "A",
-          "text": "Resource-group rights do not grant all subscription operations",
-          "rationale": "The failed action is outside the existing boundary. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Suppress every linter rule",
+          "rationale": "Source analysis suppression does not resolve an invalid parameter type assignment."
         },
         {
           "key": "B",
-          "text": "Out-of-band changes bypassed the normal declaration workflow",
-          "rationale": "Repository content no longer explains the deployed state. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Rename the deployment operation",
+          "rationale": "Operation naming does not change the parameter's value or declared type."
         },
         {
           "key": "C",
-          "text": "Copies are maintained as independent implementations",
-          "rationale": "Repeated text does not provide shared governance. This directly addresses the constraint stated in this case."
+          "text": "Select a different Azure region",
+          "rationale": "Regional selection cannot convert a source argument into the required type."
+        },
+        {
+          "key": "D",
+          "text": "Supply the declared integer type",
+          "rationale": "Typed contracts let compilation reject incompatible values before any cloud execution."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Repeated text does not provide shared governance. The selected answer is copies are maintained as independent implementations.",
+      "explanation": "Typed contracts let compilation reject incompatible values before any cloud execution. Source analysis suppression does not resolve an invalid parameter type assignment. Operation naming does not change the parameter's value or declared type. Regional selection cannot convert a source argument into the required type.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L17-Q028",
       "checkpointId": "CP1",
-      "caseId": "L17-C06",
-      "task": "verification",
-      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Validation needs the exact storage account created by a module without searching by naming prefix. Which output best supports that requirement?",
       "options": [
         {
           "key": "A",
-          "text": "The intended scoped operation succeeds without unrelated elevation",
-          "rationale": "The repair should not require blanket subscription access. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "The subscription's display name",
+          "rationale": "Subscription display names do not identify the particular created storage account."
         },
         {
           "key": "B",
-          "text": "The deployed configuration matches the approved desired state",
-          "rationale": "The comparison should cover the changed property. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "A count of created resources",
+          "rationale": "A resource count does not identify which exact resource needs validation."
         },
         {
           "key": "C",
-          "text": "Each environment resolves the approved module version",
-          "rationale": "The evidence should verify module adoption and parameters. This directly addresses the constraint stated in this case."
+          "text": "The complete storage ARM ID",
+          "rationale": "A complete resource ID identifies the account across subscriptions and resource groups."
+        },
+        {
+          "key": "D",
+          "text": "A wildcard training prefix",
+          "rationale": "A wildcard can match unrelated resources and cannot prove exact identity."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The evidence should verify module adoption and parameters. The selected answer is each environment resolves the approved module version.",
+      "explanation": "A complete resource ID identifies the account across subscriptions and resource groups. A wildcard can match unrelated resources and cannot prove exact identity. Subscription display names do not identify the particular created storage account. A resource count does not identify which exact resource needs validation.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q029",
       "checkpointId": "CP1",
-      "caseId": "L17-C06",
-      "task": "safeguard",
-      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "After successful deployment, a learner needs recorded output values without changing resources again. Which operation should the automation use?",
       "options": [
         {
           "key": "A",
-          "text": "Review module updates against representative environments",
-          "rationale": "A central change can affect many deployments. This directly addresses the constraint stated in this case."
+          "text": "Delete the deployment history entry",
+          "rationale": "Removing history destroys evidence rather than returning its stored output values."
         },
         {
           "key": "B",
-          "text": "Separate privileged foundation changes from routine application deployment",
-          "rationale": "Different risk levels need different execution identities. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Substitute a new what-if preview",
+          "rationale": "What-if predicts changes rather than retrieving the prior deployment's recorded outputs."
         },
         {
           "key": "C",
-          "text": "Determine whether the manual change was an emergency correction",
-          "rationale": "Blindly reverting can undo a needed operational fix. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Read deployment properties.outputs",
+          "rationale": "Deployment history exposes recorded outputs through a read-only management operation."
+        },
+        {
+          "key": "D",
+          "text": "Create the group again elsewhere",
+          "rationale": "A resource group mutation is unrelated to reading existing deployment outputs."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A central change can affect many deployments. The selected answer is review module updates against representative environments.",
+      "explanation": "Deployment history exposes recorded outputs through a read-only management operation. A resource group mutation is unrelated to reading existing deployment outputs. Removing history destroys evidence rather than returning its stored output values. What-if predicts changes rather than retrieving the prior deployment's recorded outputs.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q030",
       "checkpointId": "CP1",
-      "caseId": "L17-C06",
-      "task": "tradeoff",
-      "caseContext": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "advanced",
-      "question": "Repeated network definitions: Several environments copy the same Bicep network resources and drift into different security configurations. The team selects this remedy: \"Extract a reusable versioned module with explicit parameters.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "One owned resource exists after failure, another is absent, and the same artifact is still approved. Which retry best avoids duplicate resources?",
       "options": [
         {
           "key": "A",
-          "text": "Reusable modules need interface and version discipline",
-          "rationale": "Overly generic modules can become hard to maintain. This directly addresses the constraint stated in this case."
+          "text": "Skip the missing resource",
+          "rationale": "The declared desired state remains incomplete when the required resource is absent."
         },
         {
           "key": "B",
-          "text": "More scopes and identities add orchestration work",
-          "rationale": "The separation limits routine deployment authority. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Reuse identities and reconcile the declaration",
+          "rationale": "Stable names preserve owned partial state while creating only the missing resources."
         },
         {
           "key": "C",
-          "text": "Strict reconciliation needs an exception and feedback process",
-          "rationale": "Operational discoveries should return to source control. That addresses a different requirement: Environment drift. It does not directly resolve this case's stated constraint."
+          "text": "Randomize all resource names",
+          "rationale": "New identities duplicate successful resources and abandon the previous partial state."
+        },
+        {
+          "key": "D",
+          "text": "Delete all groups tagged AZ-400",
+          "rationale": "A shared course tag does not identify this exact run's managed resources."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Overly generic modules can become hard to maintain. The selected answer is reusable modules need interface and version discipline.",
+      "explanation": "Stable names preserve owned partial state while creating only the missing resources. New identities duplicate successful resources and abandon the previous partial state. A shared course tag does not identify this exact run's managed resources. The declared desired state remains incomplete when the required resource is absent.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q031",
       "checkpointId": "CP3",
-      "caseId": "L17-C07",
-      "task": "remedy",
-      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which next change most directly satisfies the stated requirement?",
+      "question": "Source declares HTTPS-only access and deployment reports success. Which observation most directly verifies the actual deployed security setting?",
       "options": [
         {
           "key": "A",
-          "text": "Match deployment scope and identity permissions to the required operation",
-          "rationale": "Resource scope determines the necessary authorization. This directly addresses the constraint stated in this case."
+          "text": "Search the Bicep source",
+          "rationale": "Declared intent alone cannot prove the current deployed resource has that setting."
         },
         {
           "key": "B",
-          "text": "Parameterize or deterministically derive collision-resistant names",
-          "rationale": "Reusable infrastructure needs environment-specific identity. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Inspect only the exit code",
+          "rationale": "Operation success does not replace a targeted postdeployment property value assertion."
         },
         {
           "key": "C",
-          "text": "Extract a reusable versioned module with explicit parameters",
-          "rationale": "Modules centralize reviewed infrastructure behavior. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Read an HTTPS diagram label",
+          "rationale": "A diagram cannot establish the current security property in the deployed service."
+        },
+        {
+          "key": "D",
+          "text": "Read the exact live property",
+          "rationale": "A service read observes applied configuration instead of merely repeating source intent."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Resource scope determines the necessary authorization. The selected answer is match deployment scope and identity permissions to the required operation.",
+      "explanation": "A service read observes applied configuration instead of merely repeating source intent. Declared intent alone cannot prove the current deployed resource has that setting. Operation success does not replace a targeted postdeployment property value assertion. A diagram cannot establish the current security property in the deployed service.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q032",
       "checkpointId": "CP3",
-      "caseId": "L17-C07",
-      "task": "diagnosis",
-      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The deployment returns a managed identity resource ID. How should validation establish that Azure actually provisioned the intended identity?",
       "options": [
         {
           "key": "A",
-          "text": "Copies are maintained as independent implementations",
-          "rationale": "Repeated text does not provide shared governance. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Accept any tenant principal",
+          "rationale": "An unrelated principal does not establish that the declared resource exists."
         },
         {
           "key": "B",
-          "text": "Resource-group rights do not grant all subscription operations",
-          "rationale": "The failed action is outside the existing boundary. This directly addresses the constraint stated in this case."
+          "text": "Check for identity in the string",
+          "rationale": "String shape alone cannot prove that Azure provisioned the intended identity."
         },
         {
           "key": "C",
-          "text": "A global namespace cannot accept duplicated fixed names",
-          "rationale": "The template assumes a single deployment instance. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Inspect the Git author email",
+          "rationale": "Git author metadata is unrelated to Azure managed identity resource creation."
+        },
+        {
+          "key": "D",
+          "text": "Read that ID and principalId",
+          "rationale": "An exact service read validates the created identity without ambiguous name discovery."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The failed action is outside the existing boundary. The selected answer is resource-group rights do not grant all subscription operations.",
+      "explanation": "An exact service read validates the created identity without ambiguous name discovery. An unrelated principal does not establish that the declared resource exists. String shape alone cannot prove that Azure provisioned the intended identity. Git author metadata is unrelated to Azure managed identity resource creation.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q033",
       "checkpointId": "CP3",
-      "caseId": "L17-C07",
-      "task": "verification",
-      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A service read contradicts the secure public-access setting still present in source. Which result should validation report?",
       "options": [
         {
           "key": "A",
-          "text": "Two isolated deployments produce distinct valid names",
-          "rationale": "The test should demonstrate reuse across environments. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Pass because names match",
+          "rationale": "Matching resource names does not establish that security settings remain correct."
         },
         {
           "key": "B",
-          "text": "Each environment resolves the approved module version",
-          "rationale": "The evidence should verify module adoption and parameters. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Reset the whole subscription",
+          "rationale": "A broad reset exceeds exact ownership and changes unrelated resource configuration."
         },
         {
           "key": "C",
-          "text": "The intended scoped operation succeeds without unrelated elevation",
-          "rationale": "The repair should not require blanket subscription access. This directly addresses the constraint stated in this case."
+          "text": "A configuration mismatch requiring investigation",
+          "rationale": "The observed property demonstrates drift from the declared resource security configuration."
+        },
+        {
+          "key": "D",
+          "text": "Pass because source is secure",
+          "rationale": "Source text cannot override a contradictory observation of current live configuration."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The repair should not require blanket subscription access. The selected answer is the intended scoped operation succeeds without unrelated elevation.",
+      "explanation": "The observed property demonstrates drift from the declared resource security configuration. Source text cannot override a contradictory observation of current live configuration. Matching resource names does not establish that security settings remain correct. A broad reset exceeds exact ownership and changes unrelated resource configuration.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q034",
       "checkpointId": "CP3",
-      "caseId": "L17-C07",
-      "task": "safeguard",
-      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Deployment outputs exist but the API's first request fails. Which extra evidence is needed before claiming application readiness?",
       "options": [
         {
           "key": "A",
-          "text": "Review module updates against representative environments",
-          "rationale": "A central change can affect many deployments. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Runtime readiness and dependency checks",
+          "rationale": "Infrastructure success does not demonstrate application identity, schema and data connectivity."
         },
         {
           "key": "B",
-          "text": "Separate privileged foundation changes from routine application deployment",
-          "rationale": "Different risk levels need different execution identities. This directly addresses the constraint stated in this case."
+          "text": "Only nonempty output values",
+          "rationale": "Outputs identify resource properties rather than proving the application's runtime behavior."
         },
         {
           "key": "C",
-          "text": "Keep naming deterministic enough for lifecycle management",
-          "rationale": "Uncontrolled randomness can complicate updates and cleanup. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Another source formatter pass",
+          "rationale": "Formatting cannot exercise deployed identity permissions or actual database connectivity."
+        },
+        {
+          "key": "D",
+          "text": "A healthy deployment display name",
+          "rationale": "An operation name provides no evidence about current application runtime health."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Different risk levels need different execution identities. The selected answer is separate privileged foundation changes from routine application deployment.",
+      "explanation": "Infrastructure success does not demonstrate application identity, schema and data connectivity. Outputs identify resource properties rather than proving the application's runtime behavior. Formatting cannot exercise deployed identity permissions or actual database connectivity. An operation name provides no evidence about current application runtime health.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q035",
       "checkpointId": "CP3",
-      "caseId": "L17-C07",
-      "task": "tradeoff",
-      "caseContext": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Wrong-scope permission: A pipeline can deploy into its training resource group but attempts a subscription-level role change and fails. The team selects this remedy: \"Match deployment scope and identity permissions to the required operation.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A security setting passed yesterday but today's what-if reports an unexplained modification. What should a reviewer do before approving reconciliation?",
       "options": [
         {
           "key": "A",
-          "text": "Reusable modules need interface and version discipline",
-          "rationale": "Overly generic modules can become hard to maintain. That addresses a different requirement: Repeated network definitions. It does not directly resolve this case's stated constraint."
+          "text": "Compare actual state and expression evaluation",
+          "rationale": "Review separates genuine configuration drift from unresolved preview expression evaluation effects."
         },
         {
           "key": "B",
-          "text": "More scopes and identities add orchestration work",
-          "rationale": "The separation limits routine deployment authority. This directly addresses the constraint stated in this case."
+          "text": "Approve all modifications automatically",
+          "rationale": "Yesterday's success cannot establish that today's changed security state is acceptable."
         },
         {
           "key": "C",
-          "text": "Name constraints differ across Azure resource types",
-          "rationale": "A universal naming expression may not fit every service. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Delete the owned group first",
+          "rationale": "Immediate deletion is unnecessary for investigating an isolated configuration state discrepancy."
+        },
+        {
+          "key": "D",
+          "text": "Ignore unchanged source files",
+          "rationale": "External changes can alter deployed resources without modifying the source declarations."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The separation limits routine deployment authority. The selected answer is more scopes and identities add orchestration work.",
+      "explanation": "Review separates genuine configuration drift from unresolved preview expression evaluation effects. Yesterday's success cannot establish that today's changed security state is acceptable. Immediate deletion is unnecessary for investigating an isolated configuration state discrepancy. External changes can alter deployed resources without modifying the source declarations.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q036",
       "checkpointId": "CP1",
-      "caseId": "L17-C08",
-      "task": "remedy",
-      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "foundational",
-      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which next change most directly satisfies the stated requirement?",
+      "question": "The deployment must preserve group ownership metadata while adding exact lab-run tags. Which Bicep pattern expresses the intended tag policy?",
       "options": [
         {
           "key": "A",
-          "text": "Parameterize or deterministically derive collision-resistant names",
-          "rationale": "Reusable infrastructure needs environment-specific identity. This directly addresses the constraint stated in this case."
+          "text": "Merge group and explicit run tags",
+          "rationale": "An explicit merge retains inherited context while recording this deployment's run identity."
         },
         {
           "key": "B",
-          "text": "Add scoped deployment and postdeployment verification",
-          "rationale": "Planning output does not exercise the full runtime path. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Replace tags with course only",
+          "rationale": "A generic course marker loses the exact run identity required for ownership."
         },
         {
           "key": "C",
-          "text": "Match deployment scope and identity permissions to the required operation",
-          "rationale": "Resource scope determines the necessary authorization. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Keep run ID only locally",
+          "rationale": "A terminal variable does not make ownership inspectable on deployed resources."
+        },
+        {
+          "key": "D",
+          "text": "Remove tags after deployment",
+          "rationale": "Removing metadata undermines ownership evidence without reducing the underlying resource charges."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Reusable infrastructure needs environment-specific identity. The selected answer is parameterize or deterministically derive collision-resistant names.",
+      "explanation": "An explicit merge retains inherited context while recording this deployment's run identity. A generic course marker loses the exact run identity required for ownership. A terminal variable does not make ownership inspectable on deployed resources. Removing metadata undermines ownership evidence without reducing the underlying resource charges.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q037",
       "checkpointId": "CP1",
-      "caseId": "L17-C08",
-      "task": "diagnosis",
-      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Validation must establish that an output belongs to the expected subscription, owned group and resource name. Which assertion is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "A global namespace cannot accept duplicated fixed names",
-          "rationale": "The template assumes a single deployment instance. This directly addresses the constraint stated in this case."
+          "text": "Compare the complete expected resource ID",
+          "rationale": "A complete scoped ID prevents accepting similarly named resources in another context."
         },
         {
           "key": "B",
-          "text": "A preview cannot prove every execution and service condition",
-          "rationale": "Authorization and live behavior can still differ. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Compare three trailing name characters",
+          "rationale": "Short name fragments cannot establish the subscription or resource group identity."
         },
         {
           "key": "C",
-          "text": "Resource-group rights do not grant all subscription operations",
-          "rationale": "The failed action is outside the existing boundary. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Accept any course-tagged resource",
+          "rationale": "A shared course tag can include other learners' or runs' resources."
+        },
+        {
+          "key": "D",
+          "text": "Accept any parseable JSON result",
+          "rationale": "Successful JSON parsing cannot establish ownership or the expected target identity."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The template assumes a single deployment instance. The selected answer is a global namespace cannot accept duplicated fixed names.",
+      "explanation": "A complete scoped ID prevents accepting similarly named resources in another context. Short name fragments cannot establish the subscription or resource group identity. A shared course tag can include other learners' or runs' resources. Successful JSON parsing cannot establish ownership or the expected target identity.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q038",
       "checkpointId": "CP1",
-      "caseId": "L17-C08",
-      "task": "verification",
-      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "The core deploys a managed identity without assigning broad permissions. What is true immediately after that identity is created?",
       "options": [
         {
           "key": "A",
-          "text": "The intended scoped operation succeeds without unrelated elevation",
-          "rationale": "The repair should not require blanket subscription access. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "It needs no audience review",
+          "rationale": "Authentication targets and authorization scopes still require explicit design and validation."
         },
         {
           "key": "B",
-          "text": "Two isolated deployments produce distinct valid names",
-          "rationale": "The test should demonstrate reuse across environments. This directly addresses the constraint stated in this case."
+          "text": "Authorization still requires scoped grants",
+          "rationale": "Creating a principal establishes identity rather than automatically granting protected resource access."
         },
         {
           "key": "C",
-          "text": "A safe test deployment passes required functional probes",
-          "rationale": "Actual behavior must support the planning conclusion. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "It administers every subscription resource",
+          "rationale": "Managed identity existence does not confer universal management or data-plane permissions."
+        },
+        {
+          "key": "D",
+          "text": "It inherits the learner's access",
+          "rationale": "A managed identity has its own principal and independently assigned effective permissions."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The test should demonstrate reuse across environments. The selected answer is two isolated deployments produce distinct valid names.",
+      "explanation": "Creating a principal establishes identity rather than automatically granting protected resource access. Managed identity existence does not confer universal management or data-plane permissions. A managed identity has its own principal and independently assigned effective permissions. Authentication targets and authorization scopes still require explicit design and validation.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q039",
       "checkpointId": "CP1",
-      "caseId": "L17-C08",
-      "task": "safeguard",
-      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A required security property is missing from an otherwise parseable Azure response. How should the validator classify its observation?",
       "options": [
         {
           "key": "A",
-          "text": "Separate privileged foundation changes from routine application deployment",
-          "rationale": "Different risk levels need different execution identities. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Replace null with expected value",
+          "rationale": "Substituting desired state conceals an unverified or incompatible service response."
         },
         {
           "key": "B",
-          "text": "Keep naming deterministic enough for lifecycle management",
-          "rationale": "Uncontrolled randomness can complicate updates and cleanup. This directly addresses the constraint stated in this case."
+          "text": "Pass because JSON parsed",
+          "rationale": "Parsing establishes document syntax rather than the required property value's correctness."
         },
         {
           "key": "C",
-          "text": "Use a bounded training target and cleanup procedure",
-          "rationale": "Validation should not accidentally modify unrelated resources. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Validate a similarly named account",
+          "rationale": "Changing targets breaks the exact resource identity established by deployment outputs."
+        },
+        {
+          "key": "D",
+          "text": "Fail or record incomplete evidence",
+          "rationale": "A missing value cannot demonstrate that the required security property is configured."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Uncontrolled randomness can complicate updates and cleanup. The selected answer is keep naming deterministic enough for lifecycle management.",
+      "explanation": "A missing value cannot demonstrate that the required security property is configured. Substituting desired state conceals an unverified or incompatible service response. Parsing establishes document syntax rather than the required property value's correctness. Changing targets breaks the exact resource identity established by deployment outputs.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q040",
       "checkpointId": "CP1",
-      "caseId": "L17-C08",
-      "task": "tradeoff",
-      "caseContext": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "advanced",
-      "question": "Hardcoded resource name: A reusable template embeds a globally unique service name and the second learner's deployment collides. The team selects this remedy: \"Parameterize or deterministically derive collision-resistant names.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The resource ID is correct but the deployed artifact predates the approved policy change. Which missing control prevents accepting this evidence?",
       "options": [
         {
           "key": "A",
-          "text": "Live verification can incur cost",
-          "rationale": "Choose the smallest representative environment. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Use a longer operation name",
+          "rationale": "Longer labels do not establish source provenance or equality with approved content."
         },
         {
           "key": "B",
-          "text": "More scopes and identities add orchestration work",
-          "rationale": "The separation limits routine deployment authority. That addresses a different requirement: Wrong-scope permission. It does not directly resolve this case's stated constraint."
+          "text": "Export another unrelated resource inventory",
+          "rationale": "Additional inventory cannot identify which reviewed template produced this resource configuration."
         },
         {
           "key": "C",
-          "text": "Name constraints differ across Azure resource types",
-          "rationale": "A universal naming expression may not fit every service. This directly addresses the constraint stated in this case."
+          "text": "Capture the overview blade alone",
+          "rationale": "An overview screenshot does not bind deployed configuration to the reviewed artifact."
+        },
+        {
+          "key": "D",
+          "text": "Bind deployed artifact to approved revision",
+          "rationale": "Correct target identity does not prove that approved infrastructure contents were applied."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A universal naming expression may not fit every service. The selected answer is name constraints differ across Azure resource types.",
+      "explanation": "Correct target identity does not prove that approved infrastructure contents were applied. Longer labels do not establish source provenance or equality with approved content. Additional inventory cannot identify which reviewed template produced this resource configuration. An overview screenshot does not bind deployed configuration to the reviewed artifact.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q041",
       "checkpointId": "CP4",
-      "caseId": "L17-C09",
-      "task": "remedy",
-      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which next change most directly satisfies the stated requirement?",
+      "question": "A postdeployment what-if reports no intended changes in the analyzed scope. What conclusion can the learner reasonably draw?",
       "options": [
         {
           "key": "A",
-          "text": "Output a nonsensitive reference rather than the secret value",
-          "rationale": "Downstream configuration should minimize secret transport. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "All application dependencies are healthy",
+          "rationale": "Infrastructure comparison does not exercise all runtime behavior and authorization paths."
         },
         {
           "key": "B",
-          "text": "Parameterize or deterministically derive collision-resistant names",
-          "rationale": "Reusable infrastructure needs environment-specific identity. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Future drift is impossible",
+          "rationale": "External actions can introduce configuration changes after any point-in-time state observation."
         },
         {
           "key": "C",
-          "text": "Add scoped deployment and postdeployment verification",
-          "rationale": "Planning output does not exercise the full runtime path. This directly addresses the constraint stated in this case."
+          "text": "Cleanup has deleted the resources",
+          "rationale": "A no-change comparison describes convergence rather than deletion or cleanup completion."
+        },
+        {
+          "key": "D",
+          "text": "The evaluated declaration currently appears converged",
+          "rationale": "A no-change preview supports convergence while retaining documented what-if evaluation limitations."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Planning output does not exercise the full runtime path. The selected answer is add scoped deployment and postdeployment verification.",
+      "explanation": "A no-change preview supports convergence while retaining documented what-if evaluation limitations. Infrastructure comparison does not exercise all runtime behavior and authorization paths. External actions can introduce configuration changes after any point-in-time state observation. A no-change comparison describes convergence rather than deletion or cleanup completion.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q042",
       "checkpointId": "CP4",
-      "caseId": "L17-C09",
-      "task": "diagnosis",
-      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "foundational",
-      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which explanation best accounts for the behavior or constraint described?",
+      "question": "The top-level template references a module outside the staged learner repository. What must change before the package is self-contained?",
       "options": [
         {
           "key": "A",
-          "text": "A global namespace cannot accept duplicated fixed names",
-          "rationale": "The template assumes a single deployment instance. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Document only the missing filename",
+          "rationale": "Naming a dependency does not supply its implementation to the learner."
         },
         {
           "key": "B",
-          "text": "A preview cannot prove every execution and service condition",
-          "rationale": "Authorization and live behavior can still differ. This directly addresses the constraint stated in this case."
+          "text": "Require guessing another repository",
+          "rationale": "Implicit external discovery prevents a reproducible and independently usable package contract."
         },
         {
           "key": "C",
-          "text": "Infrastructure output was used as an unrestricted secret channel",
-          "rationale": "Artifact publication expands the exposure boundary. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Package and reference the dependency",
+          "rationale": "A portable learner repository must contain all referenced local module implementation files."
+        },
+        {
+          "key": "D",
+          "text": "Keep the author's absolute path",
+          "rationale": "Author-specific filesystem dependencies prevent independent compilation from a fresh learner workspace."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Authorization and live behavior can still differ. The selected answer is a preview cannot prove every execution and service condition.",
+      "explanation": "A portable learner repository must contain all referenced local module implementation files. Author-specific filesystem dependencies prevent independent compilation from a fresh learner workspace. Naming a dependency does not supply its implementation to the learner. Implicit external discovery prevents a reproducible and independently usable package contract.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q043",
       "checkpointId": "CP4",
-      "caseId": "L17-C09",
-      "task": "verification",
-      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Production and development share infrastructure logic but need reviewed parameter differences. Which source-control arrangement supports reproducible deployment for both?",
       "options": [
         {
           "key": "A",
-          "text": "Two isolated deployments produce distinct valid names",
-          "rationale": "The test should demonstrate reuse across environments. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Hardcode production secrets in source",
+          "rationale": "Embedding credentials exposes sensitive values and makes shared logic environment dependent."
         },
         {
           "key": "B",
-          "text": "A safe test deployment passes required functional probes",
-          "rationale": "Actual behavior must support the planning conclusion. This directly addresses the constraint stated in this case."
+          "text": "Fetch arbitrary latest modules during release",
+          "rationale": "Moving dependencies can change behavior after the consuming revision was approved."
         },
         {
           "key": "C",
-          "text": "The public artifact contains only the permitted reference",
-          "rationale": "The test must inspect the published content. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Version modules and environment parameters",
+          "rationale": "Reviewed versioned declarations and inputs expose changes without duplicating infrastructure logic."
+        },
+        {
+          "key": "D",
+          "text": "Keep private edits on each agent",
+          "rationale": "Untracked agent changes cannot provide reproducible reviewed definitions across deployment environments."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Actual behavior must support the planning conclusion. The selected answer is a safe test deployment passes required functional probes.",
+      "explanation": "Reviewed versioned declarations and inputs expose changes without duplicating infrastructure logic. Untracked agent changes cannot provide reproducible reviewed definitions across deployment environments. Embedding credentials exposes sensitive values and makes shared logic environment dependent. Moving dependencies can change behavior after the consuming revision was approved.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q044",
       "checkpointId": "CP4",
-      "caseId": "L17-C09",
-      "task": "safeguard",
-      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "applied",
-      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "One analyzer warning is a justified false positive in a specific declaration. Which exception is narrowest and maintainable?",
       "options": [
         {
           "key": "A",
-          "text": "Restrict secret resolution to the task that actually needs it",
-          "rationale": "A reference should not grant broad retrieval capability. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Document a focused rule suppression",
+          "rationale": "A local justified exception preserves useful analyzer checks across the remaining source."
         },
         {
           "key": "B",
-          "text": "Keep naming deterministic enough for lifecycle management",
-          "rationale": "Uncontrolled randomness can complicate updates and cleanup. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Disable the complete analyzer",
+          "rationale": "Global disabling hides unrelated findings without addressing the specific justified exception."
         },
         {
           "key": "C",
-          "text": "Use a bounded training target and cleanup procedure",
-          "rationale": "Validation should not accidentally modify unrelated resources. This directly addresses the constraint stated in this case."
+          "text": "Remove CI compilation entirely",
+          "rationale": "Removing compilation discards correctness checks beyond the individual analyzer rule finding."
+        },
+        {
+          "key": "D",
+          "text": "Reduce all severities permanently",
+          "rationale": "Blanket weakening affects independent findings unrelated to the documented local exception."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Validation should not accidentally modify unrelated resources. The selected answer is use a bounded training target and cleanup procedure.",
+      "explanation": "A local justified exception preserves useful analyzer checks across the remaining source. Global disabling hides unrelated findings without addressing the specific justified exception. Removing compilation discards correctness checks beyond the individual analyzer rule finding. Blanket weakening affects independent findings unrelated to the documented local exception.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L17-Q045",
       "checkpointId": "CP4",
-      "caseId": "L17-C09",
-      "task": "tradeoff",
-      "caseContext": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct.",
       "objectiveIds": [
         "D3.5.3"
       ],
       "difficulty": "advanced",
-      "question": "Preview confusion: The team treats a successful what-if result as proof that deployment credentials and runtime networking are correct. The team selects this remedy: \"Add scoped deployment and postdeployment verification.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Review approved B1, but release now requests S1 and staging resources. Which gate addresses the additional capability and spending?",
       "options": [
         {
           "key": "A",
-          "text": "Name constraints differ across Azure resource types",
-          "rationale": "A universal naming expression may not fit every service. That addresses a different requirement: Hardcoded resource name. It does not directly resolve this case's stated constraint."
+          "text": "Fresh preview and explicit cost acknowledgement",
+          "rationale": "The changed input alters resources and cost beyond the original approved configuration."
         },
         {
           "key": "B",
-          "text": "Live verification can incur cost",
-          "rationale": "Choose the smallest representative environment. This directly addresses the constraint stated in this case."
+          "text": "Accept any syntactically allowed SKU",
+          "rationale": "Allowed values establish valid inputs rather than authorization for increased spending."
         },
         {
           "key": "C",
-          "text": "Reference-based designs depend on runtime identity access",
-          "rationale": "Consumers need scoped authorization to resolve protected values. That addresses a different requirement: Sensitive output reuse. It does not directly resolve this case's stated constraint."
+          "text": "Edit README while deploying immediately",
+          "rationale": "Documentation changes cannot replace review of the actual proposed resource modifications."
+        },
+        {
+          "key": "D",
+          "text": "Reuse the original B1 preview",
+          "rationale": "The old preview does not describe the selected SKU or resulting resources."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Choose the smallest representative environment. The selected answer is live verification can incur cost.",
+      "explanation": "The changed input alters resources and cost beyond the original approved configuration. Allowed values establish valid inputs rather than authorization for increased spending. Documentation changes cannot replace review of the actual proposed resource modifications. The old preview does not describe the selected SKU or resulting resources.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q046",
       "checkpointId": "CP4",
-      "caseId": "L17-C10",
-      "task": "remedy",
-      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "foundational",
-      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which next change most directly satisfies the stated requirement?",
+      "question": "Reusable definitions belong in Git, but runtime journals contain learner-specific state. Which files should the shared course version-control by default?",
       "options": [
         {
           "key": "A",
-          "text": "Add scoped deployment and postdeployment verification",
-          "rationale": "Planning output does not exercise the full runtime path. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Every build cache directory",
+          "rationale": "Generated caches do not replace authoritative reviewed infrastructure source declarations."
         },
         {
           "key": "B",
-          "text": "Output a nonsensitive reference rather than the secret value",
-          "rationale": "Downstream configuration should minimize secret transport. This directly addresses the constraint stated in this case."
+          "text": "Encrypted secrets beside their key",
+          "rationale": "Storing ciphertext together with its decryption key defeats secret access separation."
         },
         {
           "key": "C",
-          "text": "Run validation and review the what-if result",
-          "rationale": "Planned changes should be visible before applying them. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Definitions and nonsensitive parameter examples",
+          "rationale": "Portable declarations and examples preserve intent without exposing learner runtime identifiers."
+        },
+        {
+          "key": "D",
+          "text": "All learner ownership journals",
+          "rationale": "Runtime journals contain learner-specific state unsuitable for the shared training repository."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Downstream configuration should minimize secret transport. The selected answer is output a nonsensitive reference rather than the secret value.",
+      "explanation": "Portable declarations and examples preserve intent without exposing learner runtime identifiers. Runtime journals contain learner-specific state unsuitable for the shared training repository. Generated caches do not replace authoritative reviewed infrastructure source declarations. Storing ciphertext together with its decryption key defeats secret access separation.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q047",
       "checkpointId": "CP4",
-      "caseId": "L17-C10",
-      "task": "diagnosis",
-      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Cleanup has a recorded resource ID, but its current ownership marker differs. Which lifecycle response preserves the exact deletion boundary?",
       "options": [
         {
           "key": "A",
-          "text": "A preview cannot prove every execution and service condition",
-          "rationale": "Authorization and live behavior can still differ. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Delete all matching prefix resources",
+          "rationale": "Prefix deletion expands beyond the journal's exact managed resource ownership boundary."
         },
         {
           "key": "B",
-          "text": "Infrastructure output was used as an unrestricted secret channel",
-          "rationale": "Artifact publication expands the exposure boundary. This directly addresses the constraint stated in this case."
+          "text": "Overwrite the marker before deleting",
+          "rationale": "Rewriting evidence manufactures ownership instead of verifying actual deletion authorization context."
         },
         {
           "key": "C",
-          "text": "Template validity does not establish an acceptable resource diff",
-          "rationale": "A valid deployment can still weaken access. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Refuse and report the mismatch",
+          "rationale": "Exact identity alone cannot overcome a contradiction in current ownership evidence."
+        },
+        {
+          "key": "D",
+          "text": "Delete using the old name",
+          "rationale": "Historical naming cannot authorize deletion when current ownership assertions no longer match."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Artifact publication expands the exposure boundary. The selected answer is infrastructure output was used as an unrestricted secret channel.",
+      "explanation": "Exact identity alone cannot overcome a contradiction in current ownership evidence. Historical naming cannot authorize deletion when current ownership assertions no longer match. Prefix deletion expands beyond the journal's exact managed resource ownership boundary. Rewriting evidence manufactures ownership instead of verifying actual deletion authorization context.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q048",
       "checkpointId": "CP4",
-      "caseId": "L17-C10",
-      "task": "verification",
-      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "An additional module output is needed while existing consumers must keep working. Which change best preserves the output contract?",
       "options": [
         {
           "key": "A",
-          "text": "A safe test deployment passes required functional probes",
-          "rationale": "Actual behavior must support the planning conclusion. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Change an existing output's meaning",
+          "rationale": "Changing established semantics can redirect downstream operations toward unintended resource identities."
         },
         {
           "key": "B",
-          "text": "The public artifact contains only the permitted reference",
-          "rationale": "The test must inspect the published content. This directly addresses the constraint stated in this case."
+          "text": "Return the entire secret environment",
+          "rationale": "Bulk output exposes sensitive input values beyond what downstream consumers require."
         },
         {
           "key": "C",
-          "text": "The reviewed plan identifies the intended access change",
-          "rationale": "The evidence should show actual target impact. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Remove outputs and infer names",
+          "rationale": "Implicit inference breaks declared interfaces and increases coupling to resource naming details."
+        },
+        {
+          "key": "D",
+          "text": "Add a documented nonsensitive output",
+          "rationale": "An additive contract allows adoption without silently reinterpreting existing consumer references."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The test must inspect the published content. The selected answer is the public artifact contains only the permitted reference.",
+      "explanation": "An additive contract allows adoption without silently reinterpreting existing consumer references. Changing established semantics can redirect downstream operations toward unintended resource identities. Bulk output exposes sensitive input values beyond what downstream consumers require. Implicit inference breaks declared interfaces and increases coupling to resource naming details.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L17-Q049",
       "checkpointId": "CP4",
-      "caseId": "L17-C10",
-      "task": "safeguard",
-      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "applied",
-      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "The learner only compiled locally because their Azure subscription prerequisite is unavailable. Which recorded validation status is accurate?",
       "options": [
         {
           "key": "A",
-          "text": "Use a bounded training target and cleanup procedure",
-          "rationale": "Validation should not accidentally modify unrelated resources. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Cloud failure proven by missing account",
+          "rationale": "An unavailable prerequisite does not establish an unexecuted deployment's eventual result."
         },
         {
           "key": "B",
-          "text": "Restrict secret resolution to the task that actually needs it",
-          "rationale": "A reference should not grant broad retrieval capability. This directly addresses the constraint stated in this case."
+          "text": "Syntax verified; cloud execution unverified",
+          "rationale": "Local source evidence does not prove provider responses, deployment or runtime integration."
         },
         {
           "key": "C",
-          "text": "Verify subscription resource group and parameters before deployment",
-          "rationale": "Correct code can affect an incorrect target. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "Full deployment verified by compilation",
+          "rationale": "A local compiler cannot create resources or inspect live provider responses."
+        },
+        {
+          "key": "D",
+          "text": "All checkpoints passed through review",
+          "rationale": "Review cannot substitute for checkpoints requiring actual Azure service configuration observations."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A reference should not grant broad retrieval capability. The selected answer is restrict secret resolution to the task that actually needs it.",
+      "explanation": "Local source evidence does not prove provider responses, deployment or runtime integration. A local compiler cannot create resources or inspect live provider responses. Review cannot substitute for checkpoints requiring actual Azure service configuration observations. An unavailable prerequisite does not establish an unexecuted deployment's eventual result.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L17-Q050",
       "checkpointId": "CP4",
-      "caseId": "L17-C10",
-      "task": "tradeoff",
-      "caseContext": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact.",
       "objectiveIds": [
         "D3.5.4"
       ],
       "difficulty": "advanced",
-      "question": "Sensitive output reuse: A pipeline consumes a deployment output containing a connection secret and copies it into a public artifact. The team selects this remedy: \"Output a nonsensitive reference rather than the secret value.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A clean preview and retained baseline exist, but an output points outside the owned group. Which condition must block release acceptance?",
       "options": [
         {
           "key": "A",
-          "text": "Live verification can incur cost",
-          "rationale": "Choose the smallest representative environment. That addresses a different requirement: Preview confusion. It does not directly resolve this case's stated constraint."
+          "text": "Only the operation display name",
+          "rationale": "An operation label cannot authorize targets outside the journal-owned resource group."
         },
         {
           "key": "B",
-          "text": "Reference-based designs depend on runtime identity access",
-          "rationale": "Consumers need scoped authorization to resolve protected values. This directly addresses the constraint stated in this case."
+          "text": "Nothing after a clean preview",
+          "rationale": "A clean comparison does not supersede exact target ownership and scope checks."
         },
         {
           "key": "C",
-          "text": "What-if is a planning aid with limitations",
-          "rationale": "It does not guarantee every runtime outcome. That addresses a different requirement: Unreviewed infrastructure. It does not directly resolve this case's stated constraint."
+          "text": "The output scope mismatch",
+          "rationale": "Convergence evidence cannot override the explicitly required resource ownership and scope boundary."
+        },
+        {
+          "key": "D",
+          "text": "Only a slow preview duration",
+          "rationale": "Execution duration cannot resolve a contradictory resource ownership scope mismatch."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Consumers need scoped authorization to resolve protected values. The selected answer is reference-based designs depend on runtime identity access.",
+      "explanation": "Convergence evidence cannot override the explicitly required resource ownership and scope boundary. Execution duration cannot resolve a contradictory resource ownership scope mismatch. An operation label cannot authorize targets outside the journal-owned resource group. A clean comparison does not supersede exact target ownership and scope checks.",
       "sourceIds": [
         "S1",
-        "S2",
         "S3"
       ]
     }

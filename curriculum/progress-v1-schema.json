@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Privacy-preserving browser and CLI learner progress",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "exportedAt", "labs"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"}, "exportedAt": {"type": "string", "format": "date-time"},
+    "labs": {
+      "type": "object", "minProperties": 28, "maxProperties": 28, "additionalProperties": false,
+      "patternProperties": {
+        "^LAB-(0[0-9]|1[0-9]|2[0-7])$": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "validationPassed", "cleanupPassed", "assessmentScore", "updatedAt"],
+          "properties": {
+            "status": {"enum": ["not-started", "in-progress", "complete"]},
+            "validationPassed": {"type": "boolean"}, "cleanupPassed": {"type": "boolean"},
+            "assessmentScore": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+            "updatedAt": {"type": "string", "format": "date-time"}
+          },
+          "allOf": [{"if": {"properties": {"status": {"const": "complete"}}}, "then": {"properties": {"validationPassed": {"const": true}, "cleanupPassed": {"const": true}}}}]
+        }
+      }
+    }
+  }
+}

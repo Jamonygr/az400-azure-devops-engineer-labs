@@ -15,7 +15,8 @@ Learner role: **Engineering lead**. Outcome: Measure flow, quality, security, an
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D1.2.1`, `D1.2.2`, `D1.2.3`, `D1.2.4`, `D1.2.5`, `D1.2.6`, `D1.2.7`
 
@@ -84,11 +90,19 @@ packages and write ignored build output.
 
 Lead time includes waiting; cycle time covers active work. Recovery time, change-failure rate, test failures, and security findings have different denominators.
 
+Fix a measurement window and denominator before comparing teams. Deployment frequency counts deployments per interval; change-failure rate counts failed changes divided by changes, while restoration time measures the recovery interval. Lead and cycle time answer different queueing questions.
+
+The supplied observations are synthetic so the calculations are reproducible. They support testing/security/operations conversations without claiming a live enterprise dashboard. Test pass rate can improve while escaped defects worsen, and a shrinking security count can hide ageing critical findings. Use the review to choose one action and one follow-up measure.
+
 ## Task 1 — Normalize delivery observations
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.2` | explained | Normalize three synthetic completed-change observations; planning/throughput denominator choices are discussed rather than measured from a backlog. |
 
 ```powershell
 $events=@(
@@ -126,6 +140,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.3` | practiced | Calculate mean lead and cycle minutes from explicit synthetic duration fields; event timestamps are not supplied. |
+| `D1.2.6` | practiced | Calculate change-failure rate and mean recovery minutes for the failed synthetic change; deployment frequency is not calculated. |
+
 ```powershell
 $e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)
  $m=[ordered]@{meanLeadMinutes=($e|Measure-Object leadMinutes -Average).Average;meanCycleMinutes=($e|Measure-Object cycleMinutes -Average).Average;changeFailureRate=@($e|Where-Object failed).Count/$e.Count;meanRecoveryMinutes=($e|Where-Object failed|Measure-Object recoveryMinutes -Average).Average}
@@ -159,6 +178,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.4` | practiced | Sum test and failed-test counts from the three observations; escaped defects and pass-rate trends are not in the dataset. |
+| `D1.2.5` | practiced | Sum critical finding counts from synthetic observations; finding age and reachability are not in this dataset. |
 
 ```powershell
 $e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)
@@ -194,6 +218,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $runs=gh run list --repo $GhRepo --limit 20 --json databaseId,status,conclusion,createdAt,updatedAt,workflowName
  $runs|Set-Content (Join-Path $WorkRoot 'workflow-runs.json')
@@ -228,6 +254,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.1` | explained | Write a Markdown delivery review from flow.json; a live or queryable dashboard is not configured. |
+| `D1.2.7` | explained | Discuss why service operations/SLO evidence differs from this three-change review; no live operations signal is queried. |
+
 ```powershell
 $flow=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json
  $review=@("# Synthetic delivery review","Mean lead time: $($flow.meanLeadMinutes) minutes","Observed change failure rate: $($flow.changeFailureRate)","Action: investigate change b; improve failing test and critical findings before increasing release frequency.","Limit: three synthetic changes; no production SLO claim.")
@@ -258,7 +289,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/02-devops-metrics/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L02-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)
+if(@($e|Where-Object {$_.cycleMinutes -gt $_.leadMinutes -or $_.cycleMinutes -lt 0}).Count){throw 'AZ400-L02-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=999;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')
@@ -270,7 +316,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=70;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')
@@ -286,7 +332,7 @@ Replace synthetic changes with a redacted dataset and preserve denominators, tim
 & './labs/02-devops-metrics/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -317,4 +363,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

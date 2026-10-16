@@ -44,7 +44,7 @@ def validate(root=ROOT):
         require(lab_id in {f"{i:02}" for i in range(1, 26)}, f"{prefix}: invalid assessed lab")
         lab = lab_map.get(lab_id, {})
         require(path.parent.name == lab.get("slug"), f"{prefix}: slug differs from curriculum")
-        require(data.get("schemaVersion") == 1, f"{prefix}: unsupported schemaVersion")
+        require(data.get("schemaVersion") == 2, f"{prefix}: unsupported schemaVersion")
         require(data.get("verifiedDate") == "2026-10-16", f"{prefix}: verification date differs")
         sources = {s["id"]: s["url"] for s in data.get("sources", [])}
         for source_id, url in sources.items():
@@ -54,7 +54,6 @@ def validate(root=ROOT):
         require(len(questions) == 50, f"{prefix}: expected50 questions, found{len(questions)}")
         difficulties, checkpoints = Counter(), Counter()
         valid_cp = {c["id"] for c in lab.get("checkpoints", [])} or {f"CP{i}" for i in range(1, 6)}
-        case_tasks = defaultdict(set)
         for number, q in enumerate(questions, 1):
             qid = q.get("id", "")
             require(qid == f"L{lab_id}-Q{number:03}", f"{prefix}: unstable question ID {qid}")
@@ -71,7 +70,7 @@ def validate(root=ROOT):
             require(len(q.get("explanation", "").split()) >= 8, f"{qid}: explanation too short")
             options = q.get("options", [])
             keys = [o.get("key") for o in options]
-            require(len(options) >= 3 and len(set(keys)) == len(keys), f"{qid}: invalid options")
+            require(keys == list("ABCD"), f"{qid}: expected exactly four options A–D")
             texts = [normalized(o.get("text", "")) for o in options]
             require(len(set(texts)) == len(texts) and all(texts), f"{qid}: repeated/empty options")
             correct = q.get("correctAnswers", [])
@@ -88,9 +87,14 @@ def validate(root=ROOT):
             signature = (normalized(q.get("caseContext", q.get("question", ""))), q.get("task", ""), correct_text)
             require(signature not in decisions, f"Repeated assessed decision:{qid}/{decisions.get(signature)}")
             decisions[signature] = qid
-            case_tasks[q.get("caseId", qid)].add(q.get("task"))
+            require(not any(phrase in q.get("question", "") for phrase in (
+                "Which next change most directly satisfies the stated requirement",
+                "Which explanation best accounts for the behavior or constraint described",
+                "Which observation provides the strongest evidence that the requested result was achieved",
+                "Which execution safeguard most directly addresses the risk in this case",
+                "The team selects this remedy:",
+            )), f"{qid}: legacy generic five-form question remains")
         require(difficulties == Counter(foundational=15, applied=25, advanced=10), f"{prefix}: difficulty quotas {dict(difficulties)}")
-        require(len(case_tasks) == 10 and all(len(tasks) == 5 for tasks in case_tasks.values()), f"{prefix}: expected10 caselets with five distinct decisions")
         totals.update(difficulties)
     inverted = defaultdict(list)
     for i, (qid, case_id, grams) in enumerate(near_candidates):

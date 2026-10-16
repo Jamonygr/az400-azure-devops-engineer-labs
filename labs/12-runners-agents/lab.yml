@@ -28,7 +28,8 @@
       "negative": "$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if(-not $c.ephemeralRequired){throw 'Untrusted work must not reuse persistent credentials.'}\n",
       "validate": "$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if($c.dotnet -notmatch '^10\\.' -or -not $c.architecture){throw 'Runner lacks selected runtime/architecture.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'agent-capabilities.json') -Raw|ConvertFrom-Json\n if(-not $c.ephemeralRequired){throw 'Untrusted work must not reuse persistent credentials.'}\n",
       "evidence": "OS/architecture and tool versions, excluding machine/user identity.",
-      "fix": "Select a hosted image or ephemeral self-hosted image with the required SDK; pin important tools."
+      "fix": "Select a hosted image or ephemeral self-hosted image with the required SDK; pin important tools.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -39,7 +40,8 @@
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if(@($r.runners|Where-Object { $_.status -notin @('online','offline') }).Count){throw 'Unknown self-hosted runner status.'}\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if($null -eq $r.total_count){throw 'Runner inventory did not return total_count.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'github-runners.json') -Raw|ConvertFrom-Json\n if(@($r.runners|Where-Object { $_.status -notin @('online','offline') }).Count){throw 'Unknown self-hosted runner status.'}\n",
       "evidence": "Runner count/status with names and IDs redacted.",
-      "fix": "Repository admin/read access is needed; hosted runners do not appear in this endpoint."
+      "fix": "Repository admin/read access is needed; hosted runners do not appear in this endpoint.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -50,35 +52,51 @@
       "negative": "$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { -not $_.name }).Count){throw 'Pool inventory contains unnamed entries.'}\n",
       "validate": "$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if($p.Count -lt 1){throw 'No readable agent pool; external authorization required.'}\n\n$p=@(Get-Content (Join-Path $WorkRoot 'agent-pools.json') -Raw|ConvertFrom-Json)\n if(@($p|Where-Object { -not $_.name }).Count){throw 'Pool inventory contains unnamed entries.'}\n",
       "evidence": "Pool types and the separate hosted-parallelism gate.",
-      "fix": "Pool visibility does not prove available parallel jobs; verify the grant or use an approved disposable agent."
+      "fix": "Pool visibility does not prove available parallel jobs; verify the grant or use an approved disposable agent.",
+      "coverage": []
     },
     {
       "id": "CP4",
       "title": "Test outbound control-plane reachability",
-      "commands": "$r=@();foreach($hostName in @('api.github.com','dev.azure.com')){$c=[Net.Sockets.TcpClient]::new();try{$task=$c.ConnectAsync($hostName,443);if(-not $task.Wait(10000)){throw 'TCP timeout'};$r+=[ordered]@{host=$hostName;port=443;reachable=$c.Connected}}finally{$c.Dispose()}}\n $r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connectivity.json')\n",
-      "expected": "The candidate host can reach both HTTPS control planes without disabling TLS checks.",
+      "commands": "$r=@()\nforeach($hostName in @('api.github.com','dev.azure.com')){\n $response=Invoke-WebRequest -Uri \"https://$hostName/\" -Method Head -TimeoutSec 10 -SkipHttpErrorCheck\n $r+=[ordered]@{host=$hostName;port=443;reachable=($response.StatusCode -ge 200 -and $response.StatusCode -lt 500);statusCode=[int]$response.StatusCode}\n}\n$r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connectivity.json')\n",
+      "expected": "Both exact HTTPS control-plane endpoints respond within the bounded timeout; this does not prove registration, private SQL routing or available parallelism.",
       "positive": "$r=@(Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object reachable -ne $true).Count){throw 'Required control plane unavailable.'}\n",
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json\n if(@($r|Where-Object port -ne 443).Count){throw 'Unexpected outbound port.'}\n",
       "validate": "$r=@(Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json)\n if($r.Count -ne 2 -or @($r|Where-Object reachable -ne $true).Count){throw 'Required control plane unavailable.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'connectivity.json') -Raw|ConvertFrom-Json\n if(@($r|Where-Object port -ne 443).Count){throw 'Unexpected outbound port.'}\n",
       "evidence": "Host/port success only; no bearer tokens or proxy credentials.",
-      "fix": "Ask the sandbox network owner to permit required endpoints; do not disable certificate validation."
+      "fix": "Ask the sandbox network owner to permit required endpoints; do not disable certificate validation.",
+      "coverage": []
     },
     {
       "id": "CP5",
-      "title": "Choose an isolation and cost model",
-      "commands": "$design=[ordered]@{untrustedPR='hosted ephemeral';privateNetworkBuild='ephemeral self-hosted in isolated subnet';credentialLifetime='job';parallelJobs=1;estimatedIdleHours=0;persistentRegistration=$false}\n $design|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n",
-      "expected": "Public PRs and private-network workloads use separate trust boundaries.",
-      "positive": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.untrustedPR -ne 'hosted ephemeral' -or $d.credentialLifetime -ne 'job'){throw 'Runner trust design mismatch.'}\n",
-      "negative": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.persistentRegistration -or $d.parallelJobs -lt 1){throw 'Unbounded persistent agent design.'}\n",
-      "validate": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.untrustedPR -ne 'hosted ephemeral' -or $d.credentialLifetime -ne 'job'){throw 'Runner trust design mismatch.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\n if($d.persistentRegistration -or $d.parallelJobs -lt 1){throw 'Unbounded persistent agent design.'}\n",
-      "evidence": "Decision record, estimated concurrency, and cost assumptions.",
-      "fix": "Keep self-hosted registration tokens short-lived and outside artifacts; destroy worker instances after the job."
+      "title": "Execute and clean up an ephemeral worker fixture",
+      "commands": "$design=[ordered]@{untrustedPR='hosted ephemeral';privateNetworkBuild='ephemeral self-hosted in isolated subnet';credentialLifetime='job';parallelJobs=1;estimatedIdleHours=0;persistentRegistration=$false}\n $design|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n\npython (Join-Path $LabRoot 'artifacts/ephemeral_runner.py') --evidence (Join-Path $WorkRoot 'ephemeral.json')\nif($LASTEXITCODE -ne 0){throw 'Healthy ephemeral fixture failed.'}\n$saved=$PSNativeCommandUseErrorActionPreference\ntry{$PSNativeCommandUseErrorActionPreference=$false;python (Join-Path $LabRoot 'artifacts/ephemeral_runner.py') --fail-job --evidence (Join-Path $WorkRoot 'ephemeral-failed.json');$failedExit=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}\nif($failedExit -ne 1){throw 'Failed worker did not propagate failure.'}\n",
+      "expected": "A real temporary job process writes an artifact; success and failure both remove the workspace and omit credential-like environment values.",
+      "positive": "$e=Get-Content (Join-Path $WorkRoot 'ephemeral.json') -Raw|ConvertFrom-Json\nif($e.jobExitCode -ne 0 -or -not $e.workspaceRemoved -or $e.outputSha256.Length -ne 64){throw 'Healthy ephemeral lifecycle failed.'}\n",
+      "negative": "$e=Get-Content (Join-Path $WorkRoot 'ephemeral-failed.json') -Raw|ConvertFrom-Json\nif($e.jobExitCode -eq 0 -or -not $e.workspaceRemoved -or $e.credentialEnvironmentPresent){throw 'Failure cleanup/credential filtering failed.'}\n",
+      "validate": "$e=Get-Content (Join-Path $WorkRoot 'ephemeral.json') -Raw|ConvertFrom-Json\nif($e.jobExitCode -ne 0 -or -not $e.workspaceRemoved -or $e.outputSha256.Length -ne 64){throw 'Healthy ephemeral lifecycle failed.'}\n\n$e=Get-Content (Join-Path $WorkRoot 'ephemeral-failed.json') -Raw|ConvertFrom-Json\nif($e.jobExitCode -eq 0 -or -not $e.workspaceRemoved -or $e.credentialEnvironmentPresent){throw 'Failure cleanup/credential filtering failed.'}\n",
+      "evidence": "Process exit, artifact digest, workspace removal and credential filtering; no provider registration or OS isolation is claimed.",
+      "fix": "This process fixture teaches lifetime and failure cleanup. Real private workers additionally need approved registration, hardened images, network boundaries and job isolation.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.2",
+          "level": "practiced",
+          "reference": "Execute a local one-job worker fixture and observe artifact hash, credential filtering, failed-job cleanup, and workspace removal."
+        },
+        {
+          "objectiveId": "D3.3.7",
+          "level": "explained",
+          "reference": "Explain private-network/hybrid runner routing from the runner design; provider registration and network isolation are not exercised by this fixture."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='persistent privileged host';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'runner-design.json')\n",
-    "repair": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='hosted ephemeral';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n"
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='hosted ephemeral';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')\n",
+    "assert": "$r=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json\nif($r.untrustedPR -ne 'hosted ephemeral' -or $r.credentialLifetime -ne 'job'){throw 'AZ400-L12-FAULT'}\n",
+    "expectedFailure": "AZ400-L12-FAULT"
   },
   "challenge": "Design a hybrid pipeline with a public test job and a private deployment job, explicitly separating credentials, networks, image maintenance, and cost.",
   "sources": [
@@ -86,7 +104,7 @@
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/licensing/concurrent-jobs"
   ],
-  "primer": "A runner is a trust boundary with code execution and credentials. Untrusted pull requests should use ephemeral isolated workers; pool inventory does not establish available parallelism.",
+  "primer": "A runner is a trust boundary with code execution and credentials. Untrusted pull requests should use ephemeral isolated workers; pool inventory does not establish available parallelism.\n\nA self-hosted runner executes arbitrary repository code near its filesystem, network and credentials. Ephemeral registration limits reuse but is not OS isolation; a disposable VM/container and restricted routing may still be needed. Hosted concurrency entitlements are distinct from the number of registered runners.\n\nThe local worker fixture demonstrates one-job workspace creation, artifact hashing, credential-like environment filtering and cleanup after both success and failure. It does not register a GitHub runner or Azure agent, establish private-network access, or prove hostile-code containment. Use separate ephemeral private workers only after account bootstrap and never route untrusted fork code to the SQL-capable pool.",
   "architecture": {
     "title": "Agent trust boundaries and outbound control planes",
     "nodes": [
@@ -168,5 +186,10 @@
       }
     ],
     "topology": "GitHub and Azure DevOps control planes communicate through explicit outbound HTTPS boundaries. Hosted ephemeral workers handle untrusted code; a separately designed private-network worker handles approved private jobs. Both depend on a maintained pinned tool/image baseline. Inventory and TCP reachability checks do not register a machine or prove hosted parallelism availability."
-  }
+  },
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named policy fault/repair passed. Actual tool inventory and healthy/failed ephemeral worker fixtures executed; provider inventory and HTTPS responses use explicit doubles. No runner/agent registration or hostile-code isolation is claimed."
+  },
+  "solutionNotes": "Compare healthy and failed-job evidence: both must remove their workspace and avoid forwarding credential-like environment variables. Inventory reads cannot prove job capacity."
 }

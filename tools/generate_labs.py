@@ -21,6 +21,14 @@ def block(value: str) -> str:
     return f"```powershell\n{value.strip()}\n```"
 
 
+
+def coverage_table(checkpoint: dict) -> str:
+    rows=checkpoint.get('coverage',[])
+    if not rows:
+        return 'Foundation/supporting task; no additional exam-objective coverage is claimed.'
+    return '| Objective | Evidence level | Observation and limits |\n|---|---|---|\n'+'\n'.join(
+        f"| `{r['objectiveId']}` | {r['level']} | {r['reference'].replace('|','/')} |" for r in rows)
+
 def readme(lab: dict, labs: list[dict]) -> str:
     number = int(lab["id"])
     paid_note = (
@@ -53,7 +61,7 @@ Learner role: **{lab['role']}**. Outcome: {lab['outcome']}
 | Platforms | {', '.join(lab['platforms'])} |
 | Cost | {lab['cost']} — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | {lab['verification']['status']} |\n| Verification scope | {lab['verification']['scope']} |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -75,7 +83,7 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
-Official objective topic IDs: {', '.join('`'+x+'`' for x in lab['objectives']) or 'Foundation or cross-domain capstone; see the objective map.'}
+Coverage levels describe the intended learning evidence: **explained** means reasoned\nunderstanding, **practiced** means an observable isolated skill, and **integrated**\nmeans skills connected across a delivery boundary. These labels are curriculum\nclaims, not execution status. Verification above records what authors actually ran.\n\nOfficial objective topic IDs: {', '.join('`'+x+'`' for x in lab['objectives']) or 'Foundation or cross-domain capstone; see the objective map.'}
 
 | Checkpoint | Measurable behavior |
 |---|---|
@@ -122,25 +130,37 @@ packages and write ignored build output.
 {lab.get('primer', 'Trace the requested behavior to an observable result. Separate source intent, execution identity, resource ownership, and evidence: a valid local contract does not prove a live external integration. Preserve immutable artifact identities and treat denied paths as part of the design.')}
 
 """
+    if lab.get('toolVersions'):
+        intro += 'Pinned exercise tool versions: '+', '.join(f"`{name}` {version}" for name,version in lab['toolVersions'].items())+'. See the primary release sources below.\n\n'
     sections = [intro]
     for n,c in enumerate(lab["checkpoints"],1):
-        sections += [f"## Task {n} — {c['title']}\n\n<a id=\"task-{n}\"></a>\n\nCheckpoint: `{c['id']}`\n\n" + block(c['commands']),
+        sections += [f"## Task {n} — {c['title']}\n\n<a id=\"task-{n}\"></a>\n\nCheckpoint: `{c['id']}`\n\n" + coverage_table(c) + '\n\n' + block(c['commands']),
                      f"Expected state: {c['expected']}\n\nPositive validation:\n\n"+block(c['positive']),
                      "Negative validation:\n\n"+block(c['negative']),
                      f"Evidence to retain: {c['evidence']}\n\nCommon failure and safe retry: {c['fix']}\n\nCleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary."]
     bf=lab['breakFix']
-    sections += ["## Deterministic break/fix\n\nInject this fault only in the recorded sandbox or local run directory.\n\n"+block(bf['trigger']),
+    sections += ["## Deterministic break/fix\n\nRun the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.\n\n"+block(f"& './labs/{lab['slug']}/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute"),
+                 f"Expected rejection marker: `{bf['expectedFailure']}`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.\n\nInspect the independent assertion:\n\n"+block(bf['assert']),
+                 "Fault trigger (executed by BreakFix):\n\n"+block(bf['trigger']),
                  "Diagnose the precise difference:\n\n"+block(bf['diagnose']),
-                 "Repair, then repeat the affected checkpoint validation:\n\n"+block(bf['repair']),
-                 "## Optional job-style challenge\n\n"+lab['challenge'],
-                 "## Final validation and result interpretation\n\n"+block(f"& './labs/{lab['slug']}/scripts/cli/Validate.ps1' -RunId 'demo01'"),
-                 "A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.",
+                 "Repair (executed by BreakFix):\n\n"+block(bf['repair']),
+                 "## Optional job-style challenge\n\n"+lab['challenge']]
+    if lab.get('integration'):
+        integration=lab['integration']
+        sections += ["## Required protected integration lane\n\nThe five CI checkpoints are a **partial milestone**. Full capstone completion also requires this operation; repository CI has not executed the cloud lane. Review every prerequisite before activation.\n\n"+'\n'.join(f"{n}. {value}" for n,value in enumerate(integration['prerequisites'],1)),
+                     "Prepare only the owned workload after reviewing its preview, then stop for the separately authorized SQL/account prerequisites:\n\n"+block(integration['preparationCommands']),
+                     "Run the lifecycle operation after reviewing the exact integration commands below:\n\n"+block(f"& './labs/{lab['slug']}/scripts/cli/Integration.ps1' -RunId 'demo01' -Execute -AcknowledgeCost -AcknowledgeTenantChange"),
+                     "The operation executes this reviewed lane:\n\n"+block(integration['commands']),
+                     "Independent integration validation:\n\n"+block(integration['validate']),
+                     "Expected state: "+integration['expected']]
+    sections += ["## Final validation and result interpretation\n\n"+block(f"& './labs/{lab['slug']}/scripts/cli/Validate.ps1' -RunId 'demo01'"),
+                 "A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.",
                  "## Troubleshooting\n\n- **401/403:** inspect the explicit account/project/repository scope and required role; do not broaden a token reflexively.\n- **Resource or artifact missing:** confirm the exact run ID and prerequisite checkpoint; retry reads after eventual consistency.\n- **Unsupported SKU/runtime/tool:** consult the specific current source, record the gate, and obtain approval before changing cost or architecture.\n- **Validation mismatch:** inspect the positive and negative assertions separately, repair the named fault, and rerun validation.\n- **Ownership refusal:** stop; never edit a manifest to claim an unrelated resource.",
                  f"## Cleanup and residual checks\n\n"+block(f"& './labs/{lab['slug']}/scripts/cli/Cleanup.ps1' -RunId 'demo01'\n# Review the exact owned-object deletion plan first.\n& './labs/{lab['slug']}/scripts/cli/Cleanup.ps1' -RunId 'demo01' -Execute"),
                  "Cleanup must verify ownership, delete only recorded sandbox objects in dependency order, and prove parent/child absence. Retain `run.json`, `validation.json`, and `cleanup.json` locally until the audit passes. Soft-deleted or deliberately retained items must remain reported. Never purge a shared vault or delete an account, organization, or pre-existing service connection to finish a lab.",
                  "## Exam debrief and assessment\n\nExplain why each checkpoint's denied path matters, which scope authorizes it, what evidence proves it, and how it is reversed. "+("Complete the [50-question assessment](QUESTIONS.md), then review [rationales](ANSWERS.md) and repeat weak checkpoints." if 1 <= number <=25 else "This foundation/capstone is hands-on only; use its validation and recovery evidence for assessment."),
                  "## Microsoft and platform sources\n\n"+"\n".join(f"- [Primary source {i}]({url}) — reviewed 2026-10-16." for i,url in enumerate(lab['sources'],1)),
-                 "## Lifecycle scripts and worked solution\n\nUse `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning."]
+                 "## Lifecycle scripts and worked solution\n\nUse `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning."]
     return "\n\n".join(section.strip() for section in sections).rstrip()+"\n"
 
 
@@ -222,22 +242,32 @@ def render() -> dict[Path,str]:
         if len(lab['checkpoints'])!=5:raise ValueError(f"{lab['id']} requires five authored checkpoints")
         base=ROOT/'labs'/lab['slug']; outputs[base/'README.md']=readme(lab,labs)
         mmd,svg=diagram(lab);outputs[base/'diagrams/architecture.mmd']=mmd;outputs[base/'diagrams/architecture.svg']=svg
-        solution=[f"# Lab {lab['id']} worked solution",'Use this after attempting the guided tasks. Expected results describe authored behavior; no live execution is claimed.']
-        for c in lab['checkpoints']:solution.append(f"## {c['id']} — {c['title']}\n\n{c['expected']}\n\nVerify both the positive and negative probes in the lab README. {c['fix']}")
-        solution.append('## Repair and recovery\n\n'+block(lab['breakFix']['repair'])+'\n\nRerun independent validation, then preview cleanup and inspect residual evidence. A skipped external gate is partial completion.')
+        solution=[f"# Lab {lab['id']} worked solution",'Use this after attempting the guided tasks. Expected results describe authored behavior; no live execution is claimed.', '## Interpretation and reasoning\n\n'+lab['solutionNotes'], 'Author verification: **'+lab['verification']['status']+'**. '+lab['verification']['scope']]
+        for c in lab['checkpoints']:solution.append(f"## {c['id']} — {c['title']}\n\n{c['expected']}\n\n"+coverage_table(c)+f"\n\nRetain and inspect: {c['evidence']}\n\nInterpret both the passing behavior and denied path in the README. If they disagree, command success does not resolve the discrepancy. Recovery: {c['fix']}")
+        solution.append('## Repair and recovery\n\nExpected failure marker: `'+lab['breakFix']['expectedFailure']+'`. Prove the assertion rejects the trigger and accepts the repair; the journaled BreakFix operation records these transitions.\n\n'+block(lab['breakFix']['assert'])+'\n\n'+block(lab['breakFix']['repair'])+'\n\nRerun independent validation, then preview cleanup and inspect residual evidence. A skipped external gate is partial completion.')
         outputs[base/'solution/README.md']='\n\n'.join(solution)+'\n'
-    catalog=['# AZ-400 lab catalog','28 command-first labs: foundation, 25 assessed topic labs, and two end-to-end capstones. Every topic lab has 50 original questions.','| Lab | Outcome | Domain | Time | Cost |','|---|---|---|---:|---|']
-    catalog += [f"| [{l['id']}](../labs/{l['slug']}/README.md) | {l['title']} | {l['domain']} | {l['minutes']} min | {l['cost']} |" for l in labs]
+    catalog=['# AZ-400 lab catalog','28 command-first labs: foundation, 25 assessed topic labs, and two protected delivery capstones. Every topic lab has 50 original questions. Coverage levels describe curriculum evidence; author verification is separate. CI alone is partial for both capstones.','| Lab | Outcome | Time | Evidence claims (E / P / I) | Author verification |','|---|---|---:|---:|---|']
+    for lab in labs:
+        levels=[r['level'] for c in lab['checkpoints'] for r in c['coverage']]
+        counts=' / '.join(str(levels.count(x)) for x in ('explained','practiced','integrated'))
+        catalog.append(f"| [{lab['id']}](../labs/{lab['slug']}/README.md) | {lab['title']} | {lab['minutes']} min | {counts} | {lab['verification']['status']} — {lab['verification']['scope']} |")
     outputs[ROOT/'docs/lab-catalog.md']='\n\n'.join(catalog[:3])+'\n'+'\n'.join(catalog[3:])+'\n'
-    mapping=['# AZ-400 objective map','Blueprint effective **2026-07-27**; reviewed **2026-10-16**. The 86 topic names below are concise paraphrases. Consult the [official study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400) for authoritative wording.']
-    by_id={l['id']:l for l in labs}
+    mapping=['# AZ-400 objective map','Blueprint effective **2026-07-27**; reviewed **2026-10-16**. The 86 names below are concise paraphrases. Consult the [official study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400) for authoritative wording.','**Explained** means a reasoned concept or reviewed contract. **Practiced** means an observable isolated skill, including explicitly labelled local fixtures. **Integrated** connects delivery components and requires its stated external gates. An authored level does not claim that an author or learner executed it. Every linked checkpoint states observations and limits; each lab records its verification scope separately. Capstone integration claims remain pending until the protected lane passes.']
     for domain in blueprint['domains']:
         mapping.append(f"## {domain['title']} ({domain['weight']})")
-        mapping.append('| Topic ID | Topic | Labs |\n|---|---|---|')
+        table=['| Topic ID | Topic | Explained | Practiced | Integrated |','|---|---|---|---|---|']
         for group in domain['groups']:
             for obj in group['objectives']:
-                links=', '.join(f"[{i}](../labs/{by_id[i]['slug']}/README.md)" for i in obj['labs'])
-                mapping[-1]+=f"\n| `{obj['id']}` | {obj['title']} | {links} |"
+                cells=[]
+                for level in ('explained','practiced','integrated'):
+                    refs=[]
+                    for lab in labs:
+                        for n,c in enumerate(lab['checkpoints'],1):
+                            if any(r['objectiveId']==obj['id'] and r['level']==level for r in c['coverage']):
+                                refs.append(f"[{lab['id']}/{c['id']}](../labs/{lab['slug']}/README.md#task-{n})")
+                    cells.append(', '.join(refs) or '—')
+                table.append(f"| `{obj['id']}` | {obj['title']} | "+' | '.join(cells)+' |')
+        mapping.append('\n'.join(table))
     outputs[ROOT/'docs/objective-map.md']='\n\n'.join(mapping)+'\n'
     return outputs
 

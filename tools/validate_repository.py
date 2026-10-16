@@ -43,7 +43,7 @@ def main():
             assert len(checkpoint["commands"].strip()) >= 30, f"Empty command task {lab['id']}/{checkpoint['id']}"
             assert checkpoint.get("validate", "").strip(), f"Missing validator {lab['id']}/{checkpoint['id']}"
             assert not re.search(r"(?im)^\s*(?:az\s+\S+\s+(?:create|delete|update)|gh\s+\S+\s+(?:create|delete)|Set-Content|Remove-Item|New-Item)\b", checkpoint["validate"]), f"Mutating validator {lab['id']}/{checkpoint['id']}"
-        for name in ("Preflight", "Setup", "Validate", "Cleanup", "Context"):
+        for name in ("Preflight", "Setup", "Validate", "Cleanup", "Context", "BreakFix", "Integration"):
             assert (folder / "scripts/cli" / (name + ".ps1")).is_file()
         for name in ("README.md", "solution/README.md", "diagrams/architecture.mmd", "diagrams/architecture.svg"):
             assert (folder / name).is_file(), f"Missing lab asset {folder.name}/{name}"
@@ -53,6 +53,10 @@ def main():
         for fixture, schema_name in (("validation.sample.json", "validation-schema.json"), ("cleanup.sample.json", "cleanup-schema.json"), ("run.sample.json", "run-manifest-schema.json")):
             Draft202012Validator(load(ROOT / "curriculum" / schema_name)).validate(load(folder / "tests/fixtures" / fixture))
         definitions.append(definition)
+        coverage = [entry for cp in lab["checkpoints"] for entry in cp.get("coverage", [])]
+        assert set(lab["objectives"]) == {entry["objectiveId"] for entry in coverage}, f"Coverage evidence missing: {lab['id']}"
+        assert lab["breakFix"].get("assert") and lab["breakFix"].get("expectedFailure"), f"Missing break/fix assertion: {lab['id']}"
+        assert len(lab["objectives"]) < 86, f"Blanket objective claim: {lab['id']}"
     for objective in objectives:
         assert objective["labs"], f"Unmapped objective {objective['id']}"
         for lab_id in objective["labs"]:
@@ -65,13 +69,13 @@ def main():
             if not action.startswith("./"):
                 assert re.search(r"@[0-9a-f]{40}$", action), f"Action must use full SHA: {action}"
     broken = []
-    markdowns = [ROOT / "README.md"] + list((ROOT / "docs").rglob("*.md")) + list((ROOT / "labs").rglob("*.md"))
+    markdowns = [ROOT / "README.md", ROOT / "HOME.md", ROOT / "CONTRIBUTING.md"] + list((ROOT / "docs").rglob("*.md")) + list((ROOT / "labs").rglob("*.md"))
     for path in markdowns:
         text = re.sub(r"```.*?```", "", path.read_text(encoding="utf-8"), flags=re.S)
         for target in re.findall(r"!?\[[^\]]*\]\(([^\s)]+)(?:\s+[^)]*)?\)", text):
             if target.startswith(("https://", "http://", "mailto:", "#")):
                 continue
-            file_part = unquote(target.split("#")[0]).strip("<>")
+            file_part = unquote(target.split("#")[0].split("?")[0]).strip("<>")
             resolved = (path.parent / file_part).resolve()
             if not resolved.exists():
                 broken.append(f"{path.relative_to(ROOT)} -> {target}")

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import importlib.util
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -21,7 +22,7 @@ def validate(root: Path) -> list[str]:
         if not any(directory.rglob("*.*")):
             errors.append(f"Empty artifact directory: {directory.relative_to(root)}")
         for path in directory.rglob("*"):
-            if not path.is_file():
+            if not path.is_file() or "__pycache__" in path.parts:
                 continue
             relative = path.relative_to(root)
             text = path.read_text(encoding="utf-8-sig")
@@ -65,6 +66,36 @@ def validate(root: Path) -> list[str]:
     for contract in ["httpsOnly: true", "ftpsState: 'Disabled'", "Authentication=Active Directory Managed Identity", "enablePurgeProtection: true", "param labRunId string"]:
         if contract not in bicep:
             errors.append(f"Workload Bicep is missing {contract}")
+    # Validate package closure from the exact learner paths, not only the course tree.
+    spec = importlib.util.spec_from_file_location("capstone_package_contract", root / "tools/package_capstone.py")
+    packaging = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(packaging)
+    for platform in ("github", "azure-devops"):
+        packaged = packaging.sources(root, platform)
+        required = {"samples/Build-Release.ps1", "samples/.config/dotnet-tools.json", "deployment/scripts/Apply-Migration.ps1", "deployment/scripts/Verify-Release.ps1", "deployment/scripts/release_artifact.py", "deployment/templates/main.bicep", "deployment/templates/monitoring.bicep"}
+        for missing in required - packaged.keys():
+            errors.append(f"{platform}: missing packaged dependency {missing}")
+        for name, source in packaged.items():
+            if not source.is_file():
+                errors.append(f"{platform}: missing package source {name}")
+    for lab, filename in ((26, "capstone-github.yml"), (27, "capstone-azure-pipelines.yml")):
+        workflow = next((root / "labs").glob(f"{lab}-*/artifacts/{filename}"))
+        text = workflow.read_text()
+        for contract in ("production-database", "production", "Apply-Migration.ps1", "Verify-Release.ps1", "release_artifact.py", "baselineArtifactRunId", "baselineRevision"):
+            if contract not in text:
+                errors.append(f"{workflow.relative_to(root)}: protected immutable delivery contract missing {contract}")
+        if "dotnet publish" in text or "dotnet build" in text:
+            errors.append(f"{workflow.relative_to(root)}: release must promote CI bytes without rebuilding")
+    grants = (root / "labs/14-ordered-releases-databases/artifacts/database-identities.sql").read_text()
+    if "GRANT SELECT ON OBJECT::dbo.__EFMigrationsHistory" not in grants:
+        errors.append("SQL runtime readiness needs narrowly scoped migration-history SELECT")
+    for copy in ("samples/DevOps.Sql.Tests/database-identities.sql", "labs/26-capstone-github/artifacts/deployment/database-identities.sql"):
+        if (root / copy).read_text() != grants:
+            errors.append(f"SQL permission fixture drift: {copy}")
+    quality = (root / ".github/workflows/quality.yml").read_text()
+    for contract in ("Test-Coverage.ps1", "Test-Containers.ps1 -Application -SqlServer", "test_capstone_packaging.py"):
+        if contract not in quality:
+            errors.append(f"Offline CI is missing executable contract {contract}")
     print(f"Artifacts: {len(artifacts)} labs, {yaml_count} YAML documents, {json_count} JSON fixtures; syntax and static contracts inspected.")
     print("External execution remains unverified here: Azure deployments, SQL connectivity, GitHub environment approvals, Azure Pipelines service connections, paid security entitlements, and private-agent routing.")
     return errors

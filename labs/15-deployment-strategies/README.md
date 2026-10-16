@@ -15,7 +15,8 @@ Learner role: **Progressive delivery engineer**. Outcome: Practice progressive d
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.4.1`, `D3.4.3`, `D3.4.4`, `D3.4.7`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 A canary controls risk through limited exposure; A/B testing measures experiment outcomes. This synthetic core uses Development plus per-slot SQLite in /tmp only; real deployments use the protected SQL and identity lane.
 
+Progressive exposure needs both a healthy candidate and a measurable stop condition. A canary changes traffic percentage; a slot swap changes which deployment serves production; A/B experimentation asks a different product question. Neither technique automatically supplies database compatibility.
+
+This standalone exercise deliberately configures Development and per-slot SQLite in /tmp to avoid an external SQL dependency. It is training-only state and can disappear on recycle. Production-style SQL, runtime identities and private migration routing belong to the protected capstone lane. Compare the exact same package on production/staging, inspect readiness and then query the actual ten-percent routing state.
+
 ## Task 1 — Create a slot-capable App Service sandbox
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $app="az400-l15-$RunId";$app|Set-Content (Join-Path $WorkRoot 'app-name.txt')
@@ -126,6 +138,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $p=Join-Path $WorkRoot 'publish';dotnet publish (Join-Path $RepoRoot 'samples/DevOps.Api/DevOps.Api.csproj') --configuration Release --output $p
  if($LASTEXITCODE -ne 0){throw 'Publish failed.'}
@@ -159,6 +173,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.3` | practiced | Deploy and probe a staging slot separately from production. |
 
 ```powershell
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt')
@@ -200,6 +218,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.7` | practiced | Compare healthy slot probes and inspect the run-owned deployment contract. |
+
 ```powershell
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt')
  $checks=@();foreach($hostName in @("$app.azurewebsites.net","$app-staging.azurewebsites.net")){$r=Invoke-WebRequest "https://$hostName/health/ready";$checks+=[ordered]@{host=$hostName;status=[int]$r.StatusCode}}
@@ -234,6 +256,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.1` | integrated | Set and query the actual owned App Service staging traffic percentage. |
+| `D3.4.4` | explained | Reason about a compatible hotfix/rollback path; patching a production branch is not a separate executed task. |
+
 ```powershell
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt')
  az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=10 -o json|Set-Content (Join-Path $WorkRoot 'routing.json')
@@ -266,7 +293,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/15-deployment-strategies/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L15-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$app=Get-Content (Join-Path $WorkRoot 'app-name.txt');$r=az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json|ConvertFrom-Json
+if($r.staging -ne 10){throw 'AZ400-L15-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=100 -o none
@@ -278,7 +320,7 @@ Diagnose the precise difference:
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing show --subscription $SubscriptionId --resource-group $ResourceGroup --name $app -o json
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $app=Get-Content (Join-Path $WorkRoot 'app-name.txt');az webapp traffic-routing set --subscription $SubscriptionId --resource-group $ResourceGroup --name $app --distribution staging=10 -o none
@@ -294,7 +336,7 @@ Implement an observed canary abort threshold and an emergency hotfix route; comp
 & './labs/15-deployment-strategies/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -326,4 +368,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

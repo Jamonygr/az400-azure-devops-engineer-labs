@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "02",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -10,189 +10,215 @@
     {
       "id": "S2",
       "url": "https://learn.microsoft.com/en-us/azure/devops/report/powerbi/overview?view=azure-devops"
+    },
+    {
+      "id": "S3",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/report/dashboards/overview?view=azure-devops"
+    },
+    {
+      "id": "S4",
+      "url": "https://learn.microsoft.com/en-us/platform-engineering/plan"
+    },
+    {
+      "id": "S5",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/design-guides/testing"
+    },
+    {
+      "id": "S6",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction"
     }
   ],
   "questions": [
     {
       "id": "L02-Q001",
       "checkpointId": "CP2",
-      "caseId": "L02-C01",
-      "task": "remedy",
-      "caseContext": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which next change most directly satisfies the stated requirement?",
+      "question": "A request is created Monday, enters active work Thursday, and finishes Friday. Which interval measures its lead time under the Azure Boards definition?",
       "options": [
         {
           "key": "A",
-          "text": "Investigate intake queues and work-in-progress limits",
-          "rationale": "Stable execution points toward waiting as the bottleneck. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Active work to completion",
+          "rationale": "That measures cycle time and excludes the initial waiting period."
         },
         {
           "key": "B",
-          "text": "Normalize definitions before comparing team outcomes",
-          "rationale": "Equivalent queries require equivalent measurement semantics. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "First commit to deployment",
+          "rationale": "That is a source-to-release interval, not this work-item definition."
         },
         {
           "key": "C",
-          "text": "Measure lead time from creation through completion",
-          "rationale": "Lead time includes waiting before active work starts. This directly addresses the constraint stated in this case."
+          "text": "Creation to first assignment",
+          "rationale": "That measures intake delay but omits the remaining delivery time."
+        },
+        {
+          "key": "D",
+          "text": "Creation to completion",
+          "rationale": "Lead time includes the queue before active work begins."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Lead time includes waiting before active work starts. The selected answer is measure lead time from creation through completion.",
+      "explanation": "That measures cycle time and excludes the initial waiting period. That is a source-to-release interval, not this work-item definition. That measures intake delay but omits the remaining delivery time. Lead time includes the queue before active work begins.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L02-Q002",
       "checkpointId": "CP2",
-      "caseId": "L02-C01",
-      "task": "diagnosis",
-      "caseContext": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which event starts cycle-time measurement for a work item that waits several days in the backlog before implementation?",
       "options": [
         {
           "key": "A",
-          "text": "The delay occurs before work starts",
-          "rationale": "Unchanged cycle time weakens the slow-development hypothesis. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Initial creation of the work item",
+          "rationale": "Creation starts lead time, including the prework queue interval."
         },
         {
           "key": "B",
-          "text": "The populations and state transitions are not comparable",
-          "rationale": "A shared chart does not guarantee shared definitions. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Creation of the first linked pull request",
+          "rationale": "A pull-request event is not necessarily the work item's active-state transition."
         },
         {
           "key": "C",
-          "text": "Cycle time omits the initial queue interval",
-          "rationale": "Starting work and requesting work are different events. This directly addresses the constraint stated in this case."
+          "text": "Assignment of the release version label",
+          "rationale": "A release label does not define when implementation work began."
+        },
+        {
+          "key": "D",
+          "text": "Transition into an active work state",
+          "rationale": "Cycle time starts with active work rather than backlog arrival."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Starting work and requesting work are different events. The selected answer is cycle time omits the initial queue interval.",
+      "explanation": "Creation starts lead time, including the prework queue interval. A pull-request event is not necessarily the work item's active-state transition. A release label does not define when implementation work began. Cycle time starts with active work rather than backlog arrival.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L02-Q003",
       "checkpointId": "CP2",
-      "caseId": "L02-C01",
-      "task": "verification",
-      "caseContext": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "An item is created at09:00, starts work at11:00, and completes at15:00 on the same day. What are lead time and cycle time?",
       "options": [
         {
           "key": "A",
-          "text": "The reported interval includes Monday through Friday",
-          "rationale": "The customer wait metric starts when demand enters. This directly addresses the constraint stated in this case."
+          "text": "Six hours lead time and four hours cycle time",
+          "rationale": "Lead time includes two waiting hours plus four active hours."
         },
         {
           "key": "B",
-          "text": "Queue age falls while cycle time remains stable",
-          "rationale": "This isolates improvement to the identified waiting stage. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Four hours lead time and six hours cycle time",
+          "rationale": "This reverses the start events used by the two measurements."
         },
         {
           "key": "C",
-          "text": "Both teams reproduce the same metric from documented rules",
-          "rationale": "Reproducibility makes comparisons auditable and meaningful. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Two hours lead time and four hours cycle time",
+          "rationale": "The two-hour value is waiting time, not total lead time."
+        },
+        {
+          "key": "D",
+          "text": "Six hours lead time and two hours cycle time",
+          "rationale": "The two-hour interval ends at work start rather than completion."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The customer wait metric starts when demand enters. The selected answer is the reported interval includes Monday through Friday.",
+      "explanation": "Lead time includes two waiting hours plus four active hours. This reverses the start events used by the two measurements. The two-hour value is waiting time, not total lead time. The two-hour interval ends at work start rather than completion.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Created: 2026-10-12T09:00:00Z\nActive: 2026-10-12T11:00:00Z\nCompleted: 2026-10-12T15:00:00Z"
+      }
     },
     {
       "id": "L02-Q004",
       "checkpointId": "CP2",
-      "caseId": "L02-C01",
-      "task": "safeguard",
-      "caseContext": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team changes its workflow so Approved is a proposed state and Implementing is active. What must a cycle-time dashboard use consistently?",
       "options": [
         {
           "key": "A",
-          "text": "Standardize state mappings and timestamp definitions",
-          "rationale": "Different workflows otherwise produce incomparable time measures. This directly addresses the constraint stated in this case."
+          "text": "The date a pull request title first mentions the item",
+          "rationale": "Mention timing is independent of the configured work-state categories."
         },
         {
           "key": "B",
-          "text": "Compare similar work-item types and reporting windows",
-          "rationale": "Mixed cohorts can conceal the true bottleneck. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "The state-category mapping for when work actually becomes active",
+          "rationale": "The metric depends on workflow semantics rather than the displayed word alone."
         },
         {
           "key": "C",
-          "text": "Publish query definitions and data freshness with the chart",
-          "rationale": "Consumers need to know how the numbers were derived. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Different workflows otherwise produce incomparable time measures. The selected answer is standardize state mappings and timestamp definitions.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L02-Q005",
-      "checkpointId": "CP2",
-      "caseId": "L02-C01",
-      "task": "tradeoff",
-      "caseContext": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time.",
-      "objectiveIds": [
-        "D1.2.1"
-      ],
-      "difficulty": "advanced",
-      "question": "Two clocks: A ticket was created Monday, work began Thursday, and it was completed Friday; stakeholders want customer wait time. The team selects this remedy: \"Measure lead time from creation through completion.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Uniform metrics can miss legitimate workflow differences",
-          "rationale": "Use shared definitions while explaining contextual limitations. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "The alphabetically first state in each team's board",
+          "rationale": "Alphabetical order does not identify an active-work lifecycle transition."
         },
         {
-          "key": "B",
-          "text": "Lead time can rise without slower active development",
-          "rationale": "Queue delays can dominate the customer experience. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Lower queue age may require accepting less concurrent work",
-          "rationale": "Throughput and responsiveness need explicit capacity choices. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "The date a reviewer first opens the dashboard",
+          "rationale": "Dashboard viewing does not start the work item's execution interval."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Queue delays can dominate the customer experience. The selected answer is lead time can rise without slower active development.",
+      "explanation": "Mention timing is independent of the configured work-state categories. The metric depends on workflow semantics rather than the displayed word alone. Alphabetical order does not identify an active-work lifecycle transition. Dashboard viewing does not start the work item's execution interval.",
+      "sourceIds": [
+        "S1"
+      ]
+    },
+    {
+      "id": "L02-Q005",
+      "checkpointId": "CP2",
+      "objectiveIds": [
+        "D1.2.1"
+      ],
+      "difficulty": "advanced",
+      "question": "Two teams report cycle time, but one starts at triage and the other at coding. Their dashboards rank one faster. Which comparison plan is defensible?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use the smaller reported number as the organization's target for both teams",
+          "rationale": "The smaller value may simply omit work counted by the other definition."
+        },
+        {
+          "key": "B",
+          "text": "Publish the state definitions, compare equivalent cohorts, and explain remaining workflow differences",
+          "rationale": "Comparable intervals and populations are prerequisites for interpreting a cross-team ranking."
+        },
+        {
+          "key": "C",
+          "text": "Average both dashboards and use the combined number as a common baseline",
+          "rationale": "Combining unlike definitions does not remove the underlying measurement mismatch."
+        },
+        {
+          "key": "D",
+          "text": "Normalize only by developer headcount and keep the different start states",
+          "rationale": "Headcount adjustment cannot make different elapsed-time definitions equivalent."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "The smaller value may simply omit work counted by the other definition. Comparable intervals and populations are prerequisites for interpreting a cross-team ranking. Combining unlike definitions does not remove the underlying measurement mismatch. Headcount adjustment cannot make different elapsed-time definitions equivalent.",
       "sourceIds": [
         "S1",
         "S2"
@@ -201,146 +227,156 @@
     {
       "id": "L02-Q006",
       "checkpointId": "CP2",
-      "caseId": "L02-C02",
-      "task": "remedy",
-      "caseContext": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which next change most directly satisfies the stated requirement?",
+      "question": "Lead time increases while cycle time remains stable for comparable work items. Which investigation should receive the first attention?",
       "options": [
         {
           "key": "A",
-          "text": "Separate planning metrics by comparable work-item class",
-          "rationale": "Comparable units make trend interpretation meaningful. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Test-agent CPU during active validation",
+          "rationale": "That work is inside execution, whose duration has not changed."
         },
         {
           "key": "B",
-          "text": "Measure lead time from creation through completion",
-          "rationale": "Lead time includes waiting before active work starts. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Longer deployment execution after work is completed",
+          "rationale": "That interval is not the prework queue identified by stable active-work timing."
         },
         {
           "key": "C",
-          "text": "Investigate intake queues and work-in-progress limits",
-          "rationale": "Stable execution points toward waiting as the bottleneck. This directly addresses the constraint stated in this case."
+          "text": "Waiting before active work begins",
+          "rationale": "The changed part of the total interval is outside stable active execution."
+        },
+        {
+          "key": "D",
+          "text": "Compiler optimization during development",
+          "rationale": "Stable cycle time does not initially indicate a new compilation bottleneck."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Stable execution points toward waiting as the bottleneck. The selected answer is investigate intake queues and work-in-progress limits.",
+      "explanation": "That work is inside execution, whose duration has not changed. That interval is not the prework queue identified by stable active-work timing. The changed part of the total interval is outside stable active execution. Stable cycle time does not initially indicate a new compilation bottleneck.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L02-Q007",
       "checkpointId": "CP2",
-      "caseId": "L02-C02",
-      "task": "diagnosis",
-      "caseContext": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A team completes work quickly once started, but requests wait weeks for assignment. Which metric directly reveals this queue contribution?",
       "options": [
         {
           "key": "A",
-          "text": "Heterogeneous work units distort count-based comparisons",
-          "rationale": "An epic is not equivalent to a small task. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Average active coding duration",
+          "rationale": "Coding duration is inside active work rather than the earlier queue."
         },
         {
           "key": "B",
-          "text": "Cycle time omits the initial queue interval",
-          "rationale": "Starting work and requesting work are different events. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Mean build-agent queue duration",
+          "rationale": "Agent waiting is only one delivery stage and does not isolate backlog waiting."
         },
         {
           "key": "C",
-          "text": "The delay occurs before work starts",
-          "rationale": "Unchanged cycle time weakens the slow-development hypothesis. This directly addresses the constraint stated in this case."
+          "text": "Lead time minus cycle time for consistently defined items",
+          "rationale": "The difference isolates time outside the active-to-complete interval."
+        },
+        {
+          "key": "D",
+          "text": "Mean time to restore a failed deployment",
+          "rationale": "Recovery measures incident restoration rather than waiting before implementation begins."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Unchanged cycle time weakens the slow-development hypothesis. The selected answer is the delay occurs before work starts.",
+      "explanation": "Coding duration is inside active work rather than the earlier queue. Agent waiting is only one delivery stage and does not isolate backlog waiting. The difference isolates time outside the active-to-complete interval. Recovery measures incident restoration rather than waiting before implementation begins.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L02-Q008",
       "checkpointId": "CP2",
-      "caseId": "L02-C02",
-      "task": "verification",
-      "caseContext": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "After an intake-policy change, which observation most directly supports a reduction in queue delay without changing execution speed?",
       "options": [
         {
           "key": "A",
-          "text": "Queue age falls while cycle time remains stable",
-          "rationale": "This isolates improvement to the identified waiting stage. This directly addresses the constraint stated in this case."
+          "text": "Fewer visible backlog items after hiding old requests",
+          "rationale": "Changing visibility does not demonstrate shorter actual waiting intervals."
         },
         {
           "key": "B",
-          "text": "Forecasts show consistent definitions and comparable historical cohorts",
-          "rationale": "Predictability requires a stable measurement population. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Lower lead time with similar cycle time for equivalent cohorts",
+          "rationale": "That pattern is consistent with reduced waiting before active work."
         },
         {
           "key": "C",
-          "text": "The reported interval includes Monday through Friday",
-          "rationale": "The customer wait metric starts when demand enters. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Higher pull-request count with no time measurements",
+          "rationale": "Activity volume does not establish that customers wait less."
+        },
+        {
+          "key": "D",
+          "text": "Lower cycle time and unchanged lead time",
+          "rationale": "That pattern could mean queue delay increased enough to offset faster execution."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "This isolates improvement to the identified waiting stage. The selected answer is queue age falls while cycle time remains stable.",
+      "explanation": "Changing visibility does not demonstrate shorter actual waiting intervals. That pattern is consistent with reduced waiting before active work. Activity volume does not establish that customers wait less. That pattern could mean queue delay increased enough to offset faster execution.",
       "sourceIds": [
         "S1",
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Cohort: standard completed tasks\nBefore: mean lead12days; mean cycle4days\nAfter:  mean lead7days;  mean cycle4days"
+      }
     },
     {
       "id": "L02-Q009",
       "checkpointId": "CP2",
-      "caseId": "L02-C02",
-      "task": "safeguard",
-      "caseContext": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team proposes excluding every item older than30days before publishing lead-time improvement. Why is that method risky?",
       "options": [
         {
           "key": "A",
-          "text": "Compare similar work-item types and reporting windows",
-          "rationale": "Mixed cohorts can conceal the true bottleneck. This directly addresses the constraint stated in this case."
+          "text": "Azure Boards cannot calculate lead time for completed items",
+          "rationale": "Completed work is a normal population for elapsed-time analysis."
         },
         {
           "key": "B",
-          "text": "Document filters and excluded work-item types",
-          "rationale": "Undocumented selection can make planning dashboards misleading. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Long-running items must always represent invalid data",
+          "rationale": "Duration alone does not establish that a record is erroneous."
         },
         {
           "key": "C",
-          "text": "Standardize state mappings and timestamp definitions",
-          "rationale": "Different workflows otherwise produce incomparable time measures. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "It removes precisely the long-waiting items the metric should expose",
+          "rationale": "Selective exclusion can manufacture improvement without changing the customer experience."
+        },
+        {
+          "key": "D",
+          "text": "It will necessarily overstate the duration of every recent item",
+          "rationale": "Removing old items changes population, not each remaining item's timestamps."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Mixed cohorts can conceal the true bottleneck. The selected answer is compare similar work-item types and reporting windows.",
+      "explanation": "Completed work is a normal population for elapsed-time analysis. Duration alone does not establish that a record is erroneous. Selective exclusion can manufacture improvement without changing the customer experience. Removing old items changes population, not each remaining item's timestamps.",
       "sourceIds": [
         "S1",
         "S2"
@@ -349,35 +385,37 @@
     {
       "id": "L02-Q010",
       "checkpointId": "CP2",
-      "caseId": "L02-C02",
-      "task": "tradeoff",
-      "caseContext": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Long queue: Lead time doubled while cycle time stayed stable, and work items spend most of their life waiting for assignment. The team selects this remedy: \"Investigate intake queues and work-in-progress limits.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A queue policy appears to lower average lead time, but unfinished requests are accumulating. What additional analysis prevents a misleading success claim?",
       "options": [
         {
           "key": "A",
-          "text": "Lower queue age may require accepting less concurrent work",
-          "rationale": "Throughput and responsiveness need explicit capacity choices. This directly addresses the constraint stated in this case."
+          "text": "Review aging work-in-progress and completion cohorts alongside completed-item lead time",
+          "rationale": "A completed-only trend can look healthy while uncompleted customer demand grows older."
         },
         {
           "key": "B",
-          "text": "Item counts do not measure delivered customer value",
-          "rationale": "Forecasting metrics need qualitative business context. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Compare only the most recently completed five requests",
+          "rationale": "A small recent success sample makes the uncompleted backlog even less visible."
         },
         {
           "key": "C",
-          "text": "Lead time can rise without slower active development",
-          "rationale": "Queue delays can dominate the customer experience. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Exclude blocked work from every dashboard without reporting the exclusion",
+          "rationale": "Blocked work still affects customer waiting and should not silently disappear."
+        },
+        {
+          "key": "D",
+          "text": "Replace all time measures with the number of items created",
+          "rationale": "Input volume does not establish how quickly either completed or pending work progresses."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Throughput and responsiveness need explicit capacity choices. The selected answer is lower queue age may require accepting less concurrent work.",
+      "explanation": "A completed-only trend can look healthy while uncompleted customer demand grows older. A small recent success sample makes the uncompleted backlog even less visible. Blocked work still affects customer waiting and should not silently disappear. Input volume does not establish how quickly either completed or pending work progresses.",
       "sourceIds": [
         "S1",
         "S2"
@@ -386,1304 +424,1362 @@
     {
       "id": "L02-Q011",
       "checkpointId": "CP1",
-      "caseId": "L02-C03",
-      "task": "remedy",
-      "caseContext": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes.",
       "objectiveIds": [
         "D1.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which next change most directly satisfies the stated requirement?",
+      "question": "A planning chart counts one epic and one small task as equivalent completed units. What is the main interpretive problem?",
       "options": [
         {
           "key": "A",
-          "text": "Separate planning metrics by comparable work-item class",
-          "rationale": "Comparable units make trend interpretation meaningful. This directly addresses the constraint stated in this case."
+          "text": "Completed items can never be counted for planning",
+          "rationale": "Counts can be useful when their population and interpretation are appropriate."
         },
         {
           "key": "B",
-          "text": "Measure review waiting time and rebalance reviewer capacity",
-          "rationale": "The longest waiting stage controls delivery responsiveness. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "An epic must always take exactly one sprint",
+          "rationale": "There is no universal fixed duration implied by the item type."
         },
         {
           "key": "C",
-          "text": "Investigate intake queues and work-in-progress limits",
-          "rationale": "Stable execution points toward waiting as the bottleneck. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "The units describe materially different work sizes and lifecycle levels",
+          "rationale": "A count is difficult to compare when its underlying work units differ."
+        },
+        {
+          "key": "D",
+          "text": "The two work-item types use different numeric identifiers",
+          "rationale": "Identifier magnitude is not the reason their effort units are noncomparable."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Comparable units make trend interpretation meaningful. The selected answer is separate planning metrics by comparable work-item class.",
+      "explanation": "Counts can be useful when their population and interpretation are appropriate. There is no universal fixed duration implied by the item type. A count is difficult to compare when its underlying work units differ. Identifier magnitude is not the reason their effort units are noncomparable.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q012",
       "checkpointId": "CP1",
-      "caseId": "L02-C03",
-      "task": "diagnosis",
-      "caseContext": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes.",
       "objectiveIds": [
         "D1.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which dashboard annotation makes a weekly throughput chart reproducible for another project analyst?",
       "options": [
         {
           "key": "A",
-          "text": "The development bottleneck is reviewer availability",
-          "rationale": "Faster compilation cannot remove an unanswered review queue. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Work-item type filters, completion-state definition, and reporting window",
+          "rationale": "These rules identify the population and event counted by the metric."
         },
         {
           "key": "B",
-          "text": "The delay occurs before work starts",
-          "rationale": "Unchanged cycle time weakens the slow-development hypothesis. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Only the current total of visible work items",
+          "rationale": "A snapshot total omits the filters and completion events behind the weekly trend."
         },
         {
           "key": "C",
-          "text": "Heterogeneous work units distort count-based comparisons",
-          "rationale": "An epic is not equivalent to a small task. This directly addresses the constraint stated in this case."
+          "text": "The sum of story points without its query definition",
+          "rationale": "A summary value does not define which records and state transitions were included."
+        },
+        {
+          "key": "D",
+          "text": "Only the date on which the dashboard was created",
+          "rationale": "Creation date does not identify the reporting interval or counted work population."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "An epic is not equivalent to a small task. The selected answer is heterogeneous work units distort count-based comparisons.",
+      "explanation": "These rules identify the population and event counted by the metric. A snapshot total omits the filters and completion events behind the weekly trend. A summary value does not define which records and state transitions were included. Creation date does not identify the reporting interval or counted work population.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q013",
       "checkpointId": "CP1",
-      "caseId": "L02-C03",
-      "task": "verification",
-      "caseContext": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes.",
       "objectiveIds": [
         "D1.2.2"
       ],
       "difficulty": "applied",
-      "question": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A team creates20tasks, completes12, and carries8forward. Which weekly count describes completed-item throughput under that definition?",
       "options": [
         {
           "key": "A",
-          "text": "Forecasts show consistent definitions and comparable historical cohorts",
-          "rationale": "Predictability requires a stable measurement population. This directly addresses the constraint stated in this case."
+          "text": "Thirty-two tasks",
+          "rationale": "Adding created and completed totals mixes different lifecycle events."
         },
         {
           "key": "B",
-          "text": "Time awaiting first meaningful review decreases",
-          "rationale": "That evidence targets the observed development delay. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Twelve completed tasks",
+          "rationale": "Throughput counts finished work during the reporting interval."
         },
         {
           "key": "C",
-          "text": "Queue age falls while cycle time remains stable",
-          "rationale": "This isolates improvement to the identified waiting stage. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Twenty created tasks",
+          "rationale": "That is incoming demand rather than completed output."
+        },
+        {
+          "key": "D",
+          "text": "Eight carried tasks",
+          "rationale": "That counts remaining work rather than finished work."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Adding created and completed totals mixes different lifecycle events. Throughput counts finished work during the reporting interval. That is incoming demand rather than completed output. That counts remaining work rather than finished work.",
+      "sourceIds": [
+        "S2",
+        "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Created this week:20tasks\nCompleted this week:12tasks\nCarried into next week:8tasks"
+      }
+    },
+    {
+      "id": "L02-Q014",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D1.2.2"
+      ],
+      "difficulty": "applied",
+      "question": "A dashboard presents a delivery forecast from three unusually quiet weeks without showing sample size. Which correction is most useful?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Show the sample period and uncertainty before treating the forecast as reliable",
+          "rationale": "A short atypical history limits how confidently future behavior can be inferred."
+        },
+        {
+          "key": "B",
+          "text": "Hide the dates so readers focus on the forecast",
+          "rationale": "Removing provenance makes the evidence harder to assess."
+        },
+        {
+          "key": "C",
+          "text": "Increase displayed precision from days to seconds",
+          "rationale": "Extra digits do not add information to an unrepresentative sample."
+        },
+        {
+          "key": "D",
+          "text": "Treat the last week's throughput as a guaranteed future capacity",
+          "rationale": "One observed period is not a deterministic promise about future work."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Predictability requires a stable measurement population. The selected answer is forecasts show consistent definitions and comparable historical cohorts.",
+      "explanation": "A short atypical history limits how confidently future behavior can be inferred. Removing provenance makes the evidence harder to assess. Extra digits do not add information to an unrepresentative sample. One observed period is not a deterministic promise about future work.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L02-Q014",
-      "checkpointId": "CP1",
-      "caseId": "L02-C03",
-      "task": "safeguard",
-      "caseContext": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes.",
-      "objectiveIds": [
-        "D1.2.2"
-      ],
-      "difficulty": "applied",
-      "question": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Avoid evaluating individual developers by raw commit counts",
-          "rationale": "Activity counts can incentivize fragmented or low-value work. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Compare similar work-item types and reporting windows",
-          "rationale": "Mixed cohorts can conceal the true bottleneck. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Document filters and excluded work-item types",
-          "rationale": "Undocumented selection can make planning dashboards misleading. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Undocumented selection can make planning dashboards misleading. The selected answer is document filters and excluded work-item types.",
-      "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q015",
       "checkpointId": "CP1",
-      "caseId": "L02-C03",
-      "task": "tradeoff",
-      "caseContext": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes.",
       "objectiveIds": [
         "D1.2.2"
       ],
       "difficulty": "advanced",
-      "question": "Unreliable forecasts: Planning dashboards mix large epics with small tasks, so weekly completed-item totals vary wildly without staffing changes. The team selects this remedy: \"Separate planning metrics by comparable work-item class.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Leadership wants to compare teams using task counts. One team splits work into dozens of small tasks while another uses a few large stories. What is the soundest action?",
       "options": [
         {
           "key": "A",
-          "text": "Lower queue age may require accepting less concurrent work",
-          "rationale": "Throughput and responsiveness need explicit capacity choices. That addresses a different requirement: Long queue. It does not directly resolve this case's stated constraint."
+          "text": "Explain the noncomparable units and use comparable definitions before drawing performance conclusions",
+          "rationale": "Different decomposition practices can dominate the count independently of useful delivery performance."
         },
         {
           "key": "B",
-          "text": "Item counts do not measure delivered customer value",
-          "rationale": "Forecasting metrics need qualitative business context. This directly addresses the constraint stated in this case."
+          "text": "Rank the first team higher because more completed records always means more value",
+          "rationale": "Administrative granularity is not equivalent to customer value delivered."
         },
         {
           "key": "C",
-          "text": "Review speed must preserve review quality",
-          "rationale": "Removing scrutiny can exchange delay for defects. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Force both teams to create equal numbers of records without changing work",
+          "rationale": "That would optimize the reporting artifact rather than establish meaningful comparability."
+        },
+        {
+          "key": "D",
+          "text": "Divide both counts by the number of repositories",
+          "rationale": "Repository count does not normalize differences in task decomposition or delivered value."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Forecasting metrics need qualitative business context. The selected answer is item counts do not measure delivered customer value.",
+      "explanation": "Different decomposition practices can dominate the count independently of useful delivery performance. Administrative granularity is not equivalent to customer value delivered. That would optimize the reporting artifact rather than establish meaningful comparability. Repository count does not normalize differences in task decomposition or delivered value.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q016",
       "checkpointId": "CP4",
-      "caseId": "L02-C04",
-      "task": "remedy",
-      "caseContext": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch.",
       "objectiveIds": [
         "D1.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which next change most directly satisfies the stated requirement?",
+      "question": "A service's coding time is short, but pull requests wait four days before first review. Which measure locates that development bottleneck?",
       "options": [
         {
           "key": "A",
-          "text": "Measure review waiting time and rebalance reviewer capacity",
-          "rationale": "The longest waiting stage controls delivery responsiveness. This directly addresses the constraint stated in this case."
+          "text": "Time between the production deployments",
+          "rationale": "Delivery cadence does not isolate the first-review queue of an individual change."
         },
         {
           "key": "B",
-          "text": "Track critical-path coverage and escaped defects together",
-          "rationale": "Pass rate alone says nothing about missing scenarios. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Elapsed time awaiting first meaningful review",
+          "rationale": "The observed delay is a queue at the review stage."
         },
         {
           "key": "C",
-          "text": "Separate planning metrics by comparable work-item class",
-          "rationale": "Comparable units make trend interpretation meaningful. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "End-to-end work-item lead time",
+          "rationale": "That broader interval includes other stages and does not isolate review waiting."
+        },
+        {
+          "key": "D",
+          "text": "Time spent executing the build tests",
+          "rationale": "Test execution is a different stage from waiting for human review."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The longest waiting stage controls delivery responsiveness. The selected answer is measure review waiting time and rebalance reviewer capacity.",
+      "explanation": "Delivery cadence does not isolate the first-review queue of an individual change. The observed delay is a queue at the review stage. That broader interval includes other stages and does not isolate review waiting. Test execution is a different stage from waiting for human review.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q017",
       "checkpointId": "CP4",
-      "caseId": "L02-C04",
-      "task": "diagnosis",
-      "caseContext": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch.",
       "objectiveIds": [
         "D1.2.3"
       ],
       "difficulty": "applied",
-      "question": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why would commit count be a weak sole measure of an individual engineer's development contribution?",
       "options": [
         {
           "key": "A",
-          "text": "Heterogeneous work units distort count-based comparisons",
-          "rationale": "An epic is not equivalent to a small task. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Commit count directly records how much customer value was accepted",
+          "rationale": "A source-control activity counter does not establish a business acceptance outcome."
         },
         {
           "key": "B",
-          "text": "The development bottleneck is reviewer availability",
-          "rationale": "Faster compilation cannot remove an unanswered review queue. This directly addresses the constraint stated in this case."
+          "text": "Every commit represents an equal amount of reviewed implementation",
+          "rationale": "Commit contents and scope vary substantially between changes."
         },
         {
           "key": "C",
-          "text": "The dashboard measures executed tests rather than absent tests",
-          "rationale": "A suite can pass while omitting important behavior. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "It counts activity without establishing complexity quality or customer outcome",
+          "rationale": "Commit granularity can change independently of useful engineering value."
+        },
+        {
+          "key": "D",
+          "text": "Commit count automatically normalizes squash and nonsquash workflows",
+          "rationale": "Different history policies can produce different counts for equivalent engineering changes."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Faster compilation cannot remove an unanswered review queue. The selected answer is the development bottleneck is reviewer availability.",
+      "explanation": "A source-control activity counter does not establish a business acceptance outcome. Commit contents and scope vary substantially between changes. Commit granularity can change independently of useful engineering value. Different history policies can produce different counts for equivalent engineering changes.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q018",
       "checkpointId": "CP4",
-      "caseId": "L02-C04",
-      "task": "verification",
-      "caseContext": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch.",
       "objectiveIds": [
         "D1.2.3"
       ],
       "difficulty": "applied",
-      "question": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "After adding reviewer capacity, what outcome most directly verifies improvement to the reported review queue?",
       "options": [
         {
           "key": "A",
-          "text": "Forecasts show consistent definitions and comparable historical cohorts",
-          "rationale": "Predictability requires a stable measurement population. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "More people receive notification emails",
+          "rationale": "Recipient count does not establish that reviews actually begin sooner."
         },
         {
           "key": "B",
-          "text": "Time awaiting first meaningful review decreases",
-          "rationale": "That evidence targets the observed development delay. This directly addresses the constraint stated in this case."
+          "text": "The total duration of automated unit tests falls",
+          "rationale": "Faster tests do not demonstrate that the unanswered-review queue was shortened."
         },
         {
           "key": "C",
-          "text": "Checkout integration failures are detected before release",
-          "rationale": "The new signal must correspond to customer-critical behavior. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "The same class of changes waits less time for substantive review",
+          "rationale": "The test targets the waiting stage rather than an unrelated activity total."
+        },
+        {
+          "key": "D",
+          "text": "The team writes longer pull-request descriptions",
+          "rationale": "Description length alone does not prove a shorter review queue."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "That evidence targets the observed development delay. The selected answer is time awaiting first meaningful review decreases.",
+      "explanation": "Recipient count does not establish that reviews actually begin sooner. Faster tests do not demonstrate that the unanswered-review queue was shortened. The test targets the waiting stage rather than an unrelated activity total. Description length alone does not prove a shorter review queue.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q019",
       "checkpointId": "CP4",
-      "caseId": "L02-C04",
-      "task": "safeguard",
-      "caseContext": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch.",
       "objectiveIds": [
         "D1.2.3"
       ],
       "difficulty": "applied",
-      "question": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team halves review waiting time by removing required review from sensitive changes. Which extra signal is needed before calling this an improvement?",
       "options": [
         {
           "key": "A",
-          "text": "Document filters and excluded work-item types",
-          "rationale": "Undocumented selection can make planning dashboards misleading. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Only the median review waiting time after the policy change",
+          "rationale": "The speed improvement is already known and does not establish preserved assurance."
         },
         {
           "key": "B",
-          "text": "Avoid evaluating individual developers by raw commit counts",
-          "rationale": "Activity counts can incentivize fragmented or low-value work. This directly addresses the constraint stated in this case."
+          "text": "The total number of requested reviews",
+          "rationale": "A request count does not establish whether risky changes received effective scrutiny."
         },
         {
           "key": "C",
-          "text": "Keep test failure classification separate from infrastructure faults",
-          "rationale": "Environment outages should not masquerade as product regressions. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Defect and risk outcomes for the now-faster changes",
+          "rationale": "Faster flow may have traded away the assurance that review provided."
+        },
+        {
+          "key": "D",
+          "text": "The number of merged pull requests alone",
+          "rationale": "More merges still omit the consequences of removing the quality control."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Activity counts can incentivize fragmented or low-value work. The selected answer is avoid evaluating individual developers by raw commit counts.",
+      "explanation": "The speed improvement is already known and does not establish preserved assurance. A request count does not establish whether risky changes received effective scrutiny. Faster flow may have traded away the assurance that review provided. More merges still omit the consequences of removing the quality control.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q020",
       "checkpointId": "CP4",
-      "caseId": "L02-C04",
-      "task": "tradeoff",
-      "caseContext": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch.",
       "objectiveIds": [
         "D1.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Review bottleneck: Coding finishes quickly, but pull requests wait four days for review before their changes can reach the main branch. The team selects this remedy: \"Measure review waiting time and rebalance reviewer capacity.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "An organization wants to reduce review delay without making security-sensitive changes less reliable. Which intervention and evaluation fit both goals?",
       "options": [
         {
           "key": "A",
-          "text": "More tests can increase runtime and maintenance",
-          "rationale": "Prioritize risk rather than maximizing test count. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Add qualified review capacity or smaller review batches, then compare waiting time and escaped defects",
+          "rationale": "This addresses the bottleneck while checking that the quality constraint still holds."
         },
         {
           "key": "B",
-          "text": "Item counts do not measure delivered customer value",
-          "rationale": "Forecasting metrics need qualitative business context. That addresses a different requirement: Unreliable forecasts. It does not directly resolve this case's stated constraint."
+          "text": "Remove all approvals and compare only merge frequency",
+          "rationale": "That improves a speed counter while omitting the stated reliability requirement."
         },
         {
           "key": "C",
-          "text": "Review speed must preserve review quality",
-          "rationale": "Removing scrutiny can exchange delay for defects. This directly addresses the constraint stated in this case."
+          "text": "Reward reviewers only for approving the largest number of requests",
+          "rationale": "The incentive can favor superficial approvals over useful independent review."
+        },
+        {
+          "key": "D",
+          "text": "Ignore low-volume sensitive changes because they weaken the overall average",
+          "rationale": "Excluding the highest-risk class would hide rather than satisfy the reliability constraint."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Removing scrutiny can exchange delay for defects. The selected answer is review speed must preserve review quality.",
+      "explanation": "This addresses the bottleneck while checking that the quality constraint still holds. That improves a speed counter while omitting the stated reliability requirement. The incentive can favor superficial approvals over useful independent review. Excluding the highest-risk class would hide rather than satisfy the reliability constraint.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q021",
       "checkpointId": "CP3",
-      "caseId": "L02-C05",
-      "task": "remedy",
-      "caseContext": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout.",
       "objectiveIds": [
         "D1.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which next change most directly satisfies the stated requirement?",
+      "question": "All executed unit tests pass, but no test exercises checkout against its database. What does the pass rate establish?",
       "options": [
         {
           "key": "A",
-          "text": "Measure remediation age and justified risk dispositions",
-          "rationale": "Suppression volume is not evidence of risk reduction. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Only that the tests actually executed did not fail",
+          "rationale": "Passing results do not establish correctness of omitted scenarios."
         },
         {
           "key": "B",
-          "text": "Measure review waiting time and rebalance reviewer capacity",
-          "rationale": "The longest waiting stage controls delivery responsiveness. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "That every customer-critical workflow has been tested",
+          "rationale": "The checkout integration is explicitly absent from the suite."
         },
         {
           "key": "C",
-          "text": "Track critical-path coverage and escaped defects together",
-          "rationale": "Pass rate alone says nothing about missing scenarios. This directly addresses the constraint stated in this case."
+          "text": "That the database schema matches every deployed application",
+          "rationale": "Isolated unit tests do not exercise actual database compatibility."
+        },
+        {
+          "key": "D",
+          "text": "That no production regression can escape",
+          "rationale": "No finite passing suite proves the absence of all defects."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Pass rate alone says nothing about missing scenarios. The selected answer is track critical-path coverage and escaped defects together.",
+      "explanation": "Passing results do not establish correctness of omitted scenarios. The checkout integration is explicitly absent from the suite. Isolated unit tests do not exercise actual database compatibility. No finite passing suite proves the absence of all defects.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S5"
       ]
     },
     {
       "id": "L02-Q022",
       "checkpointId": "CP3",
-      "caseId": "L02-C05",
-      "task": "diagnosis",
-      "caseContext": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout.",
       "objectiveIds": [
         "D1.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which dashboard pairing is most useful when assessing whether tests protect a critical customer workflow?",
       "options": [
         {
           "key": "A",
-          "text": "The metric rewards changing alert state rather than fixing exposure",
-          "rationale": "Unreviewed dismissals can hide unresolved vulnerabilities. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Build runtime and agent cost only",
+          "rationale": "Execution efficiency does not establish protection of the customer-critical workflow."
         },
         {
           "key": "B",
-          "text": "The development bottleneck is reviewer availability",
-          "rationale": "Faster compilation cannot remove an unanswered review queue. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Overall coverage and total source lines only",
+          "rationale": "Broad execution coverage can dilute a missing critical-path test and weak assertions."
         },
         {
           "key": "C",
-          "text": "The dashboard measures executed tests rather than absent tests",
-          "rationale": "A suite can pass while omitting important behavior. This directly addresses the constraint stated in this case."
+          "text": "Critical-path test coverage and defects escaping into that workflow",
+          "rationale": "The pairing connects exercised behavior with observed missed failures."
+        },
+        {
+          "key": "D",
+          "text": "Test pass percentage and total test count only",
+          "rationale": "Both can improve while omitting the critical checkout behavior that causes escaped failures."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A suite can pass while omitting important behavior. The selected answer is the dashboard measures executed tests rather than absent tests.",
+      "explanation": "Execution efficiency does not establish protection of the customer-critical workflow. Broad execution coverage can dilute a missing critical-path test and weak assertions. The pairing connects exercised behavior with observed missed failures. Both can improve while omitting the critical checkout behavior that causes escaped failures.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S5"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Unit tests:412passed\nCheckout-to-database tests:0\nLast three escaped defects:checkout schema mismatch"
+      }
     },
     {
       "id": "L02-Q023",
       "checkpointId": "CP3",
-      "caseId": "L02-C05",
-      "task": "verification",
-      "caseContext": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout.",
       "objectiveIds": [
         "D1.2.4"
       ],
       "difficulty": "applied",
-      "question": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A deliberately broken checkout behavior fails the new integration test before release. What conclusion is supported?",
       "options": [
         {
           "key": "A",
-          "text": "Critical findings have verified fixes or documented accepted risk",
-          "rationale": "The evidence must show accountable risk treatment. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "The suite's pass rate must now remain permanently100percent",
+          "rationale": "Future code or environment changes can still produce failures."
         },
         {
           "key": "B",
-          "text": "Time awaiting first meaningful review decreases",
-          "rationale": "That evidence targets the observed development delay. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "The added test can detect that specific regression",
+          "rationale": "A controlled defect provides evidence for the targeted behavior."
         },
         {
           "key": "C",
-          "text": "Checkout integration failures are detected before release",
-          "rationale": "The new signal must correspond to customer-critical behavior. This directly addresses the constraint stated in this case."
+          "text": "Every possible checkout failure is now covered",
+          "rationale": "One injected defect cannot establish complete behavioral coverage."
+        },
+        {
+          "key": "D",
+          "text": "Database outages can no longer affect the service",
+          "rationale": "Detecting failures does not eliminate runtime dependency outages."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "The new signal must correspond to customer-critical behavior. The selected answer is checkout integration failures are detected before release.",
+      "explanation": "Future code or environment changes can still produce failures. A controlled defect provides evidence for the targeted behavior. One injected defect cannot establish complete behavioral coverage. Detecting failures does not eliminate runtime dependency outages.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S5"
       ]
     },
     {
       "id": "L02-Q024",
       "checkpointId": "CP3",
-      "caseId": "L02-C05",
-      "task": "safeguard",
-      "caseContext": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout.",
       "objectiveIds": [
         "D1.2.4"
       ],
       "difficulty": "applied",
-      "question": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A test reporting chart groups product assertion failures together with runner outages. What classification improves diagnosis?",
       "options": [
         {
           "key": "A",
-          "text": "Require review of dismissal reasons and exceptions",
-          "rationale": "Uncontrolled suppression undermines the security signal. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Classify every failed run as a product defect",
+          "rationale": "That assigns infrastructure interruptions to the wrong problem class."
         },
         {
           "key": "B",
-          "text": "Avoid evaluating individual developers by raw commit counts",
-          "rationale": "Activity counts can incentivize fragmented or low-value work. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Exclude every infrastructure failure from all reporting",
+          "rationale": "Those failures still affect delivery reliability and resource use."
         },
         {
           "key": "C",
-          "text": "Keep test failure classification separate from infrastructure faults",
-          "rationale": "Environment outages should not masquerade as product regressions. This directly addresses the constraint stated in this case."
+          "text": "Count retried tests only after they eventually pass",
+          "rationale": "That hides the initial instability rather than classifying it."
+        },
+        {
+          "key": "D",
+          "text": "Separate product failures infrastructure failures and known flakes",
+          "rationale": "Different failure causes require different owners and corrective action."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Environment outages should not masquerade as product regressions. The selected answer is keep test failure classification separate from infrastructure faults.",
+      "explanation": "That assigns infrastructure interruptions to the wrong problem class. Those failures still affect delivery reliability and resource use. That hides the initial instability rather than classifying it. Different failure causes require different owners and corrective action.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S5"
       ]
     },
     {
       "id": "L02-Q025",
       "checkpointId": "CP3",
-      "caseId": "L02-C05",
-      "task": "tradeoff",
-      "caseContext": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout.",
       "objectiveIds": [
         "D1.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Green but weak tests: The build pass rate is high, yet critical payment regressions escape because no integration tests exercise checkout. The team selects this remedy: \"Track critical-path coverage and escaped defects together.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The suite grows from100to1000tests, but checkout defects continue escaping and CI takes much longer. Which assessment best avoids a misleading coverage claim?",
       "options": [
         {
           "key": "A",
-          "text": "Risk acceptance can leave exposure intentionally unresolved",
-          "rationale": "Exceptions need owners and review dates. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Delete all integration tests to restore the old execution time",
+          "rationale": "That removes boundary coverage without assessing which tests provide value."
         },
         {
           "key": "B",
-          "text": "Review speed must preserve review quality",
-          "rationale": "Removing scrutiny can exchange delay for defects. That addresses a different requirement: Review bottleneck. It does not directly resolve this case's stated constraint."
+          "text": "Use only the final pass percentage as the release-quality indicator",
+          "rationale": "The percentage can stay high while critical behavior remains untested."
         },
         {
           "key": "C",
-          "text": "More tests can increase runtime and maintenance",
-          "rationale": "Prioritize risk rather than maximizing test count. This directly addresses the constraint stated in this case."
+          "text": "Examine risk-relevant scenarios assertion quality and escaped-defect trends alongside runtime",
+          "rationale": "More test records can add cost without protecting the behavior causing customer failures."
+        },
+        {
+          "key": "D",
+          "text": "Declare success because the larger suite has more tests",
+          "rationale": "Test count does not establish that important missing scenarios were added."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Prioritize risk rather than maximizing test count. The selected answer is more tests can increase runtime and maintenance.",
+      "explanation": "That removes boundary coverage without assessing which tests provide value. The percentage can stay high while critical behavior remains untested. More test records can add cost without protecting the behavior causing customer failures. Test count does not establish that important missing scenarios were added.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S5"
       ]
     },
     {
       "id": "L02-Q026",
       "checkpointId": "CP3",
-      "caseId": "L02-C06",
-      "task": "remedy",
-      "caseContext": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings.",
       "objectiveIds": [
         "D1.2.5"
       ],
       "difficulty": "foundational",
-      "question": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which next change most directly satisfies the stated requirement?",
+      "question": "An alert count falls after all findings are dismissed without investigation. Which conclusion is justified?",
       "options": [
         {
           "key": "A",
-          "text": "Measure remediation age and justified risk dispositions",
-          "rationale": "Suppression volume is not evidence of risk reduction. This directly addresses the constraint stated in this case."
+          "text": "The report's state changed without proving reduced exposure",
+          "rationale": "Dismissal is not evidence that vulnerabilities were fixed."
         },
         {
           "key": "B",
-          "text": "Pair delivery frequency with change failure and recovery metrics",
-          "rationale": "Balanced metrics expose reliability costs of speed. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Security risk necessarily fell by the same percentage",
+          "rationale": "Alert state and actual risk treatment are different quantities."
         },
         {
           "key": "C",
-          "text": "Track critical-path coverage and escaped defects together",
-          "rationale": "Pass rate alone says nothing about missing scenarios. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Every dismissed finding was automatically patched",
+          "rationale": "Dismissal does not modify the vulnerable component."
+        },
+        {
+          "key": "D",
+          "text": "The scanner can no longer inspect the repository",
+          "rationale": "A disposition change does not necessarily disable scanning."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Suppression volume is not evidence of risk reduction. The selected answer is measure remediation age and justified risk dispositions.",
+      "explanation": "Dismissal is not evidence that vulnerabilities were fixed. Alert state and actual risk treatment are different quantities. Dismissal does not modify the vulnerable component. A disposition change does not necessarily disable scanning.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L02-Q027",
       "checkpointId": "CP3",
-      "caseId": "L02-C06",
-      "task": "diagnosis",
-      "caseContext": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings.",
       "objectiveIds": [
         "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which metric reveals whether critical security findings remain unresolved for long periods?",
       "options": [
         {
           "key": "A",
-          "text": "A single throughput metric hides failed-change consequences",
-          "rationale": "More releases do not imply better delivery outcomes. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Percentage of alerts closed including unreviewed dismissals",
+          "rationale": "A closure fraction can hide whether critical issues were actually remediated or aged."
         },
         {
           "key": "B",
-          "text": "The dashboard measures executed tests rather than absent tests",
-          "rationale": "A suite can pass while omitting important behavior. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Number of packages inventoried regardless of findings",
+          "rationale": "Inventory size does not measure the time required to treat known critical exposure."
         },
         {
           "key": "C",
-          "text": "The metric rewards changing alert state rather than fixing exposure",
-          "rationale": "Unreviewed dismissals can hide unresolved vulnerabilities. This directly addresses the constraint stated in this case."
+          "text": "Age of unresolved critical findings with accountable dispositions",
+          "rationale": "The measure includes severity duration and treatment ownership."
+        },
+        {
+          "key": "D",
+          "text": "Total findings discovered during the latest scan",
+          "rationale": "A new-findings count does not show how long existing critical exposure remains unresolved."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Unreviewed dismissals can hide unresolved vulnerabilities. The selected answer is the metric rewards changing alert state rather than fixing exposure.",
+      "explanation": "A closure fraction can hide whether critical issues were actually remediated or aged. Inventory size does not measure the time required to treat known critical exposure. The measure includes severity duration and treatment ownership. A new-findings count does not show how long existing critical exposure remains unresolved.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L02-Q028",
       "checkpointId": "CP3",
-      "caseId": "L02-C06",
-      "task": "verification",
-      "caseContext": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings.",
       "objectiveIds": [
         "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A critical dependency alert closes after a reviewed version update and a clean rescan of the delivered dependency graph. What evidence supports genuine remediation?",
       "options": [
         {
           "key": "A",
-          "text": "Checkout integration failures are detected before release",
-          "rationale": "The new signal must correspond to customer-critical behavior. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "The affected version is absent from the verified release inputs",
+          "rationale": "The evidence ties the corrective change to the actual delivered dependency."
         },
         {
           "key": "B",
-          "text": "Critical findings have verified fixes or documented accepted risk",
-          "rationale": "The evidence must show accountable risk treatment. This directly addresses the constraint stated in this case."
+          "text": "Only the dashboard's open-alert count decreased",
+          "rationale": "The count alone does not explain why the finding disappeared."
         },
         {
           "key": "C",
-          "text": "Frequency improves without higher failure rate or recovery duration",
-          "rationale": "The combined trend demonstrates sustainable delivery improvement. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "The developer added a security label to the pull request",
+          "rationale": "A label is metadata rather than proof of corrected dependency content."
+        },
+        {
+          "key": "D",
+          "text": "The repository now has fewer watchers",
+          "rationale": "Subscription activity has no bearing on the vulnerable component."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The evidence must show accountable risk treatment. The selected answer is critical findings have verified fixes or documented accepted risk.",
+      "explanation": "The evidence ties the corrective change to the actual delivered dependency. The count alone does not explain why the finding disappeared. A label is metadata rather than proof of corrected dependency content. Subscription activity has no bearing on the vulnerable component.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L02-Q029",
       "checkpointId": "CP3",
-      "caseId": "L02-C06",
-      "task": "safeguard",
-      "caseContext": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings.",
       "objectiveIds": [
         "D1.2.5"
       ],
       "difficulty": "applied",
-      "question": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Which exception record makes an accepted security risk distinguishable from an unreviewed suppressed alert?",
       "options": [
         {
           "key": "A",
-          "text": "Keep test failure classification separate from infrastructure faults",
-          "rationale": "Environment outages should not masquerade as product regressions. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "The label false-positive applied to every alert",
+          "rationale": "A universal label is not an investigated justification."
         },
         {
           "key": "B",
-          "text": "Require review of dismissal reasons and exceptions",
-          "rationale": "Uncontrolled suppression undermines the security signal. This directly addresses the constraint stated in this case."
+          "text": "A private note known only to the dismissing engineer",
+          "rationale": "Unshared reasoning does not create an auditable team decision."
         },
         {
           "key": "C",
-          "text": "Use consistent definitions for failed changes and recovery",
-          "rationale": "Changing incident boundaries can artificially improve results. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Named owner rationale scope and review or expiry date",
+          "rationale": "These fields make the deliberate treatment accountable and time bounded."
+        },
+        {
+          "key": "D",
+          "text": "A green dashboard screenshot without the finding details",
+          "rationale": "The screenshot hides the actual accepted exposure."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Uncontrolled suppression undermines the security signal. The selected answer is require review of dismissal reasons and exceptions.",
+      "explanation": "A universal label is not an investigated justification. Unshared reasoning does not create an auditable team decision. These fields make the deliberate treatment accountable and time bounded. The screenshot hides the actual accepted exposure.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L02-Q030",
       "checkpointId": "CP3",
-      "caseId": "L02-C06",
-      "task": "tradeoff",
-      "caseContext": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings.",
       "objectiveIds": [
         "D1.2.5"
       ],
       "difficulty": "advanced",
-      "question": "Misleading security chart: A project celebrates fewer open alerts after suppressing every alert, including unreviewed critical findings. The team selects this remedy: \"Measure remediation age and justified risk dispositions.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A team must report reduced exposure while some high-impact findings cannot be patched before release. Which dashboard approach is most honest?",
       "options": [
         {
           "key": "A",
-          "text": "More frequent releases can increase operational overhead",
-          "rationale": "Automation and small batches help control that cost. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Rank teams only by how quickly they click Dismiss",
+          "rationale": "The metric rewards changing alert state rather than treating exposure."
         },
         {
           "key": "B",
-          "text": "More tests can increase runtime and maintenance",
-          "rationale": "Prioritize risk rather than maximizing test count. That addresses a different requirement: Green but weak tests. It does not directly resolve this case's stated constraint."
+          "text": "Separate verified fixes accepted risks and unresolved findings, showing severity and age",
+          "rationale": "Distinct dispositions prevent accepted or ignored exposure from being presented as eliminated risk."
         },
         {
           "key": "C",
-          "text": "Risk acceptance can leave exposure intentionally unresolved",
-          "rationale": "Exceptions need owners and review dates. This directly addresses the constraint stated in this case."
+          "text": "Combine all closed dismissed and fixed findings into one remediation success number",
+          "rationale": "That collapses materially different outcomes into a misleading claim."
+        },
+        {
+          "key": "D",
+          "text": "Remove the unpatchable findings from both numerator and denominator",
+          "rationale": "Silently excluding hard cases manufactures improvement."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Exceptions need owners and review dates. The selected answer is risk acceptance can leave exposure intentionally unresolved.",
+      "explanation": "The metric rewards changing alert state rather than treating exposure. Distinct dispositions prevent accepted or ignored exposure from being presented as eliminated risk. That collapses materially different outcomes into a misleading claim. Silently excluding hard cases manufactures improvement.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S6"
       ]
     },
     {
       "id": "L02-Q031",
       "checkpointId": "CP5",
-      "caseId": "L02-C07",
-      "task": "remedy",
-      "caseContext": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed.",
       "objectiveIds": [
         "D1.2.6"
       ],
       "difficulty": "foundational",
-      "question": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which next change most directly satisfies the stated requirement?",
+      "question": "Deployments increase from10to20per week, while failures increase from1to8. Which additional measure exposes the reliability deterioration?",
       "options": [
         {
           "key": "A",
-          "text": "Add user-facing availability latency and error indicators",
-          "rationale": "Runtime experience is distinct from pipeline completion. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Unit-test pass percentage alone",
+          "rationale": "A passing predeployment suite does not quantify actual failed production changes."
         },
         {
           "key": "B",
-          "text": "Measure remediation age and justified risk dispositions",
-          "rationale": "Suppression volume is not evidence of risk reduction. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Change failure rate",
+          "rationale": "The proportion of failed changes rises despite higher delivery frequency."
         },
         {
           "key": "C",
-          "text": "Pair delivery frequency with change failure and recovery metrics",
-          "rationale": "Balanced metrics expose reliability costs of speed. This directly addresses the constraint stated in this case."
+          "text": "Deployment frequency alone",
+          "rationale": "More deployments describe throughput but omit the proportion that creates failures."
+        },
+        {
+          "key": "D",
+          "text": "Mean source-to-release lead time alone",
+          "rationale": "Faster delivery does not reveal whether a larger fraction of changes fails."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Balanced metrics expose reliability costs of speed. The selected answer is pair delivery frequency with change failure and recovery metrics.",
+      "explanation": "A passing predeployment suite does not quantify actual failed production changes. The proportion of failed changes rises despite higher delivery frequency. More deployments describe throughput but omit the proportion that creates failures. Faster delivery does not reveal whether a larger fraction of changes fails.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q032",
       "checkpointId": "CP5",
-      "caseId": "L02-C07",
-      "task": "diagnosis",
-      "caseContext": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed.",
       "objectiveIds": [
         "D1.2.6"
       ],
       "difficulty": "foundational",
-      "question": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A week contains twenty deployments and four failed changes under the team's documented definition. What is that week's change failure rate?",
       "options": [
         {
           "key": "A",
-          "text": "A single throughput metric hides failed-change consequences",
-          "rationale": "More releases do not imply better delivery outcomes. This directly addresses the constraint stated in this case."
+          "text": "Four percent",
+          "rationale": "That treats the failure count as a percentage without the denominator."
         },
         {
           "key": "B",
-          "text": "Build health was being mistaken for service health",
-          "rationale": "Successful automation can deploy an unhealthy application. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Five percent",
+          "rationale": "That reverses the relationship by taking one over the failed count."
         },
         {
           "key": "C",
-          "text": "The metric rewards changing alert state rather than fixing exposure",
-          "rationale": "Unreviewed dismissals can hide unresolved vulnerabilities. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Eighty percent",
+          "rationale": "That is the success fraction rather than the failed-change fraction."
+        },
+        {
+          "key": "D",
+          "text": "Twenty percent",
+          "rationale": "Four failed changes divided by twenty changes is0.20."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "More releases do not imply better delivery outcomes. The selected answer is a single throughput metric hides failed-change consequences.",
+      "explanation": "That treats the failure count as a percentage without the denominator. That reverses the relationship by taking one over the failed count. That is the success fraction rather than the failed-change fraction. Four failed changes divided by twenty changes is0.20.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Deployment window:one week\nTotal changes deployed:20\nChanges meeting documented failure definition:4"
+      }
     },
     {
       "id": "L02-Q033",
       "checkpointId": "CP5",
-      "caseId": "L02-C07",
-      "task": "verification",
-      "caseContext": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed.",
       "objectiveIds": [
         "D1.2.6"
       ],
       "difficulty": "applied",
-      "question": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What observation supports sustainable delivery improvement rather than merely shipping more frequently?",
       "options": [
         {
           "key": "A",
-          "text": "Frequency improves without higher failure rate or recovery duration",
-          "rationale": "The combined trend demonstrates sustainable delivery improvement. This directly addresses the constraint stated in this case."
+          "text": "More pipeline runs regardless of whether anything is delivered",
+          "rationale": "Execution count is not equivalent to useful delivery."
         },
         {
           "key": "B",
-          "text": "A production regression appears in the operations dashboard",
-          "rationale": "The metric must reflect actual user-visible behavior. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "More emergency patches after every release",
+          "rationale": "That can indicate increased change failure rather than improvement."
         },
         {
           "key": "C",
-          "text": "Critical findings have verified fixes or documented accepted risk",
-          "rationale": "The evidence must show accountable risk treatment. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Shorter deployment duration while failed changes increase",
+          "rationale": "Task speed alone can improve while overall delivery reliability deteriorates."
+        },
+        {
+          "key": "D",
+          "text": "Higher useful delivery frequency without worse failure or recovery outcomes",
+          "rationale": "Balanced outcomes show that extra throughput did not simply shift cost into incidents."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The combined trend demonstrates sustainable delivery improvement. The selected answer is frequency improves without higher failure rate or recovery duration.",
+      "explanation": "Execution count is not equivalent to useful delivery. That can indicate increased change failure rather than improvement. Task speed alone can improve while overall delivery reliability deteriorates. Balanced outcomes show that extra throughput did not simply shift cost into incidents.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q034",
       "checkpointId": "CP5",
-      "caseId": "L02-C07",
-      "task": "safeguard",
-      "caseContext": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed.",
       "objectiveIds": [
         "D1.2.6"
       ],
       "difficulty": "applied",
-      "question": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should a team document what qualifies as a failed change before comparing quarterly release metrics?",
       "options": [
         {
           "key": "A",
-          "text": "Define ownership and response actions for breached indicators",
-          "rationale": "A dashboard alone does not restore service. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "The deployment system otherwise cannot count any runs",
+          "rationale": "The system can count runs even when business failure semantics are unclear."
         },
         {
           "key": "B",
-          "text": "Require review of dismissal reasons and exceptions",
-          "rationale": "Uncontrolled suppression undermines the security signal. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Different inclusion rules can change the rate without changing actual service behavior",
+          "rationale": "Comparable reporting requires stable definitions for both failures and changes."
         },
         {
           "key": "C",
-          "text": "Use consistent definitions for failed changes and recovery",
-          "rationale": "Changing incident boundaries can artificially improve results. This directly addresses the constraint stated in this case."
+          "text": "A written definition makes every change succeed",
+          "rationale": "Measurement documentation cannot prevent execution defects."
+        },
+        {
+          "key": "D",
+          "text": "Only failed changes may have source commit identities",
+          "rationale": "Successful changes can retain the same provenance information."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Changing incident boundaries can artificially improve results. The selected answer is use consistent definitions for failed changes and recovery.",
+      "explanation": "The system can count runs even when business failure semantics are unclear. Comparable reporting requires stable definitions for both failures and changes. Measurement documentation cannot prevent execution defects. Successful changes can retain the same provenance information.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q035",
       "checkpointId": "CP5",
-      "caseId": "L02-C07",
-      "task": "tradeoff",
-      "caseContext": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed.",
       "objectiveIds": [
         "D1.2.6"
       ],
       "difficulty": "advanced",
-      "question": "Deployment vanity metric: Release frequency increased, but failed deployments and emergency recoveries also doubled after gates were removed. The team selects this remedy: \"Pair delivery frequency with change failure and recovery metrics.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Frequency improves after removing gates, but customer-facing rollback incidents rise. Which next evaluation addresses the apparent tradeoff?",
       "options": [
         {
           "key": "A",
-          "text": "High-cardinality operational labels increase cost and complexity",
-          "rationale": "Choose dimensions that support useful diagnosis. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Replace incident reporting with the number of passing unit tests",
+          "rationale": "Predeployment test totals cannot substitute for observed production consequences."
         },
         {
           "key": "B",
-          "text": "Risk acceptance can leave exposure intentionally unresolved",
-          "rationale": "Exceptions need owners and review dates. That addresses a different requirement: Misleading security chart. It does not directly resolve this case's stated constraint."
+          "text": "Compare change failure recovery time and user impact for equivalent release cohorts",
+          "rationale": "The investigation tests whether the speed gain came at an unacceptable operational cost."
         },
         {
           "key": "C",
-          "text": "More frequent releases can increase operational overhead",
-          "rationale": "Automation and small batches help control that cost. This directly addresses the constraint stated in this case."
+          "text": "Celebrate the frequency increase and omit the new incidents",
+          "rationale": "That ignores the material reliability evidence."
+        },
+        {
+          "key": "D",
+          "text": "Restore every historical gate without examining which failures occurred",
+          "rationale": "A broad rollback of process may not target the actual regression mechanism."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Automation and small batches help control that cost. The selected answer is more frequent releases can increase operational overhead.",
+      "explanation": "Predeployment test totals cannot substitute for observed production consequences. The investigation tests whether the speed gain came at an unacceptable operational cost. That ignores the material reliability evidence. A broad rollback of process may not target the actual regression mechanism.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q036",
       "checkpointId": "CP5",
-      "caseId": "L02-C08",
-      "task": "remedy",
-      "caseContext": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent.",
       "objectiveIds": [
         "D1.2.7"
       ],
       "difficulty": "foundational",
-      "question": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which next change most directly satisfies the stated requirement?",
+      "question": "A deployment succeeds, but users immediately receive errors. Which signal directly reports the operational outcome rather than automation completion?",
       "options": [
         {
           "key": "A",
-          "text": "Pair delivery frequency with change failure and recovery metrics",
-          "rationale": "Balanced metrics expose reliability costs of speed. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "User-facing error rate",
+          "rationale": "The requested signal observes actual service behavior after deployment."
         },
         {
           "key": "B",
-          "text": "Add user-facing availability latency and error indicators",
-          "rationale": "Runtime experience is distinct from pipeline completion. This directly addresses the constraint stated in this case."
+          "text": "Pipeline task pass rate",
+          "rationale": "The automation has already succeeded despite the user-visible failure."
         },
         {
           "key": "C",
-          "text": "Show distributions and severe outliers alongside the mean",
-          "rationale": "Averages hide the shape of recovery experience. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Count of artifact upload steps",
+          "rationale": "Artifact storage does not establish runtime service health."
+        },
+        {
+          "key": "D",
+          "text": "Number of pull-request approvals",
+          "rationale": "Review evidence does not measure current production behavior."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Runtime experience is distinct from pipeline completion. The selected answer is add user-facing availability latency and error indicators.",
+      "explanation": "The requested signal observes actual service behavior after deployment. The automation has already succeeded despite the user-visible failure. Artifact storage does not establish runtime service health. Review evidence does not measure current production behavior.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q037",
       "checkpointId": "CP5",
-      "caseId": "L02-C08",
-      "task": "diagnosis",
-      "caseContext": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent.",
       "objectiveIds": [
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which operational measure is most appropriate when users complain about slow responses rather than outright request failures?",
       "options": [
         {
           "key": "A",
-          "text": "A long-tail incident strongly influences the arithmetic average",
-          "rationale": "The center alone cannot describe a skewed sample. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Latency distribution for the affected operations",
+          "rationale": "Response-time behavior directly addresses the reported experience."
         },
         {
           "key": "B",
-          "text": "A single throughput metric hides failed-change consequences",
-          "rationale": "More releases do not imply better delivery outcomes. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Request volume without response-time measurements",
+          "rationale": "Volume alone does not describe how long users wait for a response."
         },
         {
           "key": "C",
-          "text": "Build health was being mistaken for service health",
-          "rationale": "Successful automation can deploy an unhealthy application. This directly addresses the constraint stated in this case."
+          "text": "HTTP error percentage without timing data",
+          "rationale": "Requests can be slow yet successful, so errors alone miss the complaint."
+        },
+        {
+          "key": "D",
+          "text": "Build-pipeline duration for the latest commit",
+          "rationale": "Build timing does not measure current end-user request response time."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Successful automation can deploy an unhealthy application. The selected answer is build health was being mistaken for service health.",
+      "explanation": "Response-time behavior directly addresses the reported experience. Volume alone does not describe how long users wait for a response. Requests can be slow yet successful, so errors alone miss the complaint. Build timing does not measure current end-user request response time.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q038",
       "checkpointId": "CP5",
-      "caseId": "L02-C08",
-      "task": "verification",
-      "caseContext": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent.",
       "objectiveIds": [
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A production dashboard is healthy only because telemetry stopped arriving. Which additional indicator prevents that false interpretation?",
       "options": [
         {
           "key": "A",
-          "text": "The dashboard exposes median tail and exceptional incidents",
-          "rationale": "Multiple views distinguish routine behavior from rare severe events. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "The last successful pipeline completion state",
+          "rationale": "Deployment automation success does not prove the runtime collection path remains active."
         },
         {
           "key": "B",
-          "text": "Frequency improves without higher failure rate or recovery duration",
-          "rationale": "The combined trend demonstrates sustainable delivery improvement. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Telemetry freshness or collection health",
+          "rationale": "Missing observations must be distinguishable from observed healthy behavior."
         },
         {
           "key": "C",
-          "text": "A production regression appears in the operations dashboard",
-          "rationale": "The metric must reflect actual user-visible behavior. This directly addresses the constraint stated in this case."
+          "text": "The number of errors in an unverified empty stream",
+          "rationale": "Zero errors can mean missing data unless collection freshness is checked."
+        },
+        {
+          "key": "D",
+          "text": "The availability percentage from the last reporting period",
+          "rationale": "A previous healthy period cannot establish that current observations are arriving."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "The metric must reflect actual user-visible behavior. The selected answer is a production regression appears in the operations dashboard.",
+      "explanation": "Deployment automation success does not prove the runtime collection path remains active. Missing observations must be distinguishable from observed healthy behavior. Zero errors can mean missing data unless collection freshness is checked. A previous healthy period cannot establish that current observations are arriving.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q039",
       "checkpointId": "CP5",
-      "caseId": "L02-C08",
-      "task": "safeguard",
-      "caseContext": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent.",
       "objectiveIds": [
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A team labels every request with a unique customer identifier and sees telemetry costs grow sharply. Which design review is most relevant?",
       "options": [
         {
           "key": "A",
-          "text": "Define ownership and response actions for breached indicators",
-          "rationale": "A dashboard alone does not restore service. This directly addresses the constraint stated in this case."
+          "text": "Increase chart resolution to one-second intervals without changing collection",
+          "rationale": "Finer display does not reduce the high-cardinality collection burden."
         },
         {
           "key": "B",
-          "text": "Keep incident inclusion rules consistent over time",
-          "rationale": "Changing the sample invalidates historical comparison. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Move the same unique identifiers into every metric dimension",
+          "rationale": "Moving high-cardinality identifiers between collected dimensions does not reduce their cardinality."
         },
         {
           "key": "C",
-          "text": "Use consistent definitions for failed changes and recovery",
-          "rationale": "Changing incident boundaries can artificially improve results. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Increase raw telemetry retention to make the chart more complete",
+          "rationale": "Longer retention increases storage and exposure without resolving unnecessary unique dimensions."
+        },
+        {
+          "key": "D",
+          "text": "Review diagnostic value privacy and cardinality before retaining that dimension",
+          "rationale": "Unique labels can expand data volume and sensitive-data exposure."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "A dashboard alone does not restore service. The selected answer is define ownership and response actions for breached indicators.",
+      "explanation": "Finer display does not reduce the high-cardinality collection burden. Moving high-cardinality identifiers between collected dimensions does not reduce their cardinality. Longer retention increases storage and exposure without resolving unnecessary unique dimensions. Unique labels can expand data volume and sensitive-data exposure.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q040",
       "checkpointId": "CP5",
-      "caseId": "L02-C08",
-      "task": "tradeoff",
-      "caseContext": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent.",
       "objectiveIds": [
         "D1.2.7"
       ],
       "difficulty": "advanced",
-      "question": "Operational blind spot: Dashboards show pipeline success, but users experience high error rates after deployment because runtime metrics are absent. The team selects this remedy: \"Add user-facing availability latency and error indicators.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The pipeline team reports green automation while operations reports sustained customer errors. Which combined review best resolves the disagreement?",
       "options": [
         {
           "key": "A",
-          "text": "Percentiles are unstable with very small samples",
-          "rationale": "Interpret sparse operational data with its sample size. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Keep delivery-system health and runtime service health distinct, correlate by release identity, and act on user impact",
+          "rationale": "The two teams observe different layers, both of which are required to assess a release."
         },
         {
           "key": "B",
-          "text": "More frequent releases can increase operational overhead",
-          "rationale": "Automation and small batches help control that cost. That addresses a different requirement: Deployment vanity metric. It does not directly resolve this case's stated constraint."
+          "text": "Treat successful automation as authoritative and discard runtime signals",
+          "rationale": "A deployed application can be unhealthy despite successful deployment tasks."
         },
         {
           "key": "C",
-          "text": "High-cardinality operational labels increase cost and complexity",
-          "rationale": "Choose dimensions that support useful diagnosis. This directly addresses the constraint stated in this case."
+          "text": "Treat every runtime incident as proof that the build failed",
+          "rationale": "Runtime failures can occur after a correctly completed build process."
+        },
+        {
+          "key": "D",
+          "text": "Average pipeline pass percentage and HTTP error percentage into one health number",
+          "rationale": "Unlike populations and meanings should not be combined into an uninterpretable average."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Choose dimensions that support useful diagnosis. The selected answer is high-cardinality operational labels increase cost and complexity.",
+      "explanation": "The two teams observe different layers, both of which are required to assess a release. A deployed application can be unhealthy despite successful deployment tasks. Runtime failures can occur after a correctly completed build process. Unlike populations and meanings should not be combined into an uninterpretable average.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q041",
       "checkpointId": "CP2",
-      "caseId": "L02-C09",
-      "task": "remedy",
-      "caseContext": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which next change most directly satisfies the stated requirement?",
+      "question": "Nine incidents recover in ten minutes each and one takes one thousand minutes. Why can the mean alone misrepresent typical recovery?",
       "options": [
         {
           "key": "A",
-          "text": "Add user-facing availability latency and error indicators",
-          "rationale": "Runtime experience is distinct from pipeline completion. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "The arithmetic mean ignores long incidents",
+          "rationale": "The mean includes every value, including the unusually long recovery."
         },
         {
           "key": "B",
-          "text": "Show distributions and severe outliers alongside the mean",
-          "rationale": "Averages hide the shape of recovery experience. This directly addresses the constraint stated in this case."
+          "text": "The median must always equal the largest incident",
+          "rationale": "The median depends on ordered middle observations, not the maximum."
         },
         {
           "key": "C",
-          "text": "Normalize definitions before comparing team outcomes",
-          "rationale": "Equivalent queries require equivalent measurement semantics. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Ten incidents are insufficient to calculate any average",
+          "rationale": "The mean is calculable even when the sample is small."
+        },
+        {
+          "key": "D",
+          "text": "The single long incident strongly influences the average",
+          "rationale": "The distribution is highly skewed by an extreme value."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Averages hide the shape of recovery experience. The selected answer is show distributions and severe outliers alongside the mean.",
+      "explanation": "The mean includes every value, including the unusually long recovery. The median depends on ordered middle observations, not the maximum. The mean is calculable even when the sample is small. The distribution is highly skewed by an extreme value.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q042",
       "checkpointId": "CP2",
-      "caseId": "L02-C09",
-      "task": "diagnosis",
-      "caseContext": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which presentation helps readers distinguish normal recovery experience from severe outliers?",
       "options": [
         {
           "key": "A",
-          "text": "A long-tail incident strongly influences the arithmetic average",
-          "rationale": "The center alone cannot describe a skewed sample. This directly addresses the constraint stated in this case."
+          "text": "Median tail information sample size and notable outliers",
+          "rationale": "Several complementary summaries reveal a distribution better than one central value."
         },
         {
           "key": "B",
-          "text": "The populations and state transitions are not comparable",
-          "rationale": "A shared chart does not guarantee shared definitions. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Only the smallest observed recovery time",
+          "rationale": "The best case hides typical and severe incident behavior."
         },
         {
           "key": "C",
-          "text": "Build health was being mistaken for service health",
-          "rationale": "Successful automation can deploy an unhealthy application. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Only the arithmetic mean with no spread or sample information",
+          "rationale": "A single central value can still conceal the long-tail recovery behavior."
+        },
+        {
+          "key": "D",
+          "text": "An average with all long incidents silently removed",
+          "rationale": "Unexplained removal conceals the very tail risk under discussion."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "The center alone cannot describe a skewed sample. The selected answer is a long-tail incident strongly influences the arithmetic average.",
+      "explanation": "Several complementary summaries reveal a distribution better than one central value. The best case hides typical and severe incident behavior. A single central value can still conceal the long-tail recovery behavior. Unexplained removal conceals the very tail risk under discussion.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q043",
       "checkpointId": "CP2",
-      "caseId": "L02-C09",
-      "task": "verification",
-      "caseContext": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Four incidents recover in5,10,15,and90minutes. What is their median recovery time?",
       "options": [
         {
           "key": "A",
-          "text": "Both teams reproduce the same metric from documented rules",
-          "rationale": "Reproducibility makes comparisons auditable and meaningful. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Five minutes",
+          "rationale": "Five is the minimum rather than the ordered middle."
         },
         {
           "key": "B",
-          "text": "A production regression appears in the operations dashboard",
-          "rationale": "The metric must reflect actual user-visible behavior. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Twelve and a half minutes",
+          "rationale": "The middle values are10and15, whose mean is12.5."
         },
         {
           "key": "C",
-          "text": "The dashboard exposes median tail and exceptional incidents",
-          "rationale": "Multiple views distinguish routine behavior from rare severe events. This directly addresses the constraint stated in this case."
+          "text": "Thirty minutes",
+          "rationale": "Thirty is the arithmetic mean of all four durations."
+        },
+        {
+          "key": "D",
+          "text": "Ninety minutes",
+          "rationale": "Ninety is the maximum rather than the ordered middle."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Multiple views distinguish routine behavior from rare severe events. The selected answer is the dashboard exposes median tail and exceptional incidents.",
+      "explanation": "Five is the minimum rather than the ordered middle. The middle values are10and15, whose mean is12.5. Thirty is the arithmetic mean of all four durations. Ninety is the maximum rather than the ordered middle.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Recovery durations, minutes:\n5,10,15,90"
+      }
     },
     {
       "id": "L02-Q044",
       "checkpointId": "CP2",
-      "caseId": "L02-C09",
-      "task": "safeguard",
-      "caseContext": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "applied",
-      "question": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A recovery report improves because the team stops counting incidents that exceed a day. What should a reviewer challenge?",
       "options": [
         {
           "key": "A",
-          "text": "Publish query definitions and data freshness with the chart",
-          "rationale": "Consumers need to know how the numbers were derived. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Whether the retained chart rounds every value to whole minutes",
+          "rationale": "Rounding may affect display precision but does not explain deleting severe incidents."
         },
         {
           "key": "B",
-          "text": "Define ownership and response actions for breached indicators",
-          "rationale": "A dashboard alone does not restore service. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Whether the report also shows the fastest observed recovery",
+          "rationale": "The best-case value does not repair a population that silently excludes the worst cases."
         },
         {
           "key": "C",
-          "text": "Keep incident inclusion rules consistent over time",
-          "rationale": "Changing the sample invalidates historical comparison. This directly addresses the constraint stated in this case."
+          "text": "Whether the dashboard offers both a table and a chart",
+          "rationale": "Two presentations of the same biased sample preserve the inclusion problem."
+        },
+        {
+          "key": "D",
+          "text": "The unreported change in incident inclusion rules",
+          "rationale": "Removing severe cases can create an artificial trend improvement."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Changing the sample invalidates historical comparison. The selected answer is keep incident inclusion rules consistent over time.",
+      "explanation": "Rounding may affect display precision but does not explain deleting severe incidents. The best-case value does not repair a population that silently excludes the worst cases. Two presentations of the same biased sample preserve the inclusion problem. Removing severe cases can create an artificial trend improvement.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q045",
       "checkpointId": "CP2",
-      "caseId": "L02-C09",
-      "task": "tradeoff",
-      "caseContext": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow.",
       "objectiveIds": [
         "D1.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Skewed recovery average: Nine incidents recover in minutes and one lasts two days; a single mean makes the normal response look slow. The team selects this remedy: \"Show distributions and severe outliers alongside the mean.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A new service has only three incidents. Management requests a precise99th-percentile recovery target inferred from them. Which response is defensible?",
       "options": [
         {
           "key": "A",
-          "text": "Percentiles are unstable with very small samples",
-          "rationale": "Interpret sparse operational data with its sample size. This directly addresses the constraint stated in this case."
+          "text": "Report the mean to six decimal places as the99thpercentile",
+          "rationale": "Precision does not turn a mean into a tail estimate."
         },
         {
           "key": "B",
-          "text": "Uniform metrics can miss legitimate workflow differences",
-          "rationale": "Use shared definitions while explaining contextual limitations. That addresses a different requirement: Cross-team comparison. It does not directly resolve this case's stated constraint."
+          "text": "Copy another team's percentile without checking its workload or definitions",
+          "rationale": "Different populations and recovery semantics can make that comparison misleading."
         },
         {
           "key": "C",
-          "text": "High-cardinality operational labels increase cost and complexity",
-          "rationale": "Choose dimensions that support useful diagnosis. That addresses a different requirement: Operational blind spot. It does not directly resolve this case's stated constraint."
+          "text": "Show the observations and small sample, avoid false precision, and add evidence before making strong tail claims",
+          "rationale": "A sparse sample gives weak information about rare extreme recovery behavior."
+        },
+        {
+          "key": "D",
+          "text": "Treat the longest of the three as a guaranteed future upper bound",
+          "rationale": "Future incidents can exceed every historical observation."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Interpret sparse operational data with its sample size. The selected answer is percentiles are unstable with very small samples.",
+      "explanation": "Precision does not turn a mean into a tail estimate. Different populations and recovery semantics can make that comparison misleading. A sparse sample gives weak information about rare extreme recovery behavior. Future incidents can exceed every historical observation.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S4"
       ]
     },
     {
       "id": "L02-Q046",
       "checkpointId": "CP1",
-      "caseId": "L02-C10",
-      "task": "remedy",
-      "caseContext": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard.",
       "objectiveIds": [
         "D1.2.2",
         "D1.2.3",
@@ -1693,39 +1789,41 @@
         "D1.2.7"
       ],
       "difficulty": "foundational",
-      "question": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which next change most directly satisfies the stated requirement?",
+      "question": "Two teams' dashboards use different Done definitions and exclude different failures. What must be aligned before ranking their results?",
       "options": [
         {
           "key": "A",
-          "text": "Show distributions and severe outliers alongside the mean",
-          "rationale": "Averages hide the shape of recovery experience. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Only the chart type used to display each trend",
+          "rationale": "Matching visual forms can still display populations with incompatible semantics."
         },
         {
           "key": "B",
-          "text": "Normalize definitions before comparing team outcomes",
-          "rationale": "Equivalent queries require equivalent measurement semantics. This directly addresses the constraint stated in this case."
+          "text": "Measurement definitions and included populations",
+          "rationale": "A shared chart does not make unlike source semantics comparable."
         },
         {
           "key": "C",
-          "text": "Measure lead time from creation through completion",
-          "rationale": "Lead time includes waiting before active work starts. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Only the number of deployments in each team",
+          "rationale": "A common denominator cannot align different completion and failure definitions by itself."
+        },
+        {
+          "key": "D",
+          "text": "Only the timestamp at which each report was refreshed",
+          "rationale": "Equal refresh times do not make different event definitions and exclusions equivalent."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Equivalent queries require equivalent measurement semantics. The selected answer is normalize definitions before comparing team outcomes.",
+      "explanation": "Matching visual forms can still display populations with incompatible semantics. A shared chart does not make unlike source semantics comparable. A common denominator cannot align different completion and failure definitions by itself. Equal refresh times do not make different event definitions and exclusions equivalent.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q047",
       "checkpointId": "CP1",
-      "caseId": "L02-C10",
-      "task": "diagnosis",
-      "caseContext": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard.",
       "objectiveIds": [
         "D1.2.2",
         "D1.2.3",
@@ -1735,39 +1833,41 @@
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which explanation best accounts for the behavior or constraint described?",
+      "question": "An analyst changes a dashboard filter but does not update its description. Which reporting property is most directly damaged?",
       "options": [
         {
           "key": "A",
-          "text": "Cycle time omits the initial queue interval",
-          "rationale": "Starting work and requesting work are different events. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "The precision of the original recorded event timestamps",
+          "rationale": "A dashboard filter does not change timestamp precision in the source data."
         },
         {
           "key": "B",
-          "text": "A long-tail incident strongly influences the arithmetic average",
-          "rationale": "The center alone cannot describe a skewed sample. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "The original dataset refresh schedule",
+          "rationale": "Changing the report filter does not by itself change how often source data is refreshed."
         },
         {
           "key": "C",
-          "text": "The populations and state transitions are not comparable",
-          "rationale": "A shared chart does not guarantee shared definitions. This directly addresses the constraint stated in this case."
+          "text": "The access roles assigned to the underlying analytics service",
+          "rationale": "A chart-filter edit does not itself modify the service permission assignments."
+        },
+        {
+          "key": "D",
+          "text": "Reproducibility and interpretability of the displayed result",
+          "rationale": "Readers cannot explain a changed population from the unchanged description."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A shared chart does not guarantee shared definitions. The selected answer is the populations and state transitions are not comparable.",
+      "explanation": "A dashboard filter does not change timestamp precision in the source data. Changing the report filter does not by itself change how often source data is refreshed. A chart-filter edit does not itself modify the service permission assignments. Readers cannot explain a changed population from the unchanged description.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q048",
       "checkpointId": "CP1",
-      "caseId": "L02-C10",
-      "task": "verification",
-      "caseContext": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard.",
       "objectiveIds": [
         "D1.2.2",
         "D1.2.3",
@@ -1777,39 +1877,41 @@
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What should accompany a dashboard whose data source refreshes nightly while readers expect current incident conditions?",
       "options": [
         {
           "key": "A",
-          "text": "The dashboard exposes median tail and exceptional incidents",
-          "rationale": "Multiple views distinguish routine behavior from rare severe events. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Ask readers to refresh the browser every minute",
+          "rationale": "Reloading a page cannot make a nightly source refresh contain newer observations."
         },
         {
           "key": "B",
-          "text": "Both teams reproduce the same metric from documented rules",
-          "rationale": "Reproducibility makes comparisons auditable and meaningful. This directly addresses the constraint stated in this case."
+          "text": "Change the chart from a table to a line graph",
+          "rationale": "A different visualization still contains the same old underlying source data."
         },
         {
           "key": "C",
-          "text": "The reported interval includes Monday through Friday",
-          "rationale": "The customer wait metric starts when demand enters. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "A visible freshness indication and an appropriate real-time operational view",
+          "rationale": "Readers need to know that historical analytics is not a live incident signal."
+        },
+        {
+          "key": "D",
+          "text": "A label saying realtime regardless of refresh behavior",
+          "rationale": "An inaccurate label makes the existing misunderstanding worse."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Reproducibility makes comparisons auditable and meaningful. The selected answer is both teams reproduce the same metric from documented rules.",
+      "explanation": "Reloading a page cannot make a nightly source refresh contain newer observations. A different visualization still contains the same old underlying source data. Readers need to know that historical analytics is not a live incident signal. An inaccurate label makes the existing misunderstanding worse.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     },
     {
       "id": "L02-Q049",
       "checkpointId": "CP1",
-      "caseId": "L02-C10",
-      "task": "safeguard",
-      "caseContext": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard.",
       "objectiveIds": [
         "D1.2.2",
         "D1.2.3",
@@ -1819,39 +1921,45 @@
         "D1.2.7"
       ],
       "difficulty": "applied",
-      "question": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A report shows a lower failure rate after changing its denominator from deployments to all build runs. What is the key review question?",
       "options": [
         {
           "key": "A",
-          "text": "Keep incident inclusion rules consistent over time",
-          "rationale": "Changing the sample invalidates historical comparison. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Whether the chart shows both totals alongside the percentage",
+          "rationale": "Displaying totals helps inspection but still requires validating the denominator definition."
         },
         {
           "key": "B",
-          "text": "Publish query definitions and data freshness with the chart",
-          "rationale": "Consumers need to know how the numbers were derived. This directly addresses the constraint stated in this case."
+          "text": "Whether numerator and denominator still describe the same documented change population",
+          "rationale": "Adding nondelivery runs can lower the fraction without improving release reliability."
         },
         {
           "key": "C",
-          "text": "Standardize state mappings and timestamp definitions",
-          "rationale": "Different workflows otherwise produce incomparable time measures. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Whether rates are rounded consistently for display",
+          "rationale": "Rounding precision cannot correct a denominator containing nondelivery builds."
+        },
+        {
+          "key": "D",
+          "text": "Whether the report groups daily values into weekly bins",
+          "rationale": "Aggregation choice can matter, but it does not resolve the changed event population."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Consumers need to know how the numbers were derived. The selected answer is publish query definitions and data freshness with the chart.",
+      "explanation": "Displaying totals helps inspection but still requires validating the denominator definition. Adding nondelivery runs can lower the fraction without improving release reliability. Rounding precision cannot correct a denominator containing nondelivery builds. Aggregation choice can matter, but it does not resolve the changed event population.",
       "sourceIds": [
-        "S1",
-        "S2"
-      ]
+        "S2",
+        "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Prior definition: failed deployments / deployments\nNew denominator: every CI build, including nondelivery runs\nIncident population and deployment behavior: unchanged"
+      }
     },
     {
       "id": "L02-Q050",
       "checkpointId": "CP1",
-      "caseId": "L02-C10",
-      "task": "tradeoff",
-      "caseContext": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard.",
       "objectiveIds": [
         "D1.2.2",
         "D1.2.3",
@@ -1861,31 +1969,36 @@
         "D1.2.7"
       ],
       "difficulty": "advanced",
-      "question": "Cross-team comparison: Two teams use different completion states and exclude different failed runs, but leadership ranks them on one dashboard. The team selects this remedy: \"Normalize definitions before comparing team outcomes.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Leadership requests one ranking combining planning throughput, test pass rate, security dismissals, and incident recovery. What design best preserves meaning?",
       "options": [
         {
           "key": "A",
-          "text": "Percentiles are unstable with very small samples",
-          "rationale": "Interpret sparse operational data with its sample size. That addresses a different requirement: Skewed recovery average. It does not directly resolve this case's stated constraint."
+          "text": "Assign equal fixed weights before defining the populations or desired outcomes",
+          "rationale": "Arbitrary weights cannot establish semantic comparability or make the tradeoffs explicit."
         },
         {
           "key": "B",
-          "text": "Uniform metrics can miss legitimate workflow differences",
-          "rationale": "Use shared definitions while explaining contextual limitations. This directly addresses the constraint stated in this case."
+          "text": "Normalize each value to its own historical maximum and omit the underlying measures",
+          "rationale": "A normalized total can conceal which operational or security outcome actually deteriorated."
         },
         {
           "key": "C",
-          "text": "Lead time can rise without slower active development",
-          "rationale": "Queue delays can dominate the customer experience. That addresses a different requirement: Two clocks. It does not directly resolve this case's stated constraint."
+          "text": "Keep the measures separate with stable definitions and show the tradeoffs relevant to decisions",
+          "rationale": "The quantities represent different populations and outcomes, so one unexplained score can hide deterioration."
+        },
+        {
+          "key": "D",
+          "text": "Sum raw metric values without converting units or defining direction",
+          "rationale": "Different units and favorable directions make the resulting score uninterpretable."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Use shared definitions while explaining contextual limitations. The selected answer is uniform metrics can miss legitimate workflow differences.",
+      "explanation": "Arbitrary weights cannot establish semantic comparability or make the tradeoffs explicit. A normalized total can conceal which operational or security outcome actually deteriorated. The quantities represent different populations and outcomes, so one unexplained score can hide deterioration. Different units and favorable directions make the resulting score uninterpretable.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S2",
+        "S3"
       ]
     }
   ]

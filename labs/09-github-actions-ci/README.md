@@ -15,7 +15,8 @@ Learner role: **GitHub automation engineer**. Outcome: Build the sample with Git
 | Platforms | local, github |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.1.4`, `D3.2.3`, `D3.3.1`, `D3.3.4`, `D3.3.5`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Triggers choose when jobs exist, permissions choose what a token may do, and headSha ties results to source. Hosted success must be observed rather than inferred from a push.
 
+A GitHub Actions workflow has three related contracts: events create runs, jobs execute under a runner identity, and token permissions constrain access. A successful local test does not establish hosted-run success, and a push does not prove the intended workflow ran.
+
+CI restores locked dependencies, tests and packages the same source revision. Inspect headSha, conclusion and artifact presence together. An artifact name alone is mutable context; the run ID, revision and digest provide a reproducible promotion input. Keep untrusted pull requests away from privileged deployment identities and use a separate protected release workflow.
+
 ## Task 1 — Prepare the isolated GitHub CI working copy
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $p=Join-Path $WorkRoot 'github-ci'
@@ -133,6 +145,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.1` | practiced | Stage and parse an event-driven GitHub Actions CI workflow. |
+| `D3.3.5` | practiced | Inspect jobs, steps, permissions, locked restore, tests, and package output in authored YAML. |
+
 ```powershell
 $p=Join-Path $WorkRoot 'github-ci';$wf=Join-Path $p '.github/workflows';New-Item -ItemType Directory -Force $wf|Out-Null
  Copy-Item (Join-Path $LabRoot 'artifacts/github-ci.yml') (Join-Path $wf 'ci.yml')
@@ -167,6 +184,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $p=Join-Path $WorkRoot 'github-ci'
  dotnet test (Join-Path $p 'samples/DevOps.slnx') --configuration Release --logger "trx;LogFileName=before-push.trx" --results-directory (Join-Path $WorkRoot 'local-ci')
@@ -199,6 +218,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.4` | practiced | Push the owned main branch and observe the matching trigger/run. |
 
 ```powershell
 $p=Join-Path $WorkRoot 'github-ci';git -C $p add .;$staged=@(git -C $p diff --cached --name-only)
@@ -236,6 +259,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.1.4` | integrated | Correlate the immutable hosted build artifact with the exact source SHA. |
+| `D3.2.3` | integrated | Read the exact GitHub Actions run result for the tested source commit. |
+
 ```powershell
 $sha=Get-Content (Join-Path $WorkRoot 'ci-commit.txt')
  $runs=gh run list --repo $GhRepo --commit $sha --limit 5 --json databaseId,headSha,status,conclusion
@@ -271,7 +299,23 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/09-github-actions-ci/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L09-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$saved=$PSNativeCommandUseErrorActionPreference
+try{$PSNativeCommandUseErrorActionPreference=$false;dotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx') --configuration Release --no-restore|Out-Null;$code=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}
+if($code -ne 0){throw 'AZ400-L09-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $p=Join-Path $WorkRoot 'github-ci';'fault'|Set-Content (Join-Path $p 'samples/DevOps.Api/Broken.cs')
@@ -283,7 +327,7 @@ Diagnose the precise difference:
 dotnet build (Join-Path $WorkRoot 'github-ci/samples/DevOps.slnx');'Expected: compiler error names Broken.cs.'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 Remove-Item -LiteralPath (Join-Path $WorkRoot 'github-ci/samples/DevOps.Api/Broken.cs')
@@ -300,7 +344,7 @@ Add a branch-only CI trigger and path filter; prove the selected commit, test ar
 & './labs/09-github-actions-ci/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -331,4 +375,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

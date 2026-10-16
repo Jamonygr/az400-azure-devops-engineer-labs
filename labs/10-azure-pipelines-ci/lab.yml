@@ -31,7 +31,14 @@
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'ado-repo.json') -Raw|ConvertFrom-Json\n if ($r.isDisabled) { throw 'Repository is disabled.' }\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'ado-repo.json') -Raw|ConvertFrom-Json\n if ($r.project.name -ne $AdoProject) { throw 'Repository project mismatch.' }\n\n$r=Get-Content (Join-Path $WorkRoot 'ado-repo.json') -Raw|ConvertFrom-Json\n if ($r.isDisabled) { throw 'Repository is disabled.' }\n",
       "evidence": "Repository ID/project and remote URL redacted.",
-      "fix": "Configure Git Credential Manager through bootstrap instead of putting a PAT in a command or URL."
+      "fix": "Configure Git Credential Manager through bootstrap instead of putting a PAT in a command or URL.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.3",
+          "level": "explained",
+          "reference": "Use Azure Repos as the concrete source; connecting GitHub/Bitbucket service resources remains a separately authorized bootstrap."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -42,7 +49,19 @@
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Raw\n if ($t -match 'AzureCLI@|az deployment|clientSecret') { throw 'CI definition unexpectedly deploys or embeds credentials.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'azure-ci'\n if (-not (Test-Path (Join-Path $p 'samples/DevOps.slnx'))) { throw 'Sample source missing.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Raw\n if ($t -match 'AzureCLI@|az deployment|clientSecret') { throw 'CI definition unexpectedly deploys or embeds credentials.' }\n",
       "evidence": "Pipeline YAML and sample source allowlist.",
-      "fix": "Keep service connections out of a build-only definition."
+      "fix": "Keep service connections out of a build-only definition.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.1",
+          "level": "practiced",
+          "reference": "Stage the Azure Pipelines CI definition."
+        },
+        {
+          "objectiveId": "D3.3.5",
+          "level": "practiced",
+          "reference": "Parse build/test/coverage/artifact tasks in the checked-in pipeline YAML."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -53,7 +72,14 @@
       "negative": "$p=Join-Path $WorkRoot 'azure-ci'\n if ((git -C $p ls-files) -match '(^|/)(bin|obj)/') { throw 'Build output was staged.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'azure-ci'\n if ((git -C $p rev-parse HEAD) -ne (Get-Content (Join-Path $WorkRoot 'ado-ci-commit.txt'))) { throw 'Committed revision mismatch.' }\n\n$p=Join-Path $WorkRoot 'azure-ci'\n if ((git -C $p ls-files) -match '(^|/)(bin|obj)/') { throw 'Build output was staged.' }\n",
       "evidence": "Commit SHA and changed files.",
-      "fix": "Resolve credential/bootstrap failures before retrying the push; never switch projects implicitly."
+      "fix": "Resolve credential/bootstrap failures before retrying the push; never switch projects implicitly.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.4",
+          "level": "practiced",
+          "reference": "Commit and push the owned main-branch definition and inspect its trigger."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -64,7 +90,8 @@
       "negative": "$id=Get-Content (Join-Path $WorkRoot 'pipeline-id.txt')\n $p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($p.project.name -ne $AdoProject) { throw 'Pipeline escaped project boundary.' }\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'pipeline-id.txt')\n $p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($p.process.yamlFilename -ne 'azure-pipelines.yml') { throw 'Wrong YAML source path.' }\n\n$id=Get-Content (Join-Path $WorkRoot 'pipeline-id.txt')\n $p=az pipelines show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($p.project.name -ne $AdoProject) { throw 'Pipeline escaped project boundary.' }\n",
       "evidence": "Pipeline ID and source path.",
-      "fix": "Hosted parallelism may require an Azure DevOps grant or an approved self-hosted agent; record this external gate."
+      "fix": "Hosted parallelism may require an Azure DevOps grant or an approved self-hosted agent; record this external gate.",
+      "coverage": []
     },
     {
       "id": "CP5",
@@ -75,13 +102,27 @@
       "negative": "$id=Get-Content (Join-Path $WorkRoot 'build-id.txt');$r=az pipelines runs show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($r.sourceVersion -ne (Get-Content (Join-Path $WorkRoot 'ado-ci-commit.txt'))) { throw 'Build source revision mismatch.' }\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'build-id.txt')\n $r=az pipelines runs show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($r.status -ne 'completed' -or $r.result -ne 'succeeded') { throw 'Build still queued/running or failed; retry validation after completion.' }\n\n$id=Get-Content (Join-Path $WorkRoot 'build-id.txt');$r=az pipelines runs show --organization $AdoOrganization --project $AdoProject --id $id -o json|ConvertFrom-Json\n if ($r.sourceVersion -ne (Get-Content (Join-Path $WorkRoot 'ado-ci-commit.txt'))) { throw 'Build source revision mismatch.' }\n",
       "evidence": "Build ID, final result, source SHA, and test summary.",
-      "fix": "Inspect agent availability and task logs; queued, canceled, and partially succeeded results do not satisfy completion."
+      "fix": "Inspect agent availability and task logs; queued, canceled, and partially succeeded results do not satisfy completion.",
+      "coverage": [
+        {
+          "objectiveId": "D3.1.4",
+          "level": "integrated",
+          "reference": "Correlate the Azure Pipelines build and artifact with the exact source SHA."
+        },
+        {
+          "objectiveId": "D3.2.3",
+          "level": "integrated",
+          "reference": "Read the exact Azure Pipelines build result for the source commit."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/DevOps.slnx','samples/Missing.slnx')|Set-Content $p\n",
     "diagnose": "Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing.slnx'\n",
-    "repair": "$p=Join-Path $WorkRoot 'azure-ci';git -C $p restore azure-pipelines.yml\n"
+    "repair": "$p=Join-Path $WorkRoot 'azure-ci';git -C $p restore azure-pipelines.yml\n",
+    "assert": "$p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw\n$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\\.slnx')|ForEach-Object Value)\nif($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}\n",
+    "expectedFailure": "AZ400-L10-FAULT"
   },
   "challenge": "Connect a disposable GitHub repository as the source through an explicitly approved GitHub App/service connection, and compare provenance and permissions.",
   "sources": [
@@ -89,7 +130,7 @@
     "https://learn.microsoft.com/en-us/cli/azure/pipelines",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/licensing/concurrent-jobs"
   ],
-  "primer": "A pipeline definition names a YAML source; a queued run is not a successful build. Hosted parallelism and agent permission are external capacity gates.",
+  "primer": "A pipeline definition names a YAML source; a queued run is not a successful build. Hosted parallelism and agent permission are external capacity gates.\n\nAzure Pipelines separates the registered definition from its YAML source and the queued build. A definition ID is stable provider state; the YAML path and repository ID must match the owned project before reuse. Authorization and hosted parallelism can block an otherwise valid definition.\n\nUse explicit organization and project arguments and avoid changing global CLI defaults. Capture the queued build ID, then read its final result and sourceVersion. Connecting a GitHub repository requires a separately authorized provider service connection; this core uses Azure Repos and does not claim that additional integration.",
   "architecture": {
     "title": "Azure Pipelines continuous integration",
     "nodes": [
@@ -169,5 +210,10 @@
       }
     ],
     "topology": "An exact Azure Repos repository and YAML path define the sandbox pipeline. An available hosted or explicitly approved agent executes the .NET build/test workload and publishes results/artifacts. Build sourceVersion must match the reviewed revision; pipeline registration, queued capacity, and successful completion are separate states."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The invalid solution path should fail an actual referenced-path assertion. A queued, in-progress or partially successful build cannot satisfy the final provenance gate."
 }

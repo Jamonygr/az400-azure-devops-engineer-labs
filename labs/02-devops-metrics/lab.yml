@@ -32,7 +32,14 @@
       "negative": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if (@($e|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }).Count) { throw 'Cycle time exceeds lead time.' }\n",
       "validate": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if ($e.Count -ne 3 -or ($e|Measure-Object leadMinutes -Minimum).Minimum -lt 0) { throw 'Invalid observation data.' }\n\n$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\n if (@($e|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }).Count) { throw 'Cycle time exceeds lead time.' }\n",
       "evidence": "observations.json marked synthetic.",
-      "fix": "Use one time unit and keep observation windows consistent."
+      "fix": "Use one time unit and keep observation windows consistent.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.2",
+          "level": "explained",
+          "reference": "Normalize three synthetic completed-change observations; planning/throughput denominator choices are discussed rather than measured from a backlog."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -43,7 +50,19 @@
       "negative": "$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.changeFailureRate -lt 0 -or $m.changeFailureRate -gt 1) { throw 'Failure rate outside fraction range.' }\n",
       "validate": "$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.meanLeadMinutes -ne 150 -or $m.meanRecoveryMinutes -ne 30) { throw 'Flow aggregation incorrect.' }\n\n$m=Get-Content (Join-Path $WorkRoot 'flow.json') -Raw|ConvertFrom-Json\n if ($m.changeFailureRate -lt 0 -or $m.changeFailureRate -gt 1) { throw 'Failure rate outside fraction range.' }\n",
       "evidence": "flow.json with the denominator and observation window.",
-      "fix": "Count failed deployments, not failed unit tests, in the change-failure numerator."
+      "fix": "Count failed deployments, not failed unit tests, in the change-failure numerator.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.3",
+          "level": "practiced",
+          "reference": "Calculate mean lead and cycle minutes from explicit synthetic duration fields; event timestamps are not supplied."
+        },
+        {
+          "objectiveId": "D1.2.6",
+          "level": "practiced",
+          "reference": "Calculate change-failure rate and mean recovery minutes for the failed synthetic change; deployment frequency is not calculated."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -54,7 +73,19 @@
       "negative": "$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.failedTests -gt $q.tests) { throw 'Test failure count exceeds executed tests.' }\n",
       "validate": "$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.tests -ne 165 -or $q.failedTests -ne 1 -or $q.criticalFindings -ne 2) { throw 'Quality aggregation mismatch.' }\n\n$q=Get-Content (Join-Path $WorkRoot 'quality.json') -Raw|ConvertFrom-Json\n if ($q.failedTests -gt $q.tests) { throw 'Test failure count exceeds executed tests.' }\n",
       "evidence": "Separate test and security counters, without person rankings.",
-      "fix": "Avoid interpreting scan count as vulnerability count; deduplicate by stable alert identity."
+      "fix": "Avoid interpreting scan count as vulnerability count; deduplicate by stable alert identity.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.4",
+          "level": "practiced",
+          "reference": "Sum test and failed-test counts from the three observations; escaped defects and pass-rate trends are not in the dataset."
+        },
+        {
+          "objectiveId": "D1.2.5",
+          "level": "practiced",
+          "reference": "Sum critical finding counts from synthetic observations; finding age and reachability are not in this dataset."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -65,7 +96,8 @@
       "negative": "$r=@(Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json)\n if (@($r|Where-Object { $_.status -eq 'completed' -and -not $_.conclusion }).Count) { throw 'Completed runs require conclusions.' }\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json -NoEnumerate\n if ($null -eq $r) { throw 'Workflow API did not return a JSON collection.' }\n\n$r=@(Get-Content (Join-Path $WorkRoot 'workflow-runs.json') -Raw|ConvertFrom-Json)\n if (@($r|Where-Object { $_.status -eq 'completed' -and -not $_.conclusion }).Count) { throw 'Completed runs require conclusions.' }\n",
       "evidence": "Observed inventory and explicit zero-data status.",
-      "fix": "A zero-run sandbox is missing telemetry, not a successful pipeline."
+      "fix": "A zero-run sandbox is missing telemetry, not a successful pipeline.",
+      "coverage": []
     },
     {
       "id": "CP5",
@@ -76,20 +108,34 @@
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -match '100% production reliability') { throw 'Unsupported reliability claim.' }\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -notmatch 'Action:' -or $r -notmatch 'Limit:') { throw 'Review lacks action or uncertainty.' }\n\n$r=Get-Content (Join-Path $WorkRoot 'review.md') -Raw\n if ($r -match '100% production reliability') { throw 'Unsupported reliability claim.' }\n",
       "evidence": "review.md and the raw synthetic observation set.",
-      "fix": "Report the sample size and distinguish delivery metrics from service SLO measurements."
+      "fix": "Report the sample size and distinguish delivery metrics from service SLO measurements.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.1",
+          "level": "explained",
+          "reference": "Write a Markdown delivery review from flow.json; a live or queryable dashboard is not configured."
+        },
+        {
+          "objectiveId": "D1.2.7",
+          "level": "explained",
+          "reference": "Discuss why service operations/SLO evidence differs from this three-change review; no live operations signal is queried."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=999;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json|Where-Object { $_.cycleMinutes -gt $_.leadMinutes }\n",
-    "repair": "$e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=70;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n"
+    "repair": "$e=Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json;$e[0].cycleMinutes=70;$e|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'observations.json')\n",
+    "assert": "$e=@(Get-Content (Join-Path $WorkRoot 'observations.json') -Raw|ConvertFrom-Json)\nif(@($e|Where-Object {$_.cycleMinutes -gt $_.leadMinutes -or $_.cycleMinutes -lt 0}).Count){throw 'AZ400-L02-FAULT'}\n",
+    "expectedFailure": "AZ400-L02-FAULT"
   },
   "challenge": "Replace synthetic changes with a redacted dataset and preserve denominators, time zones, null values, and statistical limitations.",
   "sources": [
     "https://learn.microsoft.com/en-us/azure/devops/report/dashboards/overview",
     "https://cli.github.com/manual/gh_run_list"
   ],
-  "primer": "Lead time includes waiting; cycle time covers active work. Recovery time, change-failure rate, test failures, and security findings have different denominators.",
+  "primer": "Lead time includes waiting; cycle time covers active work. Recovery time, change-failure rate, test failures, and security findings have different denominators.\n\nFix a measurement window and denominator before comparing teams. Deployment frequency counts deployments per interval; change-failure rate counts failed changes divided by changes, while restoration time measures the recovery interval. Lead and cycle time answer different queueing questions.\n\nThe supplied observations are synthetic so the calculations are reproducible. They support testing/security/operations conversations without claiming a live enterprise dashboard. Test pass rate can improve while escaped defects worsen, and a shrinking security count can hide ageing critical findings. Use the review to choose one action and one follow-up measure.",
   "architecture": {
     "title": "Delivery observations and the metric review",
     "nodes": [
@@ -164,5 +210,10 @@
       }
     ],
     "topology": "The collector reads the sandbox Actions run inventory while the exercise computes flow and quality measures from an explicitly synthetic JSON dataset. PowerShell produces a Markdown review with denominators and sample-size limits. The engineering decision follows the measurements; no synthetic value is presented as production telemetry."
-  }
+  },
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run."
+  },
+  "solutionNotes": "Recalculate the metric after the injected timestamp fault; reject negative durations before presenting an average. Document the observation window beside every derived number."
 }

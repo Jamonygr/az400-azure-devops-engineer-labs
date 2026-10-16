@@ -21,25 +21,39 @@
   "checkpoints": [
     {
       "id": "CP1",
-      "title": "Review the reusable GitHub workflow contract",
-      "commands": "$t=Get-Content (Join-Path $LabRoot 'artifacts/templates/reusable-dotnet.yml') -Raw\n $t|Set-Content (Join-Path $WorkRoot 'reusable-dotnet.yml')\n Select-String -InputObject $t -Pattern 'workflow_call|inputs:|permissions:|dotnet' -AllMatches\n",
-      "expected": "The reusable workflow exposes typed inputs and a limited permission contract.",
-      "positive": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -notmatch 'workflow_call' -or $t -notmatch 'inputs:') { throw 'Reusable interface missing.' }\n",
-      "negative": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -match 'secrets: inherit|write-all') { throw 'Overbroad reusable-workflow access.' }\n",
-      "validate": "$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -notmatch 'workflow_call' -or $t -notmatch 'inputs:') { throw 'Reusable interface missing.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw\n if ($t -match 'secrets: inherit|write-all') { throw 'Overbroad reusable-workflow access.' }\n",
-      "evidence": "Input names, defaults, and permissions.",
-      "fix": "Pass only required inputs and explicitly named secrets; pin cross-repository reuse to a reviewed commit."
+      "title": "Exercise the reusable workflow input contract",
+      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/templates/reusable-dotnet.yml') (Join-Path $WorkRoot 'reusable-dotnet.yml')\nCopy-Item (Join-Path $LabRoot 'artifacts/consumer-github.yml') (Join-Path $WorkRoot 'consumer-github.yml')\n@'\nimport json,sys,yaml\nfrom pathlib import Path\nr=Path(sys.argv[1]); raw=yaml.safe_load((r/'reusable-dotnet.yml').read_text());on=raw.get('on',raw.get(True,{}));call=on['workflow_call']\nassert call['inputs'] and raw['permissions'].get('contents')=='read'\nconsumer=yaml.safe_load((r/'consumer-github.yml').read_text());jobs=consumer['jobs']\nassert any('reusable-dotnet.yml' in v.get('uses','') for v in jobs.values())\nassert 'secrets: inherit' not in (r/'consumer-github.yml').read_text()\nprint(json.dumps({'inputs':list(call['inputs']),'consumerJobs':list(jobs),'explicitContract':True}))\n'@|python - $WorkRoot|Set-Content (Join-Path $WorkRoot 'github-template-contract.json')\nif($LASTEXITCODE -ne 0){throw 'Reusable workflow contract failed.'}\n",
+      "expected": "The consumer references the reusable workflow, typed inputs exist, and repository permission stays read-only.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'github-template-contract.json') -Raw|ConvertFrom-Json\nif(-not $r.explicitContract -or @($r.inputs).Count -lt 1){throw 'Reusable input contract absent.'}\n",
+      "negative": "$t=Get-Content (Join-Path $WorkRoot 'consumer-github.yml') -Raw\nif($t -match 'secrets: inherit|write-all'){throw 'Consumer broadened the reusable contract.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'github-template-contract.json') -Raw|ConvertFrom-Json\nif(-not $r.explicitContract -or @($r.inputs).Count -lt 1){throw 'Reusable input contract absent.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'consumer-github.yml') -Raw\nif($t -match 'secrets: inherit|write-all'){throw 'Consumer broadened the reusable contract.'}\n",
+      "evidence": "Parsed interface and consumer job names; explicitly offline contract practice, not a hosted run.",
+      "fix": "Reusable workflows are called as jobs. Offline parsing verifies the authored interface; separately activated provider execution is needed to prove service compilation.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.8",
+          "level": "practiced",
+          "reference": "Parse a reusable workflow consumer and resolve its declared inputs and minimum permissions locally."
+        }
+      ]
     },
     {
       "id": "CP2",
-      "title": "Review the Azure Pipelines template interface",
-      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/templates/dotnet-build.yml') (Join-Path $WorkRoot 'dotnet-build.yml')\n Select-String -Path (Join-Path $WorkRoot 'dotnet-build.yml') -Pattern 'parameters:|type:|dotnet|steps:'\n",
-      "expected": "The build template declares parameters separately from runtime variables.",
-      "positive": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -notmatch 'parameters:' -or $t -notmatch 'steps:') { throw 'Build template contract absent.' }\n",
-      "negative": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -match 'password:\\s*[^$\\s]') { throw 'Literal credential in template.' }\n",
-      "validate": "$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -notmatch 'parameters:' -or $t -notmatch 'steps:') { throw 'Build template contract absent.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw\n if ($t -match 'password:\\s*[^$\\s]') { throw 'Literal credential in template.' }\n",
-      "evidence": "Parameter types and compile-time/runtime expression comparison.",
-      "fix": "Use template parameters for structure; use runtime variables for execution values."
+      "title": "Reject an invalid parameter and execute valid build behavior",
+      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/templates/dotnet-build.yml') (Join-Path $WorkRoot 'dotnet-build.yml')\nCopy-Item (Join-Path $LabRoot 'artifacts/consumer-azure-pipelines.yml') (Join-Path $WorkRoot 'consumer-azure-pipelines.yml')\n@'\nimport json,sys,yaml\nfrom pathlib import Path\nr=Path(sys.argv[1]);t=yaml.safe_load((r/'dotnet-build.yml').read_text());p=next(x for x in t['parameters'] if x['name']=='configuration')\nassert p['type']=='string' and 'Release' in p['values'] and 'Production' not in p['values']\nassert any('Build-Release.ps1' in x.get('pwsh','') for x in t['steps'])\nprint(json.dumps({'selected':'Release','rejected':'Production','allowed':p['values']}))\n'@|python - $WorkRoot|Set-Content (Join-Path $WorkRoot 'template-parameters.json')\nif($LASTEXITCODE -ne 0){throw 'Typed template parameter contract failed.'}\n$config=(Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json).selected\ndotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration $config --logger 'trx;LogFileName=reusable.trx' --results-directory (Join-Path $WorkRoot 'template-tests')\nif($LASTEXITCODE -ne 0){throw 'Selected reusable build behavior failed.'}\n",
+      "expected": "Release is accepted, Production is rejected, and selected test behavior passes locally.",
+      "positive": "$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json\n$f=Get-ChildItem (Join-Path $WorkRoot 'template-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\nif($p.selected -ne 'Release' -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Valid template behavior unproven.'}\n",
+      "negative": "$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json\nif($p.rejected -in $p.allowed){throw 'Invalid template value accepted.'}\n",
+      "validate": "$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json\n$f=Get-ChildItem (Join-Path $WorkRoot 'template-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)\nif($p.selected -ne 'Release' -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Valid template behavior unproven.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json\nif($p.rejected -in $p.allowed){throw 'Invalid template value accepted.'}\n",
+      "evidence": "Allowed/rejected parameter decisions and passing TRX; local validation is not provider template expansion.",
+      "fix": "Use parameters for compile-time structure, variables for runtime data, and valid enum values rather than arbitrary substitution.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.5",
+          "level": "practiced",
+          "reference": "Consume the typed Release parameter and execute the selected .NET test configuration."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -50,7 +64,8 @@
       "negative": "$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.authorized) { throw 'Variable group must not be authorized for every pipeline.' }\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.variables.BuildConfiguration.value -ne 'Release') { throw 'Build variable mismatch.' }\n\n$id=Get-Content (Join-Path $WorkRoot 'variable-group-id.txt')\n $g=az pipelines variable-group show --organization $AdoOrganization --project $AdoProject --group-id $id -o json|ConvertFrom-Json\n if ($g.authorized) { throw 'Variable group must not be authorized for every pipeline.' }\n",
       "evidence": "Variable group ID and nonsecret values.",
-      "fix": "Authorize only a designated sandbox pipeline; store secrets through protected secret facilities."
+      "fix": "Authorize only a designated sandbox pipeline; store secrets through protected secret facilities.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -58,10 +73,17 @@
       "commands": "$dag=@([ordered]@{job='build';needs=@()},[ordered]@{job='test';needs=@('build')},[ordered]@{job='package';needs=@('test')})\n $dag|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n $done=@();foreach($j in $dag){foreach($d in $j.needs){if($d -notin $done){throw \"Unresolved dependency $d\"}};$done+=$j.job}\n $done|Set-Content (Join-Path $WorkRoot 'execution-order.txt')\n",
       "expected": "Each job depends only on completed prerequisites; package follows successful tests.",
       "positive": "$o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))\n if (($o -join ',') -ne 'build,test,package') { throw 'Invalid topological execution order.' }\n",
-      "negative": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json\n if (@($d|Where-Object { $_.job -in $_.needs }).Count) { throw 'Self-referencing job dependency.' }\n",
-      "validate": "$o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))\n if (($o -join ',') -ne 'build,test,package') { throw 'Invalid topological execution order.' }\n\n$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json\n if (@($d|Where-Object { $_.job -in $_.needs }).Count) { throw 'Self-referencing job dependency.' }\n",
+      "negative": "$jobs=@(Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json);$names=@($jobs.job);$done=@()\nif(@($jobs|ForEach-Object needs|Where-Object {$_ -notin $names}).Count){throw 'AZ400-L11-FAULT'}\nwhile($done.Count -lt $jobs.Count){$ready=@($jobs|Where-Object {$_.job -notin $done -and @($_.needs|Where-Object {$_ -notin $done}).Count -eq 0});if($ready.Count -eq 0){throw 'AZ400-L11-FAULT'};$done+=@($ready.job)}\n",
+      "validate": "$o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))\n if (($o -join ',') -ne 'build,test,package') { throw 'Invalid topological execution order.' }\n\n$jobs=@(Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json);$names=@($jobs.job);$done=@()\nif(@($jobs|ForEach-Object needs|Where-Object {$_ -notin $names}).Count){throw 'AZ400-L11-FAULT'}\nwhile($done.Count -lt $jobs.Count){$ready=@($jobs|Where-Object {$_.job -notin $done -and @($_.needs|Where-Object {$_ -notin $done}).Count -eq 0});if($ready.Count -eq 0){throw 'AZ400-L11-FAULT'};$done+=@($ready.job)}\n",
       "evidence": "DAG and successful execution order.",
-      "fix": "Fix dependsOn/needs references; do not serialize independent tests unless resource contention requires it."
+      "fix": "Fix dependsOn/needs references; do not serialize independent tests unless resource contention requires it.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.6",
+          "level": "practiced",
+          "reference": "Topologically sort the dependency graph and reject an indirect build/package cycle."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -72,13 +94,16 @@
       "negative": "$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if($h.Algorithm -ne 'SHA256'){throw 'Unexpected template digest algorithm.'}\n",
       "validate": "$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'dotnet-build.yml')).Hash -ne $h.Hash){throw 'Template drift detected.'}\n\n$h=Get-Content (Join-Path $WorkRoot 'template-digest.json') -Raw|ConvertFrom-Json\n if($h.Algorithm -ne 'SHA256'){throw 'Unexpected template digest algorithm.'}\n",
       "evidence": "Build result and template SHA256.",
-      "fix": "Match local command arguments with the template, and review breaking input changes before reuse."
+      "fix": "Match local command arguments with the template, and review breaking input changes before reuse.",
+      "coverage": []
     }
   ],
   "breakFix": {
     "trigger": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@('package');$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n",
     "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d|Format-Table job,needs\n",
-    "repair": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@();$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n"
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@();$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')\n",
+    "assert": "$jobs=@(Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json);$names=@($jobs.job);$done=@()\nif(@($jobs|ForEach-Object needs|Where-Object {$_ -notin $names}).Count){throw 'AZ400-L11-FAULT'}\nwhile($done.Count -lt $jobs.Count){$ready=@($jobs|Where-Object {$_.job -notin $done -and @($_.needs|Where-Object {$_ -notin $done}).Count -eq 0});if($ready.Count -eq 0){throw 'AZ400-L11-FAULT'};$done+=@($ready.job)}\n",
+    "expectedFailure": "AZ400-L11-FAULT"
   },
   "challenge": "Call the templates from a separate disposable consumer repository using a pinned revision and demonstrate one deliberate input validation failure.",
   "sources": [
@@ -86,7 +111,7 @@
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups"
   ],
-  "primer": "Template parameters shape compile-time structure; variables carry runtime values. Reuse must preserve least privilege, immutable references, and a tested compatibility contract.",
+  "primer": "Template parameters shape compile-time structure; variables carry runtime values. Reuse must preserve least privilege, immutable references, and a tested compatibility contract.\n\nReusable YAML is an API. Parameters define accepted compile-time choices, variables carry runtime values, and secrets remain a separate privileged channel. Pin reusable sources and reject broad inherited secrets unless that trust decision has been reviewed.\n\nThe local consumer resolves the declared Release input and executes the same selected .NET behavior. It proves the parameter/command contract, not a hosted template expansion on every provider. A directed acyclic graph must reject indirect cycles as well as self-dependencies; use topological sorting rather than a simple string check. The nonsecret variable group is an actual owned Azure DevOps object.",
   "architecture": {
     "title": "Reusable YAML inputs and protected variable injection",
     "nodes": [
@@ -162,5 +187,10 @@
       }
     ],
     "topology": "The consumer YAML supplies typed template parameters while a scoped Azure DevOps variable group supplies authorized runtime values. Explicit needs/dependsOn edges order jobs. The GitHub reusable workflow is a parallel reviewed contract; its existence does not grant inherited secrets or activate a remote workflow."
-  }
+  },
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named DAG fault/repair passed. Actual Python YAML consumers and .NET tests/build executed; Azure DevOps variable-group operations use fail-closed doubles. Hosted template expansion has not run."
+  },
+  "solutionNotes": "Reject Production before executing it because the template accepts only Debug/Release. The build/package cycle is deliberately indirect and must fail the named DAG assertion."
 }

@@ -27,7 +27,8 @@
       "negative": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json\n if($p.deployment_branch_policy.custom_branch_policies){throw 'This exercise selects protected-branches policy only.'}\n",
       "validate": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json\n if(-not $p.prevent_self_review -or $p.reviewers.Count -ne 1){throw 'Approval policy missing.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json\n if($p.deployment_branch_policy.custom_branch_policies){throw 'This exercise selects protected-branches policy only.'}\n",
       "evidence": "Reviewer type/ID redacted and selected branch rule.",
-      "fix": "Use a separate authorized reviewer for actual deployment; never self-approve by lowering protection."
+      "fix": "Use a separate authorized reviewer for actual deployment; never self-approve by lowering protection.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -38,7 +39,19 @@
       "negative": "$e=gh api \"repos/$GhRepo/environments/release-$RunId\"|ConvertFrom-Json\n if(-not $e.deployment_branch_policy.protected_branches){throw 'Unprotected deployment branches allowed.'}\n",
       "validate": "$e=gh api \"repos/$GhRepo/environments/release-$RunId\"|ConvertFrom-Json\n if($e.name -ne \"release-$RunId\" -or @($e.protection_rules).Count -lt 1){throw 'Protected environment absent.'}\n\n$e=gh api \"repos/$GhRepo/environments/release-$RunId\"|ConvertFrom-Json\n if(-not $e.deployment_branch_policy.protected_branches){throw 'Unprotected deployment branches allowed.'}\n",
       "evidence": "Environment name and active protection rule types.",
-      "fix": "Environment protection availability depends on plan/visibility; record an unavailable feature as a gate, not a pass."
+      "fix": "Environment protection availability depends on plan/visibility; record an unavailable feature as a gate, not a pass.",
+      "coverage": [
+        {
+          "objectiveId": "D3.2.1",
+          "level": "practiced",
+          "reference": "Configure and query the GitHub environment review and self-review policy."
+        },
+        {
+          "objectiveId": "D3.3.9",
+          "level": "practiced",
+          "reference": "Query the owned GitHub environment protection; compare Azure DevOps checks separately without claiming its provider enforcement."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -49,7 +62,8 @@
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'github-deploy.yml') -Raw\n if($t -match 'pull_request_target|write-all'){throw 'Unsafe deployment permission/trigger.'}\n",
       "validate": "$t=Get-Content (Join-Path $WorkRoot 'github-deploy.yml') -Raw\n if($t -notmatch 'workflow_dispatch' -or $t -notmatch 'environment:'){throw 'Deployment invocation/environment gate absent.'}\n\n$t=Get-Content (Join-Path $WorkRoot 'github-deploy.yml') -Raw\n if($t -match 'pull_request_target|write-all'){throw 'Unsafe deployment permission/trigger.'}\n",
       "evidence": "Workflow event, environment name, and minimum permissions.",
-      "fix": "Replace the dormant template environment name with release-$RunId before any separately authorized activation; bind its exact name to the federation subject and use a distinct reviewer."
+      "fix": "Replace the dormant template environment name with release-$RunId before any separately authorized activation; bind its exact name to the federation subject and use a distinct reviewer.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -60,7 +74,8 @@
       "negative": "$c=Get-Content (Join-Path $WorkRoot 'ado-checks.json') -Raw|ConvertFrom-Json\n if($c.yamlCanBypass){throw 'YAML author cannot own bypassable release approval.'}\n",
       "validate": "$c=Get-Content (Join-Path $WorkRoot 'ado-checks.json') -Raw|ConvertFrom-Json\n if(-not $c.exclusiveLock -or $c.approver -ne 'separate-owner'){throw 'Environment checks incomplete.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'ado-checks.json') -Raw|ConvertFrom-Json\n if($c.yamlCanBypass){throw 'YAML author cannot own bypassable release approval.'}\n",
       "evidence": "Protected-resource check specification and owner.",
-      "fix": "Configure real checks through the separate privileged resource bootstrap; reading a YAML environment name alone does not prove approval enforcement."
+      "fix": "Configure real checks through the separate privileged resource bootstrap; reading a YAML environment name alone does not prove approval enforcement.",
+      "coverage": []
     },
     {
       "id": "CP5",
@@ -71,20 +86,23 @@
       "negative": "$d=Get-Content (Join-Path $WorkRoot 'approval-evaluation.json') -Raw|ConvertFrom-Json\n if($d.request.reviewerApproved){throw 'Denial fixture unexpectedly approved.'}\n",
       "validate": "$d=Get-Content (Join-Path $WorkRoot 'approval-evaluation.json') -Raw|ConvertFrom-Json\n if($d.allowed -ne $false -or $d.request.testsPassed -ne $true){throw 'Denial simulation incorrect.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'approval-evaluation.json') -Raw|ConvertFrom-Json\n if($d.request.reviewerApproved){throw 'Denial fixture unexpectedly approved.'}\n",
       "evidence": "Denied request and precise gate reasons.",
-      "fix": "Fix the branch and obtain independent approval; do not infer approval from a green build."
+      "fix": "Fix the branch and obtain independent approval; do not infer approval from a green build.",
+      "coverage": []
     }
   ],
   "breakFix": {
     "trigger": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json;$p.prevent_self_review=$false;$p|ConvertTo-Json -Depth 7|Set-Content (Join-Path $WorkRoot 'environment-policy.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'environment-policy.json')\n",
-    "repair": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json;$p.prevent_self_review=$true;$p|ConvertTo-Json -Depth 7|Set-Content (Join-Path $WorkRoot 'environment-policy.json')\n"
+    "repair": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json;$p.prevent_self_review=$true;$p|ConvertTo-Json -Depth 7|Set-Content (Join-Path $WorkRoot 'environment-policy.json')\n",
+    "assert": "$p=Get-Content (Join-Path $WorkRoot 'environment-policy.json') -Raw|ConvertFrom-Json\nif(-not $p.prevent_self_review -or @($p.reviewers).Count -lt 1){throw 'AZ400-L13-FAULT'}\n",
+    "expectedFailure": "AZ400-L13-FAULT"
   },
   "challenge": "With an authorized second reviewer, demonstrate a denied request and a successful approval without adding cloud deployment to ordinary repository CI.",
   "sources": [
     "https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals"
   ],
-  "primer": "Approval authorizes an environment transition, not a code review. GitHub environment subjects must match federation exactly; Azure resource checks live outside editable YAML.",
+  "primer": "Approval authorizes an environment transition, not a code review. GitHub environment subjects must match federation exactly; Azure resource checks live outside editable YAML.\n\nA code review authorizes a source change; an environment approval authorizes its promotion. Keep both boundaries. GitHub environment reviewers, branch restrictions and prevent-self-review are provider settings. Azure DevOps approvals and checks also live on protected resources outside author-editable YAML.\n\nThe local denied-request fixture models why an author cannot approve their own release. The actual GitHub environment read confirms configured protection, but enforcement is demonstrated only when a protected job runs. Review plan entitlements before enabling required reviewers on private repositories; absence of a licensed capability remains a visible gate.",
   "requiresPaidFeatures": true,
   "architecture": {
     "title": "Environment approval and deployment authorization",
@@ -163,5 +181,10 @@
       }
     ],
     "topology": "The GitHub environment contains review and protected-branch controls; the dormant workflow must bind its exact environment name before activation. That environment name also forms the federation subject used for a separately approved Azure target. Azure Pipelines resource checks are reviewed as an independent owner-controlled contract outside editable YAML."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "Read back reviewers and self-review policy rather than relying on the submitted JSON. The environment name in a dormant workflow must be deliberately mapped to the run-owned environment before activation."
 }

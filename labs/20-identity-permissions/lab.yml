@@ -35,7 +35,24 @@
       "negative": "$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.viewerPermission -eq 'NONE'){throw 'No repository access.'}\n",
       "validate": "$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.nameWithOwner -ne $GhRepo){throw 'Access review targeted wrong repository.'}\n\n$a=Get-Content (Join-Path $WorkRoot 'github-access.json') -Raw|ConvertFrom-Json\n if($a.viewerPermission -eq 'NONE'){throw 'No repository access.'}\n",
       "evidence": "Role names with personal identities redacted.",
-      "fix": "Separate organization owners, repository maintainers, contributors, and outside collaborators; choose the smallest role."
+      "fix": "Separate organization owners, repository maintainers, contributors, and outside collaborators; choose the smallest role.",
+      "coverage": [
+        {
+          "objectiveId": "D2.2.3",
+          "level": "explained",
+          "reference": "Inspect a GitHub token permission matrix and map repository role responsibilities."
+        },
+        {
+          "objectiveId": "D4.1.2",
+          "level": "explained",
+          "reference": "Inspect the current GitHub authentication context; no new PAT or GitHub App is created."
+        },
+        {
+          "objectiveId": "D4.1.4",
+          "level": "explained",
+          "reference": "Map GitHub role and token permission boundaries in the matrix."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -46,7 +63,19 @@
       "negative": "$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.visibility -notin @('private','public')){throw 'Unknown project visibility.'}\n",
       "validate": "$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.name -ne $AdoProject){throw 'Project access review mismatch.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'project-access.json') -Raw|ConvertFrom-Json\n if($p.visibility -notin @('private','public')){throw 'Unknown project visibility.'}\n",
       "evidence": "Team names/count and project visibility; access levels remain distinct from security group permissions.",
-      "fix": "Stakeholder/Basic licensing does not replace explicit project/repository permissions."
+      "fix": "Stakeholder/Basic licensing does not replace explicit project/repository permissions.",
+      "coverage": [
+        {
+          "objectiveId": "D4.1.5",
+          "level": "explained",
+          "reference": "Read Azure DevOps project identity/group context; changing collection-wide groups is outside this sandbox."
+        },
+        {
+          "objectiveId": "D4.1.7",
+          "level": "explained",
+          "reference": "Inspect the disposable project team; creating membership or changing cross-project teams is not claimed."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -57,7 +86,14 @@
       "negative": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Identity escaped resource-group boundary.'}\n",
       "validate": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n $live=az identity show --subscription $SubscriptionId --resource-group $ResourceGroup --name \"identity-$RunId\" -o json|ConvertFrom-Json\n if($live.principalId -ne $m.principalId){throw 'Managed identity principal mismatch.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Identity escaped resource-group boundary.'}\n",
       "evidence": "Identity resource ID/client ID/principal ID locally; redact before export.",
-      "fix": "Managed identities avoid an application secret; do not create an untracked Entra application as a substitute."
+      "fix": "Managed identities avoid an application secret; do not create an untracked Entra application as a substitute.",
+      "coverage": [
+        {
+          "objectiveId": "D4.1.1",
+          "level": "practiced",
+          "reference": "Create and query a user-assigned managed identity within the run-owned Azure resource group."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -68,24 +104,39 @@
       "negative": "$a=Get-Content (Join-Path $WorkRoot 'role-assignment.json') -Raw|ConvertFrom-Json\n if($a.scope -eq \"/subscriptions/$SubscriptionId\"){throw 'Subscription-wide assignment is outside this exercise.'}\n",
       "validate": "$m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json;$scope=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup\"\n $a=@(az role assignment list --subscription $SubscriptionId --assignee $m.principalId --scope $scope -o json|ConvertFrom-Json)\n if(@($a|Where-Object scope -eq $scope).Count -lt 1){throw 'Scoped role assignment absent.'}\n\n$a=Get-Content (Join-Path $WorkRoot 'role-assignment.json') -Raw|ConvertFrom-Json\n if($a.scope -eq \"/subscriptions/$SubscriptionId\"){throw 'Subscription-wide assignment is outside this exercise.'}\n",
       "evidence": "Role definition and exact scope.",
-      "fix": "Role Assignment Contributor/User Access Administrator/Owner may be required for this scoped change; missing permission is a gate."
+      "fix": "Role Assignment Contributor/User Access Administrator/Owner may be required for this scoped change; missing permission is a gate.",
+      "coverage": []
     },
     {
       "id": "CP5",
       "title": "Compare token/service-connection access choices",
-      "commands": "$matrix=[ordered]@{githubBuild='GITHUB_TOKEN contents:read';githubCrossRepo='GitHub App installation token';azureDeployment='federated managed identity';adoDeployment='workload identity service connection';pat='bootstrap-only narrowly scoped fallback';stakeholder='work tracking, subject to product restrictions'}\n $matrix|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
-      "expected": "Each trust boundary has a specific identity/access choice.",
-      "positive": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n",
-      "negative": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\n",
-      "validate": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\n",
-      "evidence": "Identity/role matrix without tokens or application secrets.",
-      "fix": "Do not equate a service connection with blanket authorization to every pipeline."
+      "commands": "$matrix=[ordered]@{githubBuild='GITHUB_TOKEN contents:read';githubCrossRepo='GitHub App installation token';azureDeployment='federated managed identity';adoDeployment='workload identity service connection';pat='bootstrap-only narrowly scoped fallback';stakeholder='work tracking, subject to product restrictions'}\n $matrix|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n$definition=@(az role definition list --subscription $SubscriptionId --name Reader -o json|ConvertFrom-Json)\nif($definition.Count -ne 1 -or $definition[0].name -ne 'acdd72a7-3385-48ef-bd42-f606fba81ae7'){throw 'Expected the built-in Reader role.'}\n$definition[0]|ConvertTo-Json -Depth 12|Set-Content (Join-Path $WorkRoot 'reader-definition.json')\n$scope=\"/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup\"\n$cases=@(@{action='Microsoft.Resources/subscriptions/resourceGroups/read';target=$scope;expected=$true},@{action='Microsoft.Compute/virtualMachines/write';target=\"$scope/providers/Microsoft.Compute/virtualMachines/example\";expected=$false},@{action='Microsoft.Resources/subscriptions/resourceGroups/read';target=\"/subscriptions/$SubscriptionId/resourceGroups/another-group\";expected=$false})\n$decisions=foreach($case in $cases){\n $within=$case.target -ieq $scope -or $case.target.StartsWith(\"$scope/\",[StringComparison]::OrdinalIgnoreCase)\n $allowed=$within -and $case.action.EndsWith('/read',[StringComparison]::OrdinalIgnoreCase)\n if($allowed -ne $case.expected){throw 'Reader fixture decision mismatch.'}\n @{action=$case.action;allowed=$allowed}\n}\n@{fixtureOnly=$true;decisions=@($decisions);effectiveAccessVerified=$false}|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'permission-decisions.json')\n",
+      "expected": "The real Reader role definition is inspected; one local in-scope read is allowed, while a write and an outside-scope read are rejected. Effective token authorization remains a separate live check.",
+      "positive": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n$r=Get-Content (Join-Path $WorkRoot 'reader-definition.json') -Raw|ConvertFrom-Json\nif($r.permissions[0].actions -notcontains '*/read' -or @($r.permissions[0].dataActions).Count){throw 'Reader management/data-plane distinction changed.'}\n$d=Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json\nif(@($d.decisions).Count -ne 3 -or @($d.decisions|Where-Object allowed).Count -ne 1){throw 'Read/write/scope decisions failed.'}\n",
+      "negative": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\nif((Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json).effectiveAccessVerified){throw 'A local policy model is not an effective-access probe.'}\n",
+      "validate": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}\n$r=Get-Content (Join-Path $WorkRoot 'reader-definition.json') -Raw|ConvertFrom-Json\nif($r.permissions[0].actions -notcontains '*/read' -or @($r.permissions[0].dataActions).Count){throw 'Reader management/data-plane distinction changed.'}\n$d=Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json\nif(@($d.decisions).Count -ne 3 -or @($d.decisions|Where-Object allowed).Count -ne 1){throw 'Read/write/scope decisions failed.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\n if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}\nif((Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json).effectiveAccessVerified){throw 'A local policy model is not an effective-access probe.'}\n",
+      "evidence": "Reader definition, three computed scope/action decisions, and the identity choice matrix; redact account identifiers.",
+      "fix": "Do not equate a service connection with blanket authorization to every pipeline.",
+      "coverage": [
+        {
+          "objectiveId": "D4.1.3",
+          "level": "explained",
+          "reference": "Review narrowly scoped workload-federated Azure DevOps connection design; no organization service connection is automatically created."
+        },
+        {
+          "objectiveId": "D4.1.6",
+          "level": "explained",
+          "reference": "Distinguish DevOps access-level entitlement from permissions in the comparison record."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN write-all';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
-    "repair": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN contents:read';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n"
+    "repair": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN contents:read';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')\n",
+    "assert": "$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json\nif($m.githubBuild -ne 'GITHUB_TOKEN contents:read'){throw 'AZ400-L20-FAULT'}\n",
+    "expectedFailure": "AZ400-L20-FAULT"
   },
   "challenge": "Prove a read-only federated identity can inspect the owned group and cannot create a resource; keep the attempted write harmless and explicitly bounded.",
   "sources": [
@@ -94,7 +145,7 @@
     "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication",
     "https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions"
   ],
-  "primer": "Authentication identifies a caller; authorization applies at a resource scope. Managed identities remove client-secret maintenance while project access levels remain distinct from security permissions.",
+  "primer": "Authentication identifies a caller; authorization applies at a resource scope. Managed identities remove client-secret maintenance while project access levels remain distinct from security permissions.\n\nIdentify the principal, permission and resource scope separately. A managed identity avoids a stored client secret but can still receive excessive authority. Prefer a narrow resource-group role and verify the exact scope after assignment. GitHub token permissions and repository roles are also distinct.\n\nAzure DevOps groups determine permission inheritance, teams organize work, and access levels license capabilities. Reading a project team does not demonstrate creating a new team or changing organization membership. The comparison record explains these boundaries without escalating shared tenant permissions. A federated service connection still needs explicit pipeline authorization.",
   "architecture": {
     "title": "Three separately scoped authorization planes",
     "nodes": [
@@ -163,5 +214,10 @@
   "providers": [
     "Microsoft.ManagedIdentity",
     "Microsoft.Authorization"
-  ]
+  ],
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run."
+  },
+  "solutionNotes": "The identity and role assignment must remain within the exact owned group. A broad subscription-level grant is not an acceptable shortcut for a failing project operation."
 }

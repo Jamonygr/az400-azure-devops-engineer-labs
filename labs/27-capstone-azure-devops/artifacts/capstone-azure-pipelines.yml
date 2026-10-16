@@ -1,16 +1,142 @@
-trigger:
-  branches:
-    include: [main]
+trigger: none
 pr: none
 parameters:
-  - name: serviceConnection
+  - name: action
     type: string
-    default: az400-wif
+    default: deploy
+    values: [deploy, rollback]
+  - name: artifactRunId
+    type: string
+    default: '0'
+  - name: expectedRevision
+    type: string
+    default: replace-with-reviewed-40-character-sha
+  - name: baselineArtifactRunId
+    type: string
+    default: '0'
+  - name: baselineRevision
+    type: string
+    default: replace-with-baseline-40-character-sha
+  - name: migrationServiceConnection
+    type: string
+    default: az400-migration-wif
+  - name: deploymentServiceConnection
+    type: string
+    default: az400-app-wif
   - name: appName
     type: string
-    default: replace-with-managed-webapp-name
-extends:
-  template: ../../14-ordered-releases-databases/artifacts/release-stages.yml
-  parameters:
-    serviceConnection: ${{ parameters.serviceConnection }}
-    appName: ${{ parameters.appName }}
+    default: replace-with-owned-app-name
+stages:
+  - stage: Select
+    jobs:
+      - job: Prepare
+        pool:
+          vmImage: ubuntu-24.04
+        steps:
+          - checkout: self
+            persistCredentials: false
+          - pwsh: |
+              $run = if ($env:RELEASE_ACTION -eq 'rollback') { $env:BASELINE_RUN } else { $env:SOURCE_RUN }
+              $sha = if ($env:RELEASE_ACTION -eq 'rollback') { $env:BASELINE_REVISION } else { $env:SOURCE_REVISION }
+              if ($run -notmatch '^[1-9][0-9]*$' -or $sha -notmatch '^[a-f0-9]{40}$') { throw 'Select a successful retained main-branch CI build and exact revision.' }
+              python deployment/scripts/release_artifact.py --platform azure-devops --run-id $run --expected-revision $sha --output '$(Pipeline.Workspace)/verified-release'
+              Write-Host "##vso[task.setvariable variable=revision;isOutput=true]$sha"
+              Write-Host "##vso[task.setvariable variable=action;isOutput=true]$env:RELEASE_ACTION"
+            name: choose
+            env:
+              RELEASE_ACTION: ${{ parameters.action }}
+              SOURCE_RUN: ${{ parameters.artifactRunId }}
+              SOURCE_REVISION: ${{ parameters.expectedRevision }}
+              BASELINE_RUN: ${{ parameters.baselineArtifactRunId }}
+              BASELINE_REVISION: ${{ parameters.baselineRevision }}
+              AZDO_TOKEN: $(System.AccessToken)
+              CI_DEFINITION_ID: $(CiDefinitionId)
+              BUILD_REPOSITORY_ID: $(Build.Repository.ID)
+              SYSTEM_COLLECTIONURI: $(System.CollectionUri)
+              SYSTEM_TEAMPROJECT: $(System.TeamProject)
+          - publish: $(Pipeline.Workspace)/verified-release
+            artifact: verified-release
+  - stage: Migrate
+    dependsOn: Select
+    condition: and(succeeded(),eq(dependencies.Select.outputs['Prepare.choose.action'],'deploy'))
+    variables:
+      selectedRevision: $[stageDependencies.Select.Prepare.outputs['choose.revision']]
+    jobs:
+      - deployment: ExpandSchema
+        environment: production-database
+        pool:
+          name: az400-private
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  persistCredentials: false
+                - download: current
+                  artifact: verified-release
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: ${{ parameters.migrationServiceConnection }}
+                    scriptType: pscore
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      & ./deployment/scripts/Apply-Migration.ps1 -ReleasePath '$(Pipeline.Workspace)/verified-release' -ExpectedRevision $env:EXPECTED_REVISION
+                  env:
+                    ConnectionStrings__Todos: $(SqlMigrationConnection)
+                    EXPECTED_REVISION: $(selectedRevision)
+  - stage: Deploy
+    dependsOn: [Select, Migrate]
+    condition: and(not(failed()),not(canceled()),or(eq(dependencies.Select.outputs['Prepare.choose.action'],'rollback'),eq(dependencies.Migrate.result,'Succeeded')))
+    variables:
+      selectedRevision: $[stageDependencies.Select.Prepare.outputs['choose.revision']]
+    jobs:
+      - deployment: Promote
+        environment: production
+        pool:
+          name: az400-private
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  persistCredentials: false
+                - download: current
+                  artifact: verified-release
+                - pwsh: python deployment/scripts/release_artifact.py --platform local --directory '$(Pipeline.Workspace)/verified-release' --output '$(Pipeline.Workspace)/verified-release' --expected-revision $env:EXPECTED_REVISION
+                  env:
+                    EXPECTED_REVISION: $(selectedRevision)
+                - task: AzureCLI@2
+                  displayName: Assert exact journal-owned application and workspace
+                  inputs:
+                    azureSubscription: ${{ parameters.deploymentServiceConnection }}
+                    scriptType: pscore
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      & ./deployment/scripts/Assert-OwnedWorkload.ps1 -SubscriptionId $env:SUBSCRIPTION_ID -ResourceGroup $env:RESOURCE_GROUP -RunId $env:LAB_RUN_ID -AppName $env:APP_NAME -WorkspaceId $env:WORKSPACE_ID
+                  env:
+                    SUBSCRIPTION_ID: $(AzureSubscriptionId)
+                    RESOURCE_GROUP: $(AzureResourceGroup)
+                    LAB_RUN_ID: $(LabRunId)
+                    APP_NAME: ${{ parameters.appName }}
+                    WORKSPACE_ID: $(LogAnalyticsWorkspaceId)
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: ${{ parameters.deploymentServiceConnection }}
+                    appType: webAppLinux
+                    appName: ${{ parameters.appName }}
+                    package: $(Pipeline.Workspace)/verified-release/app
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: ${{ parameters.deploymentServiceConnection }}
+                    scriptType: pscore
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      & ./deployment/scripts/Verify-Release.ps1 -AppUrl $env:APP_URL -ExpectedRevision $env:EXPECTED_REVISION -WorkspaceId $env:WORKSPACE_ID
+                  env:
+                    APP_URL: $(AppUrl)
+                    WORKSPACE_ID: $(LogAnalyticsWorkspaceId)
+                    EXPECTED_REVISION: $(selectedRevision)
+                - publish: $(Build.SourcesDirectory)/.state/release-evidence.json
+                  artifact: release-evidence
+                  condition: always()
+

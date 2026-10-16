@@ -12,5 +12,7 @@ IF OBJECT_ID(N'dbo.Todos', N'U') IS NULL
     THROW 50001, 'Apply the reviewed migration before granting runtime table permissions.', 1;
 CREATE USER [REPLACE_API_MANAGED_IDENTITY_DISPLAY_NAME] FROM EXTERNAL PROVIDER;
 GRANT SELECT, INSERT, UPDATE ON OBJECT::dbo.Todos TO [REPLACE_API_MANAGED_IDENTITY_DISPLAY_NAME];
+-- Readiness compares the deployed schema with the application migration set.
+GRANT SELECT ON OBJECT::dbo.__EFMigrationsHistory TO [REPLACE_API_MANAGED_IDENTITY_DISPLAY_NAME];
 -- Repeat phase 2 for the staging managed identity if an S1 slot is used.
 -- The runtime identity does not receive DDL rights or write access to __EFMigrationsHistory.

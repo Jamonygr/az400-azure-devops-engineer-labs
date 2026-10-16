@@ -8,6 +8,7 @@ Describe 'Lifecycle safety and recovery' {
             [void][IO.Directory]::CreateDirectory($script:testLab)
             $script:definition = Join-Path $script:testLab 'lab.yml'
             $script:lab = @{id='01';slug='01-test';cost='none';platforms=@();checkpoints=@(1..5 | ForEach-Object { @{id="CP$_";title="Task $_";commands='$true';validate='if (-not $true) { throw "failed" }'} })}
+            $script:lab.breakFix = @{assert='if(Test-Path (Join-Path $WorkRoot "fault")){throw "fixture-fault"}';expectedFailure='fixture-fault';trigger='Set-Content (Join-Path $WorkRoot "fault") bad';repair='Remove-Item (Join-Path $WorkRoot "fault") -ErrorAction SilentlyContinue'}
             Save-LabJson $script:definition $script:lab
             $script:context = Get-Az400Context -Definition $script:definition -RunId demo-run -GithubOwner learner -AdoOrganization https://dev.azure.com/training -SubscriptionId 00000000-0000-0000-0000-000000000000
             $script:context.adoProfileId = 'fixture-user'
@@ -195,7 +196,7 @@ Describe 'Lifecycle safety and recovery' {
         }
 
         It 'reports skipped paid validation as partial instead of passing' {
-            $script:lab.id='23'; Save-LabJson $script:definition $script:lab
+            $script:lab.id='23'; foreach($cp in $script:lab.checkpoints){$cp.requiresPaidFeatures=$true}; Save-LabJson $script:definition $script:lab
             $context = Get-Az400Context -Definition $script:definition -RunId paid-run
             $journal = Read-LabJournal $context; $journal.status='provisioned'; Save-LabJournal $context $journal
             $result = Invoke-Az400Lab -Operation Validate -Definition $script:definition -RunId paid-run
@@ -209,7 +210,8 @@ Describe 'Lifecycle safety and recovery' {
             $result = Invoke-Az400Lab -Operation Validate -Definition $script:definition -RunId clean-run
             $text = $result | ConvertTo-Json -Depth 8
             $text | Should -Not -Match 'subscriptionId|ownerToken|githubOwner|adoOrganization'
-            $result.status | Should -Be passed
+            $result.status | Should -Be partial
+            $result.breakFix | Should -Be missing
         }
 
         It 'refuses validation from cleaned or initialized journals even with cached evidence' {

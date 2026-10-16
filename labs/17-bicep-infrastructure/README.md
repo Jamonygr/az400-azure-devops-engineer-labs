@@ -15,7 +15,8 @@ Learner role: **Infrastructure delivery engineer**. Outcome: Validate and deploy
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.5.3`, `D3.5.4`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Bicep describes desired ARM state; what-if previews changes but does not grant approval. The core deploys isolated Storage and a managed identity; advanced main.bicep has separate SQL/network prerequisites.
 
+Compile validates Bicep syntax and types; ARM validation checks the request; what-if previews a particular scope; deployment changes the provider state. These are separate gates. Use the journal-owned resource group and explicit subscription on every operation.
+
+The independent core deploys a secure StorageV2 account and user-assigned identity. Storage data-plane access is disabled deliberately, so service reads validate control-plane security and ownership rather than requiring a public network path. The advanced application template is a separate SQL/network exercise. Reapplying the same declarative core should preserve resource identity and repair permitted tag drift.
+
 ## Task 1 — Compile the independent core infrastructure
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $file=Join-Path $LabRoot 'artifacts/core.bicep';az bicep lint --file $file
@@ -123,6 +135,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-2"></a>
 
 Checkpoint: `CP2`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $file=Join-Path $LabRoot 'artifacts/core.bicep'
@@ -159,6 +173,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.5.3` | integrated | Apply the reviewed Bicep deployment and assert exact owned resource IDs and outputs. |
+
 ```powershell
 $file=Join-Path $LabRoot 'artifacts/core.bicep'
  az deployment group create --subscription $SubscriptionId --resource-group $ResourceGroup --name "core-$RunId" --mode Incremental --template-file $file --parameters "labRunId=$RunId" -o json|Set-Content (Join-Path $WorkRoot 'core-deployment.json')
@@ -192,6 +210,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json;$o=$d.properties.outputs
@@ -229,6 +249,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.5.4` | practiced | Read the storage account run tag and detect actual drift against the desired run ownership. |
+
 ```powershell
 $file=Join-Path $LabRoot 'artifacts/core.bicep'
  az deployment group what-if --subscription $SubscriptionId --resource-group $ResourceGroup --template-file $file --parameters "labRunId=$RunId" -o json|Set-Content (Join-Path $WorkRoot 'what-if-after.json')
@@ -261,7 +285,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/17-bicep-infrastructure/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L17-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json;$s=az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value -o json|ConvertFrom-Json
+if($s.tags.'az400-run' -ne $RunId){throw 'AZ400-L17-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Json
@@ -275,7 +314,7 @@ $d=Get-Content (Join-Path $WorkRoot 'core-deployment.json') -Raw|ConvertFrom-Jso
 az storage account show --subscription $SubscriptionId --ids $d.properties.outputs.storageAccountId.value --query tags -o json
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 az deployment group create --subscription $SubscriptionId --resource-group $ResourceGroup --name "repair-$RunId" --template-file (Join-Path $LabRoot 'artifacts/core.bicep') --parameters "labRunId=$RunId" -o none
@@ -291,7 +330,7 @@ Execute advanced main.bicep only with separately approved Entra SQL/database use
 & './labs/17-bicep-infrastructure/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -323,4 +362,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

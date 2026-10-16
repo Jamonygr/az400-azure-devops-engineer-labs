@@ -10,25 +10,26 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: global.json
           cache: true
           cache-dependency-path: samples/**/packages.lock.json
-      - run: dotnet restore samples/DevOps.slnx --locked-mode
-      - run: dotnet test samples/DevOps.slnx --configuration Release --no-restore --settings samples/coverage.runsettings --collect:"XPlat Code Coverage" --logger trx --results-directory TestResults
-      - name: Coverage gate
+      - name: Test, enforce coverage, and build immutable release
         shell: pwsh
-        run: ./samples/Test-Coverage.ps1 -CoverageFile (Get-ChildItem TestResults -Filter coverage.cobertura.xml -Recurse | Select-Object -First 1 -ExpandProperty FullName)
-      - run: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration Release --no-restore --output publish /p:UseAppHost=false
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: ./samples/Build-Release.ps1 -Revision $env:SOURCE_REVISION -OutputPath publish
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: todo-api
           path: publish/
-          retention-days: 3
+          retention-days: 14
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: test-results
-          path: TestResults/
-          retention-days: 3
+          path: publish/test-results/
+          retention-days: 7

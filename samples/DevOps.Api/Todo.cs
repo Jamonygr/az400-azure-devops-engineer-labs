@@ -41,6 +41,12 @@ public sealed class SqlServerTodoDesignFactory : IDesignTimeDbContextFactory<Sql
 public static class ApiTelemetry
 {
     public const string SourceName = "Az400.Todos";
+    // Only a nonsecret commit SHA is copied from the gate header into telemetry.
+    public static void TagRelease(Activity? activity, string? marker)
+    {
+        if (marker is { Length: 40 } && marker.All(character => character is >= '0' and <= '9' or >= 'a' and <= 'f'))
+            activity?.SetTag("az400.release", marker);
+    }
     public static readonly ActivitySource Activities = new(SourceName);
     public static readonly Meter Meter = new(SourceName);
     public static readonly Counter<long> Created = Meter.CreateCounter<long>("todos.created", "{todo}");

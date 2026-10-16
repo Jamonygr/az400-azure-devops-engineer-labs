@@ -15,7 +15,8 @@ Learner role: **Pipeline framework maintainer**. Outcome: Reuse YAML templates a
 | Platforms | local, azure-devops |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named DAG fault/repair passed. Actual Python YAML consumers and .NET tests/build executed; Azure DevOps variable-group operations use fail-closed doubles. Hosted template expansion has not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,12 +38,17 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D3.3.5`, `D3.3.6`, `D3.3.8`
 
 | Checkpoint | Measurable behavior |
 |---|---|
-| [CP1](#task-1) | Review the reusable GitHub workflow contract |
-| [CP2](#task-2) | Review the Azure Pipelines template interface |
+| [CP1](#task-1) | Exercise the reusable workflow input contract |
+| [CP2](#task-2) | Reject an invalid parameter and execute valid build behavior |
 | [CP3](#task-3) | Create an explicitly nonsecret variable group |
 | [CP4](#task-4) | Model build-test-package ordering as a DAG |
 | [CP5](#task-5) | Exercise the shared template build command locally |
@@ -84,70 +90,105 @@ packages and write ignored build output.
 
 Template parameters shape compile-time structure; variables carry runtime values. Reuse must preserve least privilege, immutable references, and a tested compatibility contract.
 
-## Task 1 — Review the reusable GitHub workflow contract
+Reusable YAML is an API. Parameters define accepted compile-time choices, variables carry runtime values, and secrets remain a separate privileged channel. Pin reusable sources and reject broad inherited secrets unless that trust decision has been reviewed.
+
+The local consumer resolves the declared Release input and executes the same selected .NET behavior. It proves the parameter/command contract, not a hosted template expansion on every provider. A directed acyclic graph must reject indirect cycles as well as self-dependencies; use topological sorting rather than a simple string check. The nonsecret variable group is an actual owned Azure DevOps object.
+
+## Task 1 — Exercise the reusable workflow input contract
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.8` | practiced | Parse a reusable workflow consumer and resolve its declared inputs and minimum permissions locally. |
+
 ```powershell
-$t=Get-Content (Join-Path $LabRoot 'artifacts/templates/reusable-dotnet.yml') -Raw
- $t|Set-Content (Join-Path $WorkRoot 'reusable-dotnet.yml')
- Select-String -InputObject $t -Pattern 'workflow_call|inputs:|permissions:|dotnet' -AllMatches
+Copy-Item (Join-Path $LabRoot 'artifacts/templates/reusable-dotnet.yml') (Join-Path $WorkRoot 'reusable-dotnet.yml')
+Copy-Item (Join-Path $LabRoot 'artifacts/consumer-github.yml') (Join-Path $WorkRoot 'consumer-github.yml')
+@'
+import json,sys,yaml
+from pathlib import Path
+r=Path(sys.argv[1]); raw=yaml.safe_load((r/'reusable-dotnet.yml').read_text());on=raw.get('on',raw.get(True,{}));call=on['workflow_call']
+assert call['inputs'] and raw['permissions'].get('contents')=='read'
+consumer=yaml.safe_load((r/'consumer-github.yml').read_text());jobs=consumer['jobs']
+assert any('reusable-dotnet.yml' in v.get('uses','') for v in jobs.values())
+assert 'secrets: inherit' not in (r/'consumer-github.yml').read_text()
+print(json.dumps({'inputs':list(call['inputs']),'consumerJobs':list(jobs),'explicitContract':True}))
+'@|python - $WorkRoot|Set-Content (Join-Path $WorkRoot 'github-template-contract.json')
+if($LASTEXITCODE -ne 0){throw 'Reusable workflow contract failed.'}
 ```
 
-Expected state: The reusable workflow exposes typed inputs and a limited permission contract.
+Expected state: The consumer references the reusable workflow, typed inputs exist, and repository permission stays read-only.
 
 Positive validation:
 
 ```powershell
-$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw
- if ($t -notmatch 'workflow_call' -or $t -notmatch 'inputs:') { throw 'Reusable interface missing.' }
+$r=Get-Content (Join-Path $WorkRoot 'github-template-contract.json') -Raw|ConvertFrom-Json
+if(-not $r.explicitContract -or @($r.inputs).Count -lt 1){throw 'Reusable input contract absent.'}
 ```
 
 Negative validation:
 
 ```powershell
-$t=Get-Content (Join-Path $WorkRoot 'reusable-dotnet.yml') -Raw
- if ($t -match 'secrets: inherit|write-all') { throw 'Overbroad reusable-workflow access.' }
+$t=Get-Content (Join-Path $WorkRoot 'consumer-github.yml') -Raw
+if($t -match 'secrets: inherit|write-all'){throw 'Consumer broadened the reusable contract.'}
 ```
 
-Evidence to retain: Input names, defaults, and permissions.
+Evidence to retain: Parsed interface and consumer job names; explicitly offline contract practice, not a hosted run.
 
-Common failure and safe retry: Pass only required inputs and explicitly named secrets; pin cross-repository reuse to a reviewed commit.
+Common failure and safe retry: Reusable workflows are called as jobs. Offline parsing verifies the authored interface; separately activated provider execution is needed to prove service compilation.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 2 — Review the Azure Pipelines template interface
+## Task 2 — Reject an invalid parameter and execute valid build behavior
 
 <a id="task-2"></a>
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.5` | practiced | Consume the typed Release parameter and execute the selected .NET test configuration. |
+
 ```powershell
 Copy-Item (Join-Path $LabRoot 'artifacts/templates/dotnet-build.yml') (Join-Path $WorkRoot 'dotnet-build.yml')
- Select-String -Path (Join-Path $WorkRoot 'dotnet-build.yml') -Pattern 'parameters:|type:|dotnet|steps:'
+Copy-Item (Join-Path $LabRoot 'artifacts/consumer-azure-pipelines.yml') (Join-Path $WorkRoot 'consumer-azure-pipelines.yml')
+@'
+import json,sys,yaml
+from pathlib import Path
+r=Path(sys.argv[1]);t=yaml.safe_load((r/'dotnet-build.yml').read_text());p=next(x for x in t['parameters'] if x['name']=='configuration')
+assert p['type']=='string' and 'Release' in p['values'] and 'Production' not in p['values']
+assert any('Build-Release.ps1' in x.get('pwsh','') for x in t['steps'])
+print(json.dumps({'selected':'Release','rejected':'Production','allowed':p['values']}))
+'@|python - $WorkRoot|Set-Content (Join-Path $WorkRoot 'template-parameters.json')
+if($LASTEXITCODE -ne 0){throw 'Typed template parameter contract failed.'}
+$config=(Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json).selected
+dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration $config --logger 'trx;LogFileName=reusable.trx' --results-directory (Join-Path $WorkRoot 'template-tests')
+if($LASTEXITCODE -ne 0){throw 'Selected reusable build behavior failed.'}
 ```
 
-Expected state: The build template declares parameters separately from runtime variables.
+Expected state: Release is accepted, Production is rejected, and selected test behavior passes locally.
 
 Positive validation:
 
 ```powershell
-$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw
- if ($t -notmatch 'parameters:' -or $t -notmatch 'steps:') { throw 'Build template contract absent.' }
+$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json
+$f=Get-ChildItem (Join-Path $WorkRoot 'template-tests') -Filter '*.trx' -Recurse|Select-Object -First 1;$x=[xml](Get-Content $f.FullName -Raw)
+if($p.selected -ne 'Release' -or [int]$x.TestRun.ResultSummary.Counters.passed -lt 1){throw 'Valid template behavior unproven.'}
 ```
 
 Negative validation:
 
 ```powershell
-$t=Get-Content (Join-Path $WorkRoot 'dotnet-build.yml') -Raw
- if ($t -match 'password:\s*[^$\s]') { throw 'Literal credential in template.' }
+$p=Get-Content (Join-Path $WorkRoot 'template-parameters.json') -Raw|ConvertFrom-Json
+if($p.rejected -in $p.allowed){throw 'Invalid template value accepted.'}
 ```
 
-Evidence to retain: Parameter types and compile-time/runtime expression comparison.
+Evidence to retain: Allowed/rejected parameter decisions and passing TRX; local validation is not provider template expansion.
 
-Common failure and safe retry: Use template parameters for structure; use runtime variables for execution values.
+Common failure and safe retry: Use parameters for compile-time structure, variables for runtime data, and valid enum values rather than arbitrary substitution.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
@@ -156,6 +197,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $g=az pipelines variable-group create --organization $AdoOrganization --project $AdoProject --name "build-$RunId" --variables BuildConfiguration=Release TargetFramework=net10.0 --authorize false -o json|ConvertFrom-Json
@@ -192,6 +235,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.6` | practiced | Topologically sort the dependency graph and reject an indirect build/package cycle. |
+
 ```powershell
 $dag=@([ordered]@{job='build';needs=@()},[ordered]@{job='test';needs=@('build')},[ordered]@{job='package';needs=@('test')})
  $dag|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')
@@ -211,8 +258,9 @@ $o=@(Get-Content (Join-Path $WorkRoot 'execution-order.txt'))
 Negative validation:
 
 ```powershell
-$d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json
- if (@($d|Where-Object { $_.job -in $_.needs }).Count) { throw 'Self-referencing job dependency.' }
+$jobs=@(Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json);$names=@($jobs.job);$done=@()
+if(@($jobs|ForEach-Object needs|Where-Object {$_ -notin $names}).Count){throw 'AZ400-L11-FAULT'}
+while($done.Count -lt $jobs.Count){$ready=@($jobs|Where-Object {$_.job -notin $done -and @($_.needs|Where-Object {$_ -notin $done}).Count -eq 0});if($ready.Count -eq 0){throw 'AZ400-L11-FAULT'};$done+=@($ready.job)}
 ```
 
 Evidence to retain: DAG and successful execution order.
@@ -226,6 +274,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-5"></a>
 
 Checkpoint: `CP5`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 dotnet build (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release
@@ -257,7 +307,23 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/11-reusable-yaml/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L11-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$jobs=@(Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json);$names=@($jobs.job);$done=@()
+if(@($jobs|ForEach-Object needs|Where-Object {$_ -notin $names}).Count){throw 'AZ400-L11-FAULT'}
+while($done.Count -lt $jobs.Count){$ready=@($jobs|Where-Object {$_.job -notin $done -and @($_.needs|Where-Object {$_ -notin $done}).Count -eq 0});if($ready.Count -eq 0){throw 'AZ400-L11-FAULT'};$done+=@($ready.job)}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@('package');$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')
@@ -269,7 +335,7 @@ Diagnose the precise difference:
 $d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d|Format-Table job,needs
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'job-graph.json') -Raw|ConvertFrom-Json;$d[0].needs=@();$d|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'job-graph.json')
@@ -285,7 +351,7 @@ Call the templates from a separate disposable consumer repository using a pinned
 & './labs/11-reusable-yaml/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -317,4 +383,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

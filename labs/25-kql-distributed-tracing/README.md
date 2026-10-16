@@ -15,7 +15,8 @@ Learner role: **Site reliability engineer**. Outcome: Query logs and correlate d
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,6 +38,11 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D5.1.2`, `D5.2.1`, `D5.2.2`, `D5.2.3`, `D5.2.4`
 
 | Checkpoint | Measurable behavior |
@@ -45,7 +51,7 @@ Official objective topic IDs: `D5.1.2`, `D5.2.1`, `D5.2.2`, `D5.2.3`, `D5.2.4`
 | [CP2](#task-2) | Calculate latency and failure rate with KQL |
 | [CP3](#task-3) | Prove the sample emits a distributed trace span |
 | [CP4](#task-4) | Join synthetic requests and dependencies by operation identity |
-| [CP5](#task-5) | Review production query tables and infrastructure signals |
+| [CP5](#task-5) | Analyze numeric infrastructure and request evidence |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Trace identity correlates a request with dependencies; timestamp proximity does not. Sampling and unmatched rows affect joins; units and observed windows matter when interpreting infrastructure signals.
 
+Request and dependency spans correlate through a shared operation identity, not merely similar timestamps. A leftouter join retains a request with no dependency, while an inner join silently removes it. Sampling and missing telemetry should influence the interpretation rather than be hidden.
+
+The KQL datatable tasks execute deterministic aggregates in an actual selected workspace; the local ActivityListener test proves span creation without proving export. A separate Python reference calculation reads raw CPU, memory, disk and network samples and must state that it is not a KQL engine. Compare units, windows and exact numeric expectations before accepting an operational hypothesis.
+
 ## Task 1 — Create an isolated workspace for KQL evaluation
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $w=az monitor log-analytics workspace create --subscription $SubscriptionId --resource-group $ResourceGroup --workspace-name "query-$RunId" --location $Location --retention-time 30 --sku PerGB2018 -o json|ConvertFrom-Json
@@ -123,6 +135,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-2"></a>
 
 Checkpoint: `CP2`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D5.2.2` | practiced | Run a KQL datatable aggregation in the selected workspace and compare exact requests/failures/p95 outputs. |
+| `D5.2.4` | practiced | Execute and assert Kusto aggregation results; Python fixture output is only a reference calculation. |
 
 ```powershell
 $q='datatable(operation:string,durationMs:real,success:bool)["read",10.0,true,"read",30.0,true,"write",100.0,false] | summarize requests=count(), failures=countif(success == false), p95Ms=percentile(durationMs,95)'
@@ -159,6 +176,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D5.1.2` | practiced | Execute the local ActivityListener trace test and distinguish local span creation from exporter ingestion. |
+
 ```powershell
 dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --filter 'FullyQualifiedName~CreatesTraceSpanForTodoWrite' --logger "trx;LogFileName=trace.trx" --results-directory (Join-Path $WorkRoot 'trace-tests')
  if($LASTEXITCODE -ne 0){throw 'Trace instrumentation test failed.'}
@@ -192,6 +213,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D5.2.3` | practiced | Use a leftouter KQL join to retain requests with no dependency span; local span test is separate evidence. |
+
 ```powershell
 $q='let requests=datatable(operation_Id:string,name:string)["op1","POST /todos","op2","GET /todos"]; let dependencies=datatable(operation_Id:string,target:string,durationMs:real)["op1","sqlite",12.0]; requests | join kind=leftouter dependencies on operation_Id | project operation_Id,name,target,durationMs'
  $q|Set-Content (Join-Path $WorkRoot 'correlation.kql')
@@ -220,43 +245,67 @@ Common failure and safe retry: Use trace/operation identity rather than timestam
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Review production query tables and infrastructure signals
+## Task 5 — Analyze numeric infrastructure and request evidence
 
 <a id="task-5"></a>
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D5.2.1` | practiced | Calculate CPU, memory, disk, and network maxima from raw local telemetry measurements. |
+
 ```powershell
+python (Join-Path $LabRoot 'artifacts/query_fixtures.py') --input (Join-Path $LabRoot 'artifacts/telemetry-fixtures.json') --output (Join-Path $WorkRoot 'query-results.json')
+if($LASTEXITCODE -ne 0){throw 'Reference telemetry calculations failed.'}
+$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json
+$hypothesis=if($r.resourceMaxima.cpuPercent -ge 70 -and $r.resourceMaxima.diskLatencyMs -ge 10){'Investigate CPU and disk contention during the request window; correlation is not causation.'}else{'No threshold exceeded in this fixture; retain the raw window.'}
+@{fixtureOnly=$true;hypothesis=$hypothesis;requests=$r.counts.requests;failures=$r.counts.failures;liveExporterVerified=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'signal-interpretation.json')
 Copy-Item (Join-Path $LabRoot 'artifacts/operations.kql') (Join-Path $WorkRoot 'operations.kql')
- $signals=[ordered]@{CPU='percentage';memory='bytes or percent; identify source';disk='latency and free capacity';network='throughput and failures';application='requests, dependencies, exceptions';exportVerified=$false}
- $signals|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'signal-interpretation.json')
 ```
 
-Expected state: Real-table queries and infrastructure signal units are reviewable without inventing ingested data.
+Expected state: Reference calculations produce3requests,1failure, p95=100ms and resource maxima supporting a bounded contention hypothesis.
 
 Positive validation:
 
 ```powershell
-$s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json
- if($s.application -notmatch 'dependencies' -or $s.disk -notmatch 'latency'){throw 'Signal interpretation incomplete.'}
+$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json
+if($r.counts.requests -ne 3 -or $r.counts.failures -ne 1 -or $r.counts.p95Ms -ne 100 -or $r.resourceMaxima.cpuPercent -ne 75){throw 'Telemetry calculation mismatch.'}
 ```
 
 Negative validation:
 
 ```powershell
+$r=Get-Content (Join-Path $WorkRoot 'query-results.json') -Raw|ConvertFrom-Json
 $s=Get-Content (Join-Path $WorkRoot 'signal-interpretation.json') -Raw|ConvertFrom-Json
- if($s.exportVerified){throw 'Local span/KQL datatable tests do not prove live export.'}
+if(@($r.correlations).Count -ne 3 -or $s.liveExporterVerified -or $r.resourceMaxima.networkErrorRate -gt 1){throw 'Correlation/unit/verification boundary violated.'}
 ```
 
-Evidence to retain: Query digest, table schema, signal units, and explicitly pending export verification.
+Evidence to retain: Raw synthetic observation window, calculations, units and hypothesis. Python reference results are distinct from actual KQL-engine results inCP2/CP4.
 
-Common failure and safe retry: Workspace-based tables can use AppRequests/AppDependencies; adapt query schema using actual tables rather than assuming classic names.
+Common failure and safe retry: Compare the same operation IDs and time window. CPU/memory/disk/network saturation can support a hypothesis; it does not prove causation or live exporter operation.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/25-kql-distributed-tracing/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L25-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt')
+$r=@(az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query $q -o json|ConvertFrom-Json)
+if($r.Count -ne 2 -or 'op2' -notin $r.operation_Id){throw 'AZ400-L25-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('leftouter','inner')|Set-Content (Join-Path $WorkRoot 'correlation.kql')
@@ -268,7 +317,7 @@ Diagnose the precise difference:
 $id=Get-Content (Join-Path $WorkRoot 'workspace-customer-id.txt');az monitor log-analytics query --subscription $SubscriptionId --workspace $id --analytics-query (Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw) -o json
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $q=Get-Content (Join-Path $WorkRoot 'correlation.kql') -Raw;$q.Replace('kind=inner','kind=leftouter')|Set-Content (Join-Path $WorkRoot 'correlation.kql')
@@ -284,7 +333,7 @@ With approved real telemetry, find one slow request, follow its dependency span,
 & './labs/25-kql-distributed-tracing/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -316,4 +365,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

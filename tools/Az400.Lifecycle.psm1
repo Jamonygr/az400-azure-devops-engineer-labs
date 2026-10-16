@@ -236,7 +236,7 @@ function Remove-LabBoundary {
 function Invoke-Az400Lab {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][ValidateSet('Preflight', 'Setup', 'Validate', 'Cleanup')][string]$Operation,
+        [Parameter(Mandatory)][ValidateSet('Preflight', 'Setup', 'Validate', 'Cleanup', 'BreakFix', 'Integration')][string]$Operation,
         [Parameter(Mandatory)][string]$Definition,
         [Parameter(Mandatory)][ValidatePattern('^[a-z][a-z0-9-]{2,23}$')][string]$RunId,
         [string]$GithubOwner = $env:AZ400_GITHUB_OWNER,
@@ -253,17 +253,24 @@ function Invoke-Az400Lab {
     Write-Verbose "Using repository $RepoRoot and lab artifacts $LabRoot."
     $GhRepo = $context.ghRepo; $AdoProject = $context.adoProject
     $ResourceGroup = $context.resourceGroup
+    $journal = Read-LabJournal $context
     $platforms = @($lab.platforms)
-    if ($Operation -in @('Setup', 'Cleanup') -and -not $Execute) {
+    if ($Operation -eq 'Integration' -or ($journal.Contains('integration') -and $journal.integration.status -eq 'passed' -and $Operation -eq 'Validate')) { $platforms += 'azure' }
+    if ($Operation -in @('Setup', 'Cleanup', 'BreakFix', 'Integration') -and -not $Execute) {
         return [pscustomobject]@{ operation = $Operation; status = 'preview'; context = $context; platforms = $platforms; checkpoints = @($lab.checkpoints | ForEach-Object { $_.id }); changesMade = $false }
+    }
+    if ($Operation -eq 'Integration') {
+        if (-not $lab.Contains('integration')) { throw 'This lab has no separate integration lane.' }
+        if (-not $AcknowledgeCost -or -not $AcknowledgeTenantChange) { throw 'Integration requires -AcknowledgeCost and -AcknowledgeTenantChange after reviewing its prerequisites.' }
     }
     if ($Operation -eq 'Setup') {
         if ($lab.cost -ne 'none' -and -not $AcknowledgeCost) { throw 'Review cost gates and pass -AcknowledgeCost.' }
         $tenantGate = $lab.id -in @('20', '21') -or ($lab.ContainsKey('requiresTenantChange') -and $lab.requiresTenantChange)
         if ($tenantGate -and -not $AcknowledgeTenantChange) { throw 'Identity exercises require -AcknowledgeTenantChange after review.' }
     }
-    if ($Operation -in @('Preflight', 'Setup', 'Validate')) {
+    if ($Operation -in @('Preflight', 'Setup', 'Validate', 'BreakFix', 'Integration')) {
         $tools = @('git', 'pwsh', 'dotnet')
+        if ($lab.Contains('requiredTools')) { $tools += @($lab.requiredTools) }
         if ('github' -in $platforms) { $tools += 'gh'; if (-not $GithubOwner) { throw 'Set AZ400_GITHUB_OWNER or pass -GithubOwner.' } }
         if ('azure-devops' -in $platforms -or 'azure' -in $platforms) { $tools += 'az' }
         if ('azure-devops' -in $platforms -and -not $AdoOrganization) { throw 'Set AZ400_ADO_ORGANIZATION or pass -AdoOrganization.' }
@@ -274,8 +281,10 @@ function Invoke-Az400Lab {
             if ($login.Trim() -ine $GithubOwner) { throw 'GitHub authentication does not match the explicitly selected personal sandbox owner.' }
         }
         if ('azure' -in $platforms) {
-            $account = Invoke-LabNative az @('account', 'show', '--subscription', $SubscriptionId, '--output', 'json') | ConvertFrom-Json -AsHashtable
-            if ($account.id -ine $SubscriptionId) { throw 'Azure subscription context mismatch.' }
+            # Lab commands can omit --subscription. Require the active CLI
+            # subscription to match, rather than merely proving access to it.
+            $account = Invoke-LabNative az @('account', 'show', '--output', 'json') | ConvertFrom-Json -AsHashtable
+            if ($account.id -ine $SubscriptionId) { throw 'Azure subscription context mismatch. Select the intended subscription with az account set before running this lab.' }
             if ($lab.ContainsKey('providers')) {
                 foreach ($provider in @($lab.providers)) {
                     $registration = Invoke-LabNative az @('provider', 'show', '--namespace', $provider, '--subscription', $SubscriptionId, '--query', 'registrationState', '--output', 'tsv')
@@ -297,9 +306,10 @@ function Invoke-Az400Lab {
         }
         if ($Operation -eq 'Preflight') { return [pscustomobject]@{ status = 'ready'; context = $context; changesMade = $false } }
     }
-    $journal = Read-LabJournal $context
     $script:ActiveContext = $context
+    if (-not $journal.Contains('authorizations')) { $journal.authorizations = @{paidFeatures=$false} }
     if ($Operation -eq 'Setup') {
+        if ($AllowPaidFeatures) { $journal.authorizations.paidFeatures = $true }
         Save-LabJournal $context $journal
         try {
             if ('github' -in $platforms) { New-LabBoundary $context $journal 'github-repository' $GhRepo }
@@ -311,7 +321,7 @@ function Invoke-Az400Lab {
                         Write-Verbose "Preserving completed checkpoint $($checkpoint.id); use a new run ID to repeat the full lane."
                         continue
                     }
-                    $paidGate = $lab.id -eq '23' -or ($checkpoint.Contains('requiresPaidFeatures') -and $checkpoint.requiresPaidFeatures)
+                    $paidGate = $checkpoint.Contains('requiresPaidFeatures') -and $checkpoint.requiresPaidFeatures
                     if ($paidGate -and -not $AllowPaidFeatures) {
                         $journal.checkpoints = @($journal.checkpoints | Where-Object { $_.id -ne $checkpoint.id })
                         $journal.checkpoints += @{ id = $checkpoint.id; status = 'skipped'; reason = 'Paid feature prerequisite not acknowledged' }
@@ -319,6 +329,7 @@ function Invoke-Az400Lab {
                     }
                     Write-Information "Executing $($checkpoint.id): $($checkpoint.title)" -InformationAction Continue
                     $journal.activeCheckpoint = $checkpoint.id
+                    [void]$journal.Remove('breakFix')
                     Save-LabJournal $context $journal
                     & ([scriptblock]::Create($checkpoint.commands)) | Out-Host
                     $journal.checkpoints = @($journal.checkpoints | Where-Object { $_.id -ne $checkpoint.id })
@@ -332,6 +343,61 @@ function Invoke-Az400Lab {
         Save-LabJournal $context $journal
         return [pscustomobject]@{ status = $journal.status; statePath = Join-Path $WorkRoot 'run.json'; liveVerified = $false }
     }
+    if ($Operation -in @('BreakFix', 'Integration')) {
+        if ($journal.status -notin @('provisioned','configured','partial')) { throw 'Exercise requires a current provisioned run.' }
+        foreach ($ownedObject in @($journal.objects)) { [void](Assert-LabOwnership $context $ownedObject $journal.ownerToken) }
+        # Refuse destructive rehearsal before the ordinary state is healthy.
+        foreach ($checkpoint in $lab.checkpoints) {
+            $paidGate = $checkpoint.Contains('requiresPaidFeatures') -and $checkpoint.requiresPaidFeatures
+            if ($paidGate -and -not ($journal.authorizations.paidFeatures -or $AllowPaidFeatures)) { throw 'Complete the gated checkpoints before this exercise.' }
+            & ([scriptblock]::Create($checkpoint.validate)) | Out-Null
+        }
+        if ($Operation -eq 'Integration') {
+            $journal.integration = @{status='running'}
+            Save-LabJournal $context $journal
+            try {
+                New-LabBoundary $context $journal 'azure-resource-group' $ResourceGroup
+                & ([scriptblock]::Create($lab.integration.commands)) | Out-Host
+                & ([scriptblock]::Create($lab.integration.validate)) | Out-Null
+                $journal.integration = @{status='passed';verifiedAt=[DateTime]::UtcNow.ToString('o')}
+            } catch {
+                $journal.integration.status = 'failed'
+                Save-LabJournal $context $journal
+                throw
+            }
+            Save-LabJournal $context $journal
+            return [pscustomobject]@{status='passed';operation='Integration'}
+        }
+        if (-not $lab.Contains('breakFix') -or -not $lab.breakFix.Contains('assert') -or -not $lab.breakFix.Contains('expectedFailure')) { throw 'Missing versioned break/fix assertion contract.' }
+        $contract = $lab.breakFix
+        $contractHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes(($contract | ConvertTo-Json -Depth 10 -Compress))))
+        $journal.breakFix = @{status='running';healthyPassed=$false;failureObserved=$false;repairPassed=$false;contractHash=$contractHash}
+        Save-LabJournal $context $journal
+        & ([scriptblock]::Create($contract.assert)) | Out-Null
+        $journal.breakFix.healthyPassed = $true
+        Save-LabJournal $context $journal
+        try {
+            & ([scriptblock]::Create($contract.trigger)) | Out-Host
+            try { & ([scriptblock]::Create($contract.assert)) | Out-Null }
+            catch {
+                if (-not $_.Exception.Message.Contains([string]$contract.expectedFailure)) { throw 'Fault produced an unexpected assertion failure; repair will still be attempted.' }
+                $journal.breakFix.failureObserved = $true
+            }
+            if (-not $journal.breakFix.failureObserved) { throw 'Injected fault was not detected by its named assertion.' }
+        } finally {
+            # Recovery is attempted even if the trigger or diagnostic step failed.
+            try {
+                & ([scriptblock]::Create($contract.repair)) | Out-Host
+                & ([scriptblock]::Create($contract.assert)) | Out-Null
+                $journal.breakFix.repairPassed = $true
+            } finally {
+                $journal.breakFix.status = $(if ($journal.breakFix.healthyPassed -and $journal.breakFix.failureObserved -and $journal.breakFix.repairPassed) {'passed'} else {'failed'})
+                $journal.breakFix.verifiedAt = [DateTime]::UtcNow.ToString('o')
+                Save-LabJournal $context $journal
+            }
+        }
+        return [pscustomobject]@{status=$journal.breakFix.status;operation='BreakFix'}
+    }
     if ($Operation -eq 'Validate') {
         if (-not (Test-Path -LiteralPath (Join-Path $WorkRoot 'run.json'))) { throw 'No owned run exists. Complete setup first.' }
         if ($journal.status -notin @('provisioned', 'configured', 'partial')) { throw 'Validation requires a current provisioned run. Failed, initialized, or cleaned runs cannot use stale evidence as a live result.' }
@@ -341,8 +407,9 @@ function Invoke-Az400Lab {
         }
         $results = @()
         foreach ($checkpoint in $lab.checkpoints) {
-            $paidGate = $lab.id -eq '23' -or ($checkpoint.Contains('requiresPaidFeatures') -and $checkpoint.requiresPaidFeatures)
-            if ($paidGate -and -not $AllowPaidFeatures) { $results += @{ id = $checkpoint.id; status = 'skipped'; reason = 'Paid prerequisite' }; continue }
+            $paidGate = $checkpoint.Contains('requiresPaidFeatures') -and $checkpoint.requiresPaidFeatures
+            $executed = @($journal.checkpoints | Where-Object { $_.id -eq $checkpoint.id -and $_.status -eq 'executed' }).Count -gt 0
+            if ($paidGate -and -not ($AllowPaidFeatures -or ($journal.authorizations.paidFeatures -and $executed))) { $results += @{ id = $checkpoint.id; status = 'skipped'; reason = 'Paid prerequisite' }; continue }
             try {
                 if (-not $checkpoint.Contains('validate') -or -not $checkpoint.validate) { throw 'Missing read-only checkpoint validator.' }
                 & ([scriptblock]::Create($checkpoint.validate)) | Out-Null
@@ -350,7 +417,23 @@ function Invoke-Az400Lab {
             } catch { $results += @{ id = $checkpoint.id; status = 'failed'; reason = 'Assertion failed; inspect the checkpoint validation command.' } }
         }
         $status = $(if (@($results | Where-Object { $_.status -eq 'failed' }).Count) { 'failed' } elseif (@($results | Where-Object { $_.status -eq 'skipped' }).Count) { 'partial' } else { 'passed' })
-        $report = @{ schemaVersion = '1.0.0'; labId = $lab.id; runId = $RunId; status = $status; checkpoints = $results; verifiedAt = [DateTime]::UtcNow.ToString('o') }
+        $breakFixStatus = 'missing'
+        if ($lab.Contains('breakFix') -and $lab.breakFix.Contains('assert') -and $journal.Contains('breakFix')) {
+            $contractHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes(($lab.breakFix | ConvertTo-Json -Depth 10 -Compress))))
+            if ($journal.breakFix.status -eq 'passed' -and $journal.breakFix.contractHash -ceq $contractHash -and $journal.breakFix.healthyPassed -and $journal.breakFix.failureObserved -and $journal.breakFix.repairPassed) {
+                try { & ([scriptblock]::Create($lab.breakFix.assert)) | Out-Null; $breakFixStatus='passed' } catch { $breakFixStatus='failed' }
+            }
+        }
+        $integrationStatus = 'not-required'
+        if ($lab.Contains('integration') -and $lab.integration.requiredForCompletion) {
+            $integrationStatus = 'missing'
+            if ($journal.Contains('integration') -and $journal.integration.status -eq 'passed') {
+                try { & ([scriptblock]::Create($lab.integration.validate)) | Out-Null; $integrationStatus='passed' } catch { $integrationStatus='failed' }
+            }
+        }
+        if ($breakFixStatus -eq 'failed' -or $integrationStatus -eq 'failed') { $status='failed' }
+        elseif ($status -eq 'passed' -and ($breakFixStatus -ne 'passed' -or $integrationStatus -eq 'missing')) { $status='partial' }
+        $report = @{ schemaVersion = '2.0.0'; labId = $lab.id; runId = $RunId; status = $status; checkpoints = $results; breakFix=$breakFixStatus; integration=$integrationStatus; verifiedAt = [DateTime]::UtcNow.ToString('o') }
         Save-LabJson (Join-Path $WorkRoot 'validation.json') $report
         return [pscustomobject]$report
     }

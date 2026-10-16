@@ -19,16 +19,14 @@ jobs:
         env:
           BUILD_CONFIGURATION: ${{ inputs.configuration }}
         run: '[[ "$BUILD_CONFIGURATION" == Release || "$BUILD_CONFIGURATION" == Debug ]]'
-      - run: dotnet restore samples/DevOps.slnx --locked-mode
-      - name: Test
+      - name: Locked build, tests, coverage and immutable packaging
+        shell: pwsh
         env:
+          SOURCE_REVISION: ${{ github.sha }}
           BUILD_CONFIGURATION: ${{ inputs.configuration }}
-        run: dotnet test samples/DevOps.slnx --configuration "$BUILD_CONFIGURATION" --no-restore
-      - name: Publish
-        env:
-          BUILD_CONFIGURATION: ${{ inputs.configuration }}
-        run: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration "$BUILD_CONFIGURATION" --no-restore --output publish /p:UseAppHost=false
+        run: ./samples/Build-Release.ps1 -Revision $env:SOURCE_REVISION -Configuration $env:BUILD_CONFIGURATION -OutputPath publish
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: todo-api
           path: publish/
+

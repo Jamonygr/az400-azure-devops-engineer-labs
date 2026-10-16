@@ -15,7 +15,8 @@ Learner role: **Observability engineer**. Outcome: Collect telemetry and configu
 | Platforms | local, azure |
 | Cost | billable; explicit acknowledgement — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D1.2.7`, `D5.1.1`, `D5.1.2`, `D5.1.3`, `D5.1.4`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 A workspace, instrumentation, ingestion, query, and alert action are separate links. A configured rule without telemetry proves configuration only; no external notifications are sent here.
 
+Telemetry requires a chain from instrumentation to ingestion, workspace, query and response. Creating a workspace and Application Insights component proves configuration only. A silent metric alert avoids sending external messages while making its threshold, scope and enabled state inspectable.
+
+Choose response actions around an owner and measurable service objective. Pipeline events, runner consumption and application request latency belong to different signals; GitHub insights or a delivery-failure notification needs its own explicit configuration. The capstone generates tagged requests and requires observed request/error/latency data, so missing telemetry cannot pass as a healthy release.
+
 ## Task 1 — Create the owned Log Analytics workspace
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $name="logs-$RunId"
@@ -124,6 +136,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D5.1.1` | integrated | Create and query the run-owned Azure Monitor/Application Insights resources. |
+| `D5.1.2` | practiced | Inspect the actual telemetry component/workspace linkage. |
+
 ```powershell
 $w=Get-Content (Join-Path $WorkRoot 'workspace.json') -Raw|ConvertFrom-Json
  az monitor app-insights component create --subscription $SubscriptionId --resource-group $ResourceGroup --app "insights-$RunId" --location $Location --workspace $w.id --kind web --application-type web -o json|Set-Content (Join-Path $WorkRoot 'insights.json')
@@ -158,6 +175,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json
  az monitor metrics list-definitions --subscription $SubscriptionId --resource $i.id --query '[].{name:name.value,unit:unit,aggregation:primaryAggregationType}' -o json|Set-Content (Join-Path $WorkRoot 'metric-definitions.json')
@@ -190,6 +209,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $i=Get-Content (Join-Path $WorkRoot 'insights.json') -Raw|ConvertFrom-Json
@@ -224,6 +245,12 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.7` | explained | Interpret the operations dashboard and service objective; synthetic workload verification is distinct from live traffic. |
+| `D5.1.3` | explained | Compare GitHub usage/runner insights with service telemetry; no organization insight dashboard is configured. |
+| `D5.1.4` | explained | Design a delivery-event alert separately from the actual latency metric alert configured in CP4. |
+
 ```powershell
 $map=[ordered]@{application='request duration/error rate';infrastructure=@('CPU','memory','disk','network');github='workflow_run completion and repository insights';azurePipelines='build/release result';notificationMode='reviewed owner only';externalMessagesSent=0;liveTrafficVerified=$false}
  $map|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'telemetry-response-map.json')
@@ -253,7 +280,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/24-monitoring-alerts/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L24-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$a=az monitor metrics alert show --subscription $SubscriptionId --resource-group $ResourceGroup --name "slow-requests-$RunId" -o json|ConvertFrom-Json
+if(-not $a.enabled){throw 'AZ400-L24-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 az monitor metrics alert update --subscription $SubscriptionId --resource-group $ResourceGroup --name "slow-requests-$RunId" --enabled false -o none
@@ -265,7 +307,7 @@ Diagnose the precise difference:
 az monitor metrics alert show --subscription $SubscriptionId --resource-group $ResourceGroup --name "slow-requests-$RunId" --query '{enabled:enabled,window:windowSize}' -o json
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 az monitor metrics alert update --subscription $SubscriptionId --resource-group $ResourceGroup --name "slow-requests-$RunId" --enabled true -o none
@@ -281,7 +323,7 @@ Emit an approved synthetic trace/request through the sample and demonstrate the 
 & './labs/24-monitoring-alerts/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -313,4 +355,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

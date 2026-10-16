@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "04",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -10,152 +10,165 @@
     {
       "id": "S2",
       "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"
+    },
+    {
+      "id": "S3",
+      "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+    },
+    {
+      "id": "S4",
+      "url": "https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#merge_group"
     }
   ],
   "questions": [
     {
       "id": "L04-Q001",
       "checkpointId": "CP1",
-      "caseId": "L04-C01",
-      "task": "remedy",
-      "caseContext": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization. Which next change most directly satisfies the stated requirement?",
+      "question": "A feature branch has diverged from main for a month. The team wants earlier integration feedback without abandoning review. Which workflow is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Enforce pull-request review through protected-branch policies",
-          "rationale": "Written process needs a server-enforced branch control. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Create a permanent branch per developer and merge only during release week",
+          "rationale": "Permanent isolation postpones the integration feedback the team needs."
         },
         {
           "key": "B",
-          "text": "Update the required-check rule to the actual stable job name",
-          "rationale": "Protection must reference a status the workflow can produce. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "Review the entire feature only after copying it directly into production",
+          "rationale": "That moves review after the risky delivery instead of controlling source integration."
         },
         {
           "key": "C",
-          "text": "Use shorter integration cycles with a documented branch strategy",
-          "rationale": "Smaller divergence reduces expensive late reconciliation. This directly addresses the constraint stated in this case."
+          "text": "Integrate smaller reviewed increments through short-lived branches",
+          "rationale": "Smaller divergence provides earlier shared feedback while preserving review."
+        },
+        {
+          "key": "D",
+          "text": "Keep the same branch open and increase its local test frequency only",
+          "rationale": "Isolated tests do not exercise integration with colleagues' accepted changes."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Smaller divergence reduces expensive late reconciliation. The selected answer is use shorter integration cycles with a documented branch strategy.",
+      "explanation": "Permanent isolation postpones the integration feedback the team needs. That moves review after the risky delivery instead of controlling source integration. Smaller divergence provides earlier shared feedback while preserving review. Isolated tests do not exercise integration with colleagues' accepted changes.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q002",
       "checkpointId": "CP1",
-      "caseId": "L04-C01",
-      "task": "diagnosis",
-      "caseContext": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization. Which explanation best accounts for the behavior or constraint described?",
+      "question": "In a trunk-oriented workflow, what distinguishes short-lived feature branches from long-running release branches?",
       "options": [
         {
           "key": "A",
-          "text": "The branch rule is waiting for an absent status context",
-          "rationale": "Healthy jobs cannot satisfy a differently named requirement. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "They automatically publish every unfinished feature to all customers",
+          "rationale": "Source integration and customer exposure can be controlled separately."
         },
         {
           "key": "B",
-          "text": "Long-lived isolated changes accumulated incompatible edits",
-          "rationale": "Local correctness does not prevent integration conflicts. This directly addresses the constraint stated in this case."
+          "text": "Their work is integrated frequently rather than maintained as independent product versions",
+          "rationale": "The purpose is small-batch development integration, not prolonged release-line maintenance."
         },
         {
           "key": "C",
-          "text": "The policy exists only as an agreement",
-          "rationale": "Repository permissions still permit bypassing the intended workflow. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "They must never run automated tests before merging",
+          "rationale": "Short lifetime does not remove validation requirements."
+        },
+        {
+          "key": "D",
+          "text": "They necessarily bypass pull-request review",
+          "rationale": "A short-lived branch can still use enforced independent review."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Local correctness does not prevent integration conflicts. The selected answer is long-lived isolated changes accumulated incompatible edits.",
+      "explanation": "Source integration and customer exposure can be controlled separately. The purpose is small-batch development integration, not prolonged release-line maintenance. Short lifetime does not remove validation requirements. A short-lived branch can still use enforced independent review.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q003",
       "checkpointId": "CP1",
-      "caseId": "L04-C01",
-      "task": "verification",
-      "caseContext": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A team reports fewer source conflicts after reducing branch lifetime. Which evidence supports an actual integration improvement?",
       "options": [
         {
           "key": "A",
-          "text": "Features integrate in small reviewed changes with fewer conflicts",
-          "rationale": "The outcome should improve the actual integration process. This directly addresses the constraint stated in this case."
+          "text": "Fewer branches exist because developers stopped pushing unfinished work",
+          "rationale": "Hidden local work can preserve divergence while lowering the visible branch count."
         },
         {
           "key": "B",
-          "text": "A direct push is rejected and a compliant pull request merges",
-          "rationale": "Positive and negative probes confirm the required rule. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "The team deletes old branch names without merging their changes",
+          "rationale": "Deleting references does not establish that useful work integrated safely."
         },
         {
           "key": "C",
-          "text": "The current workflow result satisfies the branch requirement",
-          "rationale": "The policy and emitted check must agree. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "The release contains fewer commits only because history was squashed",
+          "rationale": "Commit presentation alone does not prove reduced integration delay."
+        },
+        {
+          "key": "D",
+          "text": "Comparable changes integrate earlier with less divergence and successful required checks",
+          "rationale": "Both the integration timing and maintained quality conditions should be observed."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The outcome should improve the actual integration process. The selected answer is features integrate in small reviewed changes with fewer conflicts.",
+      "explanation": "Hidden local work can preserve divergence while lowering the visible branch count. Deleting references does not establish that useful work integrated safely. Commit presentation alone does not prove reduced integration delay. Both the integration timing and maintained quality conditions should be observed.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q004",
       "checkpointId": "CP1",
-      "caseId": "L04-C01",
-      "task": "safeguard",
-      "caseContext": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What quality control should remain in place when the team starts merging smaller changes more frequently?",
       "options": [
         {
           "key": "A",
-          "text": "Keep incomplete exposure controlled through flags or incremental work",
-          "rationale": "Frequent merging must not expose unfinished behavior. This directly addresses the constraint stated in this case."
+          "text": "Automatic approval whenever the pull request changes fewer than ten lines",
+          "rationale": "Small diffs can still contain security or correctness defects."
         },
         {
           "key": "B",
-          "text": "Review who can bypass branch protection",
-          "rationale": "Broad bypass rights weaken otherwise correct policies. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Required review and relevant automated validation on the protected target",
+          "rationale": "Small changes still need the controls that establish acceptable merge evidence."
         },
         {
           "key": "C",
-          "text": "Coordinate workflow and protection changes in a controlled rollout",
-          "rationale": "Changing only one side can block all pull requests. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "Only a weekly manual review of the accumulated release diff",
+          "rationale": "Late aggregate review does not gate each accepted change."
+        },
+        {
+          "key": "D",
+          "text": "Permission for any author to force-push over a failing main branch",
+          "rationale": "A rewrite can bypass the review and validation boundary."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Frequent merging must not expose unfinished behavior. The selected answer is keep incomplete exposure controlled through flags or incremental work.",
+      "explanation": "Small diffs can still contain security or correctness defects. Small changes still need the controls that establish acceptable merge evidence. Late aggregate review does not gate each accepted change. A rewrite can bypass the review and validation boundary.",
       "sourceIds": [
         "S1",
         "S2"
@@ -164,35 +177,37 @@
     {
       "id": "L04-Q005",
       "checkpointId": "CP1",
-      "caseId": "L04-C01",
-      "task": "tradeoff",
-      "caseContext": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "advanced",
-      "question": "Integration drift: A feature branch remains isolated for a month and repeatedly conflicts with the release branch during stabilization. The team selects this remedy: \"Use shorter integration cycles with a documented branch strategy.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The service must integrate daily, retain independent approval, and keep an unfinished feature unavailable. Which strategy meets the combined requirements?",
       "options": [
         {
           "key": "A",
-          "text": "Trunk-oriented work requires strong automation and discipline",
-          "rationale": "A smaller branch graph does not eliminate release risk. This directly addresses the constraint stated in this case."
+          "text": "Direct pushes to main with exposure disabled and retrospective approval",
+          "rationale": "A hidden feature does not justify omitting the independent merge approval."
         },
         {
           "key": "B",
-          "text": "Strict protection can delay urgent fixes",
-          "rationale": "Define a reviewed emergency process rather than implicit bypass. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "A permanent release branch for every developer with no shared integration target",
+          "rationale": "That creates ongoing divergence instead of the required shared daily integration."
         },
         {
           "key": "C",
-          "text": "Required-status naming becomes a compatibility contract",
-          "rationale": "Renames need policy migration rather than isolated edits. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "Small reviewed integrations to protected main plus tested feature exposure control",
+          "rationale": "The plan separates integration cadence from release exposure while retaining approval evidence."
+        },
+        {
+          "key": "D",
+          "text": "A month-long feature branch with a daily local build and one final review",
+          "rationale": "That validates isolated work but fails the required daily integration."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "A smaller branch graph does not eliminate release risk. The selected answer is trunk-oriented work requires strong automation and discipline.",
+      "explanation": "A hidden feature does not justify omitting the independent merge approval. That creates ongoing divergence instead of the required shared daily integration. The plan separates integration cadence from release exposure while retaining approval evidence. That validates isolated work but fails the required daily integration.",
       "sourceIds": [
         "S1",
         "S2"
@@ -201,146 +216,156 @@
     {
       "id": "L04-Q006",
       "checkpointId": "CP4",
-      "caseId": "L04-C02",
-      "task": "remedy",
-      "caseContext": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request. Which next change most directly satisfies the stated requirement?",
+      "question": "An Azure Repos team requires every change to main to pass through review, but direct pushes still succeed. Which control is missing?",
       "options": [
         {
           "key": "A",
-          "text": "Enforce pull-request review through protected-branch policies",
-          "rationale": "Written process needs a server-enforced branch control. This directly addresses the constraint stated in this case."
+          "text": "Make review recommended but allow contributors to complete without it",
+          "rationale": "A recommendation still does not enforce the stated reviewed-only write requirement."
         },
         {
           "key": "B",
-          "text": "Dismiss stale approvals or require review of the latest push",
-          "rationale": "New code should not inherit unrelated approval evidence. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Apply the approval policy only to feature branches instead of main",
+          "rationale": "The target accepting production changes remains outside the intended protection."
         },
         {
           "key": "C",
-          "text": "Use shorter integration cycles with a documented branch strategy",
-          "rationale": "Smaller divergence reduces expensive late reconciliation. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "A scheduled report counting commits after they reach main",
+          "rationale": "After-the-fact reporting does not block the prohibited write."
+        },
+        {
+          "key": "D",
+          "text": "Enforced branch policies and permissions consistent with the review requirement",
+          "rationale": "A written process alone does not restrict the accepted write paths."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Written process needs a server-enforced branch control. The selected answer is enforce pull-request review through protected-branch policies.",
+      "explanation": "A recommendation still does not enforce the stated reviewed-only write requirement. The target accepting production changes remains outside the intended protection. After-the-fact reporting does not block the prohibited write. A written process alone does not restrict the accepted write paths.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L04-Q007",
       "checkpointId": "CP4",
-      "caseId": "L04-C02",
-      "task": "diagnosis",
-      "caseContext": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A GitHub administrator configures a required approval count. Why should bypass permissions also be reviewed?",
       "options": [
         {
           "key": "A",
-          "text": "Long-lived isolated changes accumulated incompatible edits",
-          "rationale": "Local correctness does not prevent integration conflicts. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Required reviews automatically remove all administrator privileges",
+          "rationale": "Review configuration does not necessarily revoke separate bypass capability."
         },
         {
           "key": "B",
-          "text": "The policy exists only as an agreement",
-          "rationale": "Repository permissions still permit bypassing the intended workflow. This directly addresses the constraint stated in this case."
+          "text": "A bypass role is required for every ordinary pull-request author",
+          "rationale": "Normal compliant authors do not need an exemption from protection."
         },
         {
           "key": "C",
-          "text": "The approved revision differs from the merged revision",
-          "rationale": "An earlier review may not cover the latest change. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "An exempt principal may merge without satisfying ordinary protection",
+          "rationale": "Effective enforcement depends on both the rule and who may avoid it."
+        },
+        {
+          "key": "D",
+          "text": "Bypass access automatically makes every test result invalid",
+          "rationale": "The access changes enforcement, not whether test execution produced a valid result."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Repository permissions still permit bypassing the intended workflow. The selected answer is the policy exists only as an agreement.",
+      "explanation": "Review configuration does not necessarily revoke separate bypass capability. Normal compliant authors do not need an exemption from protection. Effective enforcement depends on both the rule and who may avoid it. The access changes enforcement, not whether test execution produced a valid result.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q008",
       "checkpointId": "CP4",
-      "caseId": "L04-C02",
-      "task": "verification",
-      "caseContext": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which negative test most directly verifies a requirement for reviewed pull requests rather than direct writes to main?",
       "options": [
         {
           "key": "A",
-          "text": "A direct push is rejected and a compliant pull request merges",
-          "rationale": "Positive and negative probes confirm the required rule. This directly addresses the constraint stated in this case."
+          "text": "Open a pull request and inspect its title",
+          "rationale": "Creation does not prove a direct push would be rejected."
         },
         {
           "key": "B",
-          "text": "A new commit invalidates approval or requires fresh review",
-          "rationale": "The rule must bind review to current content. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Count the current reviewers on a merged request",
+          "rationale": "A historical review does not establish server enforcement against alternate writes."
         },
         {
           "key": "C",
-          "text": "Features integrate in small reviewed changes with fewer conflicts",
-          "rationale": "The outcome should improve the actual integration process. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Confirm the repository contains a CONTRIBUTING document",
+          "rationale": "Documentation states intent but does not prove enforced permissions."
+        },
+        {
+          "key": "D",
+          "text": "Attempt a direct push with the ordinary contributor identity and confirm rejection",
+          "rationale": "The test exercises the write path the policy must prohibit."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Positive and negative probes confirm the required rule. The selected answer is a direct push is rejected and a compliant pull request merges.",
+      "explanation": "Creation does not prove a direct push would be rejected. A historical review does not establish server enforcement against alternate writes. Documentation states intent but does not prove enforced permissions. The test exercises the write path the policy must prohibit.",
       "sourceIds": [
         "S1",
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Identity:ordinary contributor\nPolicy:pull request with independent approval required\nProbe:git push origin HEAD:main\nObserved:push accepted"
+      }
     },
     {
       "id": "L04-Q009",
       "checkpointId": "CP4",
-      "caseId": "L04-C02",
-      "task": "safeguard",
-      "caseContext": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A service account can bypass branch rules although ordinary contributors cannot. What should be checked before declaring the review policy complete?",
       "options": [
         {
           "key": "A",
-          "text": "Keep incomplete exposure controlled through flags or incremental work",
-          "rationale": "Frequent merging must not expose unfinished behavior. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the last bypassed push happened to pass tests",
+          "rationale": "One acceptable historical change does not establish an enforced future review boundary."
         },
         {
           "key": "B",
-          "text": "Review who can bypass branch protection",
-          "rationale": "Broad bypass rights weaken otherwise correct policies. This directly addresses the constraint stated in this case."
+          "text": "Whether that service requires bypass and whether its effective permissions can be narrowed",
+          "rationale": "An automation exception is part of the same protected-write trust boundary."
         },
         {
           "key": "C",
-          "text": "Keep required checks associated with the latest commit",
-          "rationale": "Old green results cannot validate a changed tree. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Only the rule shown for ordinary contributor identities",
+          "rationale": "A rule affecting contributors does not prove an exempt service is constrained."
+        },
+        {
+          "key": "D",
+          "text": "Only the service account's read permission on feature branches",
+          "rationale": "Reading a branch is different from the bypass and rewrite capabilities at issue."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Broad bypass rights weaken otherwise correct policies. The selected answer is review who can bypass branch protection.",
+      "explanation": "One acceptable historical change does not establish an enforced future review boundary. An automation exception is part of the same protected-write trust boundary. A rule affecting contributors does not prove an exempt service is constrained. Reading a branch is different from the bypass and rewrite capabilities at issue.",
       "sourceIds": [
         "S1",
         "S2"
@@ -349,35 +374,37 @@
     {
       "id": "L04-Q010",
       "checkpointId": "CP4",
-      "caseId": "L04-C02",
-      "task": "tradeoff",
-      "caseContext": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Unreviewed merge: Contributors can push directly to main even though the team says every production change requires a reviewed pull request. The team selects this remedy: \"Enforce pull-request review through protected-branch policies.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Production fixes sometimes require urgent action, but auditors require accountable review. Which policy handles urgency without making bypass the ordinary path?",
       "options": [
         {
           "key": "A",
-          "text": "Fresh-review rules can increase review churn",
-          "rationale": "Small focused pull requests reduce repeated review effort. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Give every maintainer unrestricted bypass so no incident is delayed",
+          "rationale": "Universal exemption removes the normal assurance boundary."
         },
         {
           "key": "B",
-          "text": "Trunk-oriented work requires strong automation and discipline",
-          "rationale": "A smaller branch graph does not eliminate release risk. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Automatically disable reviews whenever an issue has the urgent label",
+          "rationale": "A mutable label is insufficient authorization to remove independent review."
         },
         {
           "key": "C",
-          "text": "Strict protection can delay urgent fixes",
-          "rationale": "Define a reviewed emergency process rather than implicit bypass. This directly addresses the constraint stated in this case."
+          "text": "Allow direct pushes at night because fewer reviewers are available",
+          "rationale": "Time of day does not establish that an unreviewed production change is safe."
+        },
+        {
+          "key": "D",
+          "text": "Keep protection enforced and define a narrowly authorized audited emergency procedure",
+          "rationale": "The exceptional path remains explicit and accountable while routine changes retain their controls."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Define a reviewed emergency process rather than implicit bypass. The selected answer is strict protection can delay urgent fixes.",
+      "explanation": "Universal exemption removes the normal assurance boundary. A mutable label is insufficient authorization to remove independent review. Time of day does not establish that an unreviewed production change is safe. The exceptional path remains explicit and accountable while routine changes retain their controls.",
       "sourceIds": [
         "S1",
         "S2"
@@ -386,72 +413,79 @@
     {
       "id": "L04-Q011",
       "checkpointId": "CP3",
-      "caseId": "L04-C03",
-      "task": "remedy",
-      "caseContext": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review. Which next change most directly satisfies the stated requirement?",
+      "question": "A pull request is approved, then new code is pushed and merged under the old approval. Which GitHub protection addresses this gap?",
       "options": [
         {
           "key": "A",
-          "text": "Enforce pull-request review through protected-branch policies",
-          "rationale": "Written process needs a server-enforced branch control. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Increase the initial approval count but retain those approvals after every later push",
+          "rationale": "More stale approvals still do not cover newly changed source content."
         },
         {
           "key": "B",
-          "text": "Dismiss stale approvals or require review of the latest push",
-          "rationale": "New code should not inherit unrelated approval evidence. This directly addresses the constraint stated in this case."
+          "text": "Require an approval only when the branch is first created",
+          "rationale": "That still allows later unreviewed changes to inherit approval."
         },
         {
           "key": "C",
-          "text": "Make the relevant status check a required merge condition",
-          "rationale": "A reported result must be enforced to gate merging. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Require the author alone to acknowledge each later push",
+          "rationale": "An author acknowledgement does not provide renewed eligible independent review."
+        },
+        {
+          "key": "D",
+          "text": "Dismiss stale approvals or require approval of the most recent reviewable push",
+          "rationale": "The review evidence must cover the content actually being merged."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "New code should not inherit unrelated approval evidence. The selected answer is dismiss stale approvals or require review of the latest push.",
+      "explanation": "More stale approvals still do not cover newly changed source content. That still allows later unreviewed changes to inherit approval. An author acknowledgement does not provide renewed eligible independent review. The review evidence must cover the content actually being merged.",
       "sourceIds": [
-        "S1",
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "CommitA:reviewed and approved\nCommitB:new permission change after approval\nRequired approvals displayed:1\nNo new review submitted"
+      }
     },
     {
       "id": "L04-Q012",
       "checkpointId": "CP3",
-      "caseId": "L04-C03",
-      "task": "diagnosis",
-      "caseContext": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why can an earlier valid approval become insufficient after the author adds a risky commit?",
       "options": [
         {
           "key": "A",
-          "text": "CI execution and merge policy are separate controls",
-          "rationale": "Running a test does not automatically block a bad merge. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "The approved content differs from the current merge candidate",
+          "rationale": "Review of one revision does not necessarily cover later modifications."
         },
         {
           "key": "B",
-          "text": "The policy exists only as an agreement",
-          "rationale": "Repository permissions still permit bypassing the intended workflow. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Approval of a branch name necessarily covers every future revision on that branch",
+          "rationale": "Review assurance concerns content, not an indefinitely authorized mutable branch name."
         },
         {
           "key": "C",
-          "text": "The approved revision differs from the merged revision",
-          "rationale": "An earlier review may not cover the latest change. This directly addresses the constraint stated in this case."
+          "text": "A new commit proves that the original reviewer was unauthorized",
+          "rationale": "Authorization and the freshness of reviewed content are separate issues."
+        },
+        {
+          "key": "D",
+          "text": "A passed test result automatically extends every old human approval to new changes",
+          "rationale": "Automated execution and review freshness are separate evidence and enforcement concerns."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "An earlier review may not cover the latest change. The selected answer is the approved revision differs from the merged revision.",
+      "explanation": "Review of one revision does not necessarily cover later modifications. Review assurance concerns content, not an indefinitely authorized mutable branch name. Authorization and the freshness of reviewed content are separate issues. Automated execution and review freshness are separate evidence and enforcement concerns.",
       "sourceIds": [
         "S1",
         "S2"
@@ -460,72 +494,75 @@
     {
       "id": "L04-Q013",
       "checkpointId": "CP3",
-      "caseId": "L04-C03",
-      "task": "verification",
-      "caseContext": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which test demonstrates that approval freshness is enforced on a protected GitHub branch?",
       "options": [
         {
           "key": "A",
-          "text": "A direct push is rejected and a compliant pull request merges",
-          "rationale": "Positive and negative probes confirm the required rule. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Open two unrelated requests and count their comments",
+          "rationale": "Comment volume does not test whether a changed candidate needs renewed review."
         },
         {
           "key": "B",
-          "text": "A new commit invalidates approval or requires fresh review",
-          "rationale": "The rule must bind review to current content. This directly addresses the constraint stated in this case."
+          "text": "Rerun a successful build without changing any source",
+          "rationale": "A repeated check does not exercise new code after approval."
         },
         {
           "key": "C",
-          "text": "A failing required check prevents merge until corrected",
-          "rationale": "The rejection demonstrates enforcement rather than visibility. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Approve a request, add a new relevant commit, and confirm fresh eligible review is required",
+          "rationale": "The sequence exercises the exact transition that previously retained stale approval."
+        },
+        {
+          "key": "D",
+          "text": "Merge the first approved request without adding another commit",
+          "rationale": "That covers normal approval but not the stale-review failure path."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "The rule must bind review to current content. The selected answer is a new commit invalidates approval or requires fresh review.",
+      "explanation": "Comment volume does not test whether a changed candidate needs renewed review. A repeated check does not exercise new code after approval. The sequence exercises the exact transition that previously retained stale approval. That covers normal approval but not the stale-review failure path.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q014",
       "checkpointId": "CP3",
-      "caseId": "L04-C03",
-      "task": "safeguard",
-      "caseContext": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A new commit is added after review. Which validation evidence should merge protection use for required tests?",
       "options": [
         {
           "key": "A",
-          "text": "Use stable unambiguous check names for required results",
-          "rationale": "Renamed jobs can leave protection waiting for missing checks. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Checks associated with the current required merge candidate",
+          "rationale": "Earlier successful execution does not validate newly changed source."
         },
         {
           "key": "B",
-          "text": "Review who can bypass branch protection",
-          "rationale": "Broad bypass rights weaken otherwise correct policies. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "The oldest green run ever recorded for the branch",
+          "rationale": "That can predate the code now being considered."
         },
         {
           "key": "C",
-          "text": "Keep required checks associated with the latest commit",
-          "rationale": "Old green results cannot validate a changed tree. This directly addresses the constraint stated in this case."
+          "text": "A successful run from a different repository with the same job name",
+          "rationale": "The name alone does not establish the candidate's source or result."
+        },
+        {
+          "key": "D",
+          "text": "The author's statement that local tests passed last week",
+          "rationale": "Self-reported historical execution is not the required current check."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Old green results cannot validate a changed tree. The selected answer is keep required checks associated with the latest commit.",
+      "explanation": "Earlier successful execution does not validate newly changed source. That can predate the code now being considered. The name alone does not establish the candidate's source or result. Self-reported historical execution is not the required current check.",
       "sourceIds": [
         "S1",
         "S2"
@@ -534,35 +571,37 @@
     {
       "id": "L04-Q015",
       "checkpointId": "CP3",
-      "caseId": "L04-C03",
-      "task": "tradeoff",
-      "caseContext": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "advanced",
-      "question": "Stale approval: A pull request receives approval, then a contributor adds a risky commit and merges without another review. The team selects this remedy: \"Dismiss stale approvals or require review of the latest push.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A team wants independent review of the latest change without requiring every prior reviewer to repeat a full review after trivial updates. Which decision is most appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Required checks introduce dependency on CI availability",
-          "rationale": "Teams need a documented response to infrastructure outages. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Choose and test a supported review-freshness policy whose reviewer-independence behavior matches the risk",
+          "rationale": "Different freshness controls can impose different review duties, so the actual rule must fit and be tested."
         },
         {
           "key": "B",
-          "text": "Strict protection can delay urgent fixes",
-          "rationale": "Define a reviewed emergency process rather than implicit bypass. That addresses a different requirement: Unreviewed merge. It does not directly resolve this case's stated constraint."
+          "text": "Retain approvals forever because the first review was independent",
+          "rationale": "Later risky changes would remain outside that approval evidence."
         },
         {
           "key": "C",
-          "text": "Fresh-review rules can increase review churn",
-          "rationale": "Small focused pull requests reduce repeated review effort. This directly addresses the constraint stated in this case."
+          "text": "Require only the author to approve every new push",
+          "rationale": "That does not preserve the stated independent-review requirement."
+        },
+        {
+          "key": "D",
+          "text": "Disable required status checks whenever a review is renewed",
+          "rationale": "Review freshness does not replace automated validation of current content."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Small focused pull requests reduce repeated review effort. The selected answer is fresh-review rules can increase review churn.",
+      "explanation": "Different freshness controls can impose different review duties, so the actual rule must fit and be tested. Later risky changes would remain outside that approval evidence. That does not preserve the stated independent-review requirement. Review freshness does not replace automated validation of current content.",
       "sourceIds": [
         "S1",
         "S2"
@@ -571,35 +610,37 @@
     {
       "id": "L04-Q016",
       "checkpointId": "CP4",
-      "caseId": "L04-C04",
-      "task": "remedy",
-      "caseContext": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required. Which next change most directly satisfies the stated requirement?",
+      "question": "Tests execute on a pull request and report failure, but the request can still merge. What must be configured?",
       "options": [
         {
           "key": "A",
-          "text": "Require an eligible independent reviewer for protected changes",
-          "rationale": "Review independence addresses the stated separation-of-duties need. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Publish a more detailed failure report but leave the status optional",
+          "rationale": "Better diagnosis does not turn the informational result into a merge gate."
         },
         {
           "key": "B",
-          "text": "Dismiss stale approvals or require review of the latest push",
-          "rationale": "New code should not inherit unrelated approval evidence. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Add a second optional status containing the same failed test outcome",
+          "rationale": "Duplicating an optional result still does not require success before merging."
         },
         {
           "key": "C",
-          "text": "Make the relevant status check a required merge condition",
-          "rationale": "A reported result must be enforced to gate merging. This directly addresses the constraint stated in this case."
+          "text": "Run the same optional test twice without changing the protection",
+          "rationale": "Repeated informational failures remain informational if no rule requires success."
+        },
+        {
+          "key": "D",
+          "text": "Make the appropriate status check a required merge condition",
+          "rationale": "Execution visibility and enforced acceptance are separate configuration concerns."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "A reported result must be enforced to gate merging. The selected answer is make the relevant status check a required merge condition.",
+      "explanation": "Better diagnosis does not turn the informational result into a merge gate. Duplicating an optional result still does not require success before merging. Repeated informational failures remain informational if no rule requires success. Execution visibility and enforced acceptance are separate configuration concerns.",
       "sourceIds": [
         "S1",
         "S2"
@@ -608,146 +649,156 @@
     {
       "id": "L04-Q017",
       "checkpointId": "CP4",
-      "caseId": "L04-C04",
-      "task": "diagnosis",
-      "caseContext": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A required status is named build, but two workflows publish that same job name. What should the maintainer improve?",
       "options": [
         {
           "key": "A",
-          "text": "The policy allows author approval or lacks reviewer separation",
-          "rationale": "A review count alone may not ensure independent judgment. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Treat any success in the organization as sufficient",
+          "rationale": "A result must belong to the intended repository and validation context."
         },
         {
           "key": "B",
-          "text": "The approved revision differs from the merged revision",
-          "rationale": "An earlier review may not cover the latest change. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Use clear unique status contexts for required validation",
+          "rationale": "Ambiguous job names can make the intended required result unclear."
         },
         {
           "key": "C",
-          "text": "CI execution and merge policy are separate controls",
-          "rationale": "Running a test does not automatically block a bad merge. This directly addresses the constraint stated in this case."
+          "text": "Keep identical names and assume any matching success proves the intended validation",
+          "rationale": "A successful unrelated job can create ambiguity about which assurance was provided."
+        },
+        {
+          "key": "D",
+          "text": "Require only the shortest workflow display name rather than its emitted job context",
+          "rationale": "Display naming and the actual status context must be distinguished when configuring the rule."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Running a test does not automatically block a bad merge. The selected answer is cI execution and merge policy are separate controls.",
+      "explanation": "A result must belong to the intended repository and validation context. Ambiguous job names can make the intended required result unclear. A successful unrelated job can create ambiguity about which assurance was provided. Display naming and the actual status context must be distinguished when configuring the rule.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q018",
       "checkpointId": "CP4",
-      "caseId": "L04-C04",
-      "task": "verification",
-      "caseContext": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What is a strong acceptance test for a required CI merge gate?",
       "options": [
         {
           "key": "A",
-          "text": "The author cannot satisfy the independent-review requirement",
-          "rationale": "The negative check verifies the intended reviewer constraint. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "A previous unrelated request had a green check",
+          "rationale": "Historical success does not verify the current branch rule."
         },
         {
           "key": "B",
-          "text": "A new commit invalidates approval or requires fresh review",
-          "rationale": "The rule must bind review to current content. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "A reviewer can open the test report after merging",
+          "rationale": "Postmerge visibility does not show that failure would have blocked acceptance."
         },
         {
           "key": "C",
-          "text": "A failing required check prevents merge until corrected",
-          "rationale": "The rejection demonstrates enforcement rather than visibility. This directly addresses the constraint stated in this case."
+          "text": "A deliberately failing required check prevents merge and the repaired current check permits it",
+          "rationale": "Positive and negative execution demonstrate the intended acceptance boundary."
+        },
+        {
+          "key": "D",
+          "text": "Inspect the YAML and confirm the test command is present",
+          "rationale": "Static presence alone does not establish execution and merge enforcement on the candidate."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The rejection demonstrates enforcement rather than visibility. The selected answer is a failing required check prevents merge until corrected.",
+      "explanation": "Historical success does not verify the current branch rule. Postmerge visibility does not show that failure would have blocked acceptance. Positive and negative execution demonstrate the intended acceptance boundary. Static presence alone does not establish execution and merge enforcement on the candidate.",
       "sourceIds": [
         "S1",
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Required status:unit-tests\nCandidate commit:4f892ab\nunit-tests result:failure\nExpected merge readiness:blocked"
+      }
     },
     {
       "id": "L04-Q019",
       "checkpointId": "CP4",
-      "caseId": "L04-C04",
-      "task": "safeguard",
-      "caseContext": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A required job is renamed in a workflow, but its branch rule still expects the old name. What safe change is needed?",
       "options": [
         {
           "key": "A",
-          "text": "Assign reviewers with relevant ownership and availability",
-          "rationale": "A nominal independent reviewer may lack necessary context. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Coordinate the workflow's emitted status name and the required-check configuration",
+          "rationale": "The rule must require a status the intended workflow actually produces."
         },
         {
           "key": "B",
-          "text": "Keep required checks associated with the latest commit",
-          "rationale": "Old green results cannot validate a changed tree. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Mark every branch administrator exempt from all checks",
+          "rationale": "That bypasses the gate instead of repairing the reference."
         },
         {
           "key": "C",
-          "text": "Use stable unambiguous check names for required results",
-          "rationale": "Renamed jobs can leave protection waiting for missing checks. This directly addresses the constraint stated in this case."
+          "text": "Add an always-successful placeholder under the retired required job name",
+          "rationale": "A dummy success satisfies a name without providing the validation originally required."
+        },
+        {
+          "key": "D",
+          "text": "Rerun unrelated green jobs without updating the missing required context",
+          "rationale": "Their success cannot publish the absent old status name the rule still requires."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Renamed jobs can leave protection waiting for missing checks. The selected answer is use stable unambiguous check names for required results.",
+      "explanation": "The rule must require a status the intended workflow actually produces. That bypasses the gate instead of repairing the reference. A dummy success satisfies a name without providing the validation originally required. Their success cannot publish the absent old status name the rule still requires.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q020",
       "checkpointId": "CP4",
-      "caseId": "L04-C04",
-      "task": "tradeoff",
-      "caseContext": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Missing CI enforcement: A pull request merges while its test workflow is red because the check is informative rather than required. The team selects this remedy: \"Make the relevant status check a required merge condition.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A critical required-check provider is unavailable during an urgent production incident. Which response best preserves a meaningful control boundary?",
       "options": [
         {
           "key": "A",
-          "text": "Fresh-review rules can increase review churn",
-          "rationale": "Small focused pull requests reduce repeated review effort. That addresses a different requirement: Stale approval. It does not directly resolve this case's stated constraint."
+          "text": "Make all contributors permanent bypass actors",
+          "rationale": "A temporary outage would create an ongoing broad exemption."
         },
         {
           "key": "B",
-          "text": "Required checks introduce dependency on CI availability",
-          "rationale": "Teams need a documented response to infrastructure outages. This directly addresses the constraint stated in this case."
+          "text": "Close and reopen the request until a stale green status appears",
+          "rationale": "Reusing stale evidence does not validate the current candidate."
         },
         {
           "key": "C",
-          "text": "Independent approval increases coordination cost",
-          "rationale": "Sensitive changes trade speed for additional assurance. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Use the documented narrowly authorized exception process with recorded reason and follow-up validation",
+          "rationale": "An accountable exception addresses availability without silently redefining failed or absent checks as success."
+        },
+        {
+          "key": "D",
+          "text": "Change the required status to whichever unrelated green job is available",
+          "rationale": "That substitutes different evidence for the missing assurance."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Teams need a documented response to infrastructure outages. The selected answer is required checks introduce dependency on CI availability.",
+      "explanation": "A temporary outage would create an ongoing broad exemption. Reusing stale evidence does not validate the current candidate. An accountable exception addresses availability without silently redefining failed or absent checks as success. That substitutes different evidence for the missing assurance.",
       "sourceIds": [
         "S1",
         "S2"
@@ -756,72 +807,75 @@
     {
       "id": "L04-Q021",
       "checkpointId": "CP4",
-      "caseId": "L04-C05",
-      "task": "remedy",
-      "caseContext": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection. Which next change most directly satisfies the stated requirement?",
+      "question": "An Azure Repos policy counts the author's own approval toward the only required vote. Which change establishes independent review?",
       "options": [
         {
           "key": "A",
-          "text": "Make the relevant status check a required merge condition",
-          "rationale": "A reported result must be enforced to gate merging. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Require two votes while allowing the requester to satisfy the independent-review condition",
+          "rationale": "A numeric threshold must still enforce which eligible identities can satisfy it."
         },
         {
           "key": "B",
-          "text": "Require an eligible independent reviewer for protected changes",
-          "rationale": "Review independence addresses the stated separation-of-duties need. This directly addresses the constraint stated in this case."
+          "text": "Let the author approve from another account that they control",
+          "rationale": "A second account controlled by the requester does not establish an independent person."
         },
         {
           "key": "C",
-          "text": "Create the fix from the supported release and reconcile forward",
-          "rationale": "The patch must remain compatible with the deployed baseline. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "Automatically approve after the author runs local tests",
+          "rationale": "Local validation is not a separate independent review decision."
+        },
+        {
+          "key": "D",
+          "text": "Prevent requester self-approval from satisfying the required reviewer condition",
+          "rationale": "The decision must come from an eligible person other than the change requester."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Review independence addresses the stated separation-of-duties need. The selected answer is require an eligible independent reviewer for protected changes.",
+      "explanation": "A numeric threshold must still enforce which eligible identities can satisfy it. A second account controlled by the requester does not establish an independent person. Local validation is not a separate independent review decision. The decision must come from an eligible person other than the change requester.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S1"
       ]
     },
     {
       "id": "L04-Q022",
       "checkpointId": "CP4",
-      "caseId": "L04-C05",
-      "task": "diagnosis",
-      "caseContext": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why is a numeric approval count alone insufficient for a separation-of-duties requirement?",
       "options": [
         {
           "key": "A",
-          "text": "The default branch is ahead of the supported product",
-          "rationale": "Releasing main would include unrelated incompatible changes. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "Every counted approval necessarily comes from a different responsible person",
+          "rationale": "Account and eligibility rules must establish the intended reviewer independence."
         },
         {
           "key": "B",
-          "text": "CI execution and merge policy are separate controls",
-          "rationale": "Running a test does not automatically block a bad merge. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "The count may not ensure that approvers are independent eligible reviewers",
+          "rationale": "Who approves matters in addition to how many approvals exist."
         },
         {
           "key": "C",
-          "text": "The policy allows author approval or lacks reviewer separation",
-          "rationale": "A review count alone may not ensure independent judgment. This directly addresses the constraint stated in this case."
+          "text": "A successful test run proves that every counted approval came from an independent eligible person",
+          "rationale": "Automated execution does not establish who supplied the human review decision."
+        },
+        {
+          "key": "D",
+          "text": "A second approval automatically proves the reviewer understands the changed domain",
+          "rationale": "Eligibility does not establish expertise without additional ownership or review practice."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "A review count alone may not ensure independent judgment. The selected answer is the policy allows author approval or lacks reviewer separation.",
+      "explanation": "Account and eligibility rules must establish the intended reviewer independence. Who approves matters in addition to how many approvals exist. Automated execution does not establish who supplied the human review decision. Eligibility does not establish expertise without additional ownership or review practice.",
       "sourceIds": [
         "S1",
         "S2"
@@ -830,72 +884,80 @@
     {
       "id": "L04-Q023",
       "checkpointId": "CP4",
-      "caseId": "L04-C05",
-      "task": "verification",
-      "caseContext": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which test best verifies an independent-review rule for an ordinary contribution?",
       "options": [
         {
           "key": "A",
-          "text": "A failing required check prevents merge until corrected",
-          "rationale": "The rejection demonstrates enforcement rather than visibility. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Confirm the requester cannot satisfy the rule alone and an eligible different reviewer can",
+          "rationale": "The two outcomes establish the intended reviewer-identity distinction."
         },
         {
           "key": "B",
-          "text": "The author cannot satisfy the independent-review requirement",
-          "rationale": "The negative check verifies the intended reviewer constraint. This directly addresses the constraint stated in this case."
+          "text": "Have an administrator bypass the rule successfully",
+          "rationale": "That tests an exception rather than ordinary independent review."
         },
         {
           "key": "C",
-          "text": "The patch applies to the supported release and reaches main",
-          "rationale": "Forward reconciliation prevents the fix disappearing later. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "The negative check verifies the intended reviewer constraint. The selected answer is the author cannot satisfy the independent-review requirement.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L04-Q024",
-      "checkpointId": "CP4",
-      "caseId": "L04-C05",
-      "task": "safeguard",
-      "caseContext": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection.",
-      "objectiveIds": [
-        "D2.1.3"
-      ],
-      "difficulty": "applied",
-      "question": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Assign reviewers with relevant ownership and availability",
-          "rationale": "A nominal independent reviewer may lack necessary context. This directly addresses the constraint stated in this case."
+          "text": "Count reviewers listed in documentation without opening a request",
+          "rationale": "A written list does not establish effective enforcement."
         },
         {
-          "key": "B",
-          "text": "Record the fix commit and test the release-specific path",
-          "rationale": "Different branches can have different dependencies and behavior. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Use stable unambiguous check names for required results",
-          "rationale": "Renamed jobs can leave protection waiting for missing checks. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Ask the requester to sign their own commit twice",
+          "rationale": "Commit signatures do not create a separate reviewer."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "A nominal independent reviewer may lack necessary context. The selected answer is assign reviewers with relevant ownership and availability.",
+      "explanation": "The two outcomes establish the intended reviewer-identity distinction. That tests an exception rather than ordinary independent review. A written list does not establish effective enforcement. Commit signatures do not create a separate reviewer.",
+      "sourceIds": [
+        "S1",
+        "S2"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Requester:alex\nRequired votes:1\nAlex vote:approve\nDifferent reviewer:approve\nPolicy expectation:requester alone cannot satisfy requirement"
+      }
+    },
+    {
+      "id": "L04-Q024",
+      "checkpointId": "CP4",
+      "objectiveIds": [
+        "D2.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "Only one qualified reviewer is configured and that person is on leave. What improves continuity while preserving independent scrutiny?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Allow authors to approve their own changes whenever the reviewer is absent",
+          "rationale": "That removes independence at the moment it is inconvenient."
+        },
+        {
+          "key": "B",
+          "text": "Remove all review requirements permanently",
+          "rationale": "That trades a temporary availability problem for an ongoing missing control."
+        },
+        {
+          "key": "C",
+          "text": "Use a service account to approve all requests without examining code",
+          "rationale": "A nominal independent identity is not substantive qualified review."
+        },
+        {
+          "key": "D",
+          "text": "Maintain an approved group of qualified alternative reviewers",
+          "rationale": "More eligible experts can preserve both availability and meaningful review."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "That removes independence at the moment it is inconvenient. That trades a temporary availability problem for an ongoing missing control. A nominal independent identity is not substantive qualified review. More eligible experts can preserve both availability and meaningful review.",
       "sourceIds": [
         "S1",
         "S2"
@@ -904,35 +966,37 @@
     {
       "id": "L04-Q025",
       "checkpointId": "CP4",
-      "caseId": "L04-C05",
-      "task": "tradeoff",
-      "caseContext": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Self-approved change: The only required reviewer is also the pull-request author, and a high-risk change reaches production without independent inspection. The team selects this remedy: \"Require an eligible independent reviewer for protected changes.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A small team requires independent approval for sensitive changes but needs an emergency path when all reviewers are unavailable. Which policy is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Required checks introduce dependency on CI availability",
-          "rationale": "Teams need a documented response to infrastructure outages. That addresses a different requirement: Missing CI enforcement. It does not directly resolve this case's stated constraint."
+          "text": "Preserve ordinary independence and define restricted audited emergency authority with retrospective review obligations",
+          "rationale": "The exception has explicit accountability rather than silently making self-approval normal."
         },
         {
           "key": "B",
-          "text": "Independent approval increases coordination cost",
-          "rationale": "Sensitive changes trade speed for additional assurance. This directly addresses the constraint stated in this case."
+          "text": "Count the requester as independent when they use a second email address",
+          "rationale": "A second account does not create an independent decision-maker."
         },
         {
           "key": "C",
-          "text": "Multiple supported branches increase maintenance effort",
-          "rationale": "Each active release needs explicit patch and merge discipline. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "Treat passing tests as an automatic human approval",
+          "rationale": "Automated validation and independent review provide different assurance."
+        },
+        {
+          "key": "D",
+          "text": "Disable reviewer eligibility rules during every weekend",
+          "rationale": "A recurring broad exemption exceeds the stated exceptional need."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Sensitive changes trade speed for additional assurance. The selected answer is independent approval increases coordination cost.",
+      "explanation": "The exception has explicit accountability rather than silently making self-approval normal. A second account does not create an independent decision-maker. Automated validation and independent review provide different assurance. A recurring broad exemption exceeds the stated exceptional need.",
       "sourceIds": [
         "S1",
         "S2"
@@ -941,35 +1005,37 @@
     {
       "id": "L04-Q026",
       "checkpointId": "CP1",
-      "caseId": "L04-C06",
-      "task": "remedy",
-      "caseContext": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes. Which next change most directly satisfies the stated requirement?",
+      "question": "Main contains incompatible next-version work, while a supported release needs one urgent bug fix. Where should the patch begin?",
       "options": [
         {
           "key": "A",
-          "text": "Require an eligible independent reviewer for protected changes",
-          "rationale": "Review independence addresses the stated separation-of-duties need. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "By moving the supported release tag to main without changing code",
+          "rationale": "Renaming the reference does not make main compatible with the old release."
         },
         {
           "key": "B",
-          "text": "Create the fix from the supported release and reconcile forward",
-          "rationale": "The patch must remain compatible with the deployed baseline. This directly addresses the constraint stated in this case."
+          "text": "From the supported release baseline with deliberate reconciliation into future development",
+          "rationale": "The patch must remain compatible with the version actually receiving the fix."
         },
         {
           "key": "C",
-          "text": "Require the designated infrastructure owners for affected paths",
-          "rationale": "Path-specific ownership routes sensitive changes to knowledgeable reviewers. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "From the newest main commit including every unfinished change",
+          "rationale": "That broadens the hotfix to unrelated incompatible work."
+        },
+        {
+          "key": "D",
+          "text": "From an unrelated developer's unpushed directory",
+          "rationale": "That lacks the controlled supported-release source baseline."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "The patch must remain compatible with the deployed baseline. The selected answer is create the fix from the supported release and reconcile forward.",
+      "explanation": "Renaming the reference does not make main compatible with the old release. The patch must remain compatible with the version actually receiving the fix. That broadens the hotfix to unrelated incompatible work. That lacks the controlled supported-release source baseline.",
       "sourceIds": [
         "S1",
         "S2"
@@ -978,35 +1044,37 @@
     {
       "id": "L04-Q027",
       "checkpointId": "CP1",
-      "caseId": "L04-C06",
-      "task": "diagnosis",
-      "caseContext": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why should a hotfix applied to a supported branch also be reconciled into ongoing development?",
       "options": [
         {
           "key": "A",
-          "text": "The default branch is ahead of the supported product",
-          "rationale": "Releasing main would include unrelated incompatible changes. This directly addresses the constraint stated in this case."
+          "text": "All branches always share identical files after any commit",
+          "rationale": "Branches represent independent histories until changes are integrated."
         },
         {
           "key": "B",
-          "text": "Generic review requirements do not ensure domain expertise",
-          "rationale": "Approval can be procedurally valid but substantively weak. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Otherwise a later release can reintroduce the fixed defect",
+          "rationale": "Parallel supported lines need deliberate propagation of valid fixes."
         },
         {
           "key": "C",
-          "text": "The policy allows author approval or lacks reviewer separation",
-          "rationale": "A review count alone may not ensure independent judgment. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "A supported-branch fix is automatically copied into every future release line",
+          "rationale": "Changes must be deliberately integrated into each relevant maintained source line."
+        },
+        {
+          "key": "D",
+          "text": "A release branch can never contain a fix also present on main",
+          "rationale": "Equivalent fixes can be maintained across supported source lines."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Releasing main would include unrelated incompatible changes. The selected answer is the default branch is ahead of the supported product.",
+      "explanation": "Branches represent independent histories until changes are integrated. Parallel supported lines need deliberate propagation of valid fixes. Changes must be deliberately integrated into each relevant maintained source line. Equivalent fixes can be maintained across supported source lines.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1015,35 +1083,37 @@
     {
       "id": "L04-Q028",
       "checkpointId": "CP1",
-      "caseId": "L04-C06",
-      "task": "verification",
-      "caseContext": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What evidence supports that a hotfix is safe for the supported release rather than only for main?",
       "options": [
         {
           "key": "A",
-          "text": "A permissions change requests the relevant owners' review",
-          "rationale": "The rule should trigger for the sensitive path. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the patch applies without textual conflicts",
+          "rationale": "A clean textual application does not establish runtime or dependency compatibility."
         },
         {
           "key": "B",
-          "text": "The author cannot satisfy the independent-review requirement",
-          "rationale": "The negative check verifies the intended reviewer constraint. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Tests and review against the supported branch's actual dependencies and behavior",
+          "rationale": "Different baselines can have different compatibility and regression risks."
         },
         {
           "key": "C",
-          "text": "The patch applies to the supported release and reaches main",
-          "rationale": "Forward reconciliation prevents the fix disappearing later. This directly addresses the constraint stated in this case."
+          "text": "Only the latest successful build on main",
+          "rationale": "That can validate a different dependency and code baseline."
+        },
+        {
+          "key": "D",
+          "text": "Only matching commit messages between two branches",
+          "rationale": "Messages do not establish equal behavior or compatibility."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Forward reconciliation prevents the fix disappearing later. The selected answer is the patch applies to the supported release and reaches main.",
+      "explanation": "A clean textual application does not establish runtime or dependency compatibility. Different baselines can have different compatibility and regression risks. That can validate a different dependency and code baseline. Messages do not establish equal behavior or compatibility.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1052,35 +1122,37 @@
     {
       "id": "L04-Q029",
       "checkpointId": "CP1",
-      "caseId": "L04-C06",
-      "task": "safeguard",
-      "caseContext": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A hotfix uses a cherry-picked commit from main. What should the author inspect before release?",
       "options": [
         {
           "key": "A",
-          "text": "Record the fix commit and test the release-specific path",
-          "rationale": "Different branches can have different dependencies and behavior. This directly addresses the constraint stated in this case."
+          "text": "Only whether main passed tests before the cherry-pick",
+          "rationale": "Tests on main may include prerequisites missing from the supported baseline."
         },
         {
           "key": "B",
-          "text": "Protect the ownership configuration from casual modification",
-          "rationale": "Changing the rule could bypass the intended reviewers. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the patch changes the same number of lines on both branches",
+          "rationale": "Equal diff size does not establish equivalent surrounding contracts or dependencies."
         },
         {
           "key": "C",
-          "text": "Assign reviewers with relevant ownership and availability",
-          "rationale": "A nominal independent reviewer may lack necessary context. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Whether the selected patch depends on other changes absent from the supported branch",
+          "rationale": "A narrow transfer can still rely on surrounding newer code."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the cherry-pick applies without a merge conflict",
+          "rationale": "Textual applicability does not prove the patch has every required dependency."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Different branches can have different dependencies and behavior. The selected answer is record the fix commit and test the release-specific path.",
+      "explanation": "Tests on main may include prerequisites missing from the supported baseline. Equal diff size does not establish equivalent surrounding contracts or dependencies. A narrow transfer can still rely on surrounding newer code. Textual applicability does not prove the patch has every required dependency.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1089,35 +1161,37 @@
     {
       "id": "L04-Q030",
       "checkpointId": "CP1",
-      "caseId": "L04-C06",
-      "task": "tradeoff",
-      "caseContext": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "advanced",
-      "question": "Unsupported hotfix path: A critical patch must target the supported release while main already contains incompatible next-version changes. The team selects this remedy: \"Create the fix from the supported release and reconcile forward.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A supported release cannot accept main's new schema, but main contains the desired security correction plus dependent refactoring. What plan best respects the support boundary?",
       "options": [
         {
           "key": "A",
-          "text": "Owner-based reviews can become a bottleneck",
-          "rationale": "Maintain enough qualified owners for availability. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Skip forward reconciliation because main already contains a differently implemented fix",
+          "rationale": "The relationship should still be recorded and checked to prevent inconsistent future behavior."
         },
         {
           "key": "B",
-          "text": "Independent approval increases coordination cost",
-          "rationale": "Sensitive changes trade speed for additional assurance. That addresses a different requirement: Self-approved change. It does not directly resolve this case's stated constraint."
+          "text": "Adapt the minimal correction on the supported baseline, test it there, and reconcile the resulting fix forward",
+          "rationale": "The hotfix needs the required behavior without importing incompatible dependencies."
         },
         {
           "key": "C",
-          "text": "Multiple supported branches increase maintenance effort",
-          "rationale": "Each active release needs explicit patch and merge discipline. This directly addresses the constraint stated in this case."
+          "text": "Merge all of main and disable old-release compatibility tests",
+          "rationale": "That removes the check protecting the explicitly supported contract."
+        },
+        {
+          "key": "D",
+          "text": "Cherry-pick the security commit and assume its dependencies are automatically included",
+          "rationale": "Cherry-picking does not infer every prerequisite refactoring."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Each active release needs explicit patch and merge discipline. The selected answer is multiple supported branches increase maintenance effort.",
+      "explanation": "The relationship should still be recorded and checked to prevent inconsistent future behavior. The hotfix needs the required behavior without importing incompatible dependencies. That removes the check protecting the explicitly supported contract. Cherry-picking does not infer every prerequisite refactoring.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1126,220 +1200,227 @@
     {
       "id": "L04-Q031",
       "checkpointId": "CP3",
-      "caseId": "L04-C07",
-      "task": "remedy",
-      "caseContext": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway. Which next change most directly satisfies the stated requirement?",
+      "question": "Changes under infrastructure permissions require knowledgeable owner review. Which repository mechanism best routes that specialized review?",
       "options": [
         {
           "key": "A",
-          "text": "Create the fix from the supported release and reconcile forward",
-          "rationale": "The patch must remain compatible with the deployed baseline. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "A code comment listing a former administrator",
+          "rationale": "A source comment does not route or require an eligible review."
         },
         {
           "key": "B",
-          "text": "Require the designated infrastructure owners for affected paths",
-          "rationale": "Path-specific ownership routes sensitive changes to knowledgeable reviewers. This directly addresses the constraint stated in this case."
+          "text": "An issue label applied only after the pull request merges",
+          "rationale": "Postmerge labeling cannot gate the sensitive change."
         },
         {
           "key": "C",
-          "text": "Remove routine bypass and force-push permission from the service",
-          "rationale": "Automation should follow the same integrity boundary as users. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "A branch name containing the word security",
+          "rationale": "A name alone does not ensure the relevant experts approve."
+        },
+        {
+          "key": "D",
+          "text": "Code ownership rules paired with required owner-review protection where supported",
+          "rationale": "Ownership identifies the relevant reviewers and enforcement makes that review required."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Path-specific ownership routes sensitive changes to knowledgeable reviewers. The selected answer is require the designated infrastructure owners for affected paths.",
+      "explanation": "A source comment does not route or require an eligible review. Postmerge labeling cannot gate the sensitive change. A name alone does not ensure the relevant experts approve. Ownership identifies the relevant reviewers and enforcement makes that review required.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L04-Q032",
       "checkpointId": "CP3",
-      "caseId": "L04-C07",
-      "task": "diagnosis",
-      "caseContext": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "foundational",
-      "question": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A CODEOWNERS file names a team that lacks appropriate repository access. What should be checked?",
       "options": [
         {
           "key": "A",
-          "text": "The default branch is ahead of the supported product",
-          "rationale": "Releasing main would include unrelated incompatible changes. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "The team's eligibility and repository permissions to act as code owners",
+          "rationale": "An ownership entry must refer to eligible reviewers with suitable access."
         },
         {
           "key": "B",
-          "text": "Generic review requirements do not ensure domain expertise",
-          "rationale": "Approval can be procedurally valid but substantively weak. This directly addresses the constraint stated in this case."
+          "text": "Only whether the team name appears as plain text in CODEOWNERS",
+          "rationale": "A syntactically present name can still reference an ineligible or unauthorized owner."
         },
         {
           "key": "C",
-          "text": "An exempt identity circumvents normal branch restrictions",
-          "rationale": "Strict policies do not constrain principals explicitly allowed to bypass. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the team is visible somewhere in the organization",
+          "rationale": "Organization visibility does not establish the required repository access and team eligibility."
+        },
+        {
+          "key": "D",
+          "text": "Only whether one team member can view the public repository page",
+          "rationale": "An individual view does not establish that the nominated team is an eligible code owner."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Approval can be procedurally valid but substantively weak. The selected answer is generic review requirements do not ensure domain expertise.",
+      "explanation": "An ownership entry must refer to eligible reviewers with suitable access. A syntactically present name can still reference an ineligible or unauthorized owner. Organization visibility does not establish the required repository access and team eligibility. An individual view does not establish that the nominated team is an eligible code owner.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L04-Q033",
       "checkpointId": "CP3",
-      "caseId": "L04-C07",
-      "task": "verification",
-      "caseContext": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which test verifies that ownership routing covers a sensitive path?",
       "options": [
         {
           "key": "A",
-          "text": "The patch applies to the supported release and reaches main",
-          "rationale": "Forward reconciliation prevents the fix disappearing later. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "Open a change to the protected path and inspect the requested required owners",
+          "rationale": "The test exercises the path-to-reviewer behavior intended by the rule."
         },
         {
           "key": "B",
-          "text": "A permissions change requests the relevant owners' review",
-          "rationale": "The rule should trigger for the sensitive path. This directly addresses the constraint stated in this case."
+          "text": "Edit an unrelated documentation file and infer the sensitive path works",
+          "rationale": "Different path patterns can select different owners."
         },
         {
           "key": "C",
-          "text": "The service can create pull requests but cannot rewrite main",
-          "rationale": "The test proves least privilege for automation. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "Count team members without changing any owned file",
+          "rationale": "Membership inventory alone does not test matching or enforcement."
+        },
+        {
+          "key": "D",
+          "text": "Add an owner name only to the pull-request description",
+          "rationale": "A manual mention does not prove the ownership policy matched."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "The rule should trigger for the sensitive path. The selected answer is a permissions change requests the relevant owners' review.",
+      "explanation": "The test exercises the path-to-reviewer behavior intended by the rule. Different path patterns can select different owners. Membership inventory alone does not test matching or enforcement. A manual mention does not prove the ownership policy matched.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
       ]
     },
     {
       "id": "L04-Q034",
       "checkpointId": "CP3",
-      "caseId": "L04-C07",
-      "task": "safeguard",
-      "caseContext": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway.",
       "objectiveIds": [
         "D2.1.2"
       ],
       "difficulty": "applied",
-      "question": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should changes to the ownership policy itself receive appropriate protection?",
       "options": [
         {
           "key": "A",
-          "text": "Protect the ownership configuration from casual modification",
-          "rationale": "Changing the rule could bypass the intended reviewers. This directly addresses the constraint stated in this case."
+          "text": "Approving the application diff alone automatically approves any changed ownership policy",
+          "rationale": "The policy change can alter future enforcement and deserves its own review."
         },
         {
           "key": "B",
-          "text": "Check dependent automation before reducing permissions",
-          "rationale": "A permission correction can reveal workflows relying on bypass. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "An attacker could otherwise change the rule to avoid the intended sensitive reviewers",
+          "rationale": "The control's configuration is part of the same review trust boundary."
         },
         {
           "key": "C",
-          "text": "Record the fix commit and test the release-specific path",
-          "rationale": "Different branches can have different dependencies and behavior. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "A"
-      ],
-      "explanation": "Changing the rule could bypass the intended reviewers. The selected answer is protect the ownership configuration from casual modification.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L04-Q035",
-      "checkpointId": "CP3",
-      "caseId": "L04-C07",
-      "task": "tradeoff",
-      "caseContext": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway.",
-      "objectiveIds": [
-        "D2.1.2"
-      ],
-      "difficulty": "advanced",
-      "question": "Specialized ownership: A change alters infrastructure permissions, but ordinary code reviewers lack authorization context and approve it anyway. The team selects this remedy: \"Require the designated infrastructure owners for affected paths.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Multiple supported branches increase maintenance effort",
-          "rationale": "Each active release needs explicit patch and merge discipline. That addresses a different requirement: Unsupported hotfix path. It does not directly resolve this case's stated constraint."
+          "text": "Ownership files can never be edited through pull requests",
+          "rationale": "They are source files that need governed changes rather than assumed immutability."
         },
         {
-          "key": "B",
-          "text": "Owner-based reviews can become a bottleneck",
-          "rationale": "Maintain enough qualified owners for availability. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Least-privilege automation may need workflow redesign",
-          "rationale": "Direct writes must be replaced with reviewable operations. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Protecting the file removes the need to review infrastructure code",
+          "rationale": "Configuration protection does not validate every future implementation change."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Maintain enough qualified owners for availability. The selected answer is owner-based reviews can become a bottleneck.",
+      "explanation": "The policy change can alter future enforcement and deserves its own review. The control's configuration is part of the same review trust boundary. They are source files that need governed changes rather than assumed immutability. Configuration protection does not validate every future implementation change.",
       "sourceIds": [
-        "S1",
-        "S2"
+        "S3"
+      ]
+    },
+    {
+      "id": "L04-Q035",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.1.2"
+      ],
+      "difficulty": "advanced",
+      "question": "A repository has nested ownership patterns and a sensitive permissions directory. A proposed update changes both permissions and CODEOWNERS. Which review plan is strongest?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Review only the directory name rather than the effective file patterns",
+          "rationale": "Patterns and ordering can determine which owners actually apply."
+        },
+        {
+          "key": "B",
+          "text": "Inspect effective path matching and require independent review of both the sensitive change and ownership-rule modification",
+          "rationale": "The candidate can affect both protected behavior and the reviewers selected to examine it."
+        },
+        {
+          "key": "C",
+          "text": "Approve only CODEOWNERS syntax and assume that guarantees the permissions change is safe",
+          "rationale": "A valid rule file does not establish the implementation's security correctness."
+        },
+        {
+          "key": "D",
+          "text": "Let the requester edit the owner pattern until no specialist review is required",
+          "rationale": "That defeats the intended independent domain-ownership boundary."
+        }
+      ],
+      "correctAnswers": [
+        "B"
+      ],
+      "explanation": "Patterns and ordering can determine which owners actually apply. The candidate can affect both protected behavior and the reviewers selected to examine it. A valid rule file does not establish the implementation's security correctness. That defeats the intended independent domain-ownership boundary.",
+      "sourceIds": [
+        "S3"
       ]
     },
     {
       "id": "L04-Q036",
       "checkpointId": "CP4",
-      "caseId": "L04-C08",
-      "task": "remedy",
-      "caseContext": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls. Which next change most directly satisfies the stated requirement?",
+      "question": "A service account force-pushes main and removes reviewed commits despite ordinary branch restrictions. What is the targeted repair?",
       "options": [
         {
           "key": "A",
-          "text": "Remove routine bypass and force-push permission from the service",
-          "rationale": "Automation should follow the same integrity boundary as users. This directly addresses the constraint stated in this case."
+          "text": "Remove unnecessary rewrite and bypass authority from that automation identity",
+          "rationale": "The exempt service currently crosses the protected history boundary."
         },
         {
           "key": "B",
-          "text": "Use squash merging with an informative final commit message",
-          "rationale": "Squash combines feature commits into one mainline change. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "Disable pull requests for ordinary contributors",
+          "rationale": "That restricts the compliant path without constraining the exempt service."
         },
         {
           "key": "C",
-          "text": "Require the designated infrastructure owners for affected paths",
-          "rationale": "Path-specific ownership routes sensitive changes to knowledgeable reviewers. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Rename main after each service run",
+          "rationale": "A naming workaround does not establish durable least-privilege protection."
+        },
+        {
+          "key": "D",
+          "text": "Increase the retention of CI logs only",
+          "rationale": "More evidence does not prevent the unauthorized history rewrite."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Automation should follow the same integrity boundary as users. The selected answer is remove routine bypass and force-push permission from the service.",
+      "explanation": "The exempt service currently crosses the protected history boundary. That restricts the compliant path without constraining the exempt service. A naming workaround does not establish durable least-privilege protection. More evidence does not prevent the unauthorized history rewrite.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1348,35 +1429,37 @@
     {
       "id": "L04-Q037",
       "checkpointId": "CP4",
-      "caseId": "L04-C08",
-      "task": "diagnosis",
-      "caseContext": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why can strict rules for humans coexist with unreviewed automation writes?",
       "options": [
         {
           "key": "A",
-          "text": "The desired mainline history is feature-oriented",
-          "rationale": "Individual work-in-progress commits are not the reporting unit. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "The automation principal can have separate effective exemptions or permissions",
+          "rationale": "Protection must be evaluated for every identity that can change the target."
         },
         {
           "key": "B",
-          "text": "Generic review requirements do not ensure domain expertise",
-          "rationale": "Approval can be procedurally valid but substantively weak. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "All service accounts are automatically exempt by definition",
+          "rationale": "Exemption depends on configuration rather than the mere account category."
         },
         {
           "key": "C",
-          "text": "An exempt identity circumvents normal branch restrictions",
-          "rationale": "Strict policies do not constrain principals explicitly allowed to bypass. This directly addresses the constraint stated in this case."
+          "text": "A signed automation commit always bypasses review safely",
+          "rationale": "A signature does not establish independent review or acceptable behavior."
+        },
+        {
+          "key": "D",
+          "text": "Human approvals automatically apply to every later service commit",
+          "rationale": "Review evidence does not automatically cover future unrelated changes."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Strict policies do not constrain principals explicitly allowed to bypass. The selected answer is an exempt identity circumvents normal branch restrictions.",
+      "explanation": "Protection must be evaluated for every identity that can change the target. Exemption depends on configuration rather than the mere account category. A signature does not establish independent review or acceptable behavior. Review evidence does not automatically cover future unrelated changes.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1385,35 +1468,37 @@
     {
       "id": "L04-Q038",
       "checkpointId": "CP4",
-      "caseId": "L04-C08",
-      "task": "verification",
-      "caseContext": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which permission test demonstrates a useful narrower automation role?",
       "options": [
         {
           "key": "A",
-          "text": "Main contains one feature commit linked to the pull request",
-          "rationale": "The history matches the agreed integration policy. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "The service can propose its change but cannot directly rewrite protected main",
+          "rationale": "The test preserves necessary work while rejecting the excessive capability."
         },
         {
           "key": "B",
-          "text": "A permissions change requests the relevant owners' review",
-          "rationale": "The rule should trigger for the sensitive path. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "The service can delete and recreate main successfully",
+          "rationale": "That demonstrates the risky rewrite authority remains available."
         },
         {
           "key": "C",
-          "text": "The service can create pull requests but cannot rewrite main",
-          "rationale": "The test proves least privilege for automation. This directly addresses the constraint stated in this case."
+          "text": "The service can still force-push when it authored all affected commits",
+          "rationale": "Authorship does not justify bypassing protection of already accepted shared history."
+        },
+        {
+          "key": "D",
+          "text": "The service can update branch-protection settings before writing its change",
+          "rationale": "The ability to disable the control preserves an effective bypass capability."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The test proves least privilege for automation. The selected answer is the service can create pull requests but cannot rewrite main.",
+      "explanation": "The test preserves necessary work while rejecting the excessive capability. That demonstrates the risky rewrite authority remains available. Authorship does not justify bypassing protection of already accepted shared history. The ability to disable the control preserves an effective bypass capability.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1422,35 +1507,37 @@
     {
       "id": "L04-Q039",
       "checkpointId": "CP4",
-      "caseId": "L04-C08",
-      "task": "safeguard",
-      "caseContext": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Before removing a service's bypass permission, what operational dependency should the maintainer assess?",
       "options": [
         {
           "key": "A",
-          "text": "Protect the ownership configuration from casual modification",
-          "rationale": "Changing the rule could bypass the intended reviewers. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Whether existing jobs must be changed to use a compliant reviewed update path",
+          "rationale": "The permission repair can expose automation that relied on the forbidden shortcut."
         },
         {
           "key": "B",
-          "text": "Check dependent automation before reducing permissions",
-          "rationale": "A permission correction can reveal workflows relying on bypass. This directly addresses the constraint stated in this case."
+          "text": "Only whether the service can still clone the repository",
+          "rationale": "Read access does not identify the jobs that depend on direct protected writes."
         },
         {
           "key": "C",
-          "text": "Retain pull-request discussion and verification evidence",
-          "rationale": "A compact commit history should not erase review context. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "Only whether the latest pipeline run was green",
+          "rationale": "A past success does not identify the update path or minimum permission needed."
+        },
+        {
+          "key": "D",
+          "text": "Whether the repository has any human reviewers configured",
+          "rationale": "Reviewer availability alone does not migrate automation away from its bypassing write path."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "A permission correction can reveal workflows relying on bypass. The selected answer is check dependent automation before reducing permissions.",
+      "explanation": "The permission repair can expose automation that relied on the forbidden shortcut. Read access does not identify the jobs that depend on direct protected writes. A past success does not identify the update path or minimum permission needed. Reviewer availability alone does not migrate automation away from its bypassing write path.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1459,35 +1546,37 @@
     {
       "id": "L04-Q040",
       "checkpointId": "CP4",
-      "caseId": "L04-C08",
-      "task": "tradeoff",
-      "caseContext": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Protection bypass: A service account routinely force-pushes main, erasing the review history despite otherwise strict pull-request controls. The team selects this remedy: \"Remove routine bypass and force-push permission from the service.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A bot updates dependency locks daily and currently pushes directly to protected main. Review is mandatory and the bot still needs to propose updates. Which redesign fits?",
       "options": [
         {
           "key": "A",
-          "text": "Owner-based reviews can become a bottleneck",
-          "rationale": "Maintain enough qualified owners for availability. That addresses a different requirement: Specialized ownership. It does not directly resolve this case's stated constraint."
+          "text": "Allow the bot to force-push only during a daily time window",
+          "rationale": "Scheduling a prohibited write does not satisfy mandatory review."
         },
         {
           "key": "B",
-          "text": "Least-privilege automation may need workflow redesign",
-          "rationale": "Direct writes must be replaced with reviewable operations. This directly addresses the constraint stated in this case."
+          "text": "Remove all repository access from the bot and keep the same unattended update requirement",
+          "rationale": "That prevents the legitimate automation task rather than implementing it safely."
         },
         {
           "key": "C",
-          "text": "Squashing changes commit identity and detailed mainline history",
-          "rationale": "Later cherry-picking may need the resulting squash commit. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "Have the bot create narrowly scoped pull requests and pass ordinary required review and checks",
+          "rationale": "The service retains its legitimate proposal capability without bypassing the acceptance boundary."
+        },
+        {
+          "key": "D",
+          "text": "Retain unrestricted bypass and add the word reviewed to bot commit messages",
+          "rationale": "A message cannot substitute for actual independent review."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Direct writes must be replaced with reviewable operations. The selected answer is least-privilege automation may need workflow redesign.",
+      "explanation": "Scheduling a prohibited write does not satisfy mandatory review. That prevents the legitimate automation task rather than implementing it safely. The service retains its legitimate proposal capability without bypassing the acceptance boundary. A message cannot substitute for actual independent review.",
       "sourceIds": [
         "S1",
         "S2"
@@ -1496,372 +1585,390 @@
     {
       "id": "L04-Q041",
       "checkpointId": "CP2",
-      "caseId": "L04-C09",
-      "task": "remedy",
-      "caseContext": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion. Which next change most directly satisfies the stated requirement?",
+      "question": "A team wants one logical mainline commit for each merged feature while retaining pull-request discussion. Which merge method fits?",
       "options": [
         {
           "key": "A",
-          "text": "Use squash merging with an informative final commit message",
-          "rationale": "Squash combines feature commits into one mainline change. This directly addresses the constraint stated in this case."
+          "text": "Squash merge with a meaningful resulting commit message",
+          "rationale": "Squash can present the feature as one commit while the pull request retains its discussion."
         },
         {
           "key": "B",
-          "text": "Update the required-check rule to the actual stable job name",
-          "rationale": "Protection must reference a status the workflow can produce. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "Rebase-merge all five original feature commits into main",
+          "rationale": "That retains five logical mainline commits rather than the requested single feature commit."
         },
         {
           "key": "C",
-          "text": "Remove routine bypass and force-push permission from the service",
-          "rationale": "Automation should follow the same integrity boundary as users. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "Create a merge commit while preserving all original feature commits",
+          "rationale": "A normal merge preserves the intermediate history and adds the merge record."
+        },
+        {
+          "key": "D",
+          "text": "Fast-forward main to a feature branch containing five unsquashed commits",
+          "rationale": "The fast-forward retains those five commits rather than combining them into one."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Squash combines feature commits into one mainline change. The selected answer is use squash merging with an informative final commit message.",
+      "explanation": "Squash can present the feature as one commit while the pull request retains its discussion. That retains five logical mainline commits rather than the requested single feature commit. A normal merge preserves the intermediate history and adds the merge record. The fast-forward retains those five commits rather than combining them into one.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q042",
       "checkpointId": "CP2",
-      "caseId": "L04-C09",
-      "task": "diagnosis",
-      "caseContext": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "foundational",
-      "question": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What should an author remember when cherry-picking a previously squash-merged feature into another supported branch?",
       "options": [
         {
           "key": "A",
-          "text": "The branch rule is waiting for an absent status context",
-          "rationale": "Healthy jobs cannot satisfy a differently named requirement. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "A squash commit cannot be inspected or reverted with ordinary Git tools",
+          "rationale": "It is still a commit that can be examined and reversed where appropriate."
         },
         {
           "key": "B",
-          "text": "An exempt identity circumvents normal branch restrictions",
-          "rationale": "Strict policies do not constrain principals explicitly allowed to bypass. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "The pull-request discussion is necessarily deleted by a squash merge",
+          "rationale": "The discussion can remain associated with the merged request."
         },
         {
           "key": "C",
-          "text": "The desired mainline history is feature-oriented",
-          "rationale": "Individual work-in-progress commits are not the reporting unit. This directly addresses the constraint stated in this case."
+          "text": "The resulting squash commit has its own identity and represents the combined feature change",
+          "rationale": "Intermediate feature-branch identities are not necessarily the accepted mainline commit."
+        },
+        {
+          "key": "D",
+          "text": "Squash merging preserves every intermediate commit hash unchanged on main",
+          "rationale": "Combining changes into a new commit changes the mainline identity."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Individual work-in-progress commits are not the reporting unit. The selected answer is the desired mainline history is feature-oriented.",
+      "explanation": "It is still a commit that can be examined and reversed where appropriate. The discussion can remain associated with the merged request. Intermediate feature-branch identities are not necessarily the accepted mainline commit. Combining changes into a new commit changes the mainline identity.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q043",
       "checkpointId": "CP2",
-      "caseId": "L04-C09",
-      "task": "verification",
-      "caseContext": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which history inspection confirms a one-commit-per-feature squash policy took effect?",
       "options": [
         {
           "key": "A",
-          "text": "The current workflow result satisfies the branch requirement",
-          "rationale": "The policy and emitted check must agree. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "The original feature branch still has five local commits",
+          "rationale": "That describes the source branch rather than the accepted mainline history."
         },
         {
           "key": "B",
-          "text": "The service can create pull requests but cannot rewrite main",
-          "rationale": "The test proves least privilege for automation. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "The feature and main trees have the same final file contents",
+          "rationale": "Equal trees can be reached through different histories and do not prove a squash policy."
         },
         {
           "key": "C",
-          "text": "Main contains one feature commit linked to the pull request",
-          "rationale": "The history matches the agreed integration policy. This directly addresses the constraint stated in this case."
+          "text": "The pull request has one approved reviewer",
+          "rationale": "Review count does not establish which merge method represented the accepted commits."
+        },
+        {
+          "key": "D",
+          "text": "Main contains one resulting feature commit linked to its reviewed pull request",
+          "rationale": "The mainline representation matches the intended logical change unit."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The history matches the agreed integration policy. The selected answer is main contains one feature commit linked to the pull request.",
+      "explanation": "That describes the source branch rather than the accepted mainline history. Equal trees can be reached through different histories and do not prove a squash policy. Review count does not establish which merge method represented the accepted commits. The mainline representation matches the intended logical change unit.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q044",
       "checkpointId": "CP2",
-      "caseId": "L04-C09",
-      "task": "safeguard",
-      "caseContext": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "applied",
-      "question": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A squash merge makes main concise. Which evidence should still be retained for audit and reasoning?",
       "options": [
         {
           "key": "A",
-          "text": "Check dependent automation before reducing permissions",
-          "rationale": "A permission correction can reveal workflows relying on bypass. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "Only a list of reviewers without the reviewed revision or result",
+          "rationale": "A name list does not connect approval to the accepted source and checks."
         },
         {
           "key": "B",
-          "text": "Retain pull-request discussion and verification evidence",
-          "rationale": "A compact commit history should not erase review context. This directly addresses the constraint stated in this case."
+          "text": "Only the total number of successful repository runs",
+          "rationale": "An aggregate does not identify validation of the logical accepted feature commit."
         },
         {
           "key": "C",
-          "text": "Coordinate workflow and protection changes in a controlled rollout",
-          "rationale": "Changing only one side can block all pull requests. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "The pull-request review discussion and required validation results",
+          "rationale": "A compact history should still connect the accepted change to its assurance evidence."
+        },
+        {
+          "key": "D",
+          "text": "Only the final commit's short title without any request relationship",
+          "rationale": "A title alone loses useful review and validation context."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "A compact commit history should not erase review context. The selected answer is retain pull-request discussion and verification evidence.",
+      "explanation": "A name list does not connect approval to the accepted source and checks. An aggregate does not identify validation of the logical accepted feature commit. A compact history should still connect the accepted change to its assurance evidence. A title alone loses useful review and validation context.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q045",
       "checkpointId": "CP2",
-      "caseId": "L04-C09",
-      "task": "tradeoff",
-      "caseContext": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion.",
       "objectiveIds": [
         "D2.1.1"
       ],
       "difficulty": "advanced",
-      "question": "Merge choice: A team wants one logical commit per feature on main, while keeping detailed intermediate commits visible in pull-request discussion. The team selects this remedy: \"Use squash merging with an informative final commit message.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team needs concise mainline history, independent review, and later transfer of a complete feature to a supported branch. Which policy meets those goals?",
       "options": [
         {
           "key": "A",
-          "text": "Least-privilege automation may need workflow redesign",
-          "rationale": "Direct writes must be replaced with reviewable operations. That addresses a different requirement: Protection bypass. It does not directly resolve this case's stated constraint."
+          "text": "Require authors to rewrite main directly so its history looks concise",
+          "rationale": "History appearance does not justify bypassing the independent-review requirement."
         },
         {
           "key": "B",
-          "text": "Squashing changes commit identity and detailed mainline history",
-          "rationale": "Later cherry-picking may need the resulting squash commit. This directly addresses the constraint stated in this case."
+          "text": "Use reviewed squash merges with useful commit messages and retain the resulting commit and pull-request provenance",
+          "rationale": "The logical accepted commit can be identified for transfer while review context remains available."
         },
         {
           "key": "C",
-          "text": "Required-status naming becomes a compatibility contract",
-          "rationale": "Renames need policy migration rather than isolated edits. That addresses a different requirement: Required-check deadlock. It does not directly resolve this case's stated constraint."
+          "text": "Delete pull-request discussion after squashing because the commit contains the full rationale",
+          "rationale": "A combined diff does not necessarily preserve the reasoning and validation discussion."
+        },
+        {
+          "key": "D",
+          "text": "Cherry-pick all pre-squash work-in-progress commits blindly into the supported branch",
+          "rationale": "That can transfer superseded intermediate changes rather than the accepted logical feature."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Later cherry-picking may need the resulting squash commit. The selected answer is squashing changes commit identity and detailed mainline history.",
+      "explanation": "History appearance does not justify bypassing the independent-review requirement. The logical accepted commit can be identified for transfer while review context remains available. A combined diff does not necessarily preserve the reasoning and validation discussion. That can transfer superseded intermediate changes rather than the accepted logical feature.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q046",
       "checkpointId": "CP5",
-      "caseId": "L04-C10",
-      "task": "remedy",
-      "caseContext": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "foundational",
-      "question": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed. Which next change most directly satisfies the stated requirement?",
+      "question": "A protected branch is waiting for required check unit-tests, but the workflow now emits unit-tests-linux. What is the most direct diagnosis?",
       "options": [
         {
           "key": "A",
-          "text": "Use shorter integration cycles with a documented branch strategy",
-          "rationale": "Smaller divergence reduces expensive late reconciliation. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "The renamed passing job is still executing under the old required context",
+          "rationale": "The emitted names explicitly show that the old context is not being produced."
         },
         {
           "key": "B",
-          "text": "Use squash merging with an informative final commit message",
-          "rationale": "Squash combines feature commits into one mainline change. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "The configured required status name no longer matches the emitted check",
+          "rationale": "Healthy execution under a new name cannot satisfy a missing old context."
         },
         {
           "key": "C",
-          "text": "Update the required-check rule to the actual stable job name",
-          "rationale": "Protection must reference a status the workflow can produce. This directly addresses the constraint stated in this case."
-        }
-      ],
-      "correctAnswers": [
-        "C"
-      ],
-      "explanation": "Protection must reference a status the workflow can produce. The selected answer is update the required-check rule to the actual stable job name.",
-      "sourceIds": [
-        "S1",
-        "S2"
-      ]
-    },
-    {
-      "id": "L04-Q047",
-      "checkpointId": "CP5",
-      "caseId": "L04-C10",
-      "task": "diagnosis",
-      "caseContext": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed.",
-      "objectiveIds": [
-        "D2.1.3"
-      ],
-      "difficulty": "applied",
-      "question": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed. Which explanation best accounts for the behavior or constraint described?",
-      "options": [
-        {
-          "key": "A",
-          "text": "The desired mainline history is feature-oriented",
-          "rationale": "Individual work-in-progress commits are not the reporting unit. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "The passing Linux job proves the required old status must already be successful",
+          "rationale": "The rule and emitted context remain different identifiers."
         },
         {
-          "key": "B",
-          "text": "The branch rule is waiting for an absent status context",
-          "rationale": "Healthy jobs cannot satisfy a differently named requirement. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Long-lived isolated changes accumulated incompatible edits",
-          "rationale": "Local correctness does not prevent integration conflicts. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "The approval count is insufficient even though review requirements are satisfied",
+          "rationale": "That explanation does not account for the specifically absent named status context."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Healthy jobs cannot satisfy a differently named requirement. The selected answer is the branch rule is waiting for an absent status context.",
+      "explanation": "The emitted names explicitly show that the old context is not being produced. Healthy execution under a new name cannot satisfy a missing old context. The rule and emitted context remain different identifiers. That explanation does not account for the specifically absent named status context.",
       "sourceIds": [
-        "S1",
+        "S2"
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "jobs:\n  unit-tests-linux:\n    runs-on: ubuntu-24.04\n    steps:\n      - run: dotnet test\n#Protected branch still requires:unit-tests"
+      }
+    },
+    {
+      "id": "L04-Q047",
+      "checkpointId": "CP5",
+      "objectiveIds": [
+        "D2.1.3"
+      ],
+      "difficulty": "applied",
+      "question": "What should be checked before renaming a job used as a required branch status?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Which branch rules and workflows depend on its exact emitted status name",
+          "rationale": "The name is an operational interface consumed by merge protection."
+        },
+        {
+          "key": "B",
+          "text": "Only whether the renamed workflow can still compile the application locally",
+          "rationale": "Build behavior alone does not migrate external required-status consumers."
+        },
+        {
+          "key": "C",
+          "text": "Only the workflow's top-level display name",
+          "rationale": "Branch protection consumes emitted status contexts rather than only the workflow display label."
+        },
+        {
+          "key": "D",
+          "text": "Only the retention setting for the renamed job's logs",
+          "rationale": "Retention does not determine which exact status name the branch rule expects."
+        }
+      ],
+      "correctAnswers": [
+        "A"
+      ],
+      "explanation": "The name is an operational interface consumed by merge protection. Build behavior alone does not migrate external required-status consumers. Branch protection consumes emitted status contexts rather than only the workflow display label. Retention does not determine which exact status name the branch rule expects.",
+      "sourceIds": [
         "S2"
       ]
     },
     {
       "id": "L04-Q048",
       "checkpointId": "CP5",
-      "caseId": "L04-C10",
-      "task": "verification",
-      "caseContext": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which acceptance test verifies a coordinated required-check rename?",
       "options": [
         {
           "key": "A",
-          "text": "The current workflow result satisfies the branch requirement",
-          "rationale": "The policy and emitted check must agree. This directly addresses the constraint stated in this case."
+          "text": "A successful job exists somewhere in the Actions history",
+          "rationale": "An unrelated success does not prove the branch rule consumes it."
         },
         {
           "key": "B",
-          "text": "Features integrate in small reviewed changes with fewer conflicts",
-          "rationale": "The outcome should improve the actual integration process. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "The old job's YAML text no longer appears in search",
+          "rationale": "Text removal does not show the required branch context was migrated."
         },
         {
           "key": "C",
-          "text": "Main contains one feature commit linked to the pull request",
-          "rationale": "The history matches the agreed integration policy. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "The request title contains the new check name",
+          "rationale": "A title does not publish a status result."
+        },
+        {
+          "key": "D",
+          "text": "The new current check satisfies protection and a deliberately failing new check blocks merge",
+          "rationale": "The test establishes both correct reference resolution and continued enforcement."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "The policy and emitted check must agree. The selected answer is the current workflow result satisfies the branch requirement.",
+      "explanation": "An unrelated success does not prove the branch rule consumes it. Text removal does not show the required branch context was migrated. A title does not publish a status result. The test establishes both correct reference resolution and continued enforcement.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q049",
       "checkpointId": "CP5",
-      "caseId": "L04-C10",
-      "task": "safeguard",
-      "caseContext": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "applied",
-      "question": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A workflow uses path filters, and a required status is never emitted for documentation-only changes. What must the design resolve?",
       "options": [
         {
           "key": "A",
-          "text": "Retain pull-request discussion and verification evidence",
-          "rationale": "A compact commit history should not erase review context. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "Ensure required validation has a compatible always-reported result or a deliberate supported gating design",
+          "rationale": "A permanently absent required result can block otherwise valid requests."
         },
         {
           "key": "B",
-          "text": "Coordinate workflow and protection changes in a controlled rollout",
-          "rationale": "Changing only one side can block all pull requests. This directly addresses the constraint stated in this case."
+          "text": "Treat an absent result as equivalent to a successful run without changing policy",
+          "rationale": "The protection still waits for its configured required evidence."
         },
         {
           "key": "C",
-          "text": "Keep incomplete exposure controlled through flags or incremental work",
-          "rationale": "Frequent merging must not expose unfinished behavior. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Require contributors to add unrelated application changes to trigger CI",
+          "rationale": "That encourages artificial scope changes rather than a correct validation contract."
+        },
+        {
+          "key": "D",
+          "text": "Grant all documentation authors unrestricted branch bypass",
+          "rationale": "A broad exception weakens protection instead of fixing trigger compatibility."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Changing only one side can block all pull requests. The selected answer is coordinate workflow and protection changes in a controlled rollout.",
+      "explanation": "A permanently absent required result can block otherwise valid requests. The protection still waits for its configured required evidence. That encourages artificial scope changes rather than a correct validation contract. A broad exception weakens protection instead of fixing trigger compatibility.",
       "sourceIds": [
-        "S1",
         "S2"
       ]
     },
     {
       "id": "L04-Q050",
       "checkpointId": "CP5",
-      "caseId": "L04-C10",
-      "task": "tradeoff",
-      "caseContext": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed.",
       "objectiveIds": [
         "D2.1.3"
       ],
       "difficulty": "advanced",
-      "question": "Required-check deadlock: A branch rule requires a job name that no longer exists after the CI workflow was renamed. The team selects this remedy: \"Update the required-check rule to the actual stable job name.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team plans to rename a required job and enable a merge queue. What validation protects against missing-check deadlocks in the new integration path?",
       "options": [
         {
           "key": "A",
-          "text": "Squashing changes commit identity and detailed mainline history",
-          "rationale": "Later cherry-picking may need the resulting squash commit. That addresses a different requirement: Merge choice. It does not directly resolve this case's stated constraint."
+          "text": "Rename the branch and keep the workflow and status rules unchanged",
+          "rationale": "Branch naming does not repair mismatched checks or missing queue-event execution."
         },
         {
           "key": "B",
-          "text": "Required-status naming becomes a compatibility contract",
-          "rationale": "Renames need policy migration rather than isolated edits. This directly addresses the constraint stated in this case."
+          "text": "Verify rule-to-job naming and that required validation runs for the platform's merge-queue event as well as ordinary pull requests",
+          "rationale": "A queue can introduce another candidate event that must publish the required checks."
         },
         {
           "key": "C",
-          "text": "Trunk-oriented work requires strong automation and discipline",
-          "rationale": "A smaller branch graph does not eliminate release risk. That addresses a different requirement: Integration drift. It does not directly resolve this case's stated constraint."
+          "text": "Verify only the pull-request event and assume all queue candidates reuse its status automatically",
+          "rationale": "A different candidate context may require its own workflow trigger and results."
+        },
+        {
+          "key": "D",
+          "text": "Remove all required checks while leaving the queue enabled",
+          "rationale": "That avoids the gate rather than preserving the required validation guarantee."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Renames need policy migration rather than isolated edits. The selected answer is required-status naming becomes a compatibility contract.",
+      "explanation": "Branch naming does not repair mismatched checks or missing queue-event execution. A queue can introduce another candidate event that must publish the required checks. A different candidate context may require its own workflow trigger and results. That avoids the gate rather than preserving the required validation guarantee.",
       "sourceIds": [
-        "S1",
         "S2"
-      ]
+      ],
+      "exhibit": {
+        "language": "yaml",
+        "code": "on:\n  pull_request:\n#Required validation workflow lacks merge_group\n#Protected branch uses a merge queue"
+      }
     }
   ]
 }

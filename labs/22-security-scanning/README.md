@@ -15,7 +15,8 @@ Learner role: **Product security engineer**. Outcome: Scan dependencies, code, c
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,15 +38,20 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D1.2.5`, `D4.2.4`, `D4.3.1`, `D4.3.5`, `D4.3.6`
 
 | Checkpoint | Measurable behavior |
 |---|---|
 | [CP1](#task-1) | Inventory direct and transitive dependencies |
 | [CP2](#task-2) | Run the vulnerability advisory check |
-| [CP3](#task-3) | Scan a synthetic source fixture for leakage |
-| [CP4](#task-4) | Review container and CodeQL scan execution boundaries |
-| [CP5](#task-5) | Create a dependency license review queue |
+| [CP3](#task-3) | Run a real secret scanner against clean and leaking fixtures |
+| [CP4](#task-4) | Build and scan the exact local container image |
+| [CP5](#task-5) | Collect real license findings and classify unknowns |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -84,11 +90,19 @@ packages and write ignored build output.
 
 Scanners observe different surfaces and databases change over time. Findings need severity, reachability, ownership, and remediation; unknown license status cannot become automatic approval.
 
+Use different scanners for different surfaces: secret discovery, source analysis, package advisories, container layers and licenses are not interchangeable. Pin Gitleaks 8.30.1 and Trivy 0.76.0 for the course tooling; record database timestamps because findings can change while source remains identical.
+
+The real local lanes run Gitleaks on clean/nonsecret leaking fixtures, build one uniquely tagged Docker image and scan that exact image with Trivy, then collect license results. High/critical findings block the sample release decision; an empty/unknown license cannot become automatic legal approval. Image removal checks the run label and runs even after failures. CodeQL/Dependabot provider enablement remains an explained configuration contract unless its authorized workflow is executed.
+
+Pinned exercise tool versions: `gitleaks` 8.30.1, `trivy` 0.76.0, `docker` Engine with Linux container support. See the primary release sources below.
+
 ## Task 1 — Inventory direct and transitive dependencies
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 dotnet list (Join-Path $RepoRoot 'samples/DevOps.slnx') package --include-transitive --format json|Set-Content (Join-Path $WorkRoot 'dependencies.json')
@@ -123,6 +137,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.5` | practiced | Query advisory counts/severity and keep timestamps/scope explicit. |
+
 ```powershell
 dotnet list (Join-Path $RepoRoot 'samples/DevOps.slnx') package --vulnerable --include-transitive --format json|Set-Content (Join-Path $WorkRoot 'vulnerabilities.json')
  if($LASTEXITCODE -ne 0){throw 'Vulnerability advisory query failed.'}
@@ -150,110 +168,184 @@ Common failure and safe retry: Update the smallest compatible dependency set, re
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 3 — Scan a synthetic source fixture for leakage
+## Task 3 — Run a real secret scanner against clean and leaking fixtures
 
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.2.4` | practiced | Run the real Gitleaks CLI on clean and deliberately seeded nonsecret fixtures and inspect its blocking exit/report. |
+| `D4.3.1` | practiced | Execute and distinguish secret scanning from the separately explained CodeQL provider integration. |
+
 ```powershell
-$fixture=Join-Path $WorkRoot 'scan-fixture.txt';'public-setting=training'|Set-Content $fixture
- $findings=@(Select-String -Path $fixture -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY')
- [ordered]@{tool='local demonstration rule';findings=$findings.Count;productionScannerRequired='gitleaks/secret-scanning'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'secret-scan.json')
+$scan=Join-Path $WorkRoot 'scan-target';New-Item -ItemType Directory -Force $scan|Out-Null
+'public-setting=training'|Set-Content (Join-Path $scan 'settings.txt')
+'public-setting=training'|Set-Content (Join-Path $WorkRoot 'scan-fixture.txt')
+@'
+title = "AZ400 synthetic noncredential fixture"
+[[rules]]
+id = "az400-synthetic"
+description = "Nonsecret training marker"
+regex = 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
+'@|Set-Content (Join-Path $WorkRoot 'gitleaks.toml')
+gitleaks dir $scan --config (Join-Path $WorkRoot 'gitleaks.toml') --report-format json --report-path (Join-Path $WorkRoot 'secret-clean.json') --redact --no-banner
+if($LASTEXITCODE -ne 0){throw 'Clean scanner baseline failed.'}
+Add-Content (Join-Path $scan 'settings.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
+$saved=$PSNativeCommandUseErrorActionPreference
+try{$PSNativeCommandUseErrorActionPreference=$false;gitleaks dir $scan --config (Join-Path $WorkRoot 'gitleaks.toml') --report-format json --report-path (Join-Path $WorkRoot 'secret-blocked.json') --redact --no-banner;$code=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}
+if($code -ne 1){throw 'Scanner did not block the known nonsecret fixture.'}
+'public-setting=training'|Set-Content (Join-Path $scan 'settings.txt')
 ```
 
-Expected state: A deterministic demonstration rule finds no synthetic credential pattern.
+Expected state: A real scanner accepts clean files and returns exit1 with a redacted finding for the custom noncredential marker.
 
 Positive validation:
 
 ```powershell
-$s=Get-Content (Join-Path $WorkRoot 'secret-scan.json') -Raw|ConvertFrom-Json
- if($s.findings -ne 0){throw 'Synthetic source scan found a leak.'}
+$clean=@(Get-Content (Join-Path $WorkRoot 'secret-clean.json') -Raw|ConvertFrom-Json)
+$blocked=@(Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw|ConvertFrom-Json)
+if($clean.Count -ne 0 -or @($blocked|Where-Object RuleID -eq 'az400-synthetic').Count -lt 1){throw 'Secret scanner boundary was not observed.'}
 ```
 
 Negative validation:
 
 ```powershell
-if(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'Leakage boundary violated.'}
+$blocked=Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw
+if($blocked -match 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE' -or (Select-String -Path (Join-Path $WorkRoot 'scan-target/settings.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE')){throw 'Scanner report or repaired source retained unredacted marker.'}
 ```
 
-Evidence to retain: Counts and rule names only; production secret scanning remains a distinct control.
+Evidence to retain: Scanner version, rule ID, exit codes, and redacted JSON; the marker is not a credential.
 
-Common failure and safe retry: Revoke real exposed credentials before history cleanup; a regex demonstration cannot replace a mature scanner.
+Common failure and safe retry: Install the approved scanner during bootstrap. A custom fixture proves rule execution and exit propagation, not completeness of every production credential detector.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 4 — Review container and CodeQL scan execution boundaries
+## Task 4 — Build and scan the exact local container image
 
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.3.5` | practiced | Build an exact local image, run Trivy on that tag, and apply a high/critical vulnerability gate. |
+
 ```powershell
-Copy-Item (Join-Path $LabRoot 'artifacts/security.yml') (Join-Path $WorkRoot 'security.yml')
- $policy=[ordered]@{containerFile='samples/Dockerfile';codeqlLanguage='csharp';severityGate=@('HIGH','CRITICAL');privilegedContainer=$false;scannerDatabaseMustBeCurrent=$true}
- $policy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'container-scan-policy.json')
+$tag="az400-lab22:$RunId"
+$nativePreference=$PSNativeCommandUseErrorActionPreference;$PSNativeCommandUseErrorActionPreference=$false
+try{
+ $existing=docker image inspect $tag --format '{{ index .Config.Labels "az400.run" }}' 2>$null
+ if($LASTEXITCODE -eq 0 -and $existing -ne $RunId){throw 'Container tag already belongs to another run; refusing to replace it.'}
+ docker build --label "az400.run=$RunId" --label az400.lab=22 --file (Join-Path $RepoRoot 'samples/Dockerfile') --tag $tag $RepoRoot
+ if($LASTEXITCODE -ne 0){throw 'Container build failed.'}
+ $id=docker image inspect $tag --format '{{.Id}}'
+ if($LASTEXITCODE -ne 0){throw 'Built image identity unavailable.'}
+ $id|Set-Content (Join-Path $WorkRoot 'scanned-image-id.txt')
+ trivy image --scanners vuln --format json --output (Join-Path $WorkRoot 'container-scan.json') --exit-code 0 $tag
+ if($LASTEXITCODE -ne 0){throw 'Container scanner could not complete.'}
+ $r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json
+ $high=@($r.Results|ForEach-Object Vulnerabilities|Where-Object {$null -ne $_ -and $_.Severity -in @('HIGH','CRITICAL')})
+ @{imageId=$id;highCritical=$high.Count;releaseAllowed=($high.Count -eq 0);scanner='Trivy'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'container-gate.json')
+}finally{
+ try{
+ $owned=docker image inspect $tag --format '{{ index .Config.Labels "az400.run" }}' 2>$null
+ if($LASTEXITCODE -eq 0){
+  if($owned -ne $RunId){throw 'Container ownership mismatch; do not remove unrelated image.'}
+  docker image rm $tag|Out-Null
+  if($LASTEXITCODE -ne 0){throw 'Run-owned container tag cleanup failed; inspect the exact tag.'}
+ }
+ }finally{$PSNativeCommandUseErrorActionPreference=$nativePreference}
+}
 ```
 
-Expected state: Code and container scanning have explicit language, target, severity, and isolation.
+Expected state: Trivy records actual image findings tied to the local image ID, computes the release decision, and the uniquely tagged training image is removed.
 
 Positive validation:
 
 ```powershell
-$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json
- if($p.codeqlLanguage -ne 'csharp' -or 'CRITICAL' -notin $p.severityGate){throw 'Scan target/gate missing.'}
+$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json
+$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json
+if($g.imageId -ne (Get-Content (Join-Path $WorkRoot 'scanned-image-id.txt')) -or -not $r.ArtifactName){throw 'Scanned artifact provenance incomplete.'}
 ```
 
 Negative validation:
 
 ```powershell
-$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json
- if($p.privilegedContainer){throw 'Scanner must not require privileged Docker access.'}
+$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json
+$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json
+$high=@($r.Results|ForEach-Object Vulnerabilities|Where-Object {$null -ne $_ -and $_.Severity -in @('HIGH','CRITICAL')})
+if($g.releaseAllowed -ne ($high.Count -eq 0)){throw 'Security gate ignored high/critical findings.'}
 ```
 
-Evidence to retain: Workflow digest and explicit scanner prerequisites.
+Evidence to retain: Image ID, scanner/database metadata, severity counts and gate decision; zero findings is a dated observation.
 
-Common failure and safe retry: For a live local challenge install approved Docker/Trivy tools; run docker build and trivy image on the disposable sample image.
+Common failure and safe retry: A completed scan can correctly block a release. Remediate findings and rebuild/retest the changed digest; never reuse a mutable tag as proof.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Create a dependency license review queue
+## Task 5 — Collect real license findings and classify unknowns
 
 <a id="task-5"></a>
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.3.6` | explained | Inspect the Dependabot/CodeQL configuration contract; local vulnerability/license scanning does not enable provider dependency alerts. |
+
 ```powershell
-$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json
- $queue=@();foreach($project in $d.projects){foreach($framework in $project.frameworks){foreach($pkg in $framework.topLevelPackages){$queue+=[ordered]@{package=$pkg.id;version=$pkg.resolvedVersion;licenseReview='pending primary package metadata';approved=$false}}}}
- $queue|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'license-review.json')
+trivy fs --scanners license --license-full --skip-dirs '**/bin' --skip-dirs '**/obj' --format json --output (Join-Path $WorkRoot 'license-scan.json') (Join-Path $RepoRoot 'samples')
+if($LASTEXITCODE -ne 0){throw 'License scanner failed.'}
+$r=Get-Content (Join-Path $WorkRoot 'license-scan.json') -Raw|ConvertFrom-Json
+$found=@($r.Results|ForEach-Object Licenses|Where-Object {$null -ne $_})
+$allowed=@('MIT','Apache-2.0','BSD-3-Clause')
+$queue=@($found|ForEach-Object {@{package=$_.PkgName;license=$_.Name;status=$(if($_.Name -in $allowed){'policy-candidate'}else{'manual-review'})}})
+@{scannerFindings=$found.Count;review=$queue;unknownsRemain=$true;automaticLegalApproval=$false}|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'license-review.json')
+Copy-Item (Join-Path $LabRoot 'artifacts/security.yml') (Join-Path $WorkRoot 'security.yml')
 ```
 
-Expected state: Direct dependencies enter an explicit review queue; unknown license status is not approval.
+Expected state: A real license scan produces review inputs; unknown/undetected metadata remains pending and no automatic legal approval is granted.
 
 Positive validation:
 
 ```powershell
-$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)
- if($q.Count -lt 1){throw 'License review queue empty.'}
+$r=Get-Content (Join-Path $WorkRoot 'license-scan.json') -Raw|ConvertFrom-Json
+$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json
+if(-not $r.ArtifactName -or $null -eq $q.scannerFindings){throw 'License scan evidence missing.'}
 ```
 
 Negative validation:
 
 ```powershell
-$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)
- if(@($q|Where-Object approved -eq $true).Count){throw 'Unreviewed package license cannot be automatically approved.'}
+$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json
+if($q.automaticLegalApproval -or -not $q.unknownsRemain){throw 'Unknown licenses were silently approved.'}
 ```
 
-Evidence to retain: Package/version, SPDX/expression lookup task, and review status.
+Evidence to retain: Scanner provenance, detected expressions, policy candidates and manual-review obligations.
 
-Common failure and safe retry: Resolve license expressions and notices from package/project primary metadata under your organization policy.
+Common failure and safe retry: Scanner detection is not legal advice or approval. Check package primary metadata, SPDX expressions and notices; CodeQL provider configuration is a separate explained/gated workflow.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/22-security-scanning/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L22-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+if(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'AZ400-L22-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 Add-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
@@ -265,7 +357,7 @@ Diagnose the precise difference:
 Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 Set-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'public-setting=training'
@@ -281,7 +373,7 @@ Run approved local secret, CodeQL, container, and license scanners; deliberately
 & './labs/22-security-scanning/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -310,7 +402,11 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 - [Primary source 1](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-list) — reviewed 2026-10-16.
 - [Primary source 2](https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql) — reviewed 2026-10-16.
 - [Primary source 3](https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts) — reviewed 2026-10-16.
+- [Primary source 4](https://github.com/gitleaks/gitleaks) — reviewed 2026-10-16.
+- [Primary source 5](https://trivy.dev/docs/latest/target/filesystem/) — reviewed 2026-10-16.
+- [Primary source 6](https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1) — reviewed 2026-10-16.
+- [Primary source 7](https://github.com/aquasecurity/trivy/releases/tag/v0.76.0) — reviewed 2026-10-16.
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

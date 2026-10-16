@@ -32,7 +32,8 @@
       "negative": "$m=Get-Content (Join-Path $WorkRoot 'federated-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Unowned federation target.'}\n",
       "validate": "$m=Get-Content (Join-Path $WorkRoot 'federated-identity.json') -Raw|ConvertFrom-Json\n if(-not $m.clientId -or -not $m.principalId){throw 'Federation identity IDs absent.'}\n\n$m=Get-Content (Join-Path $WorkRoot 'federated-identity.json') -Raw|ConvertFrom-Json\n if($m.id -notlike \"*/resourceGroups/$ResourceGroup/*\"){throw 'Unowned federation target.'}\n",
       "evidence": "Managed identity ID and explicitly nonsecret client/tenant metadata.",
-      "fix": "Use an RG-contained managed identity and least-privilege role, never a copied application password."
+      "fix": "Use an RG-contained managed identity and least-privilege role, never a copied application password.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -43,29 +44,55 @@
       "negative": "$f=Get-Content (Join-Path $WorkRoot 'federated-credential.json') -Raw|ConvertFrom-Json\n if($f.subject -match '\\*' -or $f.issuer -ne 'https://token.actions.githubusercontent.com'){throw 'Untrusted or wildcard issuer/subject.'}\n",
       "validate": "$f=az identity federated-credential show --subscription $SubscriptionId --resource-group $ResourceGroup --identity-name \"federated-$RunId\" --name github-release -o json|ConvertFrom-Json\n if($f.subject -ne \"repo:${GhRepo}:environment:release-$RunId\"){throw 'Federation subject mismatch.'}\n\n$f=Get-Content (Join-Path $WorkRoot 'federated-credential.json') -Raw|ConvertFrom-Json\n if($f.subject -match '\\*' -or $f.issuer -ne 'https://token.actions.githubusercontent.com'){throw 'Untrusted or wildcard issuer/subject.'}\n",
       "evidence": "Issuer, subject, audience; no assertion JWT is retained.",
-      "fix": "Environment-bound and branch-bound subjects differ; copy the exact emitted subject and keep audience exact."
+      "fix": "Environment-bound and branch-bound subjects differ; copy the exact emitted subject and keep audience exact.",
+      "coverage": [
+        {
+          "objectiveId": "D4.1.2",
+          "level": "explained",
+          "reference": "Read the exact GitHub environment-subject federation contract; exchanging a live OIDC token occurs in the capstone integration."
+        },
+        {
+          "objectiveId": "D4.2.2",
+          "level": "practiced",
+          "reference": "Create and query the managed-identity federated credential with exact issuer, audience and repository subject."
+        }
+      ]
     },
     {
       "id": "CP3",
-      "title": "Review Key Vault reference handling",
-      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/keyvault-reference.json') (Join-Path $WorkRoot 'keyvault-reference.json')\n $policy=[ordered]@{fetch='at job runtime through federated identity';retainValue=$false;masking='defense in depth';rotation='new version with rollback plan';vaultProvisioned=$false}\n $policy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'vault-policy.json')\n",
-      "expected": "Vault references and runtime retrieval are distinct from storing secret values in Git.",
-      "positive": "$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json\n if($p.fetch -notmatch 'federated identity' -or $p.rotation -notmatch 'new version'){throw 'Secret lifecycle policy incomplete.'}\n",
-      "negative": "$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json\n if($p.retainValue -or $p.vaultProvisioned){throw 'Reference review cannot expose values or claim a vault deployment.'}\n",
-      "validate": "$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json\n if($p.fetch -notmatch 'federated identity' -or $p.rotation -notmatch 'new version'){throw 'Secret lifecycle policy incomplete.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json\n if($p.retainValue -or $p.vaultProvisioned){throw 'Reference review cannot expose values or claim a vault deployment.'}\n",
-      "evidence": "Reference shape and runtime identity requirements, without secret values.",
-      "fix": "Key Vault uses separate data-plane RBAC; RG Contributor alone cannot read secret values."
+      "title": "Parse and reject unsafe Key Vault references",
+      "commands": "& (Join-Path $LabRoot 'artifacts/Test-LocalSecretHandling.ps1') -Mode References -WorkRoot $WorkRoot\n",
+      "expected": "Two HTTPS references are accepted; HTTP, an attacker-suffix hostname, and a plaintext value are rejected. Only one accepted reference pins a version.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json\nif($r.accepted -ne 2 -or $r.rejected -ne 3 -or $r.versioned -ne 1){throw 'Reference cases did not match expected syntax and rotation behavior.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json\nif($r.resolvedLive -or -not $r.fixtureOnly){throw 'Offline reference parsing cannot claim live secret resolution.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json\nif($r.accepted -ne 2 -or $r.rejected -ne 3 -or $r.versioned -ne 1){throw 'Reference cases did not match expected syntax and rotation behavior.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json\nif($r.resolvedLive -or -not $r.fixtureOnly){throw 'Offline reference parsing cannot claim live secret resolution.'}\n",
+      "evidence": "reference-results.json records counts without secret values.",
+      "fix": "Read the full vault hostname and SecretUri path. Versionless references follow rotation after the service refresh interval; a pinned version requires an explicit update.",
+      "coverage": [
+        {
+          "objectiveId": "D4.2.1",
+          "level": "explained",
+          "reference": "Parse versioned and versionless Key Vault reference fixtures and reject insecure or misleading syntax; live secret resolution is explained separately."
+        }
+      ]
     },
     {
       "id": "CP4",
-      "title": "Model secure-file access and deletion after use",
-      "commands": "$secureFile=[ordered]@{name='synthetic-signing-input';content='NOT-A-REAL-KEY';authorizedPipeline='single-disposable-pipeline';deleteAfterJob=$true}\n $secureFile|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'secure-file-contract.json')\n",
-      "expected": "A synthetic file contract narrows pipeline authorization and cleanup lifetime.",
-      "positive": "$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json\n if(-not $s.deleteAfterJob -or $s.content -ne 'NOT-A-REAL-KEY'){throw 'Secure-file lifetime/fixture violated.'}\n",
-      "negative": "$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json\n if($s.authorizedPipeline -eq 'all'){throw 'Secure files must not be broadly authorized.'}\n",
-      "validate": "$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json\n if(-not $s.deleteAfterJob -or $s.content -ne 'NOT-A-REAL-KEY'){throw 'Secure-file lifetime/fixture violated.'}\n\n$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json\n if($s.authorizedPipeline -eq 'all'){throw 'Secure files must not be broadly authorized.'}\n",
-      "evidence": "Nonsecret file metadata and access decision.",
-      "fix": "Store real certificates only in approved protected secure-file/key facilities; never echo their bytes."
+      "title": "Consume and remove a synthetic secure file",
+      "commands": "& (Join-Path $LabRoot 'artifacts/Test-LocalSecretHandling.ps1') -Mode FileLifetime -WorkRoot $WorkRoot\n",
+      "expected": "The harmless input is hash-checked and consumed twice. A normal run and an injected consumer failure both remove the temporary file in finally.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json\nif(@($r.runs).Count -ne 2 -or @($r.runs|Where-Object {-not $_.consumed -or -not $_.removed}).Count -or @($r.runs|Where-Object consumerFailed).Count -ne 1){throw 'Successful and failing consumers must both remove their temporary input.'}\n",
+      "negative": "if(Get-ChildItem -LiteralPath $WorkRoot -Filter 'synthetic-secure-file-*.tmp'){throw 'Synthetic secure-file residual remains.'}\nif((Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json).providerAuthorizationVerified){throw 'Local lifetime exercise cannot claim provider authorization.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json\nif(@($r.runs).Count -ne 2 -or @($r.runs|Where-Object {-not $_.consumed -or -not $_.removed}).Count -or @($r.runs|Where-Object consumerFailed).Count -ne 1){throw 'Successful and failing consumers must both remove their temporary input.'}\n\nif(Get-ChildItem -LiteralPath $WorkRoot -Filter 'synthetic-secure-file-*.tmp'){throw 'Synthetic secure-file residual remains.'}\nif((Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json).providerAuthorizationVerified){throw 'Local lifetime exercise cannot claim provider authorization.'}\n",
+      "evidence": "secure-file-results.json plus an empty residual file search; no real key is used.",
+      "fix": "Cleanup belongs in finally, including consumer failure. Azure DevOps Library authorization, approvals, and agent filesystem permissions remain separate prerequisite checks.",
+      "coverage": [
+        {
+          "objectiveId": "D4.2.3",
+          "level": "explained",
+          "reference": "Exercise synthetic secure-file consumption and finally cleanup on both success and failure; provider Library authorization is explained, not emulated."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -76,22 +103,38 @@
       "negative": "if(Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'){throw 'Synthetic secret leaked into log.'}\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'leak-check.json') -Raw|ConvertFrom-Json\n if(-not $r.redacted){throw 'Expected redaction evidence absent.'}\n\nif(Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'){throw 'Synthetic secret leaked into log.'}\n",
       "evidence": "Pass/fail leakage check only; never include the real credential being checked.",
-      "fix": "Masking can miss transformed values; minimize secret exposure and avoid debug tracing around token exchange."
+      "fix": "Masking can miss transformed values; minimize secret exposure and avoid debug tracing around token exchange.",
+      "coverage": [
+        {
+          "objectiveId": "D4.1.3",
+          "level": "explained",
+          "reference": "Compare the DevOps service-connection federation issuer/subject with GitHub OIDC; connection provisioning is a bootstrap prerequisite."
+        },
+        {
+          "objectiveId": "D4.2.4",
+          "level": "practiced",
+          "reference": "Scan nonsecret fixture material and reject the deterministic synthetic leak marker."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "Add-Content (Join-Path $WorkRoot 'redacted-log.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
     "diagnose": "Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
-    "repair": "Set-Content (Join-Path $WorkRoot 'redacted-log.txt') 'status=complete; value=<redacted>'\n"
+    "repair": "Set-Content (Join-Path $WorkRoot 'redacted-log.txt') 'status=complete; value=<redacted>'\n",
+    "assert": "if(Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'){throw 'AZ400-L21-FAULT'}\n",
+    "expectedFailure": "AZ400-L21-FAULT"
   },
   "challenge": "Configure a separately approved Azure DevOps workload-identity service connection to the RG-contained identity using the exact service-connection issuer/subject, then prove no client secret exists.",
   "sources": [
     "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity",
     "https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-azure",
-    "https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files"
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files",
+    "https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references",
+    "https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-secure-file-v1?view=azure-pipelines"
   ],
-  "primer": "OIDC exchanges a constrained workload assertion for an Azure token. Issuer, audience, and subject must all match; masking is defense in depth rather than permission to log secrets.",
+  "primer": "OIDC exchanges a constrained workload assertion for an Azure token. Issuer, audience, and subject must all match; masking is defense in depth rather than permission to log secrets.\n\nFederation removes a long-lived client secret by exchanging a provider assertion for a short-lived Azure token. Trust requires the correct issuer, audience and exact subject; the GitHub environment subject differs from a branch subject and from an Azure DevOps service connection.\n\nThe core creates a run-owned managed identity and its federated credential, then reads back the full trust tuple. A successful credential definition does not prove token exchange: the protected capstone supplies that integration evidence. Key Vault references and secure-file records here are reviewed handling contracts, not uploads of real secrets. Redaction and masking do not authorize logging sensitive values.",
   "architecture": {
     "title": "GitHub OIDC to Entra federation and an RG identity",
     "nodes": [
@@ -172,5 +215,10 @@
   },
   "providers": [
     "Microsoft.ManagedIdentity"
-  ]
+  ],
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run."
+  },
+  "solutionNotes": "The synthetic leakage check must reject its marker without emitting credential material. Confirm federation scope before troubleshooting a token audience or subject failure."
 }

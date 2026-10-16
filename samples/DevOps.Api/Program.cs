@@ -4,8 +4,12 @@ using DevOps.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.FeatureManagement;
 using OpenTelemetry.Resources;
+using System.Reflection;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+var informationalVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "1.0.0";
+var revision = informationalVersion.Contains('+', StringComparison.Ordinal) ? informationalVersion.Split('+', 2)[1] : "local";
 var appConfigurationEndpoint = builder.Configuration["AppConfiguration:Endpoint"];
 if (!string.IsNullOrWhiteSpace(appConfigurationEndpoint))
 {
@@ -30,7 +34,7 @@ else
     builder.Services.AddDbContext<TodoDbContext>(options => options.UseSqlite(connectionString));
 }
 var telemetry = builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource.AddService("az400-todo-api"))
+    .ConfigureResource(resource => resource.AddService("az400-todo-api", serviceVersion: informationalVersion))
     .WithTracing(tracing => tracing.AddSource(ApiTelemetry.SourceName))
     .WithMetrics(metrics => metrics.AddMeter(ApiTelemetry.SourceName));
 if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
@@ -43,12 +47,18 @@ if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNEC
 
 var app = builder.Build();
 app.UseExceptionHandler();
+app.Use(async (context, next) =>
+{
+    ApiTelemetry.TagRelease(Activity.Current, context.Request.Headers["X-Az400-Release"].ToString());
+    await next(context);
+});
 if (!string.IsNullOrWhiteSpace(appConfigurationEndpoint)) app.UseAzureAppConfiguration();
 // Local/test schema creation is intentionally separate from the ordered SQL release lane.
-if (!sqlServer && (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing")))
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 {
     using var scope = app.Services.CreateScope();
-    await scope.ServiceProvider.GetRequiredService<TodoDbContext>().Database.EnsureCreatedAsync();
+    var database = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
+    if (database.Database.IsSqlite()) await database.Database.EnsureCreatedAsync();
 }
 app.MapGet("/health/live", () => Results.Ok(new { status = "live" }));
 app.MapGet("/health/ready", async (TodoDbContext db, CancellationToken cancellation) =>
@@ -57,7 +67,7 @@ app.MapGet("/health/ready", async (TodoDbContext db, CancellationToken cancellat
     {
         var ready = await db.Database.CanConnectAsync(cancellation);
         if (ready) _ = await db.Todos.AsNoTracking().AnyAsync(cancellation);
-        if (ready && sqlServer) ready = !(await db.Database.GetPendingMigrationsAsync(cancellation)).Any();
+        if (ready && db.Database.IsSqlServer()) ready = !(await db.Database.GetPendingMigrationsAsync(cancellation)).Any();
         return ready ? Results.Ok(new { status = "ready" }) : Results.StatusCode(503);
     }
     catch (Exception exception) when (exception is not OperationCanceledException)
@@ -67,7 +77,7 @@ app.MapGet("/health/ready", async (TodoDbContext db, CancellationToken cancellat
     }
 });
 app.MapGet("/version", () => Results.Ok(new { version = typeof(Program).Assembly.GetName().Version?.ToString(),
-    revision = app.Configuration["Build:Revision"] ?? "local" }));
+    revision }));
 app.MapGet("/todos", async (TodoDbContext db, CancellationToken cancellation) =>
     Results.Ok(await db.Todos.AsNoTracking().OrderBy(todo => todo.Id).ToArrayAsync(cancellation)));
 app.MapGet("/todos/{id:int}", async (int id, TodoDbContext db, CancellationToken cancellation) =>

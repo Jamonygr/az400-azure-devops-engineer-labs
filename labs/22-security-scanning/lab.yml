@@ -29,7 +29,8 @@
       "negative": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw\n if($d -match 'password=|client_secret='){throw 'Sensitive restore configuration leaked.'}\n",
       "validate": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json\n if(@($d.projects).Count -lt 2){throw 'Dependency inventory omitted a project.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw\n if($d -match 'password=|client_secret='){throw 'Sensitive restore configuration leaked.'}\n",
       "evidence": "Package IDs/versions and lock-file fingerprints.",
-      "fix": "Restore approved sources first and review transitive exposure, not just direct references."
+      "fix": "Restore approved sources first and review transitive exposure, not just direct references.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -40,54 +41,93 @@
       "negative": "$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw\n if($v -match '\"severity\"\\s*:\\s*\"(High|Critical)\"'){throw 'High/critical dependency advisory requires remediation.'}\n",
       "validate": "$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw|ConvertFrom-Json\n if(@($v.projects).Count -lt 1){throw 'Vulnerability report lacks project scope.'}\n\n$v=Get-Content (Join-Path $WorkRoot 'vulnerabilities.json') -Raw\n if($v -match '\"severity\"\\s*:\\s*\"(High|Critical)\"'){throw 'High/critical dependency advisory requires remediation.'}\n",
       "evidence": "Advisory IDs/severity and UTC scan date; do not claim future vulnerability absence.",
-      "fix": "Update the smallest compatible dependency set, regenerate locks, rerun tests, and document accepted residual risk."
+      "fix": "Update the smallest compatible dependency set, regenerate locks, rerun tests, and document accepted residual risk.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.5",
+          "level": "practiced",
+          "reference": "Query advisory counts/severity and keep timestamps/scope explicit."
+        }
+      ]
     },
     {
       "id": "CP3",
-      "title": "Scan a synthetic source fixture for leakage",
-      "commands": "$fixture=Join-Path $WorkRoot 'scan-fixture.txt';'public-setting=training'|Set-Content $fixture\n $findings=@(Select-String -Path $fixture -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY')\n [ordered]@{tool='local demonstration rule';findings=$findings.Count;productionScannerRequired='gitleaks/secret-scanning'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'secret-scan.json')\n",
-      "expected": "A deterministic demonstration rule finds no synthetic credential pattern.",
-      "positive": "$s=Get-Content (Join-Path $WorkRoot 'secret-scan.json') -Raw|ConvertFrom-Json\n if($s.findings -ne 0){throw 'Synthetic source scan found a leak.'}\n",
-      "negative": "if(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'Leakage boundary violated.'}\n",
-      "validate": "$s=Get-Content (Join-Path $WorkRoot 'secret-scan.json') -Raw|ConvertFrom-Json\n if($s.findings -ne 0){throw 'Synthetic source scan found a leak.'}\n\nif(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'Leakage boundary violated.'}\n",
-      "evidence": "Counts and rule names only; production secret scanning remains a distinct control.",
-      "fix": "Revoke real exposed credentials before history cleanup; a regex demonstration cannot replace a mature scanner."
+      "title": "Run a real secret scanner against clean and leaking fixtures",
+      "commands": "$scan=Join-Path $WorkRoot 'scan-target';New-Item -ItemType Directory -Force $scan|Out-Null\n'public-setting=training'|Set-Content (Join-Path $scan 'settings.txt')\n'public-setting=training'|Set-Content (Join-Path $WorkRoot 'scan-fixture.txt')\n@'\ntitle = \"AZ400 synthetic noncredential fixture\"\n[[rules]]\nid = \"az400-synthetic\"\ndescription = \"Nonsecret training marker\"\nregex = 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n'@|Set-Content (Join-Path $WorkRoot 'gitleaks.toml')\ngitleaks dir $scan --config (Join-Path $WorkRoot 'gitleaks.toml') --report-format json --report-path (Join-Path $WorkRoot 'secret-clean.json') --redact --no-banner\nif($LASTEXITCODE -ne 0){throw 'Clean scanner baseline failed.'}\nAdd-Content (Join-Path $scan 'settings.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n$saved=$PSNativeCommandUseErrorActionPreference\ntry{$PSNativeCommandUseErrorActionPreference=$false;gitleaks dir $scan --config (Join-Path $WorkRoot 'gitleaks.toml') --report-format json --report-path (Join-Path $WorkRoot 'secret-blocked.json') --redact --no-banner;$code=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}\nif($code -ne 1){throw 'Scanner did not block the known nonsecret fixture.'}\n'public-setting=training'|Set-Content (Join-Path $scan 'settings.txt')\n",
+      "expected": "A real scanner accepts clean files and returns exit1 with a redacted finding for the custom noncredential marker.",
+      "positive": "$clean=@(Get-Content (Join-Path $WorkRoot 'secret-clean.json') -Raw|ConvertFrom-Json)\n$blocked=@(Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw|ConvertFrom-Json)\nif($clean.Count -ne 0 -or @($blocked|Where-Object RuleID -eq 'az400-synthetic').Count -lt 1){throw 'Secret scanner boundary was not observed.'}\n",
+      "negative": "$blocked=Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw\nif($blocked -match 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE' -or (Select-String -Path (Join-Path $WorkRoot 'scan-target/settings.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE')){throw 'Scanner report or repaired source retained unredacted marker.'}\n",
+      "validate": "$clean=@(Get-Content (Join-Path $WorkRoot 'secret-clean.json') -Raw|ConvertFrom-Json)\n$blocked=@(Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw|ConvertFrom-Json)\nif($clean.Count -ne 0 -or @($blocked|Where-Object RuleID -eq 'az400-synthetic').Count -lt 1){throw 'Secret scanner boundary was not observed.'}\n\n$blocked=Get-Content (Join-Path $WorkRoot 'secret-blocked.json') -Raw\nif($blocked -match 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE' -or (Select-String -Path (Join-Path $WorkRoot 'scan-target/settings.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE')){throw 'Scanner report or repaired source retained unredacted marker.'}\n",
+      "evidence": "Scanner version, rule ID, exit codes, and redacted JSON; the marker is not a credential.",
+      "fix": "Install the approved scanner during bootstrap. A custom fixture proves rule execution and exit propagation, not completeness of every production credential detector.",
+      "coverage": [
+        {
+          "objectiveId": "D4.2.4",
+          "level": "practiced",
+          "reference": "Run the real Gitleaks CLI on clean and deliberately seeded nonsecret fixtures and inspect its blocking exit/report."
+        },
+        {
+          "objectiveId": "D4.3.1",
+          "level": "practiced",
+          "reference": "Execute and distinguish secret scanning from the separately explained CodeQL provider integration."
+        }
+      ]
     },
     {
       "id": "CP4",
-      "title": "Review container and CodeQL scan execution boundaries",
-      "commands": "Copy-Item (Join-Path $LabRoot 'artifacts/security.yml') (Join-Path $WorkRoot 'security.yml')\n $policy=[ordered]@{containerFile='samples/Dockerfile';codeqlLanguage='csharp';severityGate=@('HIGH','CRITICAL');privilegedContainer=$false;scannerDatabaseMustBeCurrent=$true}\n $policy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'container-scan-policy.json')\n",
-      "expected": "Code and container scanning have explicit language, target, severity, and isolation.",
-      "positive": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.codeqlLanguage -ne 'csharp' -or 'CRITICAL' -notin $p.severityGate){throw 'Scan target/gate missing.'}\n",
-      "negative": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.privilegedContainer){throw 'Scanner must not require privileged Docker access.'}\n",
-      "validate": "$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.codeqlLanguage -ne 'csharp' -or 'CRITICAL' -notin $p.severityGate){throw 'Scan target/gate missing.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'container-scan-policy.json') -Raw|ConvertFrom-Json\n if($p.privilegedContainer){throw 'Scanner must not require privileged Docker access.'}\n",
-      "evidence": "Workflow digest and explicit scanner prerequisites.",
-      "fix": "For a live local challenge install approved Docker/Trivy tools; run docker build and trivy image on the disposable sample image."
+      "title": "Build and scan the exact local container image",
+      "commands": "$tag=\"az400-lab22:$RunId\"\n$nativePreference=$PSNativeCommandUseErrorActionPreference;$PSNativeCommandUseErrorActionPreference=$false\ntry{\n $existing=docker image inspect $tag --format '{{ index .Config.Labels \"az400.run\" }}' 2>$null\n if($LASTEXITCODE -eq 0 -and $existing -ne $RunId){throw 'Container tag already belongs to another run; refusing to replace it.'}\n docker build --label \"az400.run=$RunId\" --label az400.lab=22 --file (Join-Path $RepoRoot 'samples/Dockerfile') --tag $tag $RepoRoot\n if($LASTEXITCODE -ne 0){throw 'Container build failed.'}\n $id=docker image inspect $tag --format '{{.Id}}'\n if($LASTEXITCODE -ne 0){throw 'Built image identity unavailable.'}\n $id|Set-Content (Join-Path $WorkRoot 'scanned-image-id.txt')\n trivy image --scanners vuln --format json --output (Join-Path $WorkRoot 'container-scan.json') --exit-code 0 $tag\n if($LASTEXITCODE -ne 0){throw 'Container scanner could not complete.'}\n $r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json\n $high=@($r.Results|ForEach-Object Vulnerabilities|Where-Object {$null -ne $_ -and $_.Severity -in @('HIGH','CRITICAL')})\n @{imageId=$id;highCritical=$high.Count;releaseAllowed=($high.Count -eq 0);scanner='Trivy'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'container-gate.json')\n}finally{\n try{\n $owned=docker image inspect $tag --format '{{ index .Config.Labels \"az400.run\" }}' 2>$null\n if($LASTEXITCODE -eq 0){\n  if($owned -ne $RunId){throw 'Container ownership mismatch; do not remove unrelated image.'}\n  docker image rm $tag|Out-Null\n  if($LASTEXITCODE -ne 0){throw 'Run-owned container tag cleanup failed; inspect the exact tag.'}\n }\n }finally{$PSNativeCommandUseErrorActionPreference=$nativePreference}\n}\n",
+      "expected": "Trivy records actual image findings tied to the local image ID, computes the release decision, and the uniquely tagged training image is removed.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json\n$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json\nif($g.imageId -ne (Get-Content (Join-Path $WorkRoot 'scanned-image-id.txt')) -or -not $r.ArtifactName){throw 'Scanned artifact provenance incomplete.'}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json\n$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json\n$high=@($r.Results|ForEach-Object Vulnerabilities|Where-Object {$null -ne $_ -and $_.Severity -in @('HIGH','CRITICAL')})\nif($g.releaseAllowed -ne ($high.Count -eq 0)){throw 'Security gate ignored high/critical findings.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json\n$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json\nif($g.imageId -ne (Get-Content (Join-Path $WorkRoot 'scanned-image-id.txt')) -or -not $r.ArtifactName){throw 'Scanned artifact provenance incomplete.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'container-scan.json') -Raw|ConvertFrom-Json\n$g=Get-Content (Join-Path $WorkRoot 'container-gate.json') -Raw|ConvertFrom-Json\n$high=@($r.Results|ForEach-Object Vulnerabilities|Where-Object {$null -ne $_ -and $_.Severity -in @('HIGH','CRITICAL')})\nif($g.releaseAllowed -ne ($high.Count -eq 0)){throw 'Security gate ignored high/critical findings.'}\n",
+      "evidence": "Image ID, scanner/database metadata, severity counts and gate decision; zero findings is a dated observation.",
+      "fix": "A completed scan can correctly block a release. Remediate findings and rebuild/retest the changed digest; never reuse a mutable tag as proof.",
+      "coverage": [
+        {
+          "objectiveId": "D4.3.5",
+          "level": "practiced",
+          "reference": "Build an exact local image, run Trivy on that tag, and apply a high/critical vulnerability gate."
+        }
+      ]
     },
     {
       "id": "CP5",
-      "title": "Create a dependency license review queue",
-      "commands": "$d=Get-Content (Join-Path $WorkRoot 'dependencies.json') -Raw|ConvertFrom-Json\n $queue=@();foreach($project in $d.projects){foreach($framework in $project.frameworks){foreach($pkg in $framework.topLevelPackages){$queue+=[ordered]@{package=$pkg.id;version=$pkg.resolvedVersion;licenseReview='pending primary package metadata';approved=$false}}}}\n $queue|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'license-review.json')\n",
-      "expected": "Direct dependencies enter an explicit review queue; unknown license status is not approval.",
-      "positive": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if($q.Count -lt 1){throw 'License review queue empty.'}\n",
-      "negative": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if(@($q|Where-Object approved -eq $true).Count){throw 'Unreviewed package license cannot be automatically approved.'}\n",
-      "validate": "$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if($q.Count -lt 1){throw 'License review queue empty.'}\n\n$q=@(Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json)\n if(@($q|Where-Object approved -eq $true).Count){throw 'Unreviewed package license cannot be automatically approved.'}\n",
-      "evidence": "Package/version, SPDX/expression lookup task, and review status.",
-      "fix": "Resolve license expressions and notices from package/project primary metadata under your organization policy."
+      "title": "Collect real license findings and classify unknowns",
+      "commands": "trivy fs --scanners license --license-full --skip-dirs '**/bin' --skip-dirs '**/obj' --format json --output (Join-Path $WorkRoot 'license-scan.json') (Join-Path $RepoRoot 'samples')\nif($LASTEXITCODE -ne 0){throw 'License scanner failed.'}\n$r=Get-Content (Join-Path $WorkRoot 'license-scan.json') -Raw|ConvertFrom-Json\n$found=@($r.Results|ForEach-Object Licenses|Where-Object {$null -ne $_})\n$allowed=@('MIT','Apache-2.0','BSD-3-Clause')\n$queue=@($found|ForEach-Object {@{package=$_.PkgName;license=$_.Name;status=$(if($_.Name -in $allowed){'policy-candidate'}else{'manual-review'})}})\n@{scannerFindings=$found.Count;review=$queue;unknownsRemain=$true;automaticLegalApproval=$false}|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'license-review.json')\nCopy-Item (Join-Path $LabRoot 'artifacts/security.yml') (Join-Path $WorkRoot 'security.yml')\n",
+      "expected": "A real license scan produces review inputs; unknown/undetected metadata remains pending and no automatic legal approval is granted.",
+      "positive": "$r=Get-Content (Join-Path $WorkRoot 'license-scan.json') -Raw|ConvertFrom-Json\n$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json\nif(-not $r.ArtifactName -or $null -eq $q.scannerFindings){throw 'License scan evidence missing.'}\n",
+      "negative": "$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json\nif($q.automaticLegalApproval -or -not $q.unknownsRemain){throw 'Unknown licenses were silently approved.'}\n",
+      "validate": "$r=Get-Content (Join-Path $WorkRoot 'license-scan.json') -Raw|ConvertFrom-Json\n$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json\nif(-not $r.ArtifactName -or $null -eq $q.scannerFindings){throw 'License scan evidence missing.'}\n\n$q=Get-Content (Join-Path $WorkRoot 'license-review.json') -Raw|ConvertFrom-Json\nif($q.automaticLegalApproval -or -not $q.unknownsRemain){throw 'Unknown licenses were silently approved.'}\n",
+      "evidence": "Scanner provenance, detected expressions, policy candidates and manual-review obligations.",
+      "fix": "Scanner detection is not legal advice or approval. Check package primary metadata, SPDX expressions and notices; CodeQL provider configuration is a separate explained/gated workflow.",
+      "coverage": [
+        {
+          "objectiveId": "D4.3.6",
+          "level": "explained",
+          "reference": "Inspect the Dependabot/CodeQL configuration contract; local vulnerability/license scanning does not enable provider dependency alerts."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "Add-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
     "diagnose": "Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'\n",
-    "repair": "Set-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'public-setting=training'\n"
+    "repair": "Set-Content (Join-Path $WorkRoot 'scan-fixture.txt') 'public-setting=training'\n",
+    "assert": "if(Select-String -Path (Join-Path $WorkRoot 'scan-fixture.txt') -Pattern 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE|BEGIN PRIVATE KEY'){throw 'AZ400-L22-FAULT'}\n",
+    "expectedFailure": "AZ400-L22-FAULT"
   },
   "challenge": "Run approved local secret, CodeQL, container, and license scanners; deliberately introduce a nonsecret fixture that fails one gate and retain remediation evidence.",
   "sources": [
     "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-list",
     "https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql",
-    "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts"
+    "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "https://github.com/gitleaks/gitleaks",
+    "https://trivy.dev/docs/latest/target/filesystem/",
+    "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0"
   ],
-  "primer": "Scanners observe different surfaces and databases change over time. Findings need severity, reachability, ownership, and remediation; unknown license status cannot become automatic approval.",
+  "primer": "Scanners observe different surfaces and databases change over time. Findings need severity, reachability, ownership, and remediation; unknown license status cannot become automatic approval.\n\nUse different scanners for different surfaces: secret discovery, source analysis, package advisories, container layers and licenses are not interchangeable. Pin Gitleaks 8.30.1 and Trivy 0.76.0 for the course tooling; record database timestamps because findings can change while source remains identical.\n\nThe real local lanes run Gitleaks on clean/nonsecret leaking fixtures, build one uniquely tagged Docker image and scan that exact image with Trivy, then collect license results. High/critical findings block the sample release decision; an empty/unknown license cannot become automatic legal approval. Image removal checks the run label and runs even after failures. CodeQL/Dependabot provider enablement remains an explained configuration contract unless its authorized workflow is executed.",
   "architecture": {
     "title": "Separate assurance surfaces feeding a release decision",
     "nodes": [
@@ -175,5 +215,20 @@
       }
     ],
     "topology": "Direct/transitive package locks are checked against current vulnerability advisories, while source, container, secret, and licensing surfaces require distinct evidence. The core performs dependency queries, a synthetic leakage rule, and a license review queue; the CodeQL/container contracts remain separate live scanner integrations. Unknown licensing or an unexecuted scanner cannot become a green release decision."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "requiredTools": [
+    "gitleaks",
+    "docker",
+    "trivy"
+  ],
+  "toolVersions": {
+    "gitleaks": "8.30.1",
+    "trivy": "0.76.0",
+    "docker": "Engine with Linux container support"
+  },
+  "solutionNotes": "Expected scanner exit 1 means the seeded fixture was blocked, not that the scanner crashed. Preserve redacted reports and provenance; never count a missing database/report as zero findings."
 }

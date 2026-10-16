@@ -26,7 +26,8 @@
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if (@($t.git,$t.github,$t.azure) -contains '') { throw 'A required CLI reported no version.' }\n",
       "validate": "$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if ([version]$t.powershell -lt [version]'7.4' -or $t.dotnet -notmatch '^10\\.') { throw 'Required PowerShell/.NET major versions missing.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'tools.json') -Raw | ConvertFrom-Json\n if (@($t.git,$t.github,$t.azure) -contains '') { throw 'A required CLI reported no version.' }\n",
       "evidence": "tools.json without authentication tokens.",
-      "fix": "Install the missing tool outside the lab, reopen PowerShell, and repeat version checks."
+      "fix": "Install the missing tool outside the lab, reopen PowerShell, and repeat version checks.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -37,7 +38,8 @@
       "negative": "$g=Get-Content (Join-Path $WorkRoot 'github-context.json') -Raw|ConvertFrom-Json\n if (-not $g.login -or $AdoOrganization -notmatch '^https://dev.azure.com/[^/]+/?$') { throw 'Missing GitHub identity or explicit organization.' }\n",
       "validate": "$a=Get-Content (Join-Path $WorkRoot 'azure-context.json') -Raw|ConvertFrom-Json\n if ($a.subscription -ne $SubscriptionId) { throw 'Azure context mismatch.' }\n\n$g=Get-Content (Join-Path $WorkRoot 'github-context.json') -Raw|ConvertFrom-Json\n if (-not $g.login -or $AdoOrganization -notmatch '^https://dev.azure.com/[^/]+/?$') { throw 'Missing GitHub identity or explicit organization.' }\n",
       "evidence": "Redact user, tenant, and subscription identifiers before sharing context files.",
-      "fix": "Authenticate deliberately outside preflight and supply the approved disposable subscription."
+      "fix": "Authenticate deliberately outside preflight and supply the approved disposable subscription.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -48,7 +50,8 @@
       "negative": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.cloudExecutionApproved -ne $false) { throw 'Local readiness must not grant deployment approval.' }\n",
       "validate": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.runId -ne $RunId -or $b.purpose -ne 'az400-learning') { throw 'Ownership record mismatch.' }\n\n$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n if ($b.cloudExecutionApproved -ne $false) { throw 'Local readiness must not grant deployment approval.' }\n",
       "evidence": "boundary.json and the selected run ID.",
-      "fix": "Choose a fresh lowercase run ID; do not reuse another learner boundary."
+      "fix": "Choose a fresh lowercase run ID; do not reuse another learner boundary.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -59,7 +62,8 @@
       "negative": "$xml=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$xml.TestRun.ResultSummary.Counters.failed -ne 0) { throw 'A sample test failed.' }\n",
       "validate": "$trx=Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse\n if ($trx.Count -lt 1) { throw 'No test result was produced.' }\n\n$xml=[xml](Get-Content (Get-ChildItem (Join-Path $WorkRoot 'test-results') -Filter '*.trx' -Recurse|Select-Object -First 1).FullName -Raw)\n if ([int]$xml.TestRun.ResultSummary.Counters.failed -ne 0) { throw 'A sample test failed.' }\n",
       "evidence": "TRX test summary and build exit code.",
-      "fix": "Use the repository SDK version and restore packages before repeating the build."
+      "fix": "Use the repository SDK version and restore packages before repeating the build.",
+      "coverage": []
     },
     {
       "id": "CP5",
@@ -70,13 +74,16 @@
       "negative": "$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('private keys' -in $p.retain) { throw 'Credential retention is forbidden.' }\n",
       "validate": "$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('tokens' -notin $p.exclude -or $p.cleanupOrder[-1] -ne 'top-level sandbox') { throw 'Evidence policy incomplete.' }\n\n$p=Get-Content (Join-Path $WorkRoot 'evidence-policy.json') -Raw|ConvertFrom-Json\n if ('private keys' -in $p.retain) { throw 'Credential retention is forbidden.' }\n",
       "evidence": "evidence-policy.json; never include CLI token stores.",
-      "fix": "Remove confidential fields from exports, retain local manifests for cleanup, and rerun validation."
+      "fix": "Remove confidential fields from exports, retain local manifests for cleanup, and rerun validation.",
+      "coverage": []
     }
   ],
   "breakFix": {
     "trigger": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n $b.runId='wrong-run';$b|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'boundary.json')\n 'Compare runId with the explicitly selected $RunId.'\n",
-    "repair": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n $b.runId=$RunId;$b|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n"
+    "repair": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\n $b.runId=$RunId;$b|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'boundary.json')\n",
+    "assert": "$b=Get-Content (Join-Path $WorkRoot 'boundary.json') -Raw|ConvertFrom-Json\nif($b.runId -ne $RunId){throw 'AZ400-L00-FAULT'}\n",
+    "expectedFailure": "AZ400-L00-FAULT"
   },
   "challenge": "Run readiness from a second terminal and demonstrate that no authentication context or cloud resource changes.",
   "sources": [
@@ -84,7 +91,7 @@
     "https://cli.github.com/manual/gh_auth_status",
     "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test"
   ],
-  "primer": "Tool readiness, authentication, authorization, and permission to mutate are separate gates. A local success cannot authorize cloud execution.",
+  "primer": "Tool readiness, authentication, authorization, and permission to mutate are separate gates. A local success cannot authorize cloud execution.\n\nRead version output before authenticating. A successful login establishes identity, while a role assignment establishes a particular permission at a particular scope. Neither authorizes a different subscription or existing repository. The run journal records the boundary that later validators and cleanup must use.\n\nRetain tool versions, exact sandbox object IDs and redacted results. A test report without a source revision is difficult to reproduce; a cleanup report without residual reads is only an intention. Treat a missing external account as an explicit prerequisite and keep local validation distinct from hosted execution.",
   "architecture": {
     "title": "Tools, identities, and the disposable run boundary",
     "nodes": [
@@ -164,5 +171,10 @@
       }
     ],
     "topology": "PowerShell hosts the command-line tools. Read-only account queries identify GitHub, Azure DevOps, and Entra contexts; provisioning is a separate explicit step that records disposable scope IDs in the local ownership journal. The .NET test host runs locally and contributes test evidence, without granting cloud execution approval."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "Expected tool and sample-test results establish readiness only. Compare every subsequent resource ID with the original run journal before retrying a mutation."
 }

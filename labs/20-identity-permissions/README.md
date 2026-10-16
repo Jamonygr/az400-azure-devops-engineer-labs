@@ -15,7 +15,8 @@ Learner role: **Identity engineer**. Outcome: Scope identities, teams, and permi
 | Platforms | local, github, azure-devops, azure |
 | Cost | none or approved hosted-run allowance — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D2.2.3`, `D4.1.1`, `D4.1.2`, `D4.1.3`, `D4.1.4`, `D4.1.5`, `D4.1.6`, `D4.1.7`
 
@@ -84,11 +90,21 @@ packages and write ignored build output.
 
 Authentication identifies a caller; authorization applies at a resource scope. Managed identities remove client-secret maintenance while project access levels remain distinct from security permissions.
 
+Identify the principal, permission and resource scope separately. A managed identity avoids a stored client secret but can still receive excessive authority. Prefer a narrow resource-group role and verify the exact scope after assignment. GitHub token permissions and repository roles are also distinct.
+
+Azure DevOps groups determine permission inheritance, teams organize work, and access levels license capabilities. Reading a project team does not demonstrate creating a new team or changing organization membership. The comparison record explains these boundaries without escalating shared tenant permissions. A federated service connection still needs explicit pipeline authorization.
+
 ## Task 1 — Inspect GitHub effective access without expanding it
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D2.2.3` | explained | Inspect a GitHub token permission matrix and map repository role responsibilities. |
+| `D4.1.2` | explained | Inspect the current GitHub authentication context; no new PAT or GitHub App is created. |
+| `D4.1.4` | explained | Map GitHub role and token permission boundaries in the matrix. |
 
 ```powershell
 gh repo view $GhRepo --json nameWithOwner,viewerPermission,visibility|Set-Content (Join-Path $WorkRoot 'github-access.json')
@@ -123,6 +139,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.1.5` | explained | Read Azure DevOps project identity/group context; changing collection-wide groups is outside this sandbox. |
+| `D4.1.7` | explained | Inspect the disposable project team; creating membership or changing cross-project teams is not claimed. |
+
 ```powershell
 az devops team list --organization $AdoOrganization --project $AdoProject --query 'value[].{id:id,name:name}' -o json|Set-Content (Join-Path $WorkRoot 'teams.json')
  az devops project show --organization $AdoOrganization --project $AdoProject --query '{id:id,name:name,visibility:visibility}' -o json|Set-Content (Join-Path $WorkRoot 'project-access.json')
@@ -155,6 +176,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.1.1` | practiced | Create and query a user-assigned managed identity within the run-owned Azure resource group. |
 
 ```powershell
 $name="identity-$RunId"
@@ -191,6 +216,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'managed-identity.json') -Raw|ConvertFrom-Json
  $scope="/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup"
@@ -226,18 +253,39 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.1.3` | explained | Review narrowly scoped workload-federated Azure DevOps connection design; no organization service connection is automatically created. |
+| `D4.1.6` | explained | Distinguish DevOps access-level entitlement from permissions in the comparison record. |
+
 ```powershell
 $matrix=[ordered]@{githubBuild='GITHUB_TOKEN contents:read';githubCrossRepo='GitHub App installation token';azureDeployment='federated managed identity';adoDeployment='workload identity service connection';pat='bootstrap-only narrowly scoped fallback';stakeholder='work tracking, subject to product restrictions'}
  $matrix|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')
+$definition=@(az role definition list --subscription $SubscriptionId --name Reader -o json|ConvertFrom-Json)
+if($definition.Count -ne 1 -or $definition[0].name -ne 'acdd72a7-3385-48ef-bd42-f606fba81ae7'){throw 'Expected the built-in Reader role.'}
+$definition[0]|ConvertTo-Json -Depth 12|Set-Content (Join-Path $WorkRoot 'reader-definition.json')
+$scope="/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup"
+$cases=@(@{action='Microsoft.Resources/subscriptions/resourceGroups/read';target=$scope;expected=$true},@{action='Microsoft.Compute/virtualMachines/write';target="$scope/providers/Microsoft.Compute/virtualMachines/example";expected=$false},@{action='Microsoft.Resources/subscriptions/resourceGroups/read';target="/subscriptions/$SubscriptionId/resourceGroups/another-group";expected=$false})
+$decisions=foreach($case in $cases){
+ $within=$case.target -ieq $scope -or $case.target.StartsWith("$scope/",[StringComparison]::OrdinalIgnoreCase)
+ $allowed=$within -and $case.action.EndsWith('/read',[StringComparison]::OrdinalIgnoreCase)
+ if($allowed -ne $case.expected){throw 'Reader fixture decision mismatch.'}
+ @{action=$case.action;allowed=$allowed}
+}
+@{fixtureOnly=$true;decisions=@($decisions);effectiveAccessVerified=$false}|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'permission-decisions.json')
 ```
 
-Expected state: Each trust boundary has a specific identity/access choice.
+Expected state: The real Reader role definition is inspected; one local in-scope read is allowed, while a write and an outside-scope read are rejected. Effective token authorization remains a separate live check.
 
 Positive validation:
 
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json
  if($m.azureDeployment -ne 'federated managed identity' -or $m.githubBuild -notmatch 'contents:read'){throw 'Identity selection violated.'}
+$r=Get-Content (Join-Path $WorkRoot 'reader-definition.json') -Raw|ConvertFrom-Json
+if($r.permissions[0].actions -notcontains '*/read' -or @($r.permissions[0].dataActions).Count){throw 'Reader management/data-plane distinction changed.'}
+$d=Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json
+if(@($d.decisions).Count -ne 3 -or @($d.decisions|Where-Object allowed).Count -ne 1){throw 'Read/write/scope decisions failed.'}
 ```
 
 Negative validation:
@@ -245,9 +293,10 @@ Negative validation:
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json
  if($m.pat -match 'unrestricted|never expires'){throw 'Unsafe fallback-token policy.'}
+if((Get-Content (Join-Path $WorkRoot 'permission-decisions.json') -Raw|ConvertFrom-Json).effectiveAccessVerified){throw 'A local policy model is not an effective-access probe.'}
 ```
 
-Evidence to retain: Identity/role matrix without tokens or application secrets.
+Evidence to retain: Reader definition, three computed scope/action decisions, and the identity choice matrix; redact account identifiers.
 
 Common failure and safe retry: Do not equate a service connection with blanket authorization to every pipeline.
 
@@ -255,7 +304,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/20-identity-permissions/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L20-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json
+if($m.githubBuild -ne 'GITHUB_TOKEN contents:read'){throw 'AZ400-L20-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN write-all';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')
@@ -267,7 +331,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'identity-matrix.json')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $m=Get-Content (Join-Path $WorkRoot 'identity-matrix.json') -Raw|ConvertFrom-Json;$m.githubBuild='GITHUB_TOKEN contents:read';$m|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'identity-matrix.json')
@@ -283,7 +347,7 @@ Prove a read-only federated identity can inspect the owned group and cannot crea
 & './labs/20-identity-permissions/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -316,4 +380,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

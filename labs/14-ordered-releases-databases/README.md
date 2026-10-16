@@ -15,7 +15,8 @@ Learner role: **Application release engineer**. Outcome: Order application and d
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.3.6`, `D3.4.2`, `D3.4.7`, `D3.4.8`
 
@@ -84,11 +90,19 @@ packages and write ignored build output.
 
 Expand/contract preserves compatibility during rollout. Binary rollback does not automatically reverse data or schema; destructive database reversal needs separate recovery design.
 
+Build once, then promote the resulting bytes. Rebuilding at deployment time can change dependencies even for the same source revision. Package manifests and source hashes make the immutable artifact a concrete input to migration, application deployment and verification.
+
+Expand/contract keeps the old and new binary compatible while schema evolves. The local task generates an idempotent SQL script and a reviewed execution preview without connecting to a database. In live delivery, a narrow migration identity runs before the app identity. Rolling back an application binary must not automatically issue a destructive Down migration; incompatible schema needs a separately owned recovery plan.
+
 ## Task 1 — Publish a single immutable application bundle
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.7` | practiced | Produce the deployable application output from the actual sample. |
 
 ```powershell
 $dest=Join-Path $WorkRoot 'publish';dotnet publish (Join-Path $RepoRoot 'samples/DevOps.Api/DevOps.Api.csproj') --configuration Release --output $dest
@@ -123,6 +137,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.4.8` | practiced | Generate and inspect an idempotent SQL migration script without connecting to a database. |
+
 ```powershell
 Push-Location (Join-Path $RepoRoot 'samples')
  try{dotnet tool restore;dotnet ef migrations script --idempotent --context SqlServerTodoDbContext --project DevOps.Api --output (Join-Path $WorkRoot 'migration.sql');if($LASTEXITCODE -ne 0){throw 'Migration script generation failed.'}}finally{Pop-Location}
@@ -156,6 +174,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 & (Join-Path $LabRoot 'artifacts/migrate.ps1') -ConnectionString 'Server=approved-sandbox;Database=az400;Authentication=Active Directory Default;Encrypt=True'
  [ordered]@{reviewed=$true;applied=$false;credentialMode='Entra';rollback='roll forward compatible schema'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'database-review.json')
@@ -188,6 +208,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.6` | practiced | Assert the migration/application/verification ordering in the local release graph. |
+| `D3.4.2` | practiced | Resolve the ordered release dependency contract and reject a reversed migration/app order. |
 
 ```powershell
 $steps=@('schema-expand','application-deploy','readiness-check','schema-contract-later')
@@ -223,6 +248,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $compat=[ordered]@{binaryDigest=(Get-Content (Join-Path $WorkRoot 'application-hash.json') -Raw|ConvertFrom-Json).Hash;oldBinarySupportsExpandedSchema=$true;destructiveRollbackAllowed=$false;recovery='route back to previous compatible binary'}
  $compat|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'rollback-contract.json')
@@ -252,7 +279,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/14-ordered-releases-databases/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L14-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$s=@(Get-Content (Join-Path $WorkRoot 'release-order.txt'))
+if(($s -join ',') -ne 'schema-expand,application-deploy,readiness-check,schema-contract-later'){throw 'AZ400-L14-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 @('application-deploy','schema-expand','readiness-check','schema-contract-later')|Set-Content (Join-Path $WorkRoot 'release-order.txt')
@@ -264,7 +306,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'release-order.txt')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 @('schema-expand','application-deploy','readiness-check','schema-contract-later')|Set-Content (Join-Path $WorkRoot 'release-order.txt')
@@ -280,7 +322,7 @@ Against a separately approved disposable SQL database, prove forward-compatible 
 & './labs/14-ordered-releases-databases/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -311,4 +353,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

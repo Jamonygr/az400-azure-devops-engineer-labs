@@ -15,7 +15,8 @@ Learner role: **Quality engineer**. Outcome: Run tests, collect coverage, and en
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D1.2.4`, `D3.2.1`, `D3.2.2`, `D3.2.3`, `D3.2.4`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Passing tests, line coverage, security checks, and approval solve different risks. This course uses a 65% measured-line threshold for the sample; it is not a universal quality target.
 
+The sample has unit and API integration tests. They exercise fast logic and an in-process application boundary; production routing, browser behavior and sustained load need additional layers. Preserve a TRX report so passed, failed and skipped tests can be distinguished from an empty successful invocation.
+
+Coverage measures executed lines, not assertion quality or every possible branch. The course's 65% minimum is a sample gate, not a recommendation for every system. Collect coverage with the checked-in runsettings, inspect the measured denominator, and apply the threshold to the generated report. An approval or security scan cannot replace test execution.
+
 ## Task 1 — Restore locked sample dependencies
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 dotnet restore (Join-Path $RepoRoot 'samples/DevOps.slnx') --locked-mode
@@ -124,6 +136,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.2.4` | practiced | Read TRX counters from an executed test run. |
+| `D3.2.3` | practiced | Execute the test command and preserve machine-readable TRX results. |
+
 ```powershell
 dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --logger "trx;LogFileName=quality.trx" --results-directory (Join-Path $WorkRoot 'results')
  if ($LASTEXITCODE -ne 0) { throw 'Test gate failed.' }
@@ -156,6 +173,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.2.4` | practiced | Collect real coverage with the checked-in runsettings and inspect measured rates. |
 
 ```powershell
 dotnet test (Join-Path $RepoRoot 'samples/DevOps.slnx') --configuration Release --settings (Join-Path $RepoRoot 'samples/coverage.runsettings') --collect 'XPlat Code Coverage' --results-directory (Join-Path $WorkRoot 'coverage')
@@ -190,6 +211,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.2.1` | practiced | Apply a numerical coverage threshold to measured Cobertura coverage. |
 
 ```powershell
 $f=Get-ChildItem (Join-Path $WorkRoot 'coverage') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1
@@ -226,6 +251,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.2.2` | explained | Compare unit/integration/end-to-end responsibilities using the sample test strategy. |
+
 ```powershell
 $strategy=[ordered]@{unit='pure behavior checks';integration='WebApplicationFactory with isolated SQLite';load='separate approved endpoint and budget';release=@('tests pass','coverage>=0.65','security checks clear');productionTrafficAllowed=$false}
  $strategy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'test-strategy.json')
@@ -255,7 +284,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/08-tests-coverage-gates/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L08-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json
+if($g.minimum -ne 0.65 -or $g.actual -lt $g.minimum -or -not $g.passed){throw 'AZ400-L08-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json;$g.minimum=1.01;$g.passed=$false;$g|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'coverage-gate.json')
@@ -267,7 +311,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'coverage-gate.json')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json;$g.minimum=0.65;$g.passed=$g.actual -ge $g.minimum;$g|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'coverage-gate.json')
@@ -283,7 +327,7 @@ Add tests for a missing API validation boundary, show the coverage delta, and ex
 & './labs/08-tests-coverage-gates/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -315,4 +359,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

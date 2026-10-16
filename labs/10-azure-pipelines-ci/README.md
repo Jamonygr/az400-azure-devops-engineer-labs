@@ -15,7 +15,8 @@ Learner role: **Azure Pipelines engineer**. Outcome: Build the sample with Azure
 | Platforms | local, azure-devops |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D3.1.4`, `D3.2.3`, `D3.3.1`, `D3.3.3`, `D3.3.4`, `D3.3.5`
 
@@ -84,11 +90,19 @@ packages and write ignored build output.
 
 A pipeline definition names a YAML source; a queued run is not a successful build. Hosted parallelism and agent permission are external capacity gates.
 
+Azure Pipelines separates the registered definition from its YAML source and the queued build. A definition ID is stable provider state; the YAML path and repository ID must match the owned project before reuse. Authorization and hosted parallelism can block an otherwise valid definition.
+
+Use explicit organization and project arguments and avoid changing global CLI defaults. Capture the queued build ID, then read its final result and sourceVersion. Connecting a GitHub repository requires a separately authorized provider service connection; this core uses Azure Repos and does not claim that additional integration.
+
 ## Task 1 — Resolve the disposable Azure Repos repository
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.3` | explained | Use Azure Repos as the concrete source; connecting GitHub/Bitbucket service resources remains a separately authorized bootstrap. |
 
 ```powershell
 $r=@(az repos list --organization $AdoOrganization --project $AdoProject -o json|ConvertFrom-Json)|Select-Object -First 1
@@ -131,6 +145,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.1` | practiced | Stage the Azure Pipelines CI definition. |
+| `D3.3.5` | practiced | Parse build/test/coverage/artifact tasks in the checked-in pipeline YAML. |
+
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci'
  $source=Join-Path $RepoRoot 'samples'
@@ -168,6 +187,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.4` | practiced | Commit and push the owned main-branch definition and inspect its trigger. |
+
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci';git -C $p add .;$staged=@(git -C $p diff --cached --name-only)
 if($staged.Count -gt 0){git -C $p commit -m "[$RunId] Add Azure Pipelines sample CI"}else{Write-Output 'Reviewed files already committed; reusing the current source revision.'}
@@ -202,6 +225,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $r=Get-Content (Join-Path $WorkRoot 'ado-repo.json') -Raw|ConvertFrom-Json
@@ -255,6 +280,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.1.4` | integrated | Correlate the Azure Pipelines build and artifact with the exact source SHA. |
+| `D3.2.3` | integrated | Read the exact Azure Pipelines build result for the source commit. |
+
 ```powershell
 $id=Get-Content (Join-Path $WorkRoot 'pipeline-id.txt')
  $r=az pipelines run --organization $AdoOrganization --project $AdoProject --id $id --branch main -o json|ConvertFrom-Json
@@ -287,7 +317,23 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/10-azure-pipelines-ci/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L10-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$p=Join-Path $WorkRoot 'azure-ci';$t=Get-Content (Join-Path $p 'azure-pipelines.yml') -Raw
+$paths=@([regex]::Matches($t,'samples/[A-Za-z0-9._/-]+\.slnx')|ForEach-Object Value)
+if($paths.Count -lt 1 -or @($paths|Where-Object {-not (Test-Path (Join-Path $p $_))}).Count){throw 'AZ400-L10-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml';(Get-Content $p -Raw).Replace('samples/DevOps.slnx','samples/Missing.slnx')|Set-Content $p
@@ -299,7 +345,7 @@ Diagnose the precise difference:
 Select-String -Path (Join-Path $WorkRoot 'azure-ci/azure-pipelines.yml') -Pattern 'Missing.slnx'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $p=Join-Path $WorkRoot 'azure-ci';git -C $p restore azure-pipelines.yml
@@ -315,7 +361,7 @@ Connect a disposable GitHub repository as the source through an explicitly appro
 & './labs/10-azure-pipelines-ci/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -347,4 +393,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

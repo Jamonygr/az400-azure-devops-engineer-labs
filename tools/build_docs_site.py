@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
 import shutil
 from pathlib import Path
 
@@ -41,13 +42,51 @@ def domain_pages():
     return pages
 
 
+def interactive_data():
+    labs = json.loads((ROOT / "curriculum/lab-content.yml").read_text(encoding="utf-8"))["labs"]
+    files, catalog = {}, []
+    for lab in labs:
+        verification = lab.get("verification", {})
+        prerequisites = ["PowerShell 7.4+, Git, .NET 10"]
+        prerequisites += [{"github": "Authenticated GitHub sandbox owner", "azure-devops": "Azure DevOps organization and agent access", "azure": "Azure subscription and cost acknowledgement"}[p] for p in lab["platforms"] if p != "local"]
+        catalog.append({k: lab[k] for k in ("id", "slug", "title", "domain", "platforms", "minutes", "cost", "scenario")} | {
+            "prerequisites": prerequisites,
+            "verification": verification.get("status", "not-run") + " — " + verification.get("scope", "See the validation report; live cloud paths unverified")})
+        bank_path = ROOT / "labs" / lab["slug"] / "questions.yml"
+        if bank_path.exists():
+            raw = bank_path.read_bytes()
+            bank = json.loads(raw)
+            bank.update(revision=hashlib.sha256(raw).hexdigest(), slug=lab["slug"], title=lab["title"])
+            files[Path(f"docs/site-assets/data/quiz-{lab['id']}.json")] = json.dumps(bank, ensure_ascii=False) + "\n"
+    files[Path("docs/site-assets/data/catalog.json")] = json.dumps(catalog, ensure_ascii=False) + "\n"
+    return files
+
+
+def stage():
+    # Only the exact generated directory is replaced; source and runtime state are excluded.
+    if STAGE.resolve() != ROOT.resolve() / ".site-docs":
+        raise SystemExit("Refusing unexpected documentation staging path")
+    if STAGE.exists():
+        shutil.rmtree(STAGE)
+    STAGE.mkdir()
+    for relative, source in sources().items():
+        target = STAGE / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    (STAGE / "index.md").write_text((ROOT / "HOME.md").read_text(encoding="utf-8"), encoding="utf-8")
+    for relative, content in (domain_pages() | interactive_data()).items():
+        target = STAGE / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+
+
 def check_sources():
-    required = [ROOT / "README.md", ROOT / "docs/visuals/az400-cover.svg", ROOT / "docs/site-assets/progress.js", ROOT / "samples/README.md"]
+    required = [ROOT / "README.md", ROOT / "HOME.md", ROOT / "docs/visuals/az400-cover.svg", ROOT / "docs/site-assets/progress.js", ROOT / "samples/README.md"]
     missing = [str(p.relative_to(ROOT)) for p in required if not p.is_file()]
     if missing:
         raise SystemExit("Missing site source: " + ", ".join(missing))
     progress = (ROOT / "docs/site-assets/progress.js").read_text(encoding="utf-8")
-    assert "az400LearnerProgress.v1" in progress and "maximumImportBytes" in progress
+    assert "az400LearnerProgress.v2" in progress and "maximumImportBytes" in progress
     assert "az104" not in progress.lower()
     assert "validationPassed" in progress and "cleanupPassed" in progress
 
@@ -59,7 +98,7 @@ def main():
     args = parser.parse_args()
     check_sources()
     if args.check_built_site:
-        for relative in ("index.html", "docs/learner-progress/index.html", "labs/09-github-actions-ci/index.html", "search/search_index.json"):
+        for relative in ("index.html", "docs/learner-progress/index.html", "docs/practice/index.html", "docs/lab-explorer/index.html", "docs/site-assets/data/quiz-01.json", "labs/09-github-actions-ci/index.html", "search/search_index.json"):
             path = args.check_built_site / relative
             assert path.is_file(), f"Missing built output: {relative}"
             if path.suffix == ".html":
@@ -71,21 +110,7 @@ def main():
         assert len(domain_pages()) == 7
         print(f"Documentation sources checked: {len(sources())} files and seven generated domain pages")
     else:
-        # This exact output directory is the only recursively replaced path.
-        if STAGE.resolve() != ROOT.resolve() / ".site-docs":
-            raise SystemExit("Refusing unexpected documentation staging path")
-        if STAGE.exists():
-            shutil.rmtree(STAGE)
-        STAGE.mkdir()
-        for relative, source in sources().items():
-            target = STAGE / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
-        (STAGE / "index.md").write_text((ROOT / "README.md").read_text(encoding="utf-8"), encoding="utf-8")
-        for relative, content in domain_pages().items():
-            target = STAGE / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(content, encoding="utf-8")
+        stage()
         print("Staged authoritative course in .site-docs")
 
 

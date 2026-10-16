@@ -15,7 +15,8 @@ Learner role: **Agent platform engineer**. Outcome: Select and operate runners a
 | Platforms | local, github, azure-devops |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named policy fault/repair passed. Actual tool inventory and healthy/failed ephemeral worker fixtures executed; provider inventory and HTTPS responses use explicit doubles. No runner/agent registration or hostile-code isolation is claimed. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,6 +38,11 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D3.3.2`, `D3.3.7`
 
 | Checkpoint | Measurable behavior |
@@ -45,7 +51,7 @@ Official objective topic IDs: `D3.3.2`, `D3.3.7`
 | [CP2](#task-2) | Read GitHub runner inventory without registering a machine |
 | [CP3](#task-3) | Read Azure DevOps agent pools and hosted availability |
 | [CP4](#task-4) | Test outbound control-plane reachability |
-| [CP5](#task-5) | Choose an isolation and cost model |
+| [CP5](#task-5) | Execute and clean up an ephemeral worker fixture |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
 labs. The [Microsoft study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400)
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 A runner is a trust boundary with code execution and credentials. Untrusted pull requests should use ephemeral isolated workers; pool inventory does not establish available parallelism.
 
+A self-hosted runner executes arbitrary repository code near its filesystem, network and credentials. Ephemeral registration limits reuse but is not OS isolation; a disposable VM/container and restricted routing may still be needed. Hosted concurrency entitlements are distinct from the number of registered runners.
+
+The local worker fixture demonstrates one-job workspace creation, artifact hashing, credential-like environment filtering and cleanup after both success and failure. It does not register a GitHub runner or Azure agent, establish private-network access, or prove hostile-code containment. Use separate ephemeral private workers only after account bootstrap and never route untrusted fork code to the SQL-capable pool.
+
 ## Task 1 — Inventory the local runner capability baseline
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $caps=[ordered]@{os=[System.Runtime.InteropServices.RuntimeInformation]::OSDescription;architecture=[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString();dotnet=(dotnet --version);git=(git --version);ephemeralRequired=$true}
@@ -123,6 +135,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 gh api "repos/$GhRepo/actions/runners"|Set-Content (Join-Path $WorkRoot 'github-runners.json')
  Get-Content (Join-Path $WorkRoot 'github-runners.json')
@@ -155,6 +169,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 az pipelines pool list --organization $AdoOrganization --query '[].{id:id,name:name,isHosted:isHosted}' -o json|Set-Content (Join-Path $WorkRoot 'agent-pools.json')
@@ -189,12 +205,18 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
-$r=@();foreach($hostName in @('api.github.com','dev.azure.com')){$c=[Net.Sockets.TcpClient]::new();try{$task=$c.ConnectAsync($hostName,443);if(-not $task.Wait(10000)){throw 'TCP timeout'};$r+=[ordered]@{host=$hostName;port=443;reachable=$c.Connected}}finally{$c.Dispose()}}
- $r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connectivity.json')
+$r=@()
+foreach($hostName in @('api.github.com','dev.azure.com')){
+ $response=Invoke-WebRequest -Uri "https://$hostName/" -Method Head -TimeoutSec 10 -SkipHttpErrorCheck
+ $r+=[ordered]@{host=$hostName;port=443;reachable=($response.StatusCode -ge 200 -and $response.StatusCode -lt 500);statusCode=[int]$response.StatusCode}
+}
+$r|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connectivity.json')
 ```
 
-Expected state: The candidate host can reach both HTTPS control planes without disabling TLS checks.
+Expected state: Both exact HTTPS control-plane endpoints respond within the bounded timeout; this does not prove registration, private SQL routing or available parallelism.
 
 Positive validation:
 
@@ -216,42 +238,68 @@ Common failure and safe retry: Ask the sandbox network owner to permit required 
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 5 — Choose an isolation and cost model
+## Task 5 — Execute and clean up an ephemeral worker fixture
 
 <a id="task-5"></a>
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.3.2` | practiced | Execute a local one-job worker fixture and observe artifact hash, credential filtering, failed-job cleanup, and workspace removal. |
+| `D3.3.7` | explained | Explain private-network/hybrid runner routing from the runner design; provider registration and network isolation are not exercised by this fixture. |
+
 ```powershell
 $design=[ordered]@{untrustedPR='hosted ephemeral';privateNetworkBuild='ephemeral self-hosted in isolated subnet';credentialLifetime='job';parallelJobs=1;estimatedIdleHours=0;persistentRegistration=$false}
  $design|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')
+
+python (Join-Path $LabRoot 'artifacts/ephemeral_runner.py') --evidence (Join-Path $WorkRoot 'ephemeral.json')
+if($LASTEXITCODE -ne 0){throw 'Healthy ephemeral fixture failed.'}
+$saved=$PSNativeCommandUseErrorActionPreference
+try{$PSNativeCommandUseErrorActionPreference=$false;python (Join-Path $LabRoot 'artifacts/ephemeral_runner.py') --fail-job --evidence (Join-Path $WorkRoot 'ephemeral-failed.json');$failedExit=$LASTEXITCODE}finally{$PSNativeCommandUseErrorActionPreference=$saved}
+if($failedExit -ne 1){throw 'Failed worker did not propagate failure.'}
 ```
 
-Expected state: Public PRs and private-network workloads use separate trust boundaries.
+Expected state: A real temporary job process writes an artifact; success and failure both remove the workspace and omit credential-like environment values.
 
 Positive validation:
 
 ```powershell
-$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json
- if($d.untrustedPR -ne 'hosted ephemeral' -or $d.credentialLifetime -ne 'job'){throw 'Runner trust design mismatch.'}
+$e=Get-Content (Join-Path $WorkRoot 'ephemeral.json') -Raw|ConvertFrom-Json
+if($e.jobExitCode -ne 0 -or -not $e.workspaceRemoved -or $e.outputSha256.Length -ne 64){throw 'Healthy ephemeral lifecycle failed.'}
 ```
 
 Negative validation:
 
 ```powershell
-$d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json
- if($d.persistentRegistration -or $d.parallelJobs -lt 1){throw 'Unbounded persistent agent design.'}
+$e=Get-Content (Join-Path $WorkRoot 'ephemeral-failed.json') -Raw|ConvertFrom-Json
+if($e.jobExitCode -eq 0 -or -not $e.workspaceRemoved -or $e.credentialEnvironmentPresent){throw 'Failure cleanup/credential filtering failed.'}
 ```
 
-Evidence to retain: Decision record, estimated concurrency, and cost assumptions.
+Evidence to retain: Process exit, artifact digest, workspace removal and credential filtering; no provider registration or OS isolation is claimed.
 
-Common failure and safe retry: Keep self-hosted registration tokens short-lived and outside artifacts; destroy worker instances after the job.
+Common failure and safe retry: This process fixture teaches lifetime and failure cleanup. Real private workers additionally need approved registration, hardened images, network boundaries and job isolation.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/12-runners-agents/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L12-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$r=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json
+if($r.untrustedPR -ne 'hosted ephemeral' -or $r.credentialLifetime -ne 'job'){throw 'AZ400-L12-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='persistent privileged host';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')
@@ -263,7 +311,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'runner-design.json')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $d=Get-Content (Join-Path $WorkRoot 'runner-design.json') -Raw|ConvertFrom-Json;$d.untrustedPR='hosted ephemeral';$d|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'runner-design.json')
@@ -279,7 +327,7 @@ Design a hybrid pipeline with a public test job and a private deployment job, ex
 & './labs/12-runners-agents/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -311,4 +359,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

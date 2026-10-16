@@ -24,6 +24,8 @@ def render_lab(data, answers=False):
         checkpoint = f"[{q['checkpointId']}](README.md#task-{q['checkpointId'][2:]})"
         objective_links = ", ".join(f"[{oid}](../../docs/objective-map.md)" for oid in q['objectiveIds'])
         out += [f"## {q['id']}", "", f"{q['difficulty'].title()} · {checkpoint} · {objective_links}", "", q['question'], ""]
+        if q.get("exhibit"):
+            out += [f"```{q['exhibit']['language']}", q['exhibit']['code'].rstrip(), "```", ""]
         for option in q["options"]:
             if answers:
                 mark = " **Correct.**" if option["key"] in q["correctAnswers"] else ""

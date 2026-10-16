@@ -21,14 +21,15 @@
   "checkpoints": [
     {
       "id": "CP1",
-      "title": "Author a desired-state document for local configuration",
-      "commands": "$desired=[ordered]@{schemaVersion='1.0';files=@(@{path='service.conf';content='mode=training'});compliance='audit-and-reconcile';owner=$RunId}\n $desired|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'desired-state.json')\n Copy-Item (Join-Path $LabRoot 'artifacts/configuration.catalog.yaml') (Join-Path $WorkRoot 'configuration.catalog.yaml')\n",
-      "expected": "Desired state describes content and ownership independently of an imperative deployment script.",
-      "positive": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.owner -ne $RunId -or $d.files[0].content -ne 'mode=training'){throw 'Desired state contract invalid.'}\n",
-      "negative": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.files[0].path -match '\\.\\.|^[A-Za-z]:|^/'){throw 'Desired file escaped the local sandbox.'}\n",
-      "validate": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.owner -ne $RunId -or $d.files[0].content -ne 'mode=training'){throw 'Desired state contract invalid.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n if($d.files[0].path -match '\\.\\.|^[A-Za-z]:|^/'){throw 'Desired file escaped the local sandbox.'}\n",
-      "evidence": "Desired-state document and resource ownership.",
-      "fix": "Choose Machine Configuration for Azure policy-backed auditing; use Bicep/ARM for resource state rather than conflating the layers."
+      "title": "Declare two versioned configuration resources",
+      "commands": "$desired=[ordered]@{schemaVersion='1.0';files=@(@{path='service.conf';content='mode=training'},@{path='runtime/settings.json';content='{\"feature\":\"TodoWrites\",\"enabled\":false}'});owner=$RunId}\n$desired|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'desired-state.json')\nCopy-Item (Join-Path $LabRoot 'artifacts/configuration.catalog.yaml') (Join-Path $WorkRoot 'configuration.catalog.yaml')\n",
+      "expected": "Two exact resource contents have owned paths and a versioned catalog.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nif($d.owner -ne $RunId -or @($d.files).Count -ne 2){throw 'Declared resource set incomplete.'}\n",
+      "negative": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nif(@($d.files|Where-Object {$_.path -match '\\.\\.|^[A-Za-z]:|^/'}).Count){throw 'Declared resource escaped scope.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nif($d.owner -ne $RunId -or @($d.files).Count -ne 2){throw 'Declared resource set incomplete.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nif(@($d.files|Where-Object {$_.path -match '\\.\\.|^[A-Za-z]:|^/'}).Count){throw 'Declared resource escaped scope.'}\n",
+      "evidence": "Desired paths, synthetic content hashes, and run owner.",
+      "fix": "Keep resource provisioning, machine configuration and application settings as distinct control planes.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -39,46 +40,75 @@
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.actual -eq $r.expected){throw 'Noncompliance record lacks an actual difference.'}\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.compliant -or $r.actual -ne 'mode=incorrect'){throw 'Drift fixture not detected.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'drift-before.json') -Raw|ConvertFrom-Json\n if($r.actual -eq $r.expected){throw 'Noncompliance record lacks an actual difference.'}\n",
       "evidence": "Expected, actual, and compliance values.",
-      "fix": "Keep audit and modify responsibilities separate; do not repair before retaining evidence."
+      "fix": "Keep audit and modify responsibilities separate; do not repair before retaining evidence.",
+      "coverage": []
     },
     {
       "id": "CP3",
-      "title": "Reconcile only the declared local resource",
-      "commands": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\n $target=Join-Path $WorkRoot $d.files[0].path\n $d.files[0].content|Set-Content $target\n [ordered]@{resource='service.conf';compliant=((Get-Content $target) -eq $d.files[0].content)}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'drift-after.json')\n",
-      "expected": "Reconciliation restores the declared content and proves compliance.",
-      "positive": "$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\n if(-not $r.compliant){throw 'Configuration remains drifted.'}\n",
-      "negative": "if((Get-Content (Join-Path $WorkRoot 'service.conf')) -ne 'mode=training'){throw 'Unexpected reconciled setting.'}\n",
-      "validate": "$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\n if(-not $r.compliant){throw 'Configuration remains drifted.'}\n\nif((Get-Content (Join-Path $WorkRoot 'service.conf')) -ne 'mode=training'){throw 'Unexpected reconciled setting.'}\n",
-      "evidence": "Before/after reports and exact managed file.",
-      "fix": "Use the desired-state value and owned path; never recursively repair unrelated directories."
+      "title": "Reconcile owned configuration and prove idempotence",
+      "commands": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nfunction Invoke-OwnedReconciliation {\n $changed=0;$root=[IO.Path]::GetFullPath($WorkRoot)+[IO.Path]::DirectorySeparatorChar\n foreach($item in $d.files){$target=[IO.Path]::GetFullPath((Join-Path $WorkRoot $item.path));if(-not $target.StartsWith($root,[StringComparison]::OrdinalIgnoreCase)){throw 'Configuration path escaped ownership.'};$actual=if(Test-Path $target){Get-Content $target -Raw}else{''};if($actual.TrimEnd() -cne $item.content){New-Item -ItemType Directory -Force (Split-Path $target)|Out-Null;Set-Content $target $item.content;$changed++}}\n return $changed\n}\n$first=Invoke-OwnedReconciliation;$second=Invoke-OwnedReconciliation\n[ordered]@{firstChanges=$first;secondChanges=$second;resources=@($d.files).Count}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'drift-after.json')\n",
+      "expected": "Declared content is repaired; the immediate second reconciliation changes zero resources.",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nforeach($item in $d.files){if((Get-Content (Join-Path $WorkRoot $item.path) -Raw).TrimEnd() -cne $item.content){throw 'Configuration remains drifted.'}}\n",
+      "negative": "$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\nif($r.secondChanges -ne 0 -or $r.resources -ne 2){throw 'Reconciliation is not idempotent.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nforeach($item in $d.files){if((Get-Content (Join-Path $WorkRoot $item.path) -Raw).TrimEnd() -cne $item.content){throw 'Configuration remains drifted.'}}\n\n$r=Get-Content (Join-Path $WorkRoot 'drift-after.json') -Raw|ConvertFrom-Json\nif($r.secondChanges -ne 0 -or $r.resources -ne 2){throw 'Reconciliation is not idempotent.'}\n",
+      "evidence": "Before/after hashes and first/second change counts.",
+      "fix": "Normalize the target path before writes, compare actual content, and never infer compliance from a self-declared flag.",
+      "coverage": [
+        {
+          "objectiveId": "D3.5.2",
+          "level": "practiced",
+          "reference": "Reconcile a two-file desired state and prove zero changes on the second pass."
+        },
+        {
+          "objectiveId": "D3.5.4",
+          "level": "practiced",
+          "reference": "Compare actual local file contents with desired values; this is not Azure Machine Configuration enforcement."
+        }
+      ]
     },
     {
       "id": "CP4",
-      "title": "Validate a self-service environment catalog contract",
-      "commands": "$t=Get-Content (Join-Path $WorkRoot 'configuration.catalog.yaml') -Raw\n [ordered]@{catalogDigest=(Get-FileHash (Join-Path $WorkRoot 'configuration.catalog.yaml')).Hash;environment='disposable';subscription=$SubscriptionId;resourceGroup=$ResourceGroup;approvalRequired=$true;provisioned=$false}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'self-service-contract.json')\n",
-      "expected": "The catalog is versioned and constrained to an approved target boundary.",
-      "positive": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.resourceGroup -ne $ResourceGroup -or -not $c.approvalRequired){throw 'Self-service boundary/approval absent.'}\n",
-      "negative": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.provisioned){throw 'Catalog validation cannot claim an environment deployment.'}\n",
-      "validate": "$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.resourceGroup -ne $ResourceGroup -or -not $c.approvalRequired){throw 'Self-service boundary/approval absent.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'self-service-contract.json') -Raw|ConvertFrom-Json\n if($c.provisioned){throw 'Catalog validation cannot claim an environment deployment.'}\n",
-      "evidence": "Catalog digest, target scope, and separate platform prerequisites.",
-      "fix": "A real Deployment Environments exercise requires approved dev center/project, catalog synchronization, environment type, and deployment identity."
+      "title": "Compile a bounded self-service deployment request",
+      "commands": "$request=[ordered]@{template='core';parameters=@{labRunId=$RunId;prefix='az400';location=$Location;storageSku='Standard_LRS'}}\n$request|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'environment-request.json')\naz bicep build --file (Join-Path $LabRoot 'artifacts/core.bicep') --outfile (Join-Path $WorkRoot 'environment-template.json')\nif($LASTEXITCODE -ne 0){throw 'Catalog template failed compilation.'}\n$t=Get-Content (Join-Path $WorkRoot 'environment-template.json') -Raw|ConvertFrom-Json\nforeach($name in $request.parameters.Keys){if($name -notin $t.parameters.PSObject.Properties.Name){throw \"Unknown template parameter $name\"}}\n$params=@{};foreach($name in $request.parameters.Keys){$params[$name]=@{value=$request.parameters[$name]}}\n@{'$schema'='https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#';contentVersion='1.0.0.0';parameters=$params}|ConvertTo-Json -Depth 8|Set-Content (Join-Path $WorkRoot 'environment.parameters.json')\n",
+      "expected": "Bicep compiles a real self-contained template and explicit parameter file; this local planner creates no Azure environment.",
+      "positive": "$t=Get-Content (Join-Path $WorkRoot 'environment-template.json') -Raw|ConvertFrom-Json\n$p=Get-Content (Join-Path $WorkRoot 'environment.parameters.json') -Raw|ConvertFrom-Json\nif($p.parameters.labRunId.value -ne $RunId -or 'Microsoft.Storage/storageAccounts' -notin $t.resources.type){throw 'Request/template boundary mismatch.'}\n",
+      "negative": "$p=Get-Content (Join-Path $WorkRoot 'environment.parameters.json') -Raw|ConvertFrom-Json\nif($p.parameters.storageSku.value -ne 'Standard_LRS' -or $p.parameters.prefix.value -notmatch '^[a-z][a-z0-9-]{2,17}$'){throw 'Request exceeded catalog constraints.'}\n",
+      "validate": "$t=Get-Content (Join-Path $WorkRoot 'environment-template.json') -Raw|ConvertFrom-Json\n$p=Get-Content (Join-Path $WorkRoot 'environment.parameters.json') -Raw|ConvertFrom-Json\nif($p.parameters.labRunId.value -ne $RunId -or 'Microsoft.Storage/storageAccounts' -notin $t.resources.type){throw 'Request/template boundary mismatch.'}\n\n$p=Get-Content (Join-Path $WorkRoot 'environment.parameters.json') -Raw|ConvertFrom-Json\nif($p.parameters.storageSku.value -ne 'Standard_LRS' -or $p.parameters.prefix.value -notmatch '^[a-z][a-z0-9-]{2,17}$'){throw 'Request exceeded catalog constraints.'}\n",
+      "evidence": "Compiled template, parameter names and target run; approval and live deployment remain separate.",
+      "fix": "Use the dated retirement guidance for Azure Deployment Environments; the supported exercise is a workflow calling the owned Bicep catalog entry.",
+      "coverage": [
+        {
+          "objectiveId": "D3.5.5",
+          "level": "practiced",
+          "reference": "Validate a bounded self-service request and produce deployable ARM parameters for the independent Bicep catalog entry; no portal service is created."
+        }
+      ]
     },
     {
       "id": "CP5",
       "title": "Compare legacy and supported configuration paths",
-      "commands": "$decision=[ordered]@{legacy='Azure Automation State Configuration';legacyStatus='Retirement announced; verify current lifecycle before use';modern='Azure Machine Configuration';resourcePlane='Bicep/ARM';selfService='Azure Deployment Environments';verified='2026-10-16';legacyDeploymentAllowed=$false}\n $decision|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'configuration-decision.json')\n",
+      "commands": "$decision=[ordered]@{legacy='Azure Automation State Configuration';legacyStatus='Retirement announced; verify current lifecycle before use';modern='Azure Machine Configuration';resourcePlane='Bicep/ARM';selfService='Azure Deployment Environments';verified='2026-10-16';legacyDeploymentAllowed=$false}\n $decision|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'configuration-decision.json')\n\n$bad=@{prefix='../outside';storageSku='Premium_LRS'}\n$rejected=($bad.prefix -notmatch '^[a-z][a-z0-9-]{2,17}$') -and $bad.storageSku -ne 'Standard_LRS'\n@{invalidRequestRejected=$rejected;reason='prefix and SKU outside catalog'}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'catalog-negative.json')\nif(-not $rejected){throw 'Invalid self-service request accepted.'}\n",
       "expected": "The syllabus topic is preserved as dated context with a supported modernization route.",
-      "positive": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n",
+      "positive": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'catalog-negative.json') -Raw|ConvertFrom-Json\nif(-not $r.invalidRequestRejected){throw 'Catalog rejection evidence absent.'}\n",
       "negative": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.legacyDeploymentAllowed){throw 'Legacy context must not silently enable retired infrastructure.'}\n",
-      "validate": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.legacyDeploymentAllowed){throw 'Legacy context must not silently enable retired infrastructure.'}\n",
+      "validate": "$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.modern -ne 'Azure Machine Configuration' -or $d.verified -ne '2026-10-16'){throw 'Modernization decision missing.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'catalog-negative.json') -Raw|ConvertFrom-Json\nif(-not $r.invalidRequestRejected){throw 'Catalog rejection evidence absent.'}\n\n$d=Get-Content (Join-Path $WorkRoot 'configuration-decision.json') -Raw|ConvertFrom-Json\n if($d.legacyDeploymentAllowed){throw 'Legacy context must not silently enable retired infrastructure.'}\n",
       "evidence": "Dated source comparison and migration responsibilities.",
-      "fix": "Verify current lifecycle guidance before planning production configuration changes."
+      "fix": "Verify current lifecycle guidance before planning production configuration changes.",
+      "coverage": [
+        {
+          "objectiveId": "D3.5.1",
+          "level": "explained",
+          "reference": "Compare current configuration tools with dated retired services; no retired endpoint is invoked."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "Set-Content (Join-Path $WorkRoot 'service.conf') 'mode=drifted'\n",
     "diagnose": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json;[pscustomobject]@{expected=$d.files[0].content;actual=(Get-Content (Join-Path $WorkRoot 'service.conf'))}\n",
-    "repair": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json;$d.files[0].content|Set-Content (Join-Path $WorkRoot 'service.conf')\n"
+    "repair": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json;$d.files[0].content|Set-Content (Join-Path $WorkRoot 'service.conf')\n",
+    "assert": "$d=Get-Content (Join-Path $WorkRoot 'desired-state.json') -Raw|ConvertFrom-Json\nif((Get-Content (Join-Path $WorkRoot $d.files[0].path)) -ne $d.files[0].content){throw 'AZ400-L18-FAULT'}\n",
+    "expectedFailure": "AZ400-L18-FAULT"
   },
   "challenge": "Publish a versioned catalog into a separately approved disposable Deployment Environments project and prove resource ownership, deletion, and policy compliance.",
   "sources": [
@@ -86,7 +116,7 @@
     "https://learn.microsoft.com/en-us/azure/deployment-environments/overview-what-is-azure-deployment-environments",
     "https://learn.microsoft.com/en-us/azure/automation/automation-dsc-overview"
   ],
-  "primer": "Resource provisioning, guest configuration, and self-service orchestration are different control planes. Legacy Automation State Configuration remains dated syllabus context; use current Machine Configuration guidance.",
+  "primer": "Resource provisioning, guest configuration, and self-service orchestration are different control planes. Legacy Automation State Configuration remains dated syllabus context; use current Machine Configuration guidance.\n\nProvisioning a VM, enforcing its guest settings and offering a self-service environment are different systems. Select tools around desired-state ownership, audit/remediation needs and supported service lifecycle. The dated syllabus can mention retired offerings; a successful local substitute must not be described as a retired service deployment.\n\nThe concrete local controller audits and reconciles two owned files and proves zero changes on a second pass. The bounded environment catalog rejects unknown SKUs/prefixes and generates ARM parameters for its own Bicep template. This is observable self-service planning and desired-state practice; it does not create Azure Machine Configuration policy or a hosted environment portal.",
   "architecture": {
     "title": "Desired-state reconciliation and self-service catalog",
     "nodes": [
@@ -167,5 +197,10 @@
       }
     ],
     "topology": "The desired-state document gives a local reconciler an exact owned path and target value. Audit reports preserve both drift and repaired compliance. A separate versioned catalog describes the self-service environment contract; synchronizing it with Azure Deployment Environments requires the approved dev-center/project bootstrap and is not claimed by the local reconciliation exercise."
-  }
+  },
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five checkpoint commands, final validators, named fault rejection and repair executed. Local file reconciliation and actual Bicep compilation are real; no environment was deployed."
+  },
+  "solutionNotes": "Inspect actual file bytes after repair and after the second pass. Compare catalog parameter keys with the compiled ARM template rather than trusting a success Boolean."
 }

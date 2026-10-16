@@ -28,7 +28,14 @@
       "negative": "$h=Get-Content (Join-Path $WorkRoot 'application-hash.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'publish/DevOps.Api.dll')).Hash -ne $h.Hash){throw 'Release binary drift.'}\n",
       "validate": "if(-not (Test-Path (Join-Path $WorkRoot 'publish/DevOps.Api.dll'))){throw 'Release binary missing.'}\n\n$h=Get-Content (Join-Path $WorkRoot 'application-hash.json') -Raw|ConvertFrom-Json\n if((Get-FileHash (Join-Path $WorkRoot 'publish/DevOps.Api.dll')).Hash -ne $h.Hash){throw 'Release binary drift.'}\n",
       "evidence": "Application SHA256 and build revision.",
-      "fix": "Promote these exact bytes through environments; avoid rebuilding after approval."
+      "fix": "Promote these exact bytes through environments; avoid rebuilding after approval.",
+      "coverage": [
+        {
+          "objectiveId": "D3.4.7",
+          "level": "practiced",
+          "reference": "Produce the deployable application output from the actual sample."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -39,7 +46,14 @@
       "negative": "$s=Get-Content (Join-Path $WorkRoot 'migration.sql') -Raw\n if($s -match '(?i)DROP DATABASE'){throw 'Database-destroying release step.'}\n",
       "validate": "$s=Get-Content (Join-Path $WorkRoot 'migration.sql') -Raw\n if($s -notmatch '__EFMigrationsHistory'){throw 'Migration history guard absent.'}\n\n$s=Get-Content (Join-Path $WorkRoot 'migration.sql') -Raw\n if($s -match '(?i)DROP DATABASE'){throw 'Database-destroying release step.'}\n",
       "evidence": "Migration script digest and schema compatibility review.",
-      "fix": "Select the SQL Server context; SQLite migration syntax is not interchangeable."
+      "fix": "Select the SQL Server context; SQLite migration syntax is not interchangeable.",
+      "coverage": [
+        {
+          "objectiveId": "D3.4.8",
+          "level": "practiced",
+          "reference": "Generate and inspect an idempotent SQL migration script without connecting to a database."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -50,7 +64,8 @@
       "negative": "$r=Get-Content (Join-Path $WorkRoot 'database-review.json') -Raw|ConvertFrom-Json\n if($r.applied){throw 'Preview exercise unexpectedly applied SQL.'}\n",
       "validate": "$r=Get-Content (Join-Path $WorkRoot 'database-review.json') -Raw|ConvertFrom-Json\n if(-not $r.reviewed -or $r.credentialMode -ne 'Entra'){throw 'Migration review missing.'}\n\n$r=Get-Content (Join-Path $WorkRoot 'database-review.json') -Raw|ConvertFrom-Json\n if($r.applied){throw 'Preview exercise unexpectedly applied SQL.'}\n",
       "evidence": "Preview output without connection credentials.",
-      "fix": "Supply an authorized disposable database and separate approval before -Apply; a placeholder host is never executed."
+      "fix": "Supply an authorized disposable database and separate approval before -Apply; a placeholder host is never executed.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -61,7 +76,19 @@
       "negative": "$s=@(Get-Content (Join-Path $WorkRoot 'release-order.txt'))\n if($s[0] -eq 'schema-contract-later'){throw 'Destructive contraction cannot precede rollout.'}\n",
       "validate": "$s=@(Get-Content (Join-Path $WorkRoot 'release-order.txt'))\n if($s[0] -ne 'schema-expand' -or $s[1] -ne 'application-deploy'){throw 'Database/application dependencies reversed.'}\n\n$s=@(Get-Content (Join-Path $WorkRoot 'release-order.txt'))\n if($s[0] -eq 'schema-contract-later'){throw 'Destructive contraction cannot precede rollout.'}\n",
       "evidence": "Release DAG and the generated SQL digest.",
-      "fix": "Use dependsOn/needs and a success condition; job naming alone does not impose ordering."
+      "fix": "Use dependsOn/needs and a success condition; job naming alone does not impose ordering.",
+      "coverage": [
+        {
+          "objectiveId": "D3.3.6",
+          "level": "practiced",
+          "reference": "Assert the migration/application/verification ordering in the local release graph."
+        },
+        {
+          "objectiveId": "D3.4.2",
+          "level": "practiced",
+          "reference": "Resolve the ordered release dependency contract and reject a reversed migration/app order."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -72,20 +99,23 @@
       "negative": "$c=Get-Content (Join-Path $WorkRoot 'rollback-contract.json') -Raw|ConvertFrom-Json\n if($c.destructiveRollbackAllowed){throw 'Automatic destructive database rollback is prohibited.'}\n",
       "validate": "$c=Get-Content (Join-Path $WorkRoot 'rollback-contract.json') -Raw|ConvertFrom-Json\n if(-not $c.oldBinarySupportsExpandedSchema -or $c.binaryDigest.Length -ne 64){throw 'Rollback compatibility/digest missing.'}\n\n$c=Get-Content (Join-Path $WorkRoot 'rollback-contract.json') -Raw|ConvertFrom-Json\n if($c.destructiveRollbackAllowed){throw 'Automatic destructive database rollback is prohibited.'}\n",
       "evidence": "Compatibility assumptions, recovery procedure, and SQL/application hashes.",
-      "fix": "Test old and new binaries against the expanded schema before rollout."
+      "fix": "Test old and new binaries against the expanded schema before rollout.",
+      "coverage": []
     }
   ],
   "breakFix": {
     "trigger": "@('application-deploy','schema-expand','readiness-check','schema-contract-later')|Set-Content (Join-Path $WorkRoot 'release-order.txt')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'release-order.txt')\n",
-    "repair": "@('schema-expand','application-deploy','readiness-check','schema-contract-later')|Set-Content (Join-Path $WorkRoot 'release-order.txt')\n"
+    "repair": "@('schema-expand','application-deploy','readiness-check','schema-contract-later')|Set-Content (Join-Path $WorkRoot 'release-order.txt')\n",
+    "assert": "$s=@(Get-Content (Join-Path $WorkRoot 'release-order.txt'))\nif(($s -join ',') -ne 'schema-expand,application-deploy,readiness-check,schema-contract-later'){throw 'AZ400-L14-FAULT'}\n",
+    "expectedFailure": "AZ400-L14-FAULT"
   },
   "challenge": "Against a separately approved disposable SQL database, prove forward-compatible migration and old-binary rollback using the same application artifact.",
   "sources": [
     "https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages"
   ],
-  "primer": "Expand/contract preserves compatibility during rollout. Binary rollback does not automatically reverse data or schema; destructive database reversal needs separate recovery design.",
+  "primer": "Expand/contract preserves compatibility during rollout. Binary rollback does not automatically reverse data or schema; destructive database reversal needs separate recovery design.\n\nBuild once, then promote the resulting bytes. Rebuilding at deployment time can change dependencies even for the same source revision. Package manifests and source hashes make the immutable artifact a concrete input to migration, application deployment and verification.\n\nExpand/contract keeps the old and new binary compatible while schema evolves. The local task generates an idempotent SQL script and a reviewed execution preview without connecting to a database. In live delivery, a narrow migration identity runs before the app identity. Rolling back an application binary must not automatically issue a destructive Down migration; incompatible schema needs a separately owned recovery plan.",
   "architecture": {
     "title": "Ordered schema and application release boundaries",
     "nodes": [
@@ -169,5 +199,10 @@
       }
     ],
     "topology": "The release contract promotes one immutable application bundle and orders idempotent schema expansion before application deployment. The SQL script is generated locally; applying it requires a separately approved database identity and network path. Old and new binaries must tolerate the expanded schema so recovery can route to compatible code without destructive data rollback."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The order assertion rejects application-before-migration. Inspect generated SQL and keep compatibility evidence even when the application build itself passes."
 }

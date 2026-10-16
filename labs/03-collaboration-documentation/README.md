@@ -15,7 +15,8 @@ Learner role: **Release coordinator**. Outcome: Publish documentation and config
 | Platforms | local, azure-devops |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators, named fault rejection and repair executed. Wiki provider operations use fail-closed doubles; local HMAC/Git are real. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,13 +38,18 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D1.3.1`, `D1.3.2`, `D1.3.3`, `D1.3.4`, `D1.3.5`, `D1.3.6`
 
 | Checkpoint | Measurable behavior |
 |---|---|
 | [CP1](#task-1) | Generate release notes from Git history |
 | [CP2](#task-2) | Author a process diagram and API handoff |
-| [CP3](#task-3) | Prepare a least-privilege webhook subscription |
+| [CP3](#task-3) | Authenticate and reject webhook payloads locally |
 | [CP4](#task-4) | Create a sandbox project wiki from Markdown |
 | [CP5](#task-5) | Review Teams and Boards integration before authorization |
 
@@ -84,11 +90,19 @@ packages and write ignored build output.
 
 Documentation is a versioned delivery artifact. Webhooks need authenticated receivers and narrow event subscriptions; external app authorization is a separate privileged action.
 
+Generate release notes from actual history, then add user impact and operational guidance through review. Commit subjects provide provenance, but they cannot infer customer impact or database compatibility. A diagram in a wiki should describe the handoff that operators actually need.
+
+The HMAC fixture uses a clearly nonsecret training key. Verify the exact raw bytes with constant-time comparison before parsing a webhook event; appending whitespace invalidates the signature. Real receivers additionally need replay/event-ID deduplication, narrow event selection, TLS, key rotation and bounded delivery retries. The inactive webhook and Teams/Boards proposals require separate account authorization.
+
 ## Task 1 — Generate release notes from Git history
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.3.3` | practiced | Read actual recent Git commit history and render traceable release-note subjects. |
 
 ```powershell
 git -C $RepoRoot log -10 --pretty=format:'- %h %s' | Set-Content (Join-Path $WorkRoot 'release-notes.md')
@@ -123,6 +137,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.3.2` | practiced | Generate release notes from actual Git history in CP1 and add a reviewed API handoff in CP2. |
+
 ```powershell
 @('# Release handoff','```mermaid','flowchart LR','  Commit --> Build','  Build --> Test','  Test --> Approval','  Approval --> Deploy','```','API: GET /health/ready returns readiness status.')|Set-Content (Join-Path $WorkRoot 'handoff.md')
 ```
@@ -149,36 +167,56 @@ Common failure and safe retry: Keep Mermaid syntax supported by your renderer an
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 3 — Prepare a least-privilege webhook subscription
+## Task 3 — Authenticate and reject webhook payloads locally
 
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.3.4` | practiced | Verify HMAC-SHA256 for original, tampered, and unsigned local webhook payloads; no delivery endpoint is activated. |
+
 ```powershell
 $hook=[ordered]@{name='web';active=$false;events=@('workflow_run');config=@{url='https://receiver.example.invalid/az400';content_type='json';insecure_ssl='0'}}
- $hook|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')
+$hook|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')
+@'
+import hashlib,hmac,json
+KEY=b"az400-nonsecret-training-fixture"
+def accepts(body,signature):
+ expected="sha256="+hmac.new(KEY,body,hashlib.sha256).hexdigest()
+ return isinstance(signature,str) and signature.startswith("sha256=") and hmac.compare_digest(signature,expected)
+body=b'{"event":"workflow_run","conclusion":"failure"}'
+signature="sha256="+hmac.new(KEY,body,hashlib.sha256).hexdigest()
+result={"validAccepted":accepts(body,signature),"tamperedRejected":not accepts(body+b" ",signature),"missingRejected":not accepts(body,None),"fixtureOnly":True}
+if not all(result[k] for k in ("validAccepted","tamperedRejected","missingRejected")):raise SystemExit("webhook signature boundary failed")
+print(json.dumps(result))
+
+'@|Set-Content (Join-Path $WorkRoot 'verify_webhook.py')
+python (Join-Path $WorkRoot 'verify_webhook.py')|Set-Content (Join-Path $WorkRoot 'webhook-verification.json')
+if($LASTEXITCODE -ne 0){throw 'Webhook signature tests failed.'}
 ```
 
-Expected state: An inactive webhook proposal uses HTTPS and one delivery event; no request is sent.
+Expected state: A real HMAC-SHA256 verification function accepts original bytes and rejects tampering and missing signatures; the external webhook stays inactive.
 
 Positive validation:
 
 ```powershell
-$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json
- if ($h.active -or $h.config.content_type -ne 'json' -or $h.events[0] -ne 'workflow_run') { throw 'Webhook review contract violated.' }
+$r=python (Join-Path $WorkRoot 'verify_webhook.py')|ConvertFrom-Json
+if(-not $r.validAccepted -or -not $r.tamperedRejected){throw 'Webhook authenticity boundary failed.'}
 ```
 
 Negative validation:
 
 ```powershell
 $h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json
- if ($h.config.insecure_ssl -ne '0' -or '*' -in $h.events) { throw 'Unbounded or TLS-insecure webhook.' }
+$r=Get-Content (Join-Path $WorkRoot 'webhook-verification.json') -Raw|ConvertFrom-Json
+if($h.active -or $h.config.insecure_ssl -ne '0' -or -not $r.missingRejected){throw 'Webhook transport/signature gate failed.'}
 ```
 
-Evidence to retain: Inactive payload and HMAC-secret storage plan, excluding the secret.
+Evidence to retain: Signature test outcomes and inactive event subscription; never retain a real webhook secret.
 
-Common failure and safe retry: Use an approved receiver with HMAC verification before activating a separately authorized hook.
+Common failure and safe retry: Compute HMAC over exact request bytes and compare in constant time. Receiver routing, replay protection, and approved external activation are separate controls.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
@@ -187,6 +225,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.3.1` | practiced | Create and read the run-owned Azure DevOps wiki page with a Mermaid flow. |
 
 ```powershell
 $page=Join-Path $WorkRoot 'handoff.md'
@@ -224,6 +266,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D1.3.5` | explained | Review a Boards notification contract; configuring the account-level integration remains a bootstrap task. |
+| `D1.3.6` | explained | Review a Teams notification payload and connection prerequisites; no external message is sent. |
+
 ```powershell
 $review=[ordered]@{boardsProject=$AdoProject;githubRepository=$GhRepo;teamsChannel='UNCONFIGURED';notifications=@('release failure');externalAuthorizationRequired=$true;messagesSent=0}
  $review|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'integration-review.json')
@@ -253,7 +300,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/03-collaboration-documentation/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L03-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json
+if($h.config.insecure_ssl -ne '0' -or $h.config.url -notmatch '^https://'){throw 'AZ400-L03-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json;$h.config.insecure_ssl='1';$h|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')
@@ -265,7 +327,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json|Select-Object -ExpandProperty config
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $h=Get-Content (Join-Path $WorkRoot 'webhook-proposal.json') -Raw|ConvertFrom-Json;$h.config.insecure_ssl='0';$h|ConvertTo-Json -Depth 5|Set-Content (Join-Path $WorkRoot 'webhook-proposal.json')
@@ -281,7 +343,7 @@ Produce release notes with changes, migration requirements, rollback, and links 
 & './labs/03-collaboration-documentation/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -313,4 +375,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

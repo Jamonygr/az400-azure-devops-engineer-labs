@@ -15,7 +15,8 @@ Learner role: **Security platform owner**. Outcome: Connect advanced security an
 | Platforms | local, github, azure-devops, azure |
 | Cost | paid features gated; core inspection only — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,6 +38,11 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D4.3.2`, `D4.3.3`, `D4.3.4`
 
 | Checkpoint | Measurable behavior |
@@ -44,7 +50,7 @@ Official objective topic IDs: `D4.3.2`, `D4.3.3`, `D4.3.4`
 | [CP1](#task-1) | Inspect repository security capability metadata |
 | [CP2](#task-2) | Prepare an explicit Advanced Security entitlement review |
 | [CP3](#task-3) | Inspect Microsoft Defender pricing state without changing plans |
-| [CP4](#task-4) | Map GitHub and Azure DevOps findings into Defender governance |
+| [CP4](#task-4) | Correlate and scope security finding fixtures |
 | [CP5](#task-5) | Triage a synthetic finding with an evidence-based decision |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 Advanced security capabilities vary with visibility and entitlement. Defender integration does not justify organization-wide collection or subscription billing changes from a repository lab.
 
+Advanced Security and Defender require visibility, product entitlement and owner-authorized connector scope. Reading a plan state does not enable a scanner, and enabling a billable plan is not a harmless repository default. Keep paid capability decisions outside automatic bootstrap.
+
+The observable local exercise correlates findings using exact repository ownership and applies an explicit severity/reachability/false-positive decision. A foreign critical finding is excluded from this run rather than dismissed globally. The provider reads and connector design remain explained coverage; they do not prove a live Defender for DevOps connection or paid GitHub enforcement.
+
 ## Task 1 — Inspect repository security capability metadata
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 gh api "repos/$GhRepo" --jq '{name:.full_name,visibility:.visibility,security:.security_and_analysis}'|Set-Content (Join-Path $WorkRoot 'security-capabilities.json')
@@ -121,6 +133,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-2"></a>
 
 Checkpoint: `CP2`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.3.3` | explained | Inspect existing GitHub/DevOps advanced-security eligibility and capabilities; paid enforcement is not exercised automatically. |
 
 ```powershell
 $entitlement=[ordered]@{github='public-repository supported features; verify current licensing';azureDevOps='GitHub Advanced Security for Azure DevOps requires eligible paid entitlement';approvedPaidActivation=$false;billingOwnerApprovalRequired=$true}
@@ -155,6 +171,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.3.2` | explained | Read available Defender context and document the explicit entitlement/connector prerequisites; no Defender plan is enabled. |
+
 ```powershell
 az security pricing list --subscription $SubscriptionId --query 'value[].{name:name,tier:pricingTier,subPlan:subPlan}' -o json|Set-Content (Join-Path $WorkRoot 'defender-plans.json')
 ```
@@ -181,36 +201,46 @@ Common failure and safe retry: Security Reader permission may be needed. Never c
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 4 — Map GitHub and Azure DevOps findings into Defender governance
+## Task 4 — Correlate and scope security finding fixtures
 
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.3.4` | practiced | Correlate synthetic repository findings by exact owned scope and severity; a Defender connector is explained, not configured. |
+
 ```powershell
-$mapping=@([ordered]@{source='GitHub';signal='code/dependency/secret';connectorOwner='security-admin';scope=$GhRepo},[ordered]@{source='Azure DevOps';signal='advanced-security';connectorOwner='security-admin';scope=$AdoProject})
- $mapping|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'connector-review.json')
+$fixtures=@(
+ @{id='gh-code-1';host='GitHub';scope=$GhRepo;tool='CodeQL';severity='high';reachable=$true},
+ @{id='ado-dep-1';host='Azure DevOps';scope=$AdoProject;tool='dependency';severity='medium';reachable=$false},
+ @{id='foreign-1';host='GitHub';scope='other-team/production';tool='secret';severity='critical';reachable=$true})
+$fixtures|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'security-findings.fixture.json')
+$owned=@($fixtures|Where-Object {($_.host -eq 'GitHub' -and $_.scope -eq $GhRepo) -or ($_.host -eq 'Azure DevOps' -and $_.scope -eq $AdoProject)})
+$owned|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'owned-findings.json')
+@{fixtureOnly=$true;input=$fixtures.Count;owned=$owned.Count;excluded=$fixtures.Count-$owned.Count;blocking=@($owned|Where-Object {$_.severity -eq 'high' -and $_.reachable}).Count}|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'finding-correlation.json')
 ```
 
-Expected state: Connector ownership and selected repository/project scope are explicit; no organization connector is created.
+Expected state: Two owned repository/project fixtures are correlated and one foreign finding is excluded; no organization connector is created.
 
 Positive validation:
 
 ```powershell
-$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)
- if($m.Count -ne 2 -or @($m|Where-Object connectorOwner -ne 'security-admin').Count){throw 'Security connector governance incomplete.'}
+$r=Get-Content (Join-Path $WorkRoot 'finding-correlation.json') -Raw|ConvertFrom-Json
+if($r.owned -ne 2 -or $r.blocking -ne 1){throw 'Scoped correlation result incorrect.'}
 ```
 
 Negative validation:
 
 ```powershell
-$m=@(Get-Content (Join-Path $WorkRoot 'connector-review.json') -Raw|ConvertFrom-Json)
- if('*' -in $m.scope){throw 'Connector scope must not select every organization repository.'}
+$r=@(Get-Content (Join-Path $WorkRoot 'owned-findings.json') -Raw|ConvertFrom-Json)
+if('foreign-1' -in $r.id -or @($r|Where-Object scope -notin @($GhRepo,$AdoProject)).Count){throw 'Correlation crossed the approved collection boundary.'}
 ```
 
-Evidence to retain: Connector design with explicit authorization and billing boundaries.
+Evidence to retain: Clearly labeled input fixture, owned results, exclusions and blocking count.
 
-Common failure and safe retry: Use separate one-time privileged bootstrap for connectors; repository ownership does not authorize organization-wide collection.
+Common failure and safe retry: Real Defender correlation needs a separately approved source connector. A source host, repository ID and alert ID are different identity dimensions.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
@@ -220,9 +250,15 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $finding=[ordered]@{id='training-codeql-001';severity='high';reachable=$true;owner='sample-maintainer';action='fix before release';dismissed=$false;evidence='request input reaches unsafe sink in synthetic example';falsePositive=$false}
  $finding|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')
+
+$r=@(Get-Content (Join-Path $WorkRoot 'owned-findings.json') -Raw|ConvertFrom-Json)
+$decisions=@($r|ForEach-Object {@{id=$_.id;action=$(if($_.reachable -and $_.severity -in @('high','critical')){'block-and-remediate'}else{'investigate'});owner='sample-maintainer'}})
+$decisions|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage-decisions.json')
 ```
 
 Expected state: A reachable high finding blocks release and has a named remediation owner.
@@ -232,6 +268,9 @@ Positive validation:
 ```powershell
 $f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json
  if($f.action -ne 'fix before release' -or -not $f.reachable){throw 'Triage decision inconsistent with evidence.'}
+
+$d=@(Get-Content (Join-Path $WorkRoot 'triage-decisions.json') -Raw|ConvertFrom-Json)
+if(@($d|Where-Object action -eq 'block-and-remediate').Count -ne 1){throw 'Reachable high finding did not block release.'}
 ```
 
 Negative validation:
@@ -249,7 +288,22 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/23-advanced-security-defender/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L23-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json
+if($f.reachable -and $f.severity -eq 'high' -and $f.dismissed){throw 'AZ400-L23-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json;$f.dismissed=$true;$f|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')
@@ -261,7 +315,7 @@ Diagnose the precise difference:
 Get-Content (Join-Path $WorkRoot 'triage.json')
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $f=Get-Content (Join-Path $WorkRoot 'triage.json') -Raw|ConvertFrom-Json;$f.dismissed=$false;$f|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'triage.json')
@@ -277,7 +331,7 @@ In a separately authorized licensed sandbox, enable the eligible security produc
 & './labs/23-advanced-security-defender/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -309,4 +363,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

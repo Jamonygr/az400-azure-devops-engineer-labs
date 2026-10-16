@@ -15,7 +15,8 @@ Learner role: **Automation security engineer**. Outcome: Federate pipeline ident
 | Platforms | local, azure, github |
 | Cost | none or approved hosted-run allowance — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | offline-tested |
+| Verification scope | All five checkpoint commands, final validators and named fault/repair executed in CourseSecurityTelemetry.Tests.ps1 with fail-closed provider doubles. Local calculations, permission/reference/secure-file fixtures and .NET trace behavior are real; live provider calls, federation and telemetry export have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -37,14 +38,19 @@ settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
 
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
+
 Official objective topic IDs: `D4.1.2`, `D4.1.3`, `D4.2.1`, `D4.2.2`, `D4.2.3`, `D4.2.4`
 
 | Checkpoint | Measurable behavior |
 |---|---|
 | [CP1](#task-1) | Create the run-owned federation identity |
 | [CP2](#task-2) | Bind the exact GitHub environment subject |
-| [CP3](#task-3) | Review Key Vault reference handling |
-| [CP4](#task-4) | Model secure-file access and deletion after use |
+| [CP3](#task-3) | Parse and reject unsafe Key Vault references |
+| [CP4](#task-4) | Consume and remove a synthetic secure file |
 | [CP5](#task-5) | Check evidence for a synthetic leakage marker |
 
 The [objective map](../../docs/objective-map.md) traces every official topic to
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 OIDC exchanges a constrained workload assertion for an Azure token. Issuer, audience, and subject must all match; masking is defense in depth rather than permission to log secrets.
 
+Federation removes a long-lived client secret by exchanging a provider assertion for a short-lived Azure token. Trust requires the correct issuer, audience and exact subject; the GitHub environment subject differs from a branch subject and from an Azure DevOps service connection.
+
+The core creates a run-owned managed identity and its federated credential, then reads back the full trust tuple. A successful credential definition does not prove token exchange: the protected capstone supplies that integration evidence. Key Vault references and secure-file records here are reviewed handling contracts, not uploads of real secrets. Redaction and masking do not authorize logging sensitive values.
+
 ## Task 1 — Create the run-owned federation identity
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $m=az identity create --subscription $SubscriptionId --resource-group $ResourceGroup --location $Location --name "federated-$RunId" -o json|ConvertFrom-Json
@@ -123,6 +135,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.1.2` | explained | Read the exact GitHub environment-subject federation contract; exchanging a live OIDC token occurs in the capstone integration. |
+| `D4.2.2` | practiced | Create and query the managed-identity federated credential with exact issuer, audience and repository subject. |
+
 ```powershell
 $subject="repo:${GhRepo}:environment:release-$RunId"
  az identity federated-credential create --subscription $SubscriptionId --resource-group $ResourceGroup --identity-name "federated-$RunId" --name github-release --issuer 'https://token.actions.githubusercontent.com' --subject $subject --audiences 'api://AzureADTokenExchange' -o json|Set-Content (Join-Path $WorkRoot 'federated-credential.json')
@@ -150,70 +167,75 @@ Common failure and safe retry: Environment-bound and branch-bound subjects diffe
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 3 — Review Key Vault reference handling
+## Task 3 — Parse and reject unsafe Key Vault references
 
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.2.1` | explained | Parse versioned and versionless Key Vault reference fixtures and reject insecure or misleading syntax; live secret resolution is explained separately. |
+
 ```powershell
-Copy-Item (Join-Path $LabRoot 'artifacts/keyvault-reference.json') (Join-Path $WorkRoot 'keyvault-reference.json')
- $policy=[ordered]@{fetch='at job runtime through federated identity';retainValue=$false;masking='defense in depth';rotation='new version with rollback plan';vaultProvisioned=$false}
- $policy|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'vault-policy.json')
+& (Join-Path $LabRoot 'artifacts/Test-LocalSecretHandling.ps1') -Mode References -WorkRoot $WorkRoot
 ```
 
-Expected state: Vault references and runtime retrieval are distinct from storing secret values in Git.
+Expected state: Two HTTPS references are accepted; HTTP, an attacker-suffix hostname, and a plaintext value are rejected. Only one accepted reference pins a version.
 
 Positive validation:
 
 ```powershell
-$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json
- if($p.fetch -notmatch 'federated identity' -or $p.rotation -notmatch 'new version'){throw 'Secret lifecycle policy incomplete.'}
+$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json
+if($r.accepted -ne 2 -or $r.rejected -ne 3 -or $r.versioned -ne 1){throw 'Reference cases did not match expected syntax and rotation behavior.'}
 ```
 
 Negative validation:
 
 ```powershell
-$p=Get-Content (Join-Path $WorkRoot 'vault-policy.json') -Raw|ConvertFrom-Json
- if($p.retainValue -or $p.vaultProvisioned){throw 'Reference review cannot expose values or claim a vault deployment.'}
+$r=Get-Content (Join-Path $WorkRoot 'reference-results.json') -Raw|ConvertFrom-Json
+if($r.resolvedLive -or -not $r.fixtureOnly){throw 'Offline reference parsing cannot claim live secret resolution.'}
 ```
 
-Evidence to retain: Reference shape and runtime identity requirements, without secret values.
+Evidence to retain: reference-results.json records counts without secret values.
 
-Common failure and safe retry: Key Vault uses separate data-plane RBAC; RG Contributor alone cannot read secret values.
+Common failure and safe retry: Read the full vault hostname and SecretUri path. Versionless references follow rotation after the service refresh interval; a pinned version requires an explicit update.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
-## Task 4 — Model secure-file access and deletion after use
+## Task 4 — Consume and remove a synthetic secure file
 
 <a id="task-4"></a>
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.2.3` | explained | Exercise synthetic secure-file consumption and finally cleanup on both success and failure; provider Library authorization is explained, not emulated. |
+
 ```powershell
-$secureFile=[ordered]@{name='synthetic-signing-input';content='NOT-A-REAL-KEY';authorizedPipeline='single-disposable-pipeline';deleteAfterJob=$true}
- $secureFile|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'secure-file-contract.json')
+& (Join-Path $LabRoot 'artifacts/Test-LocalSecretHandling.ps1') -Mode FileLifetime -WorkRoot $WorkRoot
 ```
 
-Expected state: A synthetic file contract narrows pipeline authorization and cleanup lifetime.
+Expected state: The harmless input is hash-checked and consumed twice. A normal run and an injected consumer failure both remove the temporary file in finally.
 
 Positive validation:
 
 ```powershell
-$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json
- if(-not $s.deleteAfterJob -or $s.content -ne 'NOT-A-REAL-KEY'){throw 'Secure-file lifetime/fixture violated.'}
+$r=Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json
+if(@($r.runs).Count -ne 2 -or @($r.runs|Where-Object {-not $_.consumed -or -not $_.removed}).Count -or @($r.runs|Where-Object consumerFailed).Count -ne 1){throw 'Successful and failing consumers must both remove their temporary input.'}
 ```
 
 Negative validation:
 
 ```powershell
-$s=Get-Content (Join-Path $WorkRoot 'secure-file-contract.json') -Raw|ConvertFrom-Json
- if($s.authorizedPipeline -eq 'all'){throw 'Secure files must not be broadly authorized.'}
+if(Get-ChildItem -LiteralPath $WorkRoot -Filter 'synthetic-secure-file-*.tmp'){throw 'Synthetic secure-file residual remains.'}
+if((Get-Content (Join-Path $WorkRoot 'secure-file-results.json') -Raw|ConvertFrom-Json).providerAuthorizationVerified){throw 'Local lifetime exercise cannot claim provider authorization.'}
 ```
 
-Evidence to retain: Nonsecret file metadata and access decision.
+Evidence to retain: secure-file-results.json plus an empty residual file search; no real key is used.
 
-Common failure and safe retry: Store real certificates only in approved protected secure-file/key facilities; never echo their bytes.
+Common failure and safe retry: Cleanup belongs in finally, including consumer failure. Azure DevOps Library authorization, approvals, and agent filesystem permissions remain separate prerequisite checks.
 
 Cleanup dependency: retain this checkpoint's evidence until final validation; remove run-owned children before their recorded parent boundary.
 
@@ -222,6 +244,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-5"></a>
 
 Checkpoint: `CP5`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D4.1.3` | explained | Compare the DevOps service-connection federation issuer/subject with GitHub OIDC; connection provisioning is a bootstrap prerequisite. |
+| `D4.2.4` | practiced | Scan nonsecret fixture material and reject the deterministic synthetic leak marker. |
 
 ```powershell
 $safe='status=complete; value=<redacted>';Set-Content (Join-Path $WorkRoot 'redacted-log.txt') $safe
@@ -253,7 +280,21 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/21-secrets-federation/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L21-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+if(Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'){throw 'AZ400-L21-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 Add-Content (Join-Path $WorkRoot 'redacted-log.txt') 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
@@ -265,7 +306,7 @@ Diagnose the precise difference:
 Select-String -Path (Join-Path $WorkRoot 'redacted-log.txt') -SimpleMatch 'AZ400_SYNTHETIC_SECRET_DO_NOT_USE'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 Set-Content (Join-Path $WorkRoot 'redacted-log.txt') 'status=complete; value=<redacted>'
@@ -281,7 +322,7 @@ Configure a separately approved Azure DevOps workload-identity service connectio
 & './labs/21-secrets-federation/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -311,7 +352,9 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 - [Primary source 2](https://learn.microsoft.com/en-us/azure/devops/pipelines/release/configure-workload-identity) — reviewed 2026-10-16.
 - [Primary source 3](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-azure) — reviewed 2026-10-16.
 - [Primary source 4](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files) — reviewed 2026-10-16.
+- [Primary source 5](https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references) — reviewed 2026-10-16.
+- [Primary source 6](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-secure-file-v1?view=azure-pipelines) — reviewed 2026-10-16.
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

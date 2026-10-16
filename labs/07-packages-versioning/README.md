@@ -15,7 +15,8 @@ Learner role: **Build engineer**. Outcome: Version packages and manage feeds.
 | Platforms | local |
 | Cost | none — review [current pricing and cleanup](../../docs/cost-and-cleanup.md) before cloud execution |
 | Exam blueprint | July 27, 2026; sources reviewed October 16, 2026 |
-| Verification | Authored and checked offline; no live Azure deployment is claimed |
+| Verification status | not-run |
+| Verification scope | All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run. |
 
 Completion requires all five checkpoints, the break/fix repair, successful
 independent validation, and a passing residual-resource audit. An unavailable
@@ -36,6 +37,11 @@ boundary. Account creation, external integrations, and privileged organization
 settings belong to [one-time bootstrap](../../docs/account-bootstrap.md).
 
 ## Objectives and checkpoints
+
+Coverage levels describe the intended learning evidence: **explained** means reasoned
+understanding, **practiced** means an observable isolated skill, and **integrated**
+means skills connected across a delivery boundary. These labels are curriculum
+claims, not execution status. Verification above records what authors actually ran.
 
 Official objective topic IDs: `D2.2.4`, `D3.1.1`, `D3.1.2`, `D3.1.3`, `D3.1.4`
 
@@ -84,11 +90,17 @@ packages and write ignored build output.
 
 SemVer communicates compatibility; CalVer communicates release dates. Feed promotion preserves bytes, upstream feeds add trust boundaries, and lock files constrain resolution.
 
+Semantic versioning communicates compatibility only when maintainers follow its contract. A prerelease label separates an unstable candidate from the stable version; an immutable package version must continue to identify the same bytes. A source tag and a package version are related identifiers rather than substitutes.
+
+The local folder feed makes packing, metadata inspection and exact restore observable without publishing externally. GitHub Packages and Azure Artifacts add identity, upstream-source trust, retention and promotion decisions. Feed topology is explained in the comparison record; no remote publication or protected feed promotion is claimed by the local exercise.
+
 ## Task 1 — Create a versioned local package
 
 <a id="task-1"></a>
 
 Checkpoint: `CP1`
+
+Foundation/supporting task; no additional exam-objective coverage is claimed.
 
 ```powershell
 $p=Join-Path $WorkRoot 'Versioned.Library'
@@ -128,6 +140,8 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP2`
 
+Foundation/supporting task; no additional exam-objective coverage is claimed.
+
 ```powershell
 $pkg=Join-Path $WorkRoot 'feed/Versioned.Library.1.2.0.nupkg'
  Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -162,6 +176,10 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 <a id="task-3"></a>
 
 Checkpoint: `CP3`
+
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.1.3` | practiced | Restore the explicitly pinned library version from the local feed. |
 
 ```powershell
 $p=Join-Path $WorkRoot 'Package.Consumer'
@@ -204,6 +222,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP4`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D2.2.4` | explained | Compare semantic package versions with Git tag/revision identity; no remote tag publication occurs. |
+| `D3.1.4` | practiced | Inspect the package version and dependency lock information as separate artifact identifiers. |
+
 ```powershell
 $p=Join-Path $WorkRoot 'Versioned.Library'
  dotnet pack $p --configuration Release -p:PackageVersion=1.3.0-beta.1 -o (Join-Path $WorkRoot 'feed')
@@ -237,6 +260,11 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 Checkpoint: `CP5`
 
+| Objective | Evidence level | Observation and limits |
+|---|---|---|
+| `D3.1.1` | explained | Compare private/public feed selection and authorization using the feed decision record. |
+| `D3.1.2` | explained | Describe upstream/feed promotion topology; the concrete exercise uses a local NuGet folder. |
+
 ```powershell
 $plan=[ordered]@{github=@{registry='https://nuget.pkg.github.com/OWNER/index.json';permission='packages:write'};azureArtifacts=@{feed='az400-disposable';views=@('@Local','@Prerelease','@Release');upstreamPolicy='approved-only'};releaseVersion='1.2.0';published=$false}
  $plan|ConvertTo-Json -Depth 6|Set-Content (Join-Path $WorkRoot 'feed-plan.json')
@@ -266,7 +294,23 @@ Cleanup dependency: retain this checkpoint's evidence until final validation; re
 
 ## Deterministic break/fix
 
-Inject this fault only in the recorded sandbox or local run directory.
+Run the journaled operation after all five checkpoints. It proves the healthy assertion, injects the named fault, requires its rejection, repairs it, and proves health again. Provider doubles used in author tests are not live enforcement evidence.
+
+```powershell
+& './labs/07-packages-versioning/scripts/cli/BreakFix.ps1' -RunId 'demo01' -Execute
+```
+
+Expected rejection marker: `AZ400-L07-FAULT`. The assertion must catch the changed behavior, not merely an exception from an unavailable CLI.
+
+Inspect the independent assertion:
+
+```powershell
+$p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';$x=[xml](Get-Content $p -Raw)
+$pkg=@($x.SelectNodes('/Project/ItemGroup/PackageReference')|Where-Object Include -eq 'Versioned.Library')
+if($pkg.Count -ne 1 -or $pkg[0].Version -ne '1.2.0'){throw 'AZ400-L07-FAULT'}
+```
+
+Fault trigger (executed by BreakFix):
 
 ```powershell
 $p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';(Get-Content $p -Raw).Replace('Version="1.2.0"','Version="9.9.9"')|Set-Content $p
@@ -278,7 +322,7 @@ Diagnose the precise difference:
 dotnet restore (Join-Path $WorkRoot 'Package.Consumer') --source (Join-Path $WorkRoot 'feed');'Expected: package version not found.'
 ```
 
-Repair, then repeat the affected checkpoint validation:
+Repair (executed by BreakFix):
 
 ```powershell
 $p=Join-Path $WorkRoot 'Package.Consumer/Package.Consumer.csproj';(Get-Content $p -Raw).Replace('Version="9.9.9"','Version="1.2.0"')|Set-Content $p
@@ -295,7 +339,7 @@ Create an approved upstream-feed policy and promotion strategy that preserves th
 & './labs/07-packages-versioning/scripts/cli/Validate.ps1' -RunId 'demo01'
 ```
 
-A complete result requires five passing read-only assertions. Pending hosted runs, missing licensed features, and unexecuted integration challenges remain visible. Review `validation.json`; a command exiting successfully is not enough if the asserted behavior is absent.
+A complete result requires five passing read-only checkpoint assertions, a journaled repaired fault, and any required integration evidence. Pending hosted runs, missing licensed features, and unexecuted integration lanes remain visible. Review `validation.json`; successful command exit alone does not establish the asserted behavior.
 
 ## Troubleshooting
 
@@ -327,4 +371,4 @@ Explain why each checkpoint's denied path matters, which scope authorizes it, wh
 
 ## Lifecycle scripts and worked solution
 
-Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.
+Use `scripts/cli/Preflight.ps1`, `Setup.ps1`, `BreakFix.ps1`, `Integration.ps1` (capstones), `Validate.ps1`, `Cleanup.ps1`, and `Context.ps1` from this lab folder. Setup and cleanup preview until `-Execute`; `-ProvisionOnly` creates only fresh ownership-tracked containers. The [worked solution](solution/README.md) lists expected results and repair reasoning.

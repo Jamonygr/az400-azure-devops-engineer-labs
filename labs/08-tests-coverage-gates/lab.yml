@@ -29,7 +29,8 @@
       "negative": "$locks=Get-ChildItem (Join-Path $RepoRoot 'samples') -Filter packages.lock.json -Recurse\n if (@($locks|Where-Object Length -eq 0).Count) { throw 'Empty dependency lock.' }\n",
       "validate": "$locks=Get-ChildItem (Join-Path $RepoRoot 'samples') -Filter packages.lock.json -Recurse\n if ($locks.Count -lt 2) { throw 'Both API and test dependency locks are required.' }\n\n$locks=Get-ChildItem (Join-Path $RepoRoot 'samples') -Filter packages.lock.json -Recurse\n if (@($locks|Where-Object Length -eq 0).Count) { throw 'Empty dependency lock.' }\n",
       "evidence": "Lock hashes and restore result.",
-      "fix": "Update lock files in a reviewed source change; never relax locked-mode silently."
+      "fix": "Update lock files in a reviewed source change; never relax locked-mode silently.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -40,7 +41,19 @@
       "negative": "$t=Get-ChildItem (Join-Path $WorkRoot 'results') -Filter '*.trx' -Recurse|Select-Object -First 1\n $x=[xml](Get-Content $t.FullName -Raw);if ([int]$x.TestRun.ResultSummary.Counters.failed -gt 0) { throw 'Failed tests cannot pass release gate.' }\n",
       "validate": "$t=Get-ChildItem (Join-Path $WorkRoot 'results') -Filter '*.trx' -Recurse|Select-Object -First 1\n $x=[xml](Get-Content $t.FullName -Raw);if ([int]$x.TestRun.ResultSummary.Counters.passed -lt 1) { throw 'No passing tests.' }\n\n$t=Get-ChildItem (Join-Path $WorkRoot 'results') -Filter '*.trx' -Recurse|Select-Object -First 1\n $x=[xml](Get-Content $t.FullName -Raw);if ([int]$x.TestRun.ResultSummary.Counters.failed -gt 0) { throw 'Failed tests cannot pass release gate.' }\n",
       "evidence": "TRX counts and failure messages with sensitive payloads removed.",
-      "fix": "Repair the failing behavior or test fixture; do not mark a failing test run successful."
+      "fix": "Repair the failing behavior or test fixture; do not mark a failing test run successful.",
+      "coverage": [
+        {
+          "objectiveId": "D1.2.4",
+          "level": "practiced",
+          "reference": "Read TRX counters from an executed test run."
+        },
+        {
+          "objectiveId": "D3.2.3",
+          "level": "practiced",
+          "reference": "Execute the test command and preserve machine-readable TRX results."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -51,7 +64,14 @@
       "negative": "$f=Get-ChildItem (Join-Path $WorkRoot 'coverage') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1\n $c=[xml](Get-Content $f.FullName -Raw);if ([double]$c.coverage.'line-rate' -gt 1) { throw 'Coverage fraction out of range.' }\n",
       "validate": "$f=Get-ChildItem (Join-Path $WorkRoot 'coverage') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1\n $c=[xml](Get-Content $f.FullName -Raw);if ([double]$c.coverage.'line-rate' -le 0) { throw 'No measured line coverage.' }\n\n$f=Get-ChildItem (Join-Path $WorkRoot 'coverage') -Filter coverage.cobertura.xml -Recurse|Select-Object -First 1\n $c=[xml](Get-Content $f.FullName -Raw);if ([double]$c.coverage.'line-rate' -gt 1) { throw 'Coverage fraction out of range.' }\n",
       "evidence": "Cobertura summary and instrumentation scope.",
-      "fix": "Confirm coverlet collector is installed and the tested assembly is included."
+      "fix": "Confirm coverlet collector is installed and the tested assembly is included.",
+      "coverage": [
+        {
+          "objectiveId": "D3.2.4",
+          "level": "practiced",
+          "reference": "Collect real coverage with the checked-in runsettings and inspect measured rates."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -62,7 +82,14 @@
       "negative": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json\n if ($g.minimum -le 0) { throw 'Disabled coverage gate.' }\n",
       "validate": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json\n if (-not $g.passed -or $g.actual -lt $g.minimum) { throw 'Coverage release gate failed.' }\n\n$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json\n if ($g.minimum -le 0) { throw 'Disabled coverage gate.' }\n",
       "evidence": "Actual value, threshold, tested scope, and gate decision.",
-      "fix": "Improve exercised behavior; threshold changes require reviewed justification."
+      "fix": "Improve exercised behavior; threshold changes require reviewed justification.",
+      "coverage": [
+        {
+          "objectiveId": "D3.2.1",
+          "level": "practiced",
+          "reference": "Apply a numerical coverage threshold to measured Cobertura coverage."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -73,13 +100,22 @@
       "negative": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n",
       "validate": "$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.integration -notmatch 'isolated SQLite' -or $s.release.Count -ne 3) { throw 'Test layers/gates incomplete.' }\n\n$s=Get-Content (Join-Path $WorkRoot 'test-strategy.json') -Raw|ConvertFrom-Json\n if ($s.productionTrafficAllowed) { throw 'This exercise cannot send production load.' }\n",
       "evidence": "Layer-to-risk matrix and approval requirements for future load tests.",
-      "fix": "Keep load generation outside ordinary PR CI and bound concurrency, duration, and cost."
+      "fix": "Keep load generation outside ordinary PR CI and bound concurrency, duration, and cost.",
+      "coverage": [
+        {
+          "objectiveId": "D3.2.2",
+          "level": "explained",
+          "reference": "Compare unit/integration/end-to-end responsibilities using the sample test strategy."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json;$g.minimum=1.01;$g.passed=$false;$g|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'coverage-gate.json')\n",
     "diagnose": "Get-Content (Join-Path $WorkRoot 'coverage-gate.json')\n",
-    "repair": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json;$g.minimum=0.65;$g.passed=$g.actual -ge $g.minimum;$g|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'coverage-gate.json')\n"
+    "repair": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json;$g.minimum=0.65;$g.passed=$g.actual -ge $g.minimum;$g|ConvertTo-Json|Set-Content (Join-Path $WorkRoot 'coverage-gate.json')\n",
+    "assert": "$g=Get-Content (Join-Path $WorkRoot 'coverage-gate.json') -Raw|ConvertFrom-Json\nif($g.minimum -ne 0.65 -or $g.actual -lt $g.minimum -or -not $g.passed){throw 'AZ400-L08-FAULT'}\n",
+    "expectedFailure": "AZ400-L08-FAULT"
   },
   "challenge": "Add tests for a missing API validation boundary, show the coverage delta, and explain why high coverage alone does not prove security or resilience.",
   "sources": [
@@ -87,7 +123,7 @@
     "https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests",
     "https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-continuous-test-results-after-build"
   ],
-  "primer": "Passing tests, line coverage, security checks, and approval solve different risks. This course uses a 65% measured-line threshold for the sample; it is not a universal quality target.",
+  "primer": "Passing tests, line coverage, security checks, and approval solve different risks. This course uses a 65% measured-line threshold for the sample; it is not a universal quality target.\n\nThe sample has unit and API integration tests. They exercise fast logic and an in-process application boundary; production routing, browser behavior and sustained load need additional layers. Preserve a TRX report so passed, failed and skipped tests can be distinguished from an empty successful invocation.\n\nCoverage measures executed lines, not assertion quality or every possible branch. The course's 65% minimum is a sample gate, not a recommendation for every system. Collect coverage with the checked-in runsettings, inspect the measured denominator, and apply the threshold to the generated report. An approval or security scan cannot replace test execution.",
   "architecture": {
     "title": "API integration tests and measured coverage gates",
     "nodes": [
@@ -162,5 +198,10 @@
       }
     ],
     "topology": "WebApplicationFactory hosts the sample API in process, with an isolated SQLite database for integration behavior. xUnit exercises HTTP boundaries and Coverlet/TRX provide independent coverage and test results. The sample release gate evaluates measured coverage and passing tests; external load testing requires a separately approved target and budget."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "A passing test command with zero discovered tests is rejected. The coverage gate must consume the actual Cobertura rate and reject an increased threshold above that rate."
 }

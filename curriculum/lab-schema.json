@@ -1,38 +1,278 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AZ400 lab definition v1",
+  "title": "AZ400 lab definition with scoped course evidence",
   "type": "object",
-  "required": ["schemaVersion", "id", "slug", "title", "domain", "cost", "platforms", "objectives", "scenario", "checkpoints", "breakFix", "challenge", "sources"],
+  "required": [
+    "schemaVersion",
+    "id",
+    "slug",
+    "title",
+    "domain",
+    "cost",
+    "platforms",
+    "objectives",
+    "scenario",
+    "checkpoints",
+    "breakFix",
+    "challenge",
+    "sources",
+    "verification",
+    "primer",
+    "solutionNotes"
+  ],
   "properties": {
-    "schemaVersion": {"const": "1.0.0"},
-    "id": {"type": "string", "pattern": "^(0[0-9]|1[0-9]|2[0-7])$"},
-    "slug": {"type": "string", "pattern": "^[0-2][0-9]-[a-z0-9]+(-[a-z0-9]+)*$"},
-    "title": {"type": "string", "minLength": 10},
-    "domain": {"enum": ["foundation", "process", "source", "pipelines", "security", "instrumentation", "capstone"]},
-    "cost": {"type": "string", "minLength": 1},
-    "platforms": {"type": "array", "uniqueItems": true, "items": {"enum": ["local", "github", "azure-devops", "azure"]}},
-    "objectives": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^D[1-5]\\.[1-6]\\.[1-9]$"}},
-    "scenario": {"type": "string", "minLength": 35},
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^(0[0-9]|1[0-9]|2[0-7])$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[0-2][0-9]-[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10
+    },
+    "domain": {
+      "enum": [
+        "foundation",
+        "process",
+        "source",
+        "pipelines",
+        "security",
+        "instrumentation",
+        "capstone"
+      ]
+    },
+    "cost": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platforms": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "local",
+          "github",
+          "azure-devops",
+          "azure"
+        ]
+      }
+    },
+    "objectives": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^D[1-5]\\.[1-6]\\.[1-9]$"
+      }
+    },
+    "scenario": {
+      "type": "string",
+      "minLength": 35
+    },
     "checkpoints": {
-      "type": "array", "minItems": 5, "maxItems": 5,
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
       "items": {
         "type": "object",
-        "required": ["id", "title", "commands", "expected", "positive", "negative", "evidence", "fix", "validate"],
+        "required": [
+          "id",
+          "title",
+          "commands",
+          "expected",
+          "positive",
+          "negative",
+          "evidence",
+          "fix",
+          "validate",
+          "coverage"
+        ],
         "properties": {
-          "id": {"enum": ["CP1", "CP2", "CP3", "CP4", "CP5"]},
-          "title": {"type": "string", "minLength": 5},
-          "commands": {"type": "string", "minLength": 30},
-          "validate": {"type": "string", "minLength": 15},
-          "expected": {"type": "string", "minLength": 10},
-          "positive": {"type": "string", "minLength": 10},
-          "negative": {"type": "string", "minLength": 10},
-          "evidence": {"type": "string", "minLength": 5},
-          "fix": {"type": "string", "minLength": 10}
+          "id": {
+            "enum": [
+              "CP1",
+              "CP2",
+              "CP3",
+              "CP4",
+              "CP5"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 5
+          },
+          "commands": {
+            "type": "string",
+            "minLength": 30
+          },
+          "validate": {
+            "type": "string",
+            "minLength": 15
+          },
+          "expected": {
+            "type": "string",
+            "minLength": 10
+          },
+          "positive": {
+            "type": "string",
+            "minLength": 10
+          },
+          "negative": {
+            "type": "string",
+            "minLength": 10
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 5
+          },
+          "fix": {
+            "type": "string",
+            "minLength": 10
+          },
+          "coverage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "objectiveId",
+                "level",
+                "reference"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "objectiveId": {
+                  "type": "string",
+                  "pattern": "^D[1-5]\\.[1-6]\\.[1-9]$"
+                },
+                "level": {
+                  "enum": [
+                    "explained",
+                    "practiced",
+                    "integrated"
+                  ]
+                },
+                "reference": {
+                  "type": "string",
+                  "minLength": 20
+                }
+              }
+            }
+          }
         }
       }
     },
-    "breakFix": {"type": "object", "required": ["trigger", "diagnose", "repair"]},
-    "challenge": {"type": "string", "minLength": 20},
-    "sources": {"type": "array", "minItems": 1}
+    "breakFix": {
+      "type": "object",
+      "required": [
+        "trigger",
+        "diagnose",
+        "repair",
+        "assert",
+        "expectedFailure"
+      ],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "minLength": 10
+        },
+        "diagnose": {
+          "type": "string",
+          "minLength": 10
+        },
+        "repair": {
+          "type": "string",
+          "minLength": 10
+        },
+        "assert": {
+          "type": "string",
+          "minLength": 10
+        },
+        "expectedFailure": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "challenge": {
+      "type": "string",
+      "minLength": 20
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "status",
+        "scope"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "offline-tested",
+            "not-run"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 30
+        }
+      },
+      "additionalProperties": false
+    },
+    "primer": {
+      "type": "string",
+      "minLength": 300
+    },
+    "solutionNotes": {
+      "type": "string",
+      "minLength": 80
+    },
+    "integration": {
+      "type": "object",
+      "required": [
+        "requiredForCompletion",
+        "prerequisites",
+        "commands",
+        "validate",
+        "expected"
+      ],
+      "properties": {
+        "requiredForCompletion": {
+          "const": true
+        },
+        "prerequisites": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 20
+          }
+        },
+        "preparationCommands": {
+          "type": "string",
+          "minLength": 100
+        },
+        "commands": {
+          "type": "string",
+          "minLength": 100
+        },
+        "validate": {
+          "type": "string",
+          "minLength": 60
+        },
+        "expected": {
+          "type": "string",
+          "minLength": 30
+        }
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "labId": "05",
   "verifiedDate": "2026-10-16",
   "sources": [
@@ -14,1912 +14,1977 @@
     {
       "id": "S3",
       "url": "https://learn.microsoft.com/en-us/azure/devops/repos/git/set-git-repository-permissions?view=azure-devops"
+    },
+    {
+      "id": "S4",
+      "url": "https://git-scm.com/docs/git-clone"
+    },
+    {
+      "id": "S5",
+      "url": "https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization"
+    },
+    {
+      "id": "S6",
+      "url": "https://git-scm.com/docs/git-tag"
+    },
+    {
+      "id": "S7",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets"
+    },
+    {
+      "id": "S8",
+      "url": "https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification"
+    },
+    {
+      "id": "S9",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/security/secure-access-to-repos?view=azure-devops"
     }
   ],
   "questions": [
     {
       "id": "L05-Q001",
       "checkpointId": "CP2",
-      "caseId": "L05-C01",
-      "task": "remedy",
-      "caseContext": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which next change most directly satisfies the stated requirement?",
+      "question": "A repository repeatedly commits large binary artwork. Ordinary clones download large historical blobs. Which mechanism is designed to separate those assets from normal Git objects?",
       "options": [
         {
           "key": "A",
-          "text": "Use Git LFS for supported large binary assets",
-          "rationale": "LFS separates large content from ordinary Git objects. This directly addresses the constraint stated in this case."
+          "text": "Git Large File Storage with the relevant tracking patterns",
+          "rationale": "LFS keeps pointer metadata in Git while storing large file content separately."
         },
         {
           "key": "B",
-          "text": "Install and configure the LFS client then fetch content",
-          "rationale": "Pointers need LFS tooling to resolve actual objects. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Git tags applied to each binary revision",
+          "rationale": "Tags identify revisions but do not change how binary blobs are stored."
         },
         {
           "key": "C",
-          "text": "Grant the pipeline identity scoped access to the shared repository",
-          "rationale": "Cross-repository consumption requires explicit authorization. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "A CODEOWNERS rule for the artwork directory",
+          "rationale": "Ownership routes review but does not move binary content out of Git objects."
+        },
+        {
+          "key": "D",
+          "text": "A longer release-artifact retention period",
+          "rationale": "Pipeline retention does not change the source repository's historical object storage."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "LFS separates large content from ordinary Git objects. The selected answer is use Git LFS for supported large binary assets.",
+      "explanation": "LFS keeps pointer metadata in Git while storing large file content separately. Tags identify revisions but do not change how binary blobs are stored. Ownership routes review but does not move binary content out of Git objects. Pipeline retention does not change the source repository's historical object storage.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q002",
       "checkpointId": "CP2",
-      "caseId": "L05-C01",
-      "task": "diagnosis",
-      "caseContext": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What is normally stored in Git for an asset correctly tracked by Git LFS?",
       "options": [
         {
           "key": "A",
-          "text": "Source access does not imply access to another repository",
-          "rationale": "Private resource boundaries are evaluated independently. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Only the asset's filename with no content identity",
+          "rationale": "A proper pointer includes object identity and size metadata."
         },
         {
           "key": "B",
-          "text": "Binary revisions inflate repository object history",
-          "rationale": "Normal Git stores versions that clones must retrieve. This directly addresses the constraint stated in this case."
+          "text": "A generated executable that downloads arbitrary code during checkout",
+          "rationale": "The pointer is metadata rather than an executable application bootstrap."
         },
         {
           "key": "C",
-          "text": "The checkout retrieved pointer metadata without LFS objects",
-          "rationale": "The repository reference is not the binary payload. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "A pointer describing the associated LFS object",
+          "rationale": "The actual large file content is retrieved through the LFS storage mechanism."
+        },
+        {
+          "key": "D",
+          "text": "Every previous binary version concatenated into the current file",
+          "rationale": "LFS does not use the working-tree pointer as an archive of all versions."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Normal Git stores versions that clones must retrieve. The selected answer is binary revisions inflate repository object history.",
+      "explanation": "The actual large file content is retrieved through the LFS storage mechanism. LFS does not use the working-tree pointer as an archive of all versions. A proper pointer includes object identity and size metadata. The pointer is metadata rather than an executable application bootstrap.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q003",
       "checkpointId": "CP2",
-      "caseId": "L05-C01",
-      "task": "verification",
-      "caseContext": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A team adds an LFS tracking rule today. Why does the repository remain large from older committed binaries?",
       "options": [
         {
           "key": "A",
-          "text": "The expected binary content is present after LFS retrieval",
-          "rationale": "Usable content verifies the complete asset checkout. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "The rule applies only when the repository has no tags",
+          "rationale": "Release tags do not universally prevent future LFS tracking."
         },
         {
           "key": "B",
-          "text": "The pipeline fetches the shared revision without a broad token",
-          "rationale": "The result should prove both access and limited scope. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Every LFS pointer stores another complete copy of the old binary",
+          "rationale": "The pointer itself is small metadata, not the full large asset."
         },
         {
           "key": "C",
-          "text": "A new asset commit stores an LFS pointer",
-          "rationale": "The pointer demonstrates the configured content handling. This directly addresses the constraint stated in this case."
+          "text": "Existing historical blobs are not automatically rewritten by adding a rule",
+          "rationale": "Future tracking and historical migration are separate changes."
+        },
+        {
+          "key": "D",
+          "text": "LFS requires deleting all branches before any file can be tracked",
+          "rationale": "Branch deletion is not a normal prerequisite for adding tracking rules."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "The pointer demonstrates the configured content handling. The selected answer is a new asset commit stores an LFS pointer.",
+      "explanation": "Future tracking and historical migration are separate changes. Branch deletion is not a normal prerequisite for adding tracking rules. Release tags do not universally prevent future LFS tracking. The pointer itself is small metadata, not the full large asset.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q004",
       "checkpointId": "CP2",
-      "caseId": "L05-C01",
-      "task": "safeguard",
-      "caseContext": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Which repository file should be committed so collaborators use the agreed LFS tracking patterns for matching paths?",
       "options": [
         {
           "key": "A",
-          "text": "Verify LFS access separately from repository access",
-          "rationale": "Object storage permissions can differ from Git permissions. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": ".gitattributes with the intended LFS filters",
+          "rationale": "Tracking attributes need to travel with the repository's source configuration."
         },
         {
           "key": "B",
-          "text": "Authorize the exact repository and review referenced content",
-          "rationale": "Shared code becomes part of the execution trust chain. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Only the developer's private shell history",
+          "rationale": "Private history does not configure other clones."
         },
         {
           "key": "C",
-          "text": "Confirm the remote supports LFS and account for quotas",
-          "rationale": "Tracking patterns alone do not provide hosted storage. This directly addresses the constraint stated in this case."
+          "text": "Only a local editor workspace preference",
+          "rationale": "An editor preference is not the shared Git attribute contract."
+        },
+        {
+          "key": "D",
+          "text": "Only an entry in .gitignore for the already tracked asset",
+          "rationale": "Ignoring a path does not establish its LFS content filters."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "Tracking patterns alone do not provide hosted storage. The selected answer is confirm the remote supports LFS and account for quotas.",
+      "explanation": "Tracking attributes need to travel with the repository's source configuration. Private history does not configure other clones. An editor preference is not the shared Git attribute contract. Ignoring a path does not establish its LFS content filters.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q005",
       "checkpointId": "CP2",
-      "caseId": "L05-C01",
-      "task": "tradeoff",
-      "caseContext": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Binary growth: Artists commit large media files repeatedly, and ordinary clones download every historical binary revision. The team selects this remedy: \"Use Git LFS for supported large binary assets.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "The team must reduce old binary history, retain current assets, and avoid collaborators reintroducing the old graph. Which migration plan is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Shared repository availability can affect multiple consumers",
-          "rationale": "Version pins reduce drift but do not remove dependency risk. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Rewrite the server branch silently while collaborators continue pushing old references",
+          "rationale": "Uncoordinated old histories can restore the content graph the migration intended to replace."
         },
         {
           "key": "B",
-          "text": "Existing history needs separate migration",
-          "rationale": "Adding tracking does not remove previously committed blobs. This directly addresses the constraint stated in this case."
+          "text": "Back up and test the history conversion, coordinate affected references and clones, then verify LFS objects and fresh checkout behavior",
+          "rationale": "History rewriting and remote object availability both need a controlled transition."
         },
         {
           "key": "C",
-          "text": "Offline work depends on locally available LFS objects",
-          "rationale": "A pointer alone cannot reconstruct missing binary data. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Add a future LFS pattern and declare all old history already migrated",
+          "rationale": "A new attribute rule does not rewrite previously stored blobs."
+        },
+        {
+          "key": "D",
+          "text": "Delete every local artwork file and ask Git to infer the missing contents later",
+          "rationale": "Removing working files does not provide safe historical conversion or object recovery."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Adding tracking does not remove previously committed blobs. The selected answer is existing history needs separate migration.",
+      "explanation": "History rewriting and remote object availability both need a controlled transition. A new attribute rule does not rewrite previously stored blobs. Removing working files does not provide safe historical conversion or object recovery. Uncoordinated old histories can restore the content graph the migration intended to replace.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q006",
       "checkpointId": "CP2",
-      "caseId": "L05-C02",
-      "task": "remedy",
-      "caseContext": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which next change most directly satisfies the stated requirement?",
+      "question": "A new clone contains a small text pointer where a usable image is expected. The machine has no LFS client. What is the targeted repair?",
       "options": [
         {
           "key": "A",
-          "text": "Evaluate sparse checkout and Scalar-supported repository maintenance",
-          "rationale": "Large-repository tooling reduces unnecessary local work. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Remove the pointer's object ID so the editor treats it as an image",
+          "rationale": "Deleting metadata destroys the retrieval reference rather than fetching content."
         },
         {
           "key": "B",
-          "text": "Use Git LFS for supported large binary assets",
-          "rationale": "LFS separates large content from ordinary Git objects. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Create a lightweight tag for the pointer commit",
+          "rationale": "A tag does not retrieve the LFS object into the working tree."
         },
         {
           "key": "C",
-          "text": "Install and configure the LFS client then fetch content",
-          "rationale": "Pointers need LFS tooling to resolve actual objects. This directly addresses the constraint stated in this case."
+          "text": "Install the supported LFS client and retrieve the asset objects",
+          "rationale": "The checkout needs the tooling that resolves pointers into actual content."
+        },
+        {
+          "key": "D",
+          "text": "Rename the pointer file to a different image extension",
+          "rationale": "Changing its name cannot turn metadata into the missing binary bytes."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Pointers need LFS tooling to resolve actual objects. The selected answer is install and configure the LFS client then fetch content.",
+      "explanation": "The checkout needs the tooling that resolves pointers into actual content. Changing its name cannot turn metadata into the missing binary bytes. Deleting metadata destroys the retrieval reference rather than fetching content. A tag does not retrieve the LFS object into the working tree.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q007",
       "checkpointId": "CP2",
-      "caseId": "L05-C02",
-      "task": "diagnosis",
-      "caseContext": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Which clue distinguishes an LFS pointer from the actual image content expected by an editor?",
       "options": [
         {
           "key": "A",
-          "text": "The working tree includes more content than the task needs",
-          "rationale": "Checkout scope can dominate local resource consumption. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "The file contains LFS version object-identity and size fields",
+          "rationale": "These metadata lines describe another stored object rather than the image bytes."
         },
         {
           "key": "B",
-          "text": "Binary revisions inflate repository object history",
-          "rationale": "Normal Git stores versions that clones must retrieve. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "The image has a filename ending in png",
+          "rationale": "An extension alone does not establish what bytes the file contains."
         },
         {
           "key": "C",
-          "text": "The checkout retrieved pointer metadata without LFS objects",
-          "rationale": "The repository reference is not the binary payload. This directly addresses the constraint stated in this case."
+          "text": "The commit has an associated pull request",
+          "rationale": "Review association does not identify whether a file is a pointer."
+        },
+        {
+          "key": "D",
+          "text": "The repository has an origin remote configured",
+          "rationale": "Remote existence does not prove that LFS content was retrieved."
         }
       ],
       "correctAnswers": [
-        "C"
+        "A"
       ],
-      "explanation": "The repository reference is not the binary payload. The selected answer is the checkout retrieved pointer metadata without LFS objects.",
+      "explanation": "These metadata lines describe another stored object rather than the image bytes. An extension alone does not establish what bytes the file contains. Review association does not identify whether a file is a pointer. Remote existence does not prove that LFS content was retrieved.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S1"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "version https://git-lfs.github.com/spec/v1\noid sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\nsize 5278123"
+      }
     },
     {
       "id": "L05-Q008",
       "checkpointId": "CP2",
-      "caseId": "L05-C02",
-      "task": "verification",
-      "caseContext": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "After repairing LFS setup, what should a functional checkout check verify?",
       "options": [
         {
           "key": "A",
-          "text": "The required service is available with a smaller working tree",
-          "rationale": "The measurement must include usability and local overhead. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Only that the current branch name matches the asset folder",
+          "rationale": "Branch naming does not verify retrieved binary bytes."
         },
         {
           "key": "B",
-          "text": "A new asset commit stores an LFS pointer",
-          "rationale": "The pointer demonstrates the configured content handling. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Only that the repository log lists the asset commit",
+          "rationale": "History presence does not establish local LFS object availability."
         },
         {
           "key": "C",
-          "text": "The expected binary content is present after LFS retrieval",
-          "rationale": "Usable content verifies the complete asset checkout. This directly addresses the constraint stated in this case."
+          "text": "The expected asset content is usable and corresponds to the intended object",
+          "rationale": "A successful Git clone message alone does not establish the binary content arrived."
+        },
+        {
+          "key": "D",
+          "text": "Only that the pointer's text is under one kilobyte",
+          "rationale": "A small pointer is expected before hydration and does not prove usable content."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Usable content verifies the complete asset checkout. The selected answer is the expected binary content is present after LFS retrieval.",
+      "explanation": "A successful Git clone message alone does not establish the binary content arrived. A small pointer is expected before hydration and does not prove usable content. Branch naming does not verify retrieved binary bytes. History presence does not establish local LFS object availability.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q009",
       "checkpointId": "CP2",
-      "caseId": "L05-C02",
-      "task": "safeguard",
-      "caseContext": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A custom LFS endpoint returns403while ordinary Git fetch succeeds. What should be inspected before replacing the credential with an administrator token?",
       "options": [
         {
           "key": "A",
-          "text": "Confirm the remote supports LFS and account for quotas",
-          "rationale": "Tracking patterns alone do not provide hosted storage. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Only the default branch's display name",
+          "rationale": "A branch label does not explain content-endpoint authorization failure."
         },
         {
           "key": "B",
-          "text": "Verify LFS access separately from repository access",
-          "rationale": "Object storage permissions can differ from Git permissions. This directly addresses the constraint stated in this case."
+          "text": "Only whether the image editor is up to date",
+          "rationale": "Editor behavior cannot repair the server's explicit denied retrieval."
         },
         {
           "key": "C",
-          "text": "Test cross-service build dependencies before narrowing checkout",
-          "rationale": "Sparse content can omit inputs required by tooling. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Only the total number of repository tags",
+          "rationale": "Tag inventory does not identify the failed endpoint credential or permission."
+        },
+        {
+          "key": "D",
+          "text": "The configured LFS endpoint and its required scoped authorization",
+          "rationale": "Git object retrieval and the configured content endpoint can fail at different access boundaries."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Object storage permissions can differ from Git permissions. The selected answer is verify LFS access separately from repository access.",
+      "explanation": "Git object retrieval and the configured content endpoint can fail at different access boundaries. A branch label does not explain content-endpoint authorization failure. Editor behavior cannot repair the server's explicit denied retrieval. Tag inventory does not identify the failed endpoint credential or permission.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q010",
       "checkpointId": "CP2",
-      "caseId": "L05-C02",
-      "task": "tradeoff",
-      "caseContext": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Missing assets: A checkout contains small pointer files instead of usable artwork on a machine without the LFS client. The team selects this remedy: \"Install and configure the LFS client then fetch content.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Learners need an offline demonstration using selected LFS assets, but storage and bandwidth are limited. Which preparation meets both constraints?",
       "options": [
         {
           "key": "A",
-          "text": "Existing history needs separate migration",
-          "rationale": "Adding tracking does not remove previously committed blobs. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Remove all tracking rules before going offline",
+          "rationale": "Changing attributes does not download unavailable asset content."
         },
         {
           "key": "B",
-          "text": "Offline work depends on locally available LFS objects",
-          "rationale": "A pointer alone cannot reconstruct missing binary data. This directly addresses the constraint stated in this case."
+          "text": "Retrieve the required versions while online, verify their local availability, and document which assets are intentionally excluded",
+          "rationale": "Pointers alone cannot supply missing offline bytes, while selecting required content controls resource use."
         },
         {
           "key": "C",
-          "text": "Optimization cannot remove genuine cross-repository dependencies",
-          "rationale": "Some tasks still need broader source availability. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Clone only the pointer metadata and assume the offline client can reconstruct the image",
+          "rationale": "A content hash is not a reversible encoding of the missing binary."
+        },
+        {
+          "key": "D",
+          "text": "Fetch every historical asset version regardless of the exercise scope",
+          "rationale": "That ignores the explicit storage and transfer budget."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "A pointer alone cannot reconstruct missing binary data. The selected answer is offline work depends on locally available LFS objects.",
+      "explanation": "Pointers alone cannot supply missing offline bytes, while selecting required content controls resource use. A content hash is not a reversible encoding of the missing binary. That ignores the explicit storage and transfer budget. Changing attributes does not download unavailable asset content.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q011",
       "checkpointId": "CP4",
-      "caseId": "L05-C03",
-      "task": "remedy",
-      "caseContext": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which next change most directly satisfies the stated requirement?",
+      "question": "Developers use one service in a very large monorepo. What problem can sparse checkout directly reduce?",
       "options": [
         {
           "key": "A",
-          "text": "Install and configure the LFS client then fetch content",
-          "rationale": "Pointers need LFS tooling to resolve actual objects. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "The amount of repository content populated in the working tree",
+          "rationale": "A narrower checkout can omit unrelated paths from local working files."
         },
         {
           "key": "B",
-          "text": "Evaluate sparse checkout and Scalar-supported repository maintenance",
-          "rationale": "Large-repository tooling reduces unnecessary local work. This directly addresses the constraint stated in this case."
+          "text": "The need to review changes before merging",
+          "rationale": "Checkout scope does not replace review governance."
         },
         {
           "key": "C",
-          "text": "Reference a governed shared component at a deliberate version",
-          "rationale": "A maintained shared source reduces unmanaged copy divergence. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Every remote object's historical storage automatically",
+          "rationale": "Working-tree sparsity alone does not rewrite the remote history."
+        },
+        {
+          "key": "D",
+          "text": "The requirement for access to private source",
+          "rationale": "Narrow content selection does not bypass repository authorization."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Large-repository tooling reduces unnecessary local work. The selected answer is evaluate sparse checkout and Scalar-supported repository maintenance.",
+      "explanation": "A narrower checkout can omit unrelated paths from local working files. Checkout scope does not replace review governance. Working-tree sparsity alone does not rewrite the remote history. Narrow content selection does not bypass repository authorization.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q012",
       "checkpointId": "CP4",
-      "caseId": "L05-C03",
-      "task": "diagnosis",
-      "caseContext": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A developer wants a sparse working tree and reduced initial blob transfer where the server supports partial clone. Which combination addresses both concerns?",
       "options": [
         {
           "key": "A",
-          "text": "The working tree includes more content than the task needs",
-          "rationale": "Checkout scope can dominate local resource consumption. This directly addresses the constraint stated in this case."
+          "text": "Use supported partial-clone filtering together with sparse checkout",
+          "rationale": "The mechanisms address object transfer and populated working paths separately."
         },
         {
           "key": "B",
-          "text": "Independent copies no longer share an update mechanism",
-          "rationale": "Copying creates separate maintenance lifecycles. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Use sparse checkout alone and assume no unselected blobs can ever exist locally",
+          "rationale": "Working-tree sparsity and object availability are different concepts."
         },
         {
           "key": "C",
-          "text": "The checkout retrieved pointer metadata without LFS objects",
-          "rationale": "The repository reference is not the binary payload. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Delete unrelated files after a full clone and assume transfer was avoided",
+          "rationale": "Postclone deletion cannot undo bytes already downloaded."
+        },
+        {
+          "key": "D",
+          "text": "Apply a release tag before cloning and assume it removes all historical objects",
+          "rationale": "A tag identifies a revision rather than defining a universal transfer filter."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Checkout scope can dominate local resource consumption. The selected answer is the working tree includes more content than the task needs.",
+      "explanation": "The mechanisms address object transfer and populated working paths separately. Working-tree sparsity and object availability are different concepts. Postclone deletion cannot undo bytes already downloaded. A tag identifies a revision rather than defining a universal transfer filter.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S4"
+      ],
+      "exhibit": {
+        "language": "bash",
+        "code": "git clone --filter=blob:none --sparse https://example.invalid/team/monorepo.git\ngit sparse-checkout set services/api shared/contracts"
+      }
     },
     {
       "id": "L05-Q013",
       "checkpointId": "CP4",
-      "caseId": "L05-C03",
-      "task": "verification",
-      "caseContext": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "applied",
-      "question": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A sparse checkout builds incorrectly because a shared project was omitted. What should the team adjust?",
       "options": [
         {
           "key": "A",
-          "text": "The required service is available with a smaller working tree",
-          "rationale": "The measurement must include usability and local overhead. This directly addresses the constraint stated in this case."
+          "text": "Remove the missing project reference without checking its functionality",
+          "rationale": "Changing the application contract is not a safe checkout optimization."
         },
         {
           "key": "B",
-          "text": "Consumers report the intended shared component revision",
-          "rationale": "Version evidence makes cross-repository adoption traceable. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Include the paths required by the service's actual build dependency graph",
+          "rationale": "A smaller working tree must still contain required inputs."
         },
         {
           "key": "C",
-          "text": "The expected binary content is present after LFS retrieval",
-          "rationale": "Usable content verifies the complete asset checkout. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Disable the compiler's missing-project errors",
+          "rationale": "Ignoring a missing dependency does not produce a correct build."
+        },
+        {
+          "key": "D",
+          "text": "Commit copied binaries from a developer's old output folder",
+          "rationale": "That substitutes uncontrolled build products for declared source dependencies."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "The measurement must include usability and local overhead. The selected answer is the required service is available with a smaller working tree.",
+      "explanation": "A smaller working tree must still contain required inputs. Ignoring a missing dependency does not produce a correct build. That substitutes uncontrolled build products for declared source dependencies. Changing the application contract is not a safe checkout optimization.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q014",
       "checkpointId": "CP4",
-      "caseId": "L05-C03",
-      "task": "safeguard",
-      "caseContext": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "applied",
-      "question": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should large-repository maintenance be evaluated separately from LFS tracking?",
       "options": [
         {
           "key": "A",
-          "text": "Review shared changes before advancing consumer references",
-          "rationale": "One central mistake can affect many dependent repositories. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "The two techniques require contradictory repository permission models",
+          "rationale": "Their purposes differ without requiring an inherent authorization conflict."
         },
         {
           "key": "B",
-          "text": "Verify LFS access separately from repository access",
-          "rationale": "Object storage permissions can differ from Git permissions. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Repository maintenance and large-content storage address different sources of overhead",
+          "rationale": "One improves repository operations while the other changes handling of selected large files."
         },
         {
           "key": "C",
-          "text": "Test cross-service build dependencies before narrowing checkout",
-          "rationale": "Sparse content can omit inputs required by tooling. This directly addresses the constraint stated in this case."
+          "text": "Scalar automatically converts every binary to an LFS pointer",
+          "rationale": "Repository management does not imply that content migration."
+        },
+        {
+          "key": "D",
+          "text": "LFS makes every Git history operation constant time",
+          "rationale": "Large-file separation does not eliminate all repository-scale costs."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Sparse content can omit inputs required by tooling. The selected answer is test cross-service build dependencies before narrowing checkout.",
+      "explanation": "One improves repository operations while the other changes handling of selected large files. Repository management does not imply that content migration. Large-file separation does not eliminate all repository-scale costs. Their purposes differ without requiring an inherent authorization conflict.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q015",
       "checkpointId": "CP4",
-      "caseId": "L05-C03",
-      "task": "tradeoff",
-      "caseContext": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "advanced",
-      "question": "Huge working tree: Developers need one service from a monorepo, but checkout and maintenance overhead slow their laptops. The team selects this remedy: \"Evaluate sparse checkout and Scalar-supported repository maintenance.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A monorepo contains huge binary history, slow local maintenance, and builds requiring shared projects outside each service folder. Which rollout is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Offline work depends on locally available LFS objects",
-          "rationale": "A pointer alone cannot reconstruct missing binary data. That addresses a different requirement: Missing assets. It does not directly resolve this case's stated constraint."
+          "text": "Enable sparse checkout for only the service folder and assume every build dependency is implicit",
+          "rationale": "Omitted shared projects can still be required build inputs."
         },
         {
           "key": "B",
-          "text": "Optimization cannot remove genuine cross-repository dependencies",
-          "rationale": "Some tasks still need broader source availability. This directly addresses the constraint stated in this case."
+          "text": "Adopt LFS for new assets and claim old history and every Git operation are optimized",
+          "rationale": "Future tracking does not rewrite old blobs or solve all repository-maintenance overhead."
         },
         {
           "key": "C",
-          "text": "Central sharing creates a dependency and coordination point",
-          "rationale": "Consumers need versioning and compatibility policies. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Rewrite all history immediately without checking remote support or collaborator readiness",
+          "rationale": "The migration can break content access and existing clones without establishing the desired performance benefit."
+        },
+        {
+          "key": "D",
+          "text": "Measure each bottleneck, test supported LFS and repository-scale techniques, and validate complete service dependency checkouts before broad adoption",
+          "rationale": "The design separates different problems and verifies correctness rather than assuming one setting fixes all three."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Some tasks still need broader source availability. The selected answer is optimization cannot remove genuine cross-repository dependencies.",
+      "explanation": "The design separates different problems and verifies correctness rather than assuming one setting fixes all three. Omitted shared projects can still be required build inputs. Future tracking does not rewrite old blobs or solve all repository-maintenance overhead. The migration can break content access and existing clones without establishing the desired performance benefit.",
       "sourceIds": [
         "S1",
         "S2",
-        "S3"
+        "S4"
       ]
     },
     {
       "id": "L05-Q016",
       "checkpointId": "CP5",
-      "caseId": "L05-C04",
-      "task": "remedy",
-      "caseContext": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "foundational",
-      "question": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which next change most directly satisfies the stated requirement?",
+      "question": "Twenty repositories copy one security-sensitive build script and now apply different fixes. Which change reduces unmanaged copy drift?",
       "options": [
         {
           "key": "A",
-          "text": "Reference a governed shared component at a deliberate version",
-          "rationale": "A maintained shared source reduces unmanaged copy divergence. This directly addresses the constraint stated in this case."
+          "text": "Consume a governed shared component at an intentional version",
+          "rationale": "The shared implementation provides a controlled update path for consumers."
         },
         {
           "key": "B",
-          "text": "Assign the narrow repository role needed for documentation review",
-          "rationale": "Deletion rights exceed the required collaboration task. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Copy the newest file manually into a few selected repositories",
+          "rationale": "The remaining independent copies still have separate maintenance lifecycles."
         },
         {
           "key": "C",
-          "text": "Evaluate sparse checkout and Scalar-supported repository maintenance",
-          "rationale": "Large-repository tooling reduces unnecessary local work. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Rename every copied script to the same filename",
+          "rationale": "Equal names do not establish equal content or a common update mechanism."
+        },
+        {
+          "key": "D",
+          "text": "Delete the script's version information so consumers appear uniform",
+          "rationale": "Removing identity makes drift harder to detect rather than fixing it."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "A maintained shared source reduces unmanaged copy divergence. The selected answer is reference a governed shared component at a deliberate version.",
+      "explanation": "The shared implementation provides a controlled update path for consumers. The remaining independent copies still have separate maintenance lifecycles. Equal names do not establish equal content or a common update mechanism. Removing identity makes drift harder to detect rather than fixing it.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q017",
       "checkpointId": "CP5",
-      "caseId": "L05-C04",
-      "task": "diagnosis",
-      "caseContext": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "applied",
-      "question": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A pipeline can read its own private repository but cannot read the private shared-template repository. What is the likely access requirement?",
       "options": [
         {
           "key": "A",
-          "text": "Independent copies no longer share an update mechanism",
-          "rationale": "Copying creates separate maintenance lifecycles. This directly addresses the constraint stated in this case."
+          "text": "Make the shared repository public immediately",
+          "rationale": "Public exposure is unnecessary for supported private cross-repository access."
         },
         {
           "key": "B",
-          "text": "The principal inherited an overly broad role",
-          "rationale": "Task intent does not automatically constrain permission grants. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Disable source protection on the consuming repository",
+          "rationale": "Its merge policy does not grant access to another private source."
         },
         {
           "key": "C",
-          "text": "The working tree includes more content than the task needs",
-          "rationale": "Checkout scope can dominate local resource consumption. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Authorize the pipeline identity for the specific additional repository",
+          "rationale": "Source access does not automatically extend to every private dependency."
+        },
+        {
+          "key": "D",
+          "text": "Grant every contributor project-administrator access",
+          "rationale": "That broadens unrelated authority instead of authorizing the actual consumer."
         }
       ],
       "correctAnswers": [
-        "A"
+        "C"
       ],
-      "explanation": "Copying creates separate maintenance lifecycles. The selected answer is independent copies no longer share an update mechanism.",
+      "explanation": "Source access does not automatically extend to every private dependency. That broadens unrelated authority instead of authorizing the actual consumer. Public exposure is unnecessary for supported private cross-repository access. Its merge policy does not grant access to another private source.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S9"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Self repository checkout:success\nShared template repository:403Forbidden\nExecution identity:project build service\nRequested operation:read approved template revision"
+      }
     },
     {
       "id": "L05-Q018",
       "checkpointId": "CP5",
-      "caseId": "L05-C04",
-      "task": "verification",
-      "caseContext": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "applied",
-      "question": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A shared component uses a moving branch and breaks unchanged consumers. What reference policy improves repeatability?",
       "options": [
         {
           "key": "A",
-          "text": "The required service is available with a smaller working tree",
-          "rationale": "The measurement must include usability and local overhead. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Always consume the newest branch head and suppress failure notifications",
+          "rationale": "That preserves uncontrolled change while hiding its consequences."
         },
         {
           "key": "B",
-          "text": "Consumers report the intended shared component revision",
-          "rationale": "Version evidence makes cross-repository adoption traceable. This directly addresses the constraint stated in this case."
+          "text": "Use the same filename in every repository without tracking the source revision",
+          "rationale": "A name cannot identify which shared implementation executed."
         },
         {
           "key": "C",
-          "text": "The contractor can review but cannot delete the repository",
-          "rationale": "Positive and negative tests demonstrate the access boundary. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Cache the first fetched copy forever without an upgrade owner",
+          "rationale": "That can retain defects and security problems indefinitely."
+        },
+        {
+          "key": "D",
+          "text": "Pin consumption to a reviewed immutable revision and update it deliberately",
+          "rationale": "The executable dependency should not change independently without an intentional consumer update."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "Version evidence makes cross-repository adoption traceable. The selected answer is consumers report the intended shared component revision.",
+      "explanation": "The executable dependency should not change independently without an intentional consumer update. That preserves uncontrolled change while hiding its consequences. A name cannot identify which shared implementation executed. That can retain defects and security problems indefinitely.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q019",
       "checkpointId": "CP5",
-      "caseId": "L05-C04",
-      "task": "safeguard",
-      "caseContext": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "applied",
-      "question": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Which evidence proves that a consumer actually adopted a required shared-script fix?",
       "options": [
         {
           "key": "A",
-          "text": "Inspect inherited and explicit permissions before changing roles",
-          "rationale": "Effective access can come through several group memberships. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "The shared repository's default branch contains the fix",
+          "rationale": "The consumer may still reference a different revision."
         },
         {
           "key": "B",
-          "text": "Test cross-service build dependencies before narrowing checkout",
-          "rationale": "Sparse content can omit inputs required by tooling. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "The author sent an update message to the team",
+          "rationale": "Communication alone does not establish the executable dependency used."
         },
         {
           "key": "C",
-          "text": "Review shared changes before advancing consumer references",
-          "rationale": "One central mistake can affect many dependent repositories. This directly addresses the constraint stated in this case."
+          "text": "The run records the approved shared revision and executes the relevant corrected behavior",
+          "rationale": "A version assertion and behavioral check connect the consumer to the intended fix."
+        },
+        {
+          "key": "D",
+          "text": "The consumer repository includes a comment saying latest template",
+          "rationale": "A comment can be stale and does not prove runtime resolution."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "One central mistake can affect many dependent repositories. The selected answer is review shared changes before advancing consumer references.",
+      "explanation": "A version assertion and behavioral check connect the consumer to the intended fix. A comment can be stale and does not prove runtime resolution. The consumer may still reference a different revision. Communication alone does not establish the executable dependency used.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q020",
       "checkpointId": "CP5",
-      "caseId": "L05-C04",
-      "task": "tradeoff",
-      "caseContext": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings.",
       "objectiveIds": [
         "D2.2.2"
       ],
       "difficulty": "advanced",
-      "question": "Shared template drift: Twenty repositories copy one build script and each copy now applies different security settings. The team selects this remedy: \"Reference a governed shared component at a deliberate version.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A shared security fix must reach many repositories, but one application is incompatible with its new interface. Which update process balances propagation and safety?",
       "options": [
         {
           "key": "A",
-          "text": "Optimization cannot remove genuine cross-repository dependencies",
-          "rationale": "Some tasks still need broader source availability. That addresses a different requirement: Huge working tree. It does not directly resolve this case's stated constraint."
+          "text": "Maintain an untracked special copy for the incompatible application",
+          "rationale": "An undocumented fork recreates unmanaged drift and hides its remediation obligation."
         },
         {
           "key": "B",
-          "text": "Central sharing creates a dependency and coordination point",
-          "rationale": "Consumers need versioning and compatibility policies. This directly addresses the constraint stated in this case."
+          "text": "Version the change, test representative consumers, stage adoption, and track remaining exceptions with owners",
+          "rationale": "A central fix still needs compatibility evidence and accountable rollout across its consumers."
         },
         {
           "key": "C",
-          "text": "Narrow roles can require explicit onboarding updates",
-          "rationale": "New duties should trigger a deliberate permission review. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Force every consumer to a moving main reference before running tests",
+          "rationale": "That can distribute an incompatible interface to all builds simultaneously."
+        },
+        {
+          "key": "D",
+          "text": "Leave every consumer permanently pinned to its old revision",
+          "rationale": "That avoids interface work by retaining the security defect."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Consumers need versioning and compatibility policies. The selected answer is central sharing creates a dependency and coordination point.",
+      "explanation": "A central fix still needs compatibility evidence and accountable rollout across its consumers. That can distribute an incompatible interface to all builds simultaneously. That avoids interface work by retaining the security defect. An undocumented fork recreates unmanaged drift and hides its remediation obligation.",
       "sourceIds": [
-        "S1",
         "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q021",
       "checkpointId": "CP1",
-      "caseId": "L05-C05",
-      "task": "remedy",
-      "caseContext": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which next change most directly satisfies the stated requirement?",
+      "question": "A contractor needs to review one private repository but currently has permission to delete it. What is the appropriate access correction?",
       "options": [
         {
           "key": "A",
-          "text": "Assign the narrow repository role needed for documentation review",
-          "rationale": "Deletion rights exceed the required collaboration task. This directly addresses the constraint stated in this case."
+          "text": "Keep the broad role and rely only on a request not to delete",
+          "rationale": "A written request does not constrain effective capability."
         },
         {
           "key": "B",
-          "text": "Inspect effective permissions and remove the unintended denial",
-          "rationale": "Effective access includes overlapping grants and restrictions. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "Assign the narrow repository role required by the review task",
+          "rationale": "Deletion is beyond the stated collaboration responsibility."
         },
         {
           "key": "C",
-          "text": "Reference a governed shared component at a deliberate version",
-          "rationale": "A maintained shared source reduces unmanaged copy divergence. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Remove branch protections while retaining the broad role",
+          "rationale": "That weakens a different boundary and does not remove deletion authority."
+        },
+        {
+          "key": "D",
+          "text": "Grant organization ownership so access problems stop occurring",
+          "rationale": "That increases unnecessary privilege rather than reducing it."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Deletion rights exceed the required collaboration task. The selected answer is assign the narrow repository role needed for documentation review.",
+      "explanation": "Deletion is beyond the stated collaboration responsibility. That weakens a different boundary and does not remove deletion authority. That increases unnecessary privilege rather than reducing it. A written request does not constrain effective capability.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L05-Q022",
       "checkpointId": "CP1",
-      "caseId": "L05-C05",
-      "task": "diagnosis",
-      "caseContext": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A role change appears ineffective because the user also belongs to another privileged group. What must be inspected?",
       "options": [
         {
           "key": "A",
-          "text": "Independent copies no longer share an update mechanism",
-          "rationale": "Copying creates separate maintenance lifecycles. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Only whether a pull request was previously approved",
+          "rationale": "Past review activity does not establish current access grants."
         },
         {
           "key": "B",
-          "text": "The principal inherited an overly broad role",
-          "rationale": "Task intent does not automatically constrain permission grants. This directly addresses the constraint stated in this case."
+          "text": "Effective access including inherited and explicit assignments",
+          "rationale": "One visible role does not necessarily explain every source of authority."
         },
         {
           "key": "C",
-          "text": "An explicit deny can override the expected allow",
-          "rationale": "Group membership must be evaluated as a whole. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "Only the most recently edited role label",
+          "rationale": "Earlier memberships can continue to grant permissions."
+        },
+        {
+          "key": "D",
+          "text": "Only the user's Git author name",
+          "rationale": "Commit attribution does not define repository authorization."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Task intent does not automatically constrain permission grants. The selected answer is the principal inherited an overly broad role.",
+      "explanation": "One visible role does not necessarily explain every source of authority. Earlier memberships can continue to grant permissions. Commit attribution does not define repository authorization. Past review activity does not establish current access grants.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S3",
+        "S5"
       ]
     },
     {
       "id": "L05-Q023",
       "checkpointId": "CP1",
-      "caseId": "L05-C05",
-      "task": "verification",
-      "caseContext": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which validation best demonstrates suitable contractor access within a disposable training scope?",
       "options": [
         {
           "key": "A",
-          "text": "The permitted push succeeds without broad administrative elevation",
-          "rationale": "The repair should address the actual permission conflict. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "The contractor's role description contains the word limited",
+          "rationale": "Labels do not establish the effective permissions actually granted."
         },
         {
           "key": "B",
-          "text": "Consumers report the intended shared component revision",
-          "rationale": "Version evidence makes cross-repository adoption traceable. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "The contractor can perform the intended review and lacks the unneeded destructive capability",
+          "rationale": "Least privilege requires useful access as well as a meaningful denied boundary."
         },
         {
           "key": "C",
-          "text": "The contractor can review but cannot delete the repository",
-          "rationale": "Positive and negative tests demonstrate the access boundary. This directly addresses the constraint stated in this case."
+          "text": "The contractor cannot access anything including the assigned review",
+          "rationale": "That fails the legitimate collaboration requirement."
+        },
+        {
+          "key": "D",
+          "text": "The contractor can change organization-wide policies",
+          "rationale": "That demonstrates broader authority than this task needs."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Positive and negative tests demonstrate the access boundary. The selected answer is the contractor can review but cannot delete the repository.",
+      "explanation": "Least privilege requires useful access as well as a meaningful denied boundary. That fails the legitimate collaboration requirement. That demonstrates broader authority than this task needs. Labels do not establish the effective permissions actually granted.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
       "id": "L05-Q024",
       "checkpointId": "CP1",
-      "caseId": "L05-C05",
-      "task": "safeguard",
-      "caseContext": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why is granting project administration a poor default fix for a denied documentation review operation?",
       "options": [
         {
           "key": "A",
-          "text": "Inspect inherited and explicit permissions before changing roles",
-          "rationale": "Effective access can come through several group memberships. This directly addresses the constraint stated in this case."
+          "text": "Role elevation automatically removes all inherited restrictions safely",
+          "rationale": "Effective permission behavior still requires deliberate inspection."
         },
         {
           "key": "B",
-          "text": "Check the scope of each deny before removing it",
-          "rationale": "A restriction may intentionally protect another resource. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "It can grant broad unrelated capabilities instead of correcting the exact missing access",
+          "rationale": "The permission should match the task and effective cause of denial."
         },
         {
           "key": "C",
-          "text": "Review shared changes before advancing consumer references",
-          "rationale": "One central mistake can affect many dependent repositories. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Administrative roles always lack repository read access",
+          "rationale": "The problem is unnecessary breadth rather than a universal absence of reading."
+        },
+        {
+          "key": "D",
+          "text": "Review tasks require the ability to delete every project",
+          "rationale": "Destructive project control is not inherent to documentation review."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Effective access can come through several group memberships. The selected answer is inspect inherited and explicit permissions before changing roles.",
+      "explanation": "The permission should match the task and effective cause of denial. The problem is unnecessary breadth rather than a universal absence of reading. Destructive project control is not inherent to documentation review. Effective permission behavior still requires deliberate inspection.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S3",
+        "S5"
       ]
     },
     {
       "id": "L05-Q025",
       "checkpointId": "CP1",
-      "caseId": "L05-C05",
-      "task": "tradeoff",
-      "caseContext": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Excess repository rights: A contractor who only reviews documentation can delete the entire training repository. The team selects this remedy: \"Assign the narrow repository role needed for documentation review.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A temporary collaborator needs one repository for two weeks, must not delete it, and should lose access afterward. Which onboarding plan is appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Central sharing creates a dependency and coordination point",
-          "rationale": "Consumers need versioning and compatibility policies. That addresses a different requirement: Shared template drift. It does not directly resolve this case's stated constraint."
+          "text": "Grant the necessary scoped role, verify allowed and denied capabilities, and assign an access-removal owner and date",
+          "rationale": "The plan covers usable least privilege and the temporary relationship's lifecycle."
         },
         {
           "key": "B",
-          "text": "Narrow roles can require explicit onboarding updates",
-          "rationale": "New duties should trigger a deliberate permission review. This directly addresses the constraint stated in this case."
+          "text": "Grant a permanent organization-owner role and record the intended two-week use in a comment",
+          "rationale": "The capability and duration exceed the requirement despite the note."
         },
         {
           "key": "C",
-          "text": "Complex group inheritance makes access harder to reason about",
-          "rationale": "Simpler role boundaries reduce surprising combinations. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "New duties should trigger a deliberate permission review. The selected answer is narrow roles can require explicit onboarding updates.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L05-Q026",
-      "checkpointId": "CP1",
-      "caseId": "L05-C06",
-      "task": "remedy",
-      "caseContext": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission.",
-      "objectiveIds": [
-        "D2.2.3"
-      ],
-      "difficulty": "foundational",
-      "question": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which next change most directly satisfies the stated requirement?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Inspect effective permissions and remove the unintended denial",
-          "rationale": "Effective access includes overlapping grants and restrictions. This directly addresses the constraint stated in this case."
+          "text": "Share an existing maintainer's credentials and ask the contractor not to use destructive commands",
+          "rationale": "Shared broad credentials undermine both attribution and effective restriction."
         },
         {
-          "key": "B",
-          "text": "Use distinct release tags and protect established release references",
-          "rationale": "A release identifier should resolve consistently over time. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "C",
-          "text": "Assign the narrow repository role needed for documentation review",
-          "rationale": "Deletion rights exceed the required collaboration task. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "key": "D",
+          "text": "Rely on removing the collaborator from one group without checking other memberships",
+          "rationale": "Other assignments can preserve unintended access after the nominal expiry."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Effective access includes overlapping grants and restrictions. The selected answer is inspect effective permissions and remove the unintended denial.",
+      "explanation": "The plan covers usable least privilege and the temporary relationship's lifecycle. The capability and duration exceed the requirement despite the note. Shared broad credentials undermine both attribution and effective restriction. Other assignments can preserve unintended access after the nominal expiry.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S3",
+        "S5"
       ]
+    },
+    {
+      "id": "L05-Q026",
+      "checkpointId": "CP1",
+      "objectiveIds": [
+        "D2.2.3"
+      ],
+      "difficulty": "foundational",
+      "question": "An Azure Repos contributor belongs to an Allow group and an explicit Deny group at the relevant permission scope. Why can the push fail?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The Git author email must match the group name",
+          "rationale": "Commit metadata is separate from the server's permission decision."
+        },
+        {
+          "key": "B",
+          "text": "A successful clone guarantees permission to push",
+          "rationale": "Read access and source modification are distinct capabilities."
+        },
+        {
+          "key": "C",
+          "text": "The effective permission includes the conflicting restriction rather than only the expected grant",
+          "rationale": "Overlapping assignments must be evaluated at the actual applicable scope."
+        },
+        {
+          "key": "D",
+          "text": "Membership in any Allow group always overrides every Deny",
+          "rationale": "That ignores how effective restrictions can constrain an ordinary contributor."
+        }
+      ],
+      "correctAnswers": [
+        "C"
+      ],
+      "explanation": "Overlapping assignments must be evaluated at the actual applicable scope. That ignores how effective restrictions can constrain an ordinary contributor. Commit metadata is separate from the server's permission decision. Read access and source modification are distinct capabilities.",
+      "sourceIds": [
+        "S3"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Ordinary contributor at repository scope:\nGroupA Contribute:Allow\nGroupB Contribute:Deny\nObserved push:permission denied"
+      }
     },
     {
       "id": "L05-Q027",
       "checkpointId": "CP1",
-      "caseId": "L05-C06",
-      "task": "diagnosis",
-      "caseContext": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What should a permission investigation retrieve before changing a failing Azure Repos contributor's role?",
       "options": [
         {
           "key": "A",
-          "text": "The principal inherited an overly broad role",
-          "rationale": "Task intent does not automatically constrain permission grants. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "The identity's effective permissions and relevant group and branch scopes",
+          "rationale": "The denied operation must be traced to its actual assignments."
         },
         {
           "key": "B",
-          "text": "An explicit deny can override the expected allow",
-          "rationale": "Group membership must be evaluated as a whole. This directly addresses the constraint stated in this case."
+          "text": "Only the repository's default branch name",
+          "rationale": "The name alone does not explain the permission sources."
         },
         {
           "key": "C",
-          "text": "A mutable tag was being treated as immutable provenance",
-          "rationale": "The same label now identifies different source states. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "Only the number of commits created by that user",
+          "rationale": "Activity history does not define current authorization."
+        },
+        {
+          "key": "D",
+          "text": "Only whether the user can open a dashboard",
+          "rationale": "Dashboard viewing is not proof of repository write permission."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Group membership must be evaluated as a whole. The selected answer is an explicit deny can override the expected allow.",
+      "explanation": "The denied operation must be traced to its actual assignments. The name alone does not explain the permission sources. Activity history does not define current authorization. Dashboard viewing is not proof of repository write permission.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L05-Q028",
       "checkpointId": "CP1",
-      "caseId": "L05-C06",
-      "task": "verification",
-      "caseContext": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which repair demonstrates that a conflicting permission was fixed without unnecessary elevation?",
       "options": [
         {
           "key": "A",
-          "text": "The contractor can review but cannot delete the repository",
-          "rationale": "Positive and negative tests demonstrate the access boundary. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "The user can now delete every project in the organization",
+          "rationale": "That is excessive access rather than a targeted repository repair."
         },
         {
           "key": "B",
-          "text": "The permitted push succeeds without broad administrative elevation",
-          "rationale": "The repair should address the actual permission conflict. This directly addresses the constraint stated in this case."
+          "text": "The user switches to an administrator's credential for every operation",
+          "rationale": "That bypasses rather than resolves the ordinary identity's permission issue."
         },
         {
           "key": "C",
-          "text": "The release tag resolves to the documented commit",
-          "rationale": "Provenance depends on stable reference resolution. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "All explicit restrictions are removed from every repository",
+          "rationale": "That broadens scope far beyond the identified conflict."
+        },
+        {
+          "key": "D",
+          "text": "The intended push succeeds under the ordinary identity while unrelated protected actions remain denied",
+          "rationale": "The corrected boundary should permit required work and retain restrictions beyond it."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The repair should address the actual permission conflict. The selected answer is the permitted push succeeds without broad administrative elevation.",
+      "explanation": "The corrected boundary should permit required work and retain restrictions beyond it. That is excessive access rather than a targeted repository repair. That bypasses rather than resolves the ordinary identity's permission issue. That broadens scope far beyond the identified conflict.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L05-Q029",
       "checkpointId": "CP1",
-      "caseId": "L05-C06",
-      "task": "safeguard",
-      "caseContext": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A deny assignment may intentionally protect another repository. What should precede removing it?",
       "options": [
         {
           "key": "A",
-          "text": "Check the scope of each deny before removing it",
-          "rationale": "A restriction may intentionally protect another resource. This directly addresses the constraint stated in this case."
+          "text": "Delete the group from the organization before examining membership",
+          "rationale": "That risks unrelated access changes without understanding the boundary."
         },
         {
           "key": "B",
-          "text": "Restrict deletion and movement of release tags where supported",
-          "rationale": "Accidental rewrites can invalidate published release evidence. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "Assume the oldest assignment is always obsolete",
+          "rationale": "Age alone does not determine whether a control remains necessary."
         },
         {
           "key": "C",
-          "text": "Inspect inherited and explicit permissions before changing roles",
-          "rationale": "Effective access can come through several group memberships. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Copy the user into every allowed group and stop investigating",
+          "rationale": "More grants do not establish the actual effective restriction or its intent."
+        },
+        {
+          "key": "D",
+          "text": "Identify its exact scope purpose and affected consumers",
+          "rationale": "A restriction can be legitimate elsewhere even when it conflicts with this task."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "A restriction may intentionally protect another resource. The selected answer is check the scope of each deny before removing it.",
+      "explanation": "A restriction can be legitimate elsewhere even when it conflicts with this task. That risks unrelated access changes without understanding the boundary. Age alone does not determine whether a control remains necessary. More grants do not establish the actual effective restriction or its intent.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L05-Q030",
       "checkpointId": "CP1",
-      "caseId": "L05-C06",
-      "task": "tradeoff",
-      "caseContext": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission.",
       "objectiveIds": [
         "D2.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Unexpected denial: A contributor belongs to an allowed group but still cannot push because another group explicitly denies the permission. The team selects this remedy: \"Inspect effective permissions and remove the unintended denial.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A contributor must write one training repository but remain restricted from shared production repositories through an existing group. Which access design is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Tag protection adds controlled maintenance steps",
-          "rationale": "Correcting a mistaken release reference requires deliberate handling. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "Remove the shared restrictive group globally to make the training push work",
+          "rationale": "That can remove the explicit production limitation."
         },
         {
           "key": "B",
-          "text": "Narrow roles can require explicit onboarding updates",
-          "rationale": "New duties should trigger a deliberate permission review. That addresses a different requirement: Excess repository rights. It does not directly resolve this case's stated constraint."
+          "text": "Grant organization administration and assume the user will stay in the training repository",
+          "rationale": "Broad authority contradicts the required production restriction."
         },
         {
           "key": "C",
-          "text": "Complex group inheritance makes access harder to reason about",
-          "rationale": "Simpler role boundaries reduce surprising combinations. This directly addresses the constraint stated in this case."
+          "text": "Move the production repositories into the contributor's training project",
+          "rationale": "That changes resource boundaries instead of applying scoped authorization."
+        },
+        {
+          "key": "D",
+          "text": "Resolve the conflicting assignment at the narrow appropriate scope while preserving the production restriction and testing effective access",
+          "rationale": "The repair must satisfy one task without undoing a separate legitimate boundary."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "Simpler role boundaries reduce surprising combinations. The selected answer is complex group inheritance makes access harder to reason about.",
+      "explanation": "The repair must satisfy one task without undoing a separate legitimate boundary. That can remove the explicit production limitation. Broad authority contradicts the required production restriction. That changes resource boundaries instead of applying scoped authorization.",
       "sourceIds": [
-        "S1",
-        "S2",
         "S3"
       ]
     },
     {
       "id": "L05-Q031",
       "checkpointId": "CP3",
-      "caseId": "L05-C07",
-      "task": "remedy",
-      "caseContext": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which next change most directly satisfies the stated requirement?",
+      "question": "A published release tag v1.0 is moved to a different commit. What traceability risk does this create?",
       "options": [
         {
           "key": "A",
-          "text": "Use distinct release tags and protect established release references",
-          "rationale": "A release identifier should resolve consistently over time. This directly addresses the constraint stated in this case."
+          "text": "The original commit is necessarily deleted immediately",
+          "rationale": "Moving a tag changes a reference rather than guaranteeing object deletion."
         },
         {
           "key": "B",
-          "text": "Use signed tags when cryptographic identity verification is required",
-          "rationale": "Annotation and signature serve different provenance purposes. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Every collaborator's local tag is automatically rewritten at once",
+          "rationale": "Remote reference changes do not guarantee synchronized local references."
         },
         {
           "key": "C",
-          "text": "Inspect effective permissions and remove the unintended denial",
-          "rationale": "Effective access includes overlapping grants and restrictions. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "The new target automatically passes the original release tests",
+          "rationale": "Validation evidence does not transfer merely because a tag name is reused."
+        },
+        {
+          "key": "D",
+          "text": "The same release label now identifies different source content",
+          "rationale": "Consumers and audits may resolve the name to a revision different from the original release."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "A release identifier should resolve consistently over time. The selected answer is use distinct release tags and protect established release references.",
+      "explanation": "Consumers and audits may resolve the name to a revision different from the original release. Moving a tag changes a reference rather than guaranteeing object deletion. Remote reference changes do not guarantee synchronized local references. Validation evidence does not transfer merely because a tag name is reused.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L05-Q032",
       "checkpointId": "CP3",
-      "caseId": "L05-C07",
-      "task": "diagnosis",
-      "caseContext": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which explanation best accounts for the behavior or constraint described?",
+      "question": "What additional information does an annotated Git tag provide compared with a lightweight tag?",
       "options": [
         {
           "key": "A",
-          "text": "Tag metadata is not automatically a verified signature",
-          "rationale": "A message and author field are not cryptographic proof. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "A complete copy of every release binary",
+          "rationale": "A source tag is not automatically an artifact archive."
         },
         {
           "key": "B",
-          "text": "An explicit deny can override the expected allow",
-          "rationale": "Group membership must be evaluated as a whole. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "A tag object with tagging metadata and message",
+          "rationale": "A lightweight tag is a direct reference without the same annotated tag object."
         },
         {
           "key": "C",
-          "text": "A mutable tag was being treated as immutable provenance",
-          "rationale": "The same label now identifies different source states. This directly addresses the constraint stated in this case."
+          "text": "A guarantee that the tagged code contains no defects",
+          "rationale": "Tag metadata does not establish application correctness."
+        },
+        {
+          "key": "D",
+          "text": "A universal restriction preventing any maintainer from moving it",
+          "rationale": "Reference protection is a separate repository governance concern."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "The same label now identifies different source states. The selected answer is a mutable tag was being treated as immutable provenance.",
+      "explanation": "A lightweight tag is a direct reference without the same annotated tag object. Tag metadata does not establish application correctness. Reference protection is a separate repository governance concern. A source tag is not automatically an artifact archive.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6"
       ]
     },
     {
       "id": "L05-Q033",
       "checkpointId": "CP3",
-      "caseId": "L05-C07",
-      "task": "verification",
-      "caseContext": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "applied",
-      "question": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "Which verification binds a release tag to the source revision recorded by a build?",
       "options": [
         {
           "key": "A",
-          "text": "Signature verification succeeds with the expected trusted key",
-          "rationale": "The verifier must validate both signature and trust. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Compare the tag name's length with the build number length",
+          "rationale": "Character count does not establish source identity."
         },
         {
           "key": "B",
-          "text": "The permitted push succeeds without broad administrative elevation",
-          "rationale": "The repair should address the actual permission conflict. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "Check that both records were created on a Friday",
+          "rationale": "Shared date characteristics do not prove equal contents."
         },
         {
           "key": "C",
-          "text": "The release tag resolves to the documented commit",
-          "rationale": "Provenance depends on stable reference resolution. This directly addresses the constraint stated in this case."
+          "text": "Compare only the first word of the commit messages",
+          "rationale": "Messages can be similar while revisions differ."
+        },
+        {
+          "key": "D",
+          "text": "Resolve the tag to its commit and compare the expected immutable commit identity",
+          "rationale": "Matching names alone are weaker than matching the actual source revision."
+        }
+      ],
+      "correctAnswers": [
+        "D"
+      ],
+      "explanation": "Matching names alone are weaker than matching the actual source revision. Character count does not establish source identity. Shared date characteristics do not prove equal contents. Messages can be similar while revisions differ.",
+      "sourceIds": [
+        "S6"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Expected build source:2f63a9b\nResolved tag v1.0 commit:80a12de\nRelease labels are human-readable; commits differ"
+      }
+    },
+    {
+      "id": "L05-Q034",
+      "checkpointId": "CP3",
+      "objectiveIds": [
+        "D2.2.4"
+      ],
+      "difficulty": "applied",
+      "question": "Which policy can help preserve established GitHub release-tag references against unauthorized movement or deletion?",
+      "options": [
+        {
+          "key": "A",
+          "text": "A branch-only rule that never targets tags",
+          "rationale": "Protecting another reference class does not establish the tag policy."
+        },
+        {
+          "key": "B",
+          "text": "A longer annotated tag message",
+          "rationale": "Metadata detail does not restrict who can change the reference."
+        },
+        {
+          "key": "C",
+          "text": "Applicable tag rules with narrowly controlled bypass authority",
+          "rationale": "The enforcement boundary should cover both the reference and exceptions."
+        },
+        {
+          "key": "D",
+          "text": "A README instruction saying do not move tags",
+          "rationale": "Documentation states intent but does not enforce the reference restriction."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Provenance depends on stable reference resolution. The selected answer is the release tag resolves to the documented commit.",
+      "explanation": "The enforcement boundary should cover both the reference and exceptions. Documentation states intent but does not enforce the reference restriction. Protecting another reference class does not establish the tag policy. Metadata detail does not restrict who can change the reference.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
-    },
-    {
-      "id": "L05-Q034",
-      "checkpointId": "CP3",
-      "caseId": "L05-C07",
-      "task": "safeguard",
-      "caseContext": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release.",
-      "objectiveIds": [
-        "D2.2.4"
-      ],
-      "difficulty": "applied",
-      "question": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. Which execution safeguard most directly addresses the risk in this case?",
-      "options": [
-        {
-          "key": "A",
-          "text": "Check the scope of each deny before removing it",
-          "rationale": "A restriction may intentionally protect another resource. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
-        },
-        {
-          "key": "B",
-          "text": "Restrict deletion and movement of release tags where supported",
-          "rationale": "Accidental rewrites can invalidate published release evidence. This directly addresses the constraint stated in this case."
-        },
-        {
-          "key": "C",
-          "text": "Protect signing material and document key ownership",
-          "rationale": "A compromised key can attest malicious release references. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
-        }
-      ],
-      "correctAnswers": [
-        "B"
-      ],
-      "explanation": "Accidental rewrites can invalidate published release evidence. The selected answer is restrict deletion and movement of release tags where supported.",
-      "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S7"
       ]
     },
     {
       "id": "L05-Q035",
       "checkpointId": "CP3",
-      "caseId": "L05-C07",
-      "task": "tradeoff",
-      "caseContext": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Ambiguous release tag: A team reuses the tag v1.0 for a different commit, and consumers cannot identify the original release. The team selects this remedy: \"Use distinct release tags and protect established release references.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A release tag accidentally identifies the wrong commit and has already been consumed downstream. Audit policy requires stable published references. Which response is strongest?",
       "options": [
         {
           "key": "A",
-          "text": "Signing adds key lifecycle and trust management",
-          "rationale": "Consumers still need a policy for trusted signers. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Delete the original release records before publishing the replacement",
+          "rationale": "That removes evidence needed to understand the correction."
         },
         {
           "key": "B",
-          "text": "Complex group inheritance makes access harder to reason about",
-          "rationale": "Simpler role boundaries reduce surprising combinations. That addresses a different requirement: Unexpected denial. It does not directly resolve this case's stated constraint."
+          "text": "Reuse the same name for a third commit if the first correction fails",
+          "rationale": "Repeated reassignment compounds rather than resolves ambiguous provenance."
         },
         {
           "key": "C",
-          "text": "Tag protection adds controlled maintenance steps",
-          "rationale": "Correcting a mistaken release reference requires deliberate handling. This directly addresses the constraint stated in this case."
+          "text": "Preserve evidence, publish a clearly identified corrective release or approved correction process, and notify affected consumers",
+          "rationale": "The recovery must handle both the mistaken content and the stability expectations of existing users."
+        },
+        {
+          "key": "D",
+          "text": "Silently move the tag and assume downstream caches will update consistently",
+          "rationale": "Consumers can retain different content under one name and lose a clear audit trail."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Correcting a mistaken release reference requires deliberate handling. The selected answer is tag protection adds controlled maintenance steps.",
+      "explanation": "The recovery must handle both the mistaken content and the stability expectations of existing users. Consumers can retain different content under one name and lose a clear audit trail. That removes evidence needed to understand the correction. Repeated reassignment compounds rather than resolves ambiguous provenance.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6",
+        "S7"
       ]
     },
     {
       "id": "L05-Q036",
       "checkpointId": "CP3",
-      "caseId": "L05-C08",
-      "task": "remedy",
-      "caseContext": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "foundational",
-      "question": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which next change most directly satisfies the stated requirement?",
+      "question": "An annotated tag has an author and message but no signature. What claim is not justified by annotation alone?",
       "options": [
         {
           "key": "A",
-          "text": "Use signed tags when cryptographic identity verification is required",
-          "rationale": "Annotation and signature serve different provenance purposes. This directly addresses the constraint stated in this case."
+          "text": "That the tag's publisher identity has been cryptographically verified",
+          "rationale": "Annotation metadata and a verified cryptographic signature provide different evidence."
         },
         {
           "key": "B",
-          "text": "Compare tool support and select a maintained compatible solution",
-          "rationale": "Exam coverage does not mandate using every named technology. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "That the tag can refer to a commit",
+          "rationale": "Annotated tags can identify the intended source object."
         },
         {
           "key": "C",
-          "text": "Use distinct release tags and protect established release references",
-          "rationale": "A release identifier should resolve consistently over time. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "That the tag can retain a descriptive message",
+          "rationale": "That is a normal purpose of annotated tag metadata."
+        },
+        {
+          "key": "D",
+          "text": "That the tag can appear in repository history inspection",
+          "rationale": "Annotation does not prevent ordinary inspection of the reference."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Annotation and signature serve different provenance purposes. The selected answer is use signed tags when cryptographic identity verification is required.",
+      "explanation": "Annotation metadata and a verified cryptographic signature provide different evidence. Annotated tags can identify the intended source object. That is a normal purpose of annotated tag metadata. Annotation does not prevent ordinary inspection of the reference.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6",
+        "S8"
       ]
     },
     {
       "id": "L05-Q037",
       "checkpointId": "CP3",
-      "caseId": "L05-C08",
-      "task": "diagnosis",
-      "caseContext": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "applied",
-      "question": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which explanation best accounts for the behavior or constraint described?",
+      "question": "A release process requires cryptographic publisher verification. Which tag form is relevant to that requirement?",
       "options": [
         {
           "key": "A",
-          "text": "A named technique was mistaken for a required implementation",
-          "rationale": "Product compatibility and support remain design constraints. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "A lightweight tag named signed-release",
+          "rationale": "The name does not add a signature to the reference."
         },
         {
           "key": "B",
-          "text": "A mutable tag was being treated as immutable provenance",
-          "rationale": "The same label now identifies different source states. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "A branch name containing the release owner's email",
+          "rationale": "A name is not a verified cryptographic attestation."
         },
         {
           "key": "C",
-          "text": "Tag metadata is not automatically a verified signature",
-          "rationale": "A message and author field are not cryptographic proof. This directly addresses the constraint stated in this case."
+          "text": "A signed tag verified under the intended trust policy",
+          "rationale": "The signature must be checked against the authorized signer expectations."
+        },
+        {
+          "key": "D",
+          "text": "An unsigned annotated tag with a long message",
+          "rationale": "Human-readable metadata is not cryptographic proof of the signer."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "A message and author field are not cryptographic proof. The selected answer is tag metadata is not automatically a verified signature.",
+      "explanation": "The signature must be checked against the authorized signer expectations. Human-readable metadata is not cryptographic proof of the signer. The name does not add a signature to the reference. A name is not a verified cryptographic attestation.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L05-Q038",
       "checkpointId": "CP3",
-      "caseId": "L05-C08",
-      "task": "verification",
-      "caseContext": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "applied",
-      "question": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "A signature is mathematically valid but belongs to a key outside the organization's approved release-signing policy. What remains unproven?",
       "options": [
         {
           "key": "A",
-          "text": "The release tag resolves to the documented commit",
-          "rationale": "Provenance depends on stable reference resolution. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "That any bytes were signed at all",
+          "rationale": "A valid signature already provides evidence of the signed data relationship."
         },
         {
           "key": "B",
-          "text": "Signature verification succeeds with the expected trusted key",
-          "rationale": "The verifier must validate both signature and trust. This directly addresses the constraint stated in this case."
+          "text": "That the tag has a human-readable name",
+          "rationale": "The signature's trust issue is independent of its reference name."
         },
         {
           "key": "C",
-          "text": "The selected workflow works with the actual host and clients",
-          "rationale": "Compatibility must be demonstrated in the target environment. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "That Git can store the tagged commit",
+          "rationale": "The repository object relationship is not the unresolved trust condition."
+        },
+        {
+          "key": "D",
+          "text": "That the release was attested by an authorized trusted signer",
+          "rationale": "Signature validity and the decision to trust that signer are separate checks."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "The verifier must validate both signature and trust. The selected answer is signature verification succeeds with the expected trusted key.",
+      "explanation": "Signature validity and the decision to trust that signer are separate checks. A valid signature already provides evidence of the signed data relationship. The signature's trust issue is independent of its reference name. The repository object relationship is not the unresolved trust condition.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S6",
+        "S8"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Signature verification:cryptographically valid\nSigner fingerprint:KEY-EXTERNAL\nAuthorized release signers:KEY-RELEASE-A, KEY-RELEASE-B"
+      }
     },
     {
       "id": "L05-Q039",
       "checkpointId": "CP3",
-      "caseId": "L05-C08",
-      "task": "safeguard",
-      "caseContext": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "applied",
-      "question": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "Why should release-signing keys have controlled access and a defined lifecycle?",
       "options": [
         {
           "key": "A",
-          "text": "Restrict deletion and movement of release tags where supported",
-          "rationale": "Accidental rewrites can invalidate published release evidence. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "A key automatically prevents every malicious source change",
+          "rationale": "Signing does not independently review the safety of the signed contents."
         },
         {
           "key": "B",
-          "text": "Protect signing material and document key ownership",
-          "rationale": "A compromised key can attest malicious release references. This directly addresses the constraint stated in this case."
+          "text": "Signed tags never require any key rotation or revocation process",
+          "rationale": "Credential lifecycle and compromise handling remain relevant to trust."
         },
         {
           "key": "C",
-          "text": "Keep a rollback and backup plan for history migration",
-          "rationale": "Large-file conversion can rewrite shared commit history. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "Giving every build contributor the release key improves signer separation",
+          "rationale": "Broad key distribution weakens rather than separates the attestation authority."
+        },
+        {
+          "key": "D",
+          "text": "A compromised signing key can attest content under the expected identity",
+          "rationale": "The value of attestation depends on protecting and managing signer authority."
         }
       ],
       "correctAnswers": [
-        "B"
+        "D"
       ],
-      "explanation": "A compromised key can attest malicious release references. The selected answer is protect signing material and document key ownership.",
+      "explanation": "The value of attestation depends on protecting and managing signer authority. Signing does not independently review the safety of the signed contents. Credential lifecycle and compromise handling remain relevant to trust. Broad key distribution weakens rather than separates the attestation authority.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S8"
       ]
     },
     {
       "id": "L05-Q040",
       "checkpointId": "CP3",
-      "caseId": "L05-C08",
-      "task": "tradeoff",
-      "caseContext": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature.",
       "objectiveIds": [
         "D2.2.4"
       ],
       "difficulty": "advanced",
-      "question": "Unsigned provenance claim: A team assumes an annotated tag proves the publisher identity although the tag has no cryptographic signature. The team selects this remedy: \"Use signed tags when cryptographic identity verification is required.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A signed release tag verifies successfully, but the published binary came from another commit. Which conclusion and repair are appropriate?",
       "options": [
         {
           "key": "A",
-          "text": "Tag protection adds controlled maintenance steps",
-          "rationale": "Correcting a mistaken release reference requires deliberate handling. That addresses a different requirement: Ambiguous release tag. It does not directly resolve this case's stated constraint."
+          "text": "The mismatch is harmless if both commits were authored by one person",
+          "rationale": "Author identity does not establish that the artifact matches the reviewed release revision."
         },
         {
           "key": "B",
-          "text": "Signing adds key lifecycle and trust management",
-          "rationale": "Consumers still need a policy for trusted signers. This directly addresses the constraint stated in this case."
+          "text": "The signature authenticates the tag, so the binary still needs independent provenance tying it to that tagged source",
+          "rationale": "A verified reference does not prove that a separately uploaded artifact was built from it."
         },
         {
           "key": "C",
-          "text": "Migration affects collaborators and existing clones",
-          "rationale": "They may need coordinated cleanup or fresh checkouts. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "The signature automatically authenticates every file attached to the release page",
+          "rationale": "An attachment is not necessarily part of the signed tag data."
+        },
+        {
+          "key": "D",
+          "text": "The binary is trustworthy whenever its filename matches the tag",
+          "rationale": "Names can match while the source and bytes differ."
         }
       ],
       "correctAnswers": [
         "B"
       ],
-      "explanation": "Consumers still need a policy for trusted signers. The selected answer is signing adds key lifecycle and trust management.",
+      "explanation": "A verified reference does not prove that a separately uploaded artifact was built from it. An attachment is not necessarily part of the signed tag data. Names can match while the source and bytes differ. Author identity does not establish that the artifact matches the reviewed release revision.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S6",
+        "S8"
       ]
     },
     {
       "id": "L05-Q041",
       "checkpointId": "CP5",
-      "caseId": "L05-C09",
-      "task": "remedy",
-      "caseContext": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which next change most directly satisfies the stated requirement?",
+      "question": "The exam names several large-file approaches, but the team's host and clients already support LFS. What should determine its implementation choice?",
       "options": [
         {
           "key": "A",
-          "text": "Use signed tags when cryptographic identity verification is required",
-          "rationale": "Annotation and signature serve different provenance purposes. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Supported compatibility lifecycle and the actual content requirements",
+          "rationale": "An examined example is not a mandate to deploy every named tool."
         },
         {
           "key": "B",
-          "text": "Compare tool support and select a maintained compatible solution",
-          "rationale": "Exam coverage does not mandate using every named technology. This directly addresses the constraint stated in this case."
+          "text": "The alphabetical order of tool names in the study guide",
+          "rationale": "Ordering does not establish support or suitability."
         },
         {
           "key": "C",
-          "text": "Grant the pipeline identity scoped access to the shared repository",
-          "rationale": "Cross-repository consumption requires explicit authorization. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "The assumption that every tool uses identical server storage",
+          "rationale": "Large-file tools can have different hosting and operational requirements."
+        },
+        {
+          "key": "D",
+          "text": "The oldest tool used in any previous team project",
+          "rationale": "Historical familiarity alone does not establish current compatibility."
         }
       ],
       "correctAnswers": [
-        "B"
+        "A"
       ],
-      "explanation": "Exam coverage does not mandate using every named technology. The selected answer is compare tool support and select a maintained compatible solution.",
+      "explanation": "An examined example is not a mandate to deploy every named tool. Ordering does not establish support or suitability. Large-file tools can have different hosting and operational requirements. Historical familiarity alone does not establish current compatibility.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q042",
       "checkpointId": "CP5",
-      "caseId": "L05-C09",
-      "task": "diagnosis",
-      "caseContext": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "foundational",
-      "question": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why should a proposed large-file history conversion be tested in a disposable clone first?",
       "options": [
         {
           "key": "A",
-          "text": "Source access does not imply access to another repository",
-          "rationale": "Private resource boundaries are evaluated independently. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "The test automatically migrates every collaborator's existing clone",
+          "rationale": "Other clones have their own references and lifecycle."
         },
         {
           "key": "B",
-          "text": "Tag metadata is not automatically a verified signature",
-          "rationale": "A message and author field are not cryptographic proof. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "A conversion can never alter commit hashes",
+          "rationale": "History rewriting can change the commit identities downstream consumers reference."
         },
         {
           "key": "C",
-          "text": "A named technique was mistaken for a required implementation",
-          "rationale": "Product compatibility and support remain design constraints. This directly addresses the constraint stated in this case."
+          "text": "It can rewrite identities and expose missing object or compatibility problems",
+          "rationale": "A rehearsal checks migration consequences before disrupting shared collaboration."
+        },
+        {
+          "key": "D",
+          "text": "A disposable clone grants permission to ignore the remote host's limits",
+          "rationale": "Local isolation does not change hosted storage or support restrictions."
         }
       ],
       "correctAnswers": [
         "C"
       ],
-      "explanation": "Product compatibility and support remain design constraints. The selected answer is a named technique was mistaken for a required implementation.",
+      "explanation": "A rehearsal checks migration consequences before disrupting shared collaboration. Local isolation does not change hosted storage or support restrictions. Other clones have their own references and lifecycle. History rewriting can change the commit identities downstream consumers reference.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q043",
       "checkpointId": "CP5",
-      "caseId": "L05-C09",
-      "task": "verification",
-      "caseContext": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What should a fresh-clone acceptance test include after historical LFS migration?",
       "options": [
         {
           "key": "A",
-          "text": "Signature verification succeeds with the expected trusted key",
-          "rationale": "The verifier must validate both signature and trust. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Only that the local folder contains fewer filenames",
+          "rationale": "Filename count does not prove correct content availability."
         },
         {
           "key": "B",
-          "text": "The selected workflow works with the actual host and clients",
-          "rationale": "Compatibility must be demonstrated in the target environment. This directly addresses the constraint stated in this case."
+          "text": "Only that the migration command exited without printing warnings",
+          "rationale": "A command result should be complemented by actual consumer behavior."
         },
         {
           "key": "C",
-          "text": "The pipeline fetches the shared revision without a broad token",
-          "rationale": "The result should prove both access and limited scope. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Required assets hydrate correctly and intended release revisions remain identifiable",
+          "rationale": "Both content access and release provenance matter after graph changes."
+        },
+        {
+          "key": "D",
+          "text": "Only that the remote accepts one new empty commit",
+          "rationale": "That does not verify migrated historical assets or release references."
         }
       ],
       "correctAnswers": [
-        "B"
+        "C"
       ],
-      "explanation": "Compatibility must be demonstrated in the target environment. The selected answer is the selected workflow works with the actual host and clients.",
+      "explanation": "Both content access and release provenance matter after graph changes. That does not verify migrated historical assets or release references. Filename count does not prove correct content availability. A command result should be complemented by actual consumer behavior.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S1"
       ]
     },
     {
       "id": "L05-Q044",
       "checkpointId": "CP5",
-      "caseId": "L05-C09",
-      "task": "safeguard",
-      "caseContext": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "applied",
-      "question": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "What does enabling repository maintenance fail to prove about a large-file migration?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize the exact repository and review referenced content",
-          "rationale": "Shared code becomes part of the execution trust chain. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "That the project can retain an architecture document",
+          "rationale": "Documentation availability is independent of the conversion's content correctness."
         },
         {
           "key": "B",
-          "text": "Protect signing material and document key ownership",
-          "rationale": "A compromised key can attest malicious release references. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "That historical binary objects were converted and remote LFS content is available",
+          "rationale": "Maintenance optimization is not evidence of a separate content-storage conversion."
         },
         {
           "key": "C",
-          "text": "Keep a rollback and backup plan for history migration",
-          "rationale": "Large-file conversion can rewrite shared commit history. This directly addresses the constraint stated in this case."
+          "text": "That the repository can still have branch names",
+          "rationale": "Maintenance does not inherently prohibit branches."
+        },
+        {
+          "key": "D",
+          "text": "That contributors may use reviewed pull requests",
+          "rationale": "Storage optimization does not replace or remove the review workflow."
         }
       ],
       "correctAnswers": [
-        "C"
+        "B"
       ],
-      "explanation": "Large-file conversion can rewrite shared commit history. The selected answer is keep a rollback and backup plan for history migration.",
+      "explanation": "Maintenance optimization is not evidence of a separate content-storage conversion. Maintenance does not inherently prohibit branches. Storage optimization does not replace or remove the review workflow. Documentation availability is independent of the conversion's content correctness.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q045",
       "checkpointId": "CP5",
-      "caseId": "L05-C09",
-      "task": "tradeoff",
-      "caseContext": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS.",
       "objectiveIds": [
         "D2.2.1"
       ],
       "difficulty": "advanced",
-      "question": "Legacy large-file tool: A project proposes git-fat because it appears in exam material, but the hosting workflow already supports LFS. The team selects this remedy: \"Compare tool support and select a maintained compatible solution.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "A repository needs large-file migration and local performance work, but downstream releases refer to existing commits. Which plan best controls disruption?",
       "options": [
         {
           "key": "A",
-          "text": "Migration affects collaborators and existing clones",
-          "rationale": "They may need coordinated cleanup or fresh checkouts. This directly addresses the constraint stated in this case."
+          "text": "Inventory affected references and consumers, rehearse conversion, coordinate the identity transition, and measure separate performance improvements",
+          "rationale": "Content migration and repository tuning have distinct effects that must be verified against downstream requirements."
         },
         {
           "key": "B",
-          "text": "Shared repository availability can affect multiple consumers",
-          "rationale": "Version pins reduce drift but do not remove dependency risk. That addresses a different requirement: Cross-repository sharing. It does not directly resolve this case's stated constraint."
+          "text": "Apply all changes at once and compare only the final folder size",
+          "rationale": "A single size counter cannot validate references, consumer access, and separate performance effects."
         },
         {
           "key": "C",
-          "text": "Signing adds key lifecycle and trust management",
-          "rationale": "Consumers still need a policy for trusted signers. That addresses a different requirement: Unsigned provenance claim. It does not directly resolve this case's stated constraint."
+          "text": "Delete release references to avoid updating downstream consumers",
+          "rationale": "That removes required provenance rather than preserving the stated contract."
+        },
+        {
+          "key": "D",
+          "text": "Enable maintenance and assume it preserves every LFS object's availability automatically",
+          "rationale": "Maintenance does not establish the migrated content store's completeness."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "They may need coordinated cleanup or fresh checkouts. The selected answer is migration affects collaborators and existing clones.",
+      "explanation": "Content migration and repository tuning have distinct effects that must be verified against downstream requirements. A single size counter cannot validate references, consumer access, and separate performance effects. That removes required provenance rather than preserving the stated contract. Maintenance does not establish the migrated content store's completeness.",
       "sourceIds": [
         "S1",
-        "S2",
-        "S3"
+        "S2"
       ]
     },
     {
       "id": "L05-Q046",
       "checkpointId": "CP5",
-      "caseId": "L05-C10",
-      "task": "remedy",
-      "caseContext": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository.",
       "objectiveIds": [
         "D2.2.2",
         "D2.2.3"
       ],
       "difficulty": "foundational",
-      "question": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which next change most directly satisfies the stated requirement?",
+      "question": "A consuming pipeline checks out its own repository but receives permission denied for a shared private template. Which identity needs review?",
       "options": [
         {
           "key": "A",
-          "text": "Grant the pipeline identity scoped access to the shared repository",
-          "rationale": "Cross-repository consumption requires explicit authorization. This directly addresses the constraint stated in this case."
+          "text": "Only the repository's list of human code owners",
+          "rationale": "Review ownership is not a grant to the pipeline consumer."
         },
         {
           "key": "B",
-          "text": "Use Git LFS for supported large binary assets",
-          "rationale": "LFS separates large content from ordinary Git objects. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "The pipeline's effective identity and access to the shared repository",
+          "rationale": "The executing principal needs the additional source permission."
         },
         {
           "key": "C",
-          "text": "Compare tool support and select a maintained compatible solution",
-          "rationale": "Exam coverage does not mandate using every named technology. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "Only the person who last edited the shared file",
+          "rationale": "Author identity does not automatically authorize the running pipeline."
+        },
+        {
+          "key": "D",
+          "text": "Only the application's runtime managed identity",
+          "rationale": "Build-time source access may use a different principal from the deployed application."
         }
       ],
       "correctAnswers": [
-        "A"
+        "B"
       ],
-      "explanation": "Cross-repository consumption requires explicit authorization. The selected answer is grant the pipeline identity scoped access to the shared repository.",
+      "explanation": "The executing principal needs the additional source permission. Author identity does not automatically authorize the running pipeline. Build-time source access may use a different principal from the deployed application. Review ownership is not a grant to the pipeline consumer.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q047",
       "checkpointId": "CP5",
-      "caseId": "L05-C10",
-      "task": "diagnosis",
-      "caseContext": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository.",
       "objectiveIds": [
         "D2.2.2",
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which explanation best accounts for the behavior or constraint described?",
+      "question": "Why is an unrestricted personal token a poor default repair for a cross-repository read failure?",
       "options": [
         {
           "key": "A",
-          "text": "Source access does not imply access to another repository",
-          "rationale": "Private resource boundaries are evaluated independently. This directly addresses the constraint stated in this case."
+          "text": "A personal token can never read private repositories",
+          "rationale": "Such tokens can have source permissions, which is why their scope matters."
         },
         {
           "key": "B",
-          "text": "Binary revisions inflate repository object history",
-          "rationale": "Normal Git stores versions that clones must retrieve. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Using a broad token automatically validates the shared template's code",
+          "rationale": "Authentication does not establish executable content safety."
         },
         {
           "key": "C",
-          "text": "A named technique was mistaken for a required implementation",
-          "rationale": "Product compatibility and support remain design constraints. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "The token's owner loses all normal repository permissions",
+          "rationale": "The concern is excess delegated access rather than automatic removal of the owner's rights."
+        },
+        {
+          "key": "D",
+          "text": "It can add unrelated scope and personal lifecycle dependence",
+          "rationale": "The targeted solution should authorize the intended consumer narrowly."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Private resource boundaries are evaluated independently. The selected answer is source access does not imply access to another repository.",
+      "explanation": "The targeted solution should authorize the intended consumer narrowly. Such tokens can have source permissions, which is why their scope matters. Authentication does not establish executable content safety. The concern is excess delegated access rather than automatic removal of the owner's rights.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q048",
       "checkpointId": "CP5",
-      "caseId": "L05-C10",
-      "task": "verification",
-      "caseContext": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository.",
       "objectiveIds": [
         "D2.2.2",
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which observation provides the strongest evidence that the requested result was achieved?",
+      "question": "What test demonstrates that shared-template access is scoped appropriately?",
       "options": [
         {
           "key": "A",
-          "text": "A new asset commit stores an LFS pointer",
-          "rationale": "The pointer demonstrates the configured content handling. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "The pipeline can enumerate every private repository in the organization",
+          "rationale": "That demonstrates broader reach than the stated dependency requires."
         },
         {
           "key": "B",
-          "text": "The selected workflow works with the actual host and clients",
-          "rationale": "Compatibility must be demonstrated in the target environment. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "The source file can be viewed by an organization administrator",
+          "rationale": "Administrator access does not prove the consumer's effective permission."
         },
         {
           "key": "C",
-          "text": "The pipeline fetches the shared revision without a broad token",
-          "rationale": "The result should prove both access and limited scope. This directly addresses the constraint stated in this case."
+          "text": "The pipeline's display name contains the shared repository name",
+          "rationale": "Naming does not grant or constrain access."
+        },
+        {
+          "key": "D",
+          "text": "The intended consumer can read the approved dependency while unrelated private repositories remain inaccessible",
+          "rationale": "Both allowed consumption and a denied excess boundary are relevant."
         }
       ],
       "correctAnswers": [
-        "C"
+        "D"
       ],
-      "explanation": "The result should prove both access and limited scope. The selected answer is the pipeline fetches the shared revision without a broad token.",
+      "explanation": "Both allowed consumption and a denied excess boundary are relevant. That demonstrates broader reach than the stated dependency requires. Administrator access does not prove the consumer's effective permission. Naming does not grant or constrain access.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
-      ]
+        "S9"
+      ],
+      "exhibit": {
+        "language": "text",
+        "code": "Consumer read shared-template@approved-sha:allowed\nConsumer read unrelated-private:denied\nConsumer write shared-template:denied"
+      }
     },
     {
       "id": "L05-Q049",
       "checkpointId": "CP5",
-      "caseId": "L05-C10",
-      "task": "safeguard",
-      "caseContext": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository.",
       "objectiveIds": [
         "D2.2.2",
         "D2.2.3"
       ],
       "difficulty": "applied",
-      "question": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. Which execution safeguard most directly addresses the risk in this case?",
+      "question": "A shared template is readable and pinned to an immutable revision. What safety review is still necessary?",
       "options": [
         {
           "key": "A",
-          "text": "Authorize the exact repository and review referenced content",
-          "rationale": "Shared code becomes part of the execution trust chain. This directly addresses the constraint stated in this case."
+          "text": "No review because immutable code cannot perform harmful actions",
+          "rationale": "Immutability controls change identity rather than semantic safety."
         },
         {
           "key": "B",
-          "text": "Confirm the remote supports LFS and account for quotas",
-          "rationale": "Tracking patterns alone do not provide hosted storage. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "Only compare the filenames in both repositories",
+          "rationale": "Names do not reveal what privileged executable instructions do."
         },
         {
           "key": "C",
-          "text": "Keep a rollback and backup plan for history migration",
-          "rationale": "Large-file conversion can rewrite shared commit history. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "Grant the template every available secret so compatibility is guaranteed",
+          "rationale": "Broad secret access increases the consequence of unsafe shared code."
+        },
+        {
+          "key": "D",
+          "text": "Review the executable content and the permissions under which it will run",
+          "rationale": "Stable authorized source can still contain unsafe instructions."
         }
       ],
       "correctAnswers": [
-        "A"
+        "D"
       ],
-      "explanation": "Shared code becomes part of the execution trust chain. The selected answer is authorize the exact repository and review referenced content.",
+      "explanation": "Stable authorized source can still contain unsafe instructions. Immutability controls change identity rather than semantic safety. Names do not reveal what privileged executable instructions do. Broad secret access increases the consequence of unsafe shared code.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S9"
       ]
     },
     {
       "id": "L05-Q050",
       "checkpointId": "CP5",
-      "caseId": "L05-C10",
-      "task": "tradeoff",
-      "caseContext": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository.",
       "objectiveIds": [
         "D2.2.2",
         "D2.2.3"
       ],
       "difficulty": "advanced",
-      "question": "Cross-repository sharing: A pipeline can read its own source but cannot fetch a shared template from a second private repository. The team selects this remedy: \"Grant the pipeline identity scoped access to the shared repository.\" In a design review that must preserve the stated requirement, which residual limitation should be explicitly accepted or mitigated rather than assumed solved?",
+      "question": "Several teams will consume one private deployment template. Requirements include minimal source access, controlled upgrades, and no surprise privilege expansion. Which contract meets them?",
       "options": [
         {
           "key": "A",
-          "text": "Shared repository availability can affect multiple consumers",
-          "rationale": "Version pins reduce drift but do not remove dependency risk. This directly addresses the constraint stated in this case."
+          "text": "Scoped consumer authorization, reviewed version pins, explicit input and permission contracts, and tested upgrades",
+          "rationale": "The contract covers source trust, execution authority, and change compatibility separately."
         },
         {
           "key": "B",
-          "text": "Existing history needs separate migration",
-          "rationale": "Adding tracking does not remove previously committed blobs. That addresses a different requirement: Binary growth. It does not directly resolve this case's stated constraint."
+          "text": "One organization-owner token and an always-latest reference for every consumer",
+          "rationale": "That combines broad access with uncontrolled executable updates."
         },
         {
           "key": "C",
-          "text": "Migration affects collaborators and existing clones",
-          "rationale": "They may need coordinated cleanup or fresh checkouts. That addresses a different requirement: Legacy large-file tool. It does not directly resolve this case's stated constraint."
+          "text": "A copied unversioned template plus a promise to send update emails",
+          "rationale": "Independent copies and informal notifications do not provide governed adoption."
+        },
+        {
+          "key": "D",
+          "text": "A pinned revision that automatically receives every caller secret regardless of its needs",
+          "rationale": "A stable reference does not justify unrestricted credential distribution."
         }
       ],
       "correctAnswers": [
         "A"
       ],
-      "explanation": "Version pins reduce drift but do not remove dependency risk. The selected answer is shared repository availability can affect multiple consumers.",
+      "explanation": "The contract covers source trust, execution authority, and change compatibility separately. That combines broad access with uncontrolled executable updates. Independent copies and informal notifications do not provide governed adoption. A stable reference does not justify unrestricted credential distribution.",
       "sourceIds": [
-        "S1",
-        "S2",
-        "S3"
+        "S9"
       ]
     }
   ]

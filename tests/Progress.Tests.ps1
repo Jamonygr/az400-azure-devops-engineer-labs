@@ -7,7 +7,7 @@ Describe 'CLI progress evidence and privacy' {
         $script:validationFile = Join-Path $TestDrive 'validation.json'
         $script:cleanupFile = Join-Path $TestDrive 'cleanup.json'
         $script:progressFile = Join-Path $TestDrive ([Guid]::NewGuid().ToString('N') + '.json')
-        $script:validation = @{labId='01';runId='demo-run';status='passed';checkpoints=@(1..5|ForEach-Object { @{id="CP$_";status='passed'} })}
+        $script:validation = @{schemaVersion='2.0.0';labId='01';runId='demo-run';status='passed';breakFix='passed';integration='not-required';checkpoints=@(1..5|ForEach-Object { @{id="CP$_";status='passed'} })}
         $script:cleanup = @{labId='01';runId='demo-run';status='passed';residual=@()}
         $script:validation | ConvertTo-Json -Depth 6 | Set-Content $script:validationFile
         $script:cleanup | ConvertTo-Json -Depth 6 | Set-Content $script:cleanupFile
@@ -52,5 +52,34 @@ Describe 'CLI progress evidence and privacy' {
         & $script:progressTool -LabId 01 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -ProgressPath $script:progressFile
         & $script:progressTool -LabId 01 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -AssessmentScore 90 -ProgressPath $script:progressFile
         (Get-Content $script:progressFile -Raw | ConvertFrom-Json).labs.'LAB-01'.assessmentScore | Should -Be 90
+    }
+
+    It 'refuses old validation without verified break/fix evidence' {
+        $script:validation.breakFix='missing'
+        $script:validation | ConvertTo-Json -Depth 6 | Set-Content $script:validationFile
+        { & $script:progressTool -LabId 01 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -ProgressPath $script:progressFile } | Should -Throw '*v2 evidence*'
+    }
+
+    It 'refuses a capstone completed only through CI' {
+        $script:validation.labId='26'; $script:validation.integration='missing'; $script:cleanup.labId='26'
+        $script:validation | ConvertTo-Json -Depth 6 | Set-Content $script:validationFile
+        $script:cleanup | ConvertTo-Json -Depth 6 | Set-Content $script:cleanupFile
+        { & $script:progressTool -LabId 26 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -ProgressPath $script:progressFile } | Should -Throw '*CI alone is partial*'
+    }
+
+    It 'migrates legacy completion and scores while recording newly verified results' {
+        & $script:progressTool -LabId 01 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -AssessmentScore 88 -ProgressPath $script:progressFile
+        $data=Get-Content $script:progressFile -Raw | ConvertFrom-Json -AsHashtable
+        $data.schemaVersion='1.0.0'
+        foreach($entry in $data.labs.Values){ foreach($key in @('assessmentRevision','breakFixPassed','legacyCompletion','evidenceSource')) { $entry.Remove($key) } }
+        $data.labs['LAB-02'].status='complete'; $data.labs['LAB-02'].validationPassed=$true; $data.labs['LAB-02'].cleanupPassed=$true; $data.labs['LAB-02'].assessmentScore=90
+        $data | ConvertTo-Json -Depth 8 | Set-Content $script:progressFile
+        & $script:progressTool -LabId 01 -ValidationPath $script:validationFile -CleanupPath $script:cleanupFile -ProgressPath $script:progressFile
+        $migrated=Get-Content $script:progressFile -Raw | ConvertFrom-Json
+        $migrated.labs.'LAB-01'.status | Should -Be complete
+        $migrated.labs.'LAB-01'.assessmentScore | Should -Be 88
+        $migrated.labs.'LAB-02'.status | Should -Be 'needs-review'
+        $migrated.labs.'LAB-02'.legacyCompletion | Should -BeTrue
+        $migrated.labs.'LAB-02'.assessmentScore | Should -Be 90
     }
 }

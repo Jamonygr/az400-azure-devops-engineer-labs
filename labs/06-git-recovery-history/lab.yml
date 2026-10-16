@@ -20,13 +20,14 @@
     {
       "id": "CP1",
       "title": "Create recoverable committed history",
-      "commands": "$p=Join-Path $WorkRoot 'recovery';git init --initial-branch=main $p;git -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n 'healthy'|Set-Content (Join-Path $p 'service.txt');git -C $p add .;git -C $p commit -m 'Known good service'\n (git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'good-commit.txt')\n 'broken'|Set-Content (Join-Path $p 'service.txt');git -C $p commit -am 'Introduce deterministic regression'\n",
+      "commands": "$p=Join-Path $WorkRoot 'recovery'\nif(Test-Path (Join-Path $p '.git')){throw 'Existing recovery fixture: use the journaled resume command or a fresh run ID; do not reset a working copy.'}\ngit init --initial-branch=main $p\ngit -C $p config user.name 'AZ400 Learner';git -C $p config user.email 'learner@example.invalid'\n'healthy'|Set-Content (Join-Path $p 'service.txt');git -C $p add .;git -C $p commit -m 'Known good service'\n(git -C $p rev-parse HEAD)|Set-Content (Join-Path $WorkRoot 'good-commit.txt')\n'broken'|Set-Content (Join-Path $p 'service.txt')\n'AZ400_SYNTHETIC_UNWANTED_HISTORY_NO_CREDENTIAL'|Set-Content (Join-Path $p 'unwanted.txt')\ngit -C $p add .;git -C $p commit -m 'Introduce deterministic regression and unwanted history'\n",
       "expected": "A disposable repository contains known-good and broken commits.",
-      "positive": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '2') { throw 'Expected two-commit recovery fixture.' }\n",
+      "positive": "$p=Join-Path $WorkRoot 'recovery';$good=(Get-Content (Join-Path $WorkRoot 'good-commit.txt')).Trim()\nif([int](git -C $p rev-list --count HEAD) -lt 2 -or (git -C $p cat-file -t $good) -ne 'commit'){throw 'Known-good history is not retained.'}\n",
       "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse HEAD) -eq (Get-Content (Join-Path $WorkRoot 'good-commit.txt'))) { throw 'Regression fixture missing.' }\n",
-      "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '2') { throw 'Expected two-commit recovery fixture.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse HEAD) -eq (Get-Content (Join-Path $WorkRoot 'good-commit.txt'))) { throw 'Regression fixture missing.' }\n",
+      "validate": "$p=Join-Path $WorkRoot 'recovery';$good=(Get-Content (Join-Path $WorkRoot 'good-commit.txt')).Trim()\nif([int](git -C $p rev-list --count HEAD) -lt 2 -or (git -C $p cat-file -t $good) -ne 'commit'){throw 'Known-good history is not retained.'}\n\n$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse HEAD) -eq (Get-Content (Join-Path $WorkRoot 'good-commit.txt'))) { throw 'Regression fixture missing.' }\n",
       "evidence": "Commit graph and good commit SHA.",
-      "fix": "Run destructive history exercises only in this isolated local repository."
+      "fix": "Run destructive history exercises only in this isolated local repository.",
+      "coverage": []
     },
     {
       "id": "CP2",
@@ -34,10 +35,17 @@
       "commands": "$p=Join-Path $WorkRoot 'recovery';$good=Get-Content (Join-Path $WorkRoot 'good-commit.txt')\n git -C $p restore --source $good -- service.txt\n git -C $p add service.txt;git -C $p commit -m 'Restore known-good service content'\n",
       "expected": "A new commit restores the good file while retaining the regression history.",
       "positive": "if ((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy') { throw 'File recovery failed.' }\n",
-      "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '3') { throw 'Recovery unexpectedly rewrote history.' }\n",
-      "validate": "if ((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy') { throw 'File recovery failed.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-list --count HEAD) -ne '3') { throw 'Recovery unexpectedly rewrote history.' }\n",
+      "negative": "$p=Join-Path $WorkRoot 'recovery'\nif([int](git -C $p rev-list --count HEAD) -lt 3){throw 'Recovery must preserve history and add a correction.'}\n$restored=@(git -C $p log --all --format=%s --grep='Restore known-good service content')\nif($restored.Count -lt 1){throw 'Recovery correction commit is absent.'}\n",
+      "validate": "if ((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy') { throw 'File recovery failed.' }\n\n$p=Join-Path $WorkRoot 'recovery'\nif([int](git -C $p rev-list --count HEAD) -lt 3){throw 'Recovery must preserve history and add a correction.'}\n$restored=@(git -C $p log --all --format=%s --grep='Restore known-good service content')\nif($restored.Count -lt 1){throw 'Recovery correction commit is absent.'}\n",
       "evidence": "Recovered file digest and new commit SHA.",
-      "fix": "Use restore with a known source; avoid reset --hard for shared history."
+      "fix": "Use restore with a known source; avoid reset --hard for shared history.",
+      "coverage": [
+        {
+          "objectiveId": "D2.2.5",
+          "level": "practiced",
+          "reference": "Restore healthy content while preserving the regression and correction commits; later tasks exercise revert and reflog recovery."
+        }
+      ]
     },
     {
       "id": "CP3",
@@ -48,7 +56,8 @@
       "negative": "if (Test-Path (Join-Path $WorkRoot 'recovery/option.txt')) { throw 'Reverted file still present.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p log -1 --format=%s) -notmatch '^Revert') { throw 'Expected explicit revert commit.' }\n\nif (Test-Path (Join-Path $WorkRoot 'recovery/option.txt')) { throw 'Reverted file still present.' }\n",
       "evidence": "Original SHA, inverse SHA, and final tree.",
-      "fix": "Resolve any conflict explicitly; do not force-push a rewritten shared branch."
+      "fix": "Resolve any conflict explicitly; do not force-push a rewritten shared branch.",
+      "coverage": []
     },
     {
       "id": "CP4",
@@ -59,24 +68,34 @@
       "negative": "$p=Join-Path $WorkRoot 'recovery'\n if ('recover-me' -in @((git -C $p branch --format='%(refname:short)'))) { throw 'Deletion fixture did not occur.' }\n",
       "validate": "$p=Join-Path $WorkRoot 'recovery'\n if ((git -C $p rev-parse recovered) -ne (git -C $p rev-parse HEAD)) { throw 'Recovered branch points at wrong commit.' }\n\n$p=Join-Path $WorkRoot 'recovery'\n if ('recover-me' -in @((git -C $p branch --format='%(refname:short)'))) { throw 'Deletion fixture did not occur.' }\n",
       "evidence": "Reflog entry and recovered branch SHA.",
-      "fix": "Reflog is local and expires; preserve a backup before garbage collection."
+      "fix": "Reflog is local and expires; preserve a backup before garbage collection.",
+      "coverage": []
     },
     {
       "id": "CP5",
-      "title": "Remove an unwanted file from a disposable exported history",
-      "commands": "$p=Join-Path $WorkRoot 'recovery';$clean=Join-Path $WorkRoot 'sanitized'\n git init --initial-branch=main $clean;git -C $clean config user.name 'AZ400 Learner';git -C $clean config user.email 'learner@example.invalid'\n Copy-Item (Join-Path $p 'service.txt') (Join-Path $clean 'service.txt')\n git -C $clean add .;git -C $clean commit -m 'Create reviewed clean export'\n git -C $clean ls-tree -r --name-only HEAD|Set-Content (Join-Path $WorkRoot 'sanitized-files.txt')\n",
-      "expected": "A clean export demonstrates allowlisted history replacement without touching the source repo.",
-      "positive": "$p=Join-Path $WorkRoot 'sanitized'\n if ((git -C $p rev-list --count HEAD) -ne '1') { throw 'Clean export unexpectedly retained prior history.' }\n",
-      "negative": "$files=@(Get-Content (Join-Path $WorkRoot 'sanitized-files.txt'))\n if ($files.Count -ne 1 -or $files[0] -ne 'service.txt') { throw 'Unexpected file in sanitized export.' }\n",
-      "validate": "$p=Join-Path $WorkRoot 'sanitized'\n if ((git -C $p rev-list --count HEAD) -ne '1') { throw 'Clean export unexpectedly retained prior history.' }\n\n$files=@(Get-Content (Join-Path $WorkRoot 'sanitized-files.txt'))\n if ($files.Count -ne 1 -or $files[0] -ne 'service.txt') { throw 'Unexpected file in sanitized export.' }\n",
-      "evidence": "Allowlist and before/after commit counts.",
-      "fix": "Real secret exposure requires immediate credential revocation first, then coordinated git-filter-repo cleanup of refs, forks, caches, and clones."
+      "title": "Remove a synthetic unwanted file from all reachable history",
+      "commands": "$p=Join-Path $WorkRoot 'recovery';$clean=Join-Path $WorkRoot 'sanitized'\nif(Test-Path $clean){throw 'History-rewrite destination already exists; inspect it or select a fresh run ID. Never force-rewrite the original fixture.'}\ngit clone --no-local $p $clean\n$before=git -C $clean rev-parse HEAD\n$before|Set-Content (Join-Path $WorkRoot 'rewrite-before.txt')\nPush-Location $clean\ntry{\n python -m git_filter_repo --path unwanted.txt --invert-paths\n if($LASTEXITCODE -ne 0){throw 'git-filter-repo did not complete. Install the pinned development dependencies.'}\n}finally{Pop-Location}\n$after=git -C $clean rev-parse HEAD\n$after|Set-Content (Join-Path $WorkRoot 'rewrite-after.txt')\ngit -C $clean log --all --format='%H %s'|Set-Content (Join-Path $WorkRoot 'rewritten-history.txt')\n",
+      "expected": "The fresh disposable clone retains useful commit history and healthy content, but every reachable tree excludes unwanted.txt and rewritten commit IDs differ.",
+      "positive": "$p=Join-Path $WorkRoot 'sanitized'\nif([int](git -C $p rev-list --count --all) -lt 3 -or (Get-Content (Join-Path $p 'service.txt')).Trim() -ne 'healthy'){throw 'Useful recovery history or healthy content was lost.'}\nif((Get-Content (Join-Path $WorkRoot 'rewrite-before.txt')).Trim() -eq (Get-Content (Join-Path $WorkRoot 'rewrite-after.txt')).Trim()){throw 'History was not rewritten.'}\n",
+      "negative": "$p=Join-Path $WorkRoot 'sanitized'\nforeach($commit in @(git -C $p rev-list --all)){\n if('unwanted.txt' -in @(git -C $p ls-tree -r --name-only $commit)){throw 'Unwanted path survives in a reachable historical tree.'}\n}\n$original=Join-Path $WorkRoot 'recovery'\nif(-not (Test-Path (Join-Path $original 'unwanted.txt'))){throw 'Original evidence fixture was unexpectedly modified.'}\nif(@(git -C $p remote).Count -ne 0){throw 'Rewritten clone should not retain a pushable origin.'}\n",
+      "validate": "$p=Join-Path $WorkRoot 'sanitized'\nif([int](git -C $p rev-list --count --all) -lt 3 -or (Get-Content (Join-Path $p 'service.txt')).Trim() -ne 'healthy'){throw 'Useful recovery history or healthy content was lost.'}\nif((Get-Content (Join-Path $WorkRoot 'rewrite-before.txt')).Trim() -eq (Get-Content (Join-Path $WorkRoot 'rewrite-after.txt')).Trim()){throw 'History was not rewritten.'}\n\n$p=Join-Path $WorkRoot 'sanitized'\nforeach($commit in @(git -C $p rev-list --all)){\n if('unwanted.txt' -in @(git -C $p ls-tree -r --name-only $commit)){throw 'Unwanted path survives in a reachable historical tree.'}\n}\n$original=Join-Path $WorkRoot 'recovery'\nif(-not (Test-Path (Join-Path $original 'unwanted.txt'))){throw 'Original evidence fixture was unexpectedly modified.'}\nif(@(git -C $p remote).Count -ne 0){throw 'Rewritten clone should not retain a pushable origin.'}\n",
+      "evidence": "rewrite-before.txt, rewrite-after.txt, rewritten-history.txt and the disposable sanitized clone. The original fixture remains available for comparison.",
+      "fix": "Install git-filter-repo 2.47.0 from the pinned dependencies; run only in a fresh clone. A real leaked credential must be revoked separately; rewriting history cannot recall existing clones or published artifacts.",
+      "coverage": [
+        {
+          "objectiveId": "D2.2.6",
+          "level": "practiced",
+          "reference": "Run pinned git-filter-repo in a fresh clone and inspect every reachable tree for the removed synthetic file."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "Set-Content (Join-Path $WorkRoot 'recovery/service.txt') 'broken-again'\n",
     "diagnose": "$p=Join-Path $WorkRoot 'recovery';git -C $p diff -- service.txt\n",
-    "repair": "$p=Join-Path $WorkRoot 'recovery';git -C $p restore --source HEAD -- service.txt\n"
+    "repair": "$p=Join-Path $WorkRoot 'recovery';git -C $p restore --source HEAD -- service.txt\n",
+    "assert": "if((Get-Content (Join-Path $WorkRoot 'recovery/service.txt')) -ne 'healthy'){throw 'AZ400-L06-FAULT'}\n",
+    "expectedFailure": "AZ400-L06-FAULT"
   },
   "challenge": "On a separate throwaway clone, use git-filter-repo to remove a synthetic nonsecret file across all refs; document revocation and coordination needed for real incidents.",
   "sources": [
@@ -84,7 +103,7 @@
     "https://git-scm.com/docs/git-revert",
     "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository"
   ],
-  "primer": "Restore repairs file content, revert adds an inverse commit, and reflog can recover local references. Rewriting shared history requires coordination; exposed credentials need revocation first.",
+  "primer": "Restore repairs file content, revert adds an inverse commit, and reflog can recover local references. Rewriting shared history requires coordination; exposed credentials need revocation first.\n\nA safe correction preserves other contributors' history. Restore retrieves a file version; revert records an inverse change; reflog helps recover local reference movements and is not a durable remote backup. The original fixture retains the regression so every correction remains auditable.\n\nThe history-removal task uses git-filter-repo 2.47.0 in a fresh, non-local clone. It removes a synthetic unwanted file from every reachable tree while preserving useful commits. Commit IDs change because parent/tree content changes, and filter-repo removes the origin remote to reduce accidental publication. Real remediation starts by revoking exposed credentials and coordinating replacement of shared refs, caches, forks and artifacts.",
   "architecture": {
     "title": "Git object recovery without shared-history destruction",
     "nodes": [
@@ -164,5 +183,10 @@
       }
     ],
     "topology": "All history exercises stay in an isolated local repository. Commit objects retain snapshots, reflog entries identify moved or deleted references, and restore/revert create reviewed recovery state. A separate clean export demonstrates allowlisting without rewriting any shared remote; genuine secret exposure still requires revocation and coordinated history cleanup."
-  }
+  },
+  "verification": {
+    "status": "offline-tested",
+    "scope": "All five real Git checkpoints, final validators, named fault rejection/repair and final revalidation passed in an isolated temporary repository with pinned git-filter-repo. No remote publication."
+  },
+  "solutionNotes": "Run all final assertions after CP5: early checkpoints must remain true after later commits. The sanitized clone must retain multiple useful commits, differ in SHA, and contain no reachable unwanted.txt path."
 }

@@ -31,7 +31,14 @@
       "negative": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json title|ConvertFrom-Json\n if ($i.title -notlike \"*[$RunId]*\" -and $i.title -notmatch [regex]::Escape($RunId)) { throw 'Issue escaped run boundary.' }\n",
       "validate": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json title,body,state|ConvertFrom-Json\n if ($i.body -notmatch 'Acceptance:' -or $i.state -ne 'OPEN') { throw 'Issue lacks open acceptance criteria.' }\n\n$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json title|ConvertFrom-Json\n if ($i.title -notlike \"*[$RunId]*\" -and $i.title -notmatch [regex]::Escape($RunId)) { throw 'Issue escaped run boundary.' }\n",
       "evidence": "Issue number and redacted acceptance text.",
-      "fix": "Confirm issues are enabled in the fresh sandbox repository and use its exact owner/repo."
+      "fix": "Confirm issues are enabled in the fresh sandbox repository and use its exact owner/repo.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.1",
+          "level": "explained",
+          "reference": "Acceptance fields distinguish planning, implementation, review, and release states; the fixture is not a configured organization-wide process."
+        }
+      ]
     },
     {
       "id": "CP2",
@@ -42,7 +49,8 @@
       "negative": "$id=Get-Content (Join-Path $WorkRoot 'work-item-id.txt')\n $w=az boards work-item show --organization $AdoOrganization --id $id -o json|ConvertFrom-Json\n if ($w.fields.'System.WorkItemType' -ne 'Task') { throw 'Wrong tracking artifact type.' }\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'work-item-id.txt')\n $w=az boards work-item show --organization $AdoOrganization --id $id -o json|ConvertFrom-Json\n if ($w.fields.'System.TeamProject' -ne $AdoProject) { throw 'Work item belongs to another project.' }\n\n$id=Get-Content (Join-Path $WorkRoot 'work-item-id.txt')\n $w=az boards work-item show --organization $AdoOrganization --id $id -o json|ConvertFrom-Json\n if ($w.fields.'System.WorkItemType' -ne 'Task') { throw 'Wrong tracking artifact type.' }\n",
       "evidence": "Task ID, type, state, and project name.",
-      "fix": "Use a Task supported by the sandbox process and verify project permissions."
+      "fix": "Use a Task supported by the sandbox process and verify project permissions.",
+      "coverage": []
     },
     {
       "id": "CP3",
@@ -53,7 +61,19 @@
       "negative": "$w=Get-Content (Join-Path $WorkRoot 'linked-task.json') -Raw|ConvertFrom-Json\n if (@($w.relations|Where-Object { $_.rel -ne 'Hyperlink' }).Count -gt 0) { throw 'Unexpected relation in fresh task.' }\n",
       "validate": "$id=Get-Content (Join-Path $WorkRoot 'work-item-id.txt')\n $w=az boards work-item show --organization $AdoOrganization --id $id --expand relations -o json|ConvertFrom-Json\n if (@($w.relations|Where-Object url -eq (Get-Content (Join-Path $WorkRoot 'issue-url.txt'))).Count -ne 1) { throw 'Issue link absent or duplicated.' }\n\n$w=Get-Content (Join-Path $WorkRoot 'linked-task.json') -Raw|ConvertFrom-Json\n if (@($w.relations|Where-Object { $_.rel -ne 'Hyperlink' }).Count -gt 0) { throw 'Unexpected relation in fresh task.' }\n",
       "evidence": "Relation type and redacted target URL.",
-      "fix": "Remove only the duplicate sandbox hyperlink and retry the exact target."
+      "fix": "Remove only the duplicate sandbox hyperlink and retry the exact target.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.3",
+          "level": "integrated",
+          "reference": "Link the GitHub issue and the Azure Boards work item and query both identifiers."
+        },
+        {
+          "objectiveId": "D1.3.5",
+          "level": "integrated",
+          "reference": "Read back the reciprocal issue/work-item URL relationship inside both disposable sandboxes."
+        }
+      ]
     },
     {
       "id": "CP4",
@@ -64,7 +84,14 @@
       "negative": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json body|ConvertFrom-Json\n if ($i.body -match 'TODO|TBD') { throw 'Incomplete acceptance text.' }\n",
       "validate": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json body|ConvertFrom-Json\n if (-not $i.body.Contains((Get-Content (Join-Path $WorkRoot 'board-url.txt')))) { throw 'Reciprocal link missing.' }\n\n$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $i=gh issue view $n --repo $GhRepo --json body|ConvertFrom-Json\n if ($i.body -match 'TODO|TBD') { throw 'Incomplete acceptance text.' }\n",
       "evidence": "Issue body with reciprocal task link.",
-      "fix": "Edit only the run-owned issue and retain its acceptance criteria."
+      "fix": "Edit only the run-owned issue and retain its acceptance criteria.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.2",
+          "level": "practiced",
+          "reference": "Update the run-owned issue after feedback and read the revised acceptance text."
+        }
+      ]
     },
     {
       "id": "CP5",
@@ -75,13 +102,22 @@
       "negative": "$t=Get-Content (Join-Path $WorkRoot 'traceability.json') -Raw|ConvertFrom-Json\n if (-not $t.issue -or -not $t.workItem -or $t.acceptance -notmatch 'passing tests') { throw 'Traceability index incomplete.' }\n",
       "validate": "$q=@(Get-Content (Join-Path $WorkRoot 'queue.json') -Raw|ConvertFrom-Json)\n $id=[int](Get-Content (Join-Path $WorkRoot 'work-item-id.txt'))\n if ($id -notin @($q.id)) { throw 'Owned task absent from project query.' }\n\n$t=Get-Content (Join-Path $WorkRoot 'traceability.json') -Raw|ConvertFrom-Json\n if (-not $t.issue -or -not $t.workItem -or $t.acceptance -notmatch 'passing tests') { throw 'Traceability index incomplete.' }\n",
       "evidence": "Queue count and traceability.json with private URLs redacted.",
-      "fix": "Correct WIQL quoting and ensure the same disposable project is used for creation and query."
+      "fix": "Correct WIQL quoting and ensure the same disposable project is used for creation and query.",
+      "coverage": [
+        {
+          "objectiveId": "D1.1.4",
+          "level": "explained",
+          "reference": "The work-item index explains requirement-to-quality traceability; exact source/test/artifact/environment linkage is implemented in the capstones."
+        }
+      ]
     }
   ],
   "breakFix": {
     "trigger": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n gh issue edit $n --repo $GhRepo --body \"Run:$RunId; link intentionally removed\"\n",
     "diagnose": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt');gh issue view $n --repo $GhRepo --json body\n",
-    "repair": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $url=Get-Content (Join-Path $WorkRoot 'board-url.txt')\n gh issue edit $n --repo $GhRepo --body \"Acceptance: health returns HTTP 200; tests pass. Azure Boards: $url. Run:$RunId\"\n"
+    "repair": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt')\n $url=Get-Content (Join-Path $WorkRoot 'board-url.txt')\n gh issue edit $n --repo $GhRepo --body \"Acceptance: health returns HTTP 200; tests pass. Azure Boards: $url. Run:$RunId\"\n",
+    "assert": "$n=Get-Content (Join-Path $WorkRoot 'issue-number.txt');$i=gh issue view $n --repo $GhRepo --json body|ConvertFrom-Json\n$url=Get-Content (Join-Path $WorkRoot 'board-url.txt')\nif(-not $i.body.Contains($url) -or $i.body -notmatch 'Acceptance:'){throw 'AZ400-L01-FAULT'}\n",
+    "expectedFailure": "AZ400-L01-FAULT"
   },
   "challenge": "Extend the index with a real sandbox pull request and a release artifact digest; explain which links prove delivery rather than merely activity.",
   "sources": [
@@ -89,7 +125,7 @@
     "https://learn.microsoft.com/en-us/cli/azure/boards/work-item/relation",
     "https://docs.github.com/en/issues/tracking-your-work-with-issues"
   ],
-  "primer": "Acceptance criteria express observable value. A work-item link proves navigability; it does not itself prove a tested change reached an environment.",
+  "primer": "Acceptance criteria express observable value. A work-item link proves navigability; it does not itself prove a tested change reached an environment.\n\nModel a requirement as an observable acceptance statement rather than a task title. The GitHub issue and Boards task are two independently stored work items; reciprocal hyperlinks establish navigation, not automatic synchronization of state or delivery evidence.\n\nCP5 deliberately produces a work-item index. It does not prove the health endpoint was implemented or deployed. To establish quality traceability, extend the index with the actual reviewed commit, test run, immutable artifact and environment result in a capstone. Feedback should change acceptance or priority through an explicit review loop.",
   "architecture": {
     "title": "Cross-platform work-item traceability",
     "nodes": [
@@ -178,5 +214,10 @@
       }
     ],
     "topology": "GitHub issues and Azure Boards tasks contain reciprocal links inside the owned repository and project. PowerShell queries both APIs and writes a local traceability index. Commit and build references are the next evidence layer added by the job challenge; the hyperlinks alone do not prove delivery."
-  }
+  },
+  "verification": {
+    "status": "not-run",
+    "scope": "All checkpoint/fault scripts parse; the named fault lifecycle is independently tested with explicit provider doubles. Full normal provider execution and live cloud delivery have not run."
+  },
+  "solutionNotes": "The reciprocal URLs must resolve to the exact owned project/repository. A passing work-item index is useful planning evidence, but source-to-production traceability remains a separate integration milestone."
 }

@@ -14,23 +14,19 @@ steps:
     inputs:
       packageType: sdk
       useGlobalJson: true
-  - script: dotnet restore samples/DevOps.slnx --locked-mode
-    displayName: Restore locked dependencies
-  - script: dotnet test samples/DevOps.slnx --configuration Release --no-restore --settings samples/coverage.runsettings --collect:"XPlat Code Coverage" --logger trx --results-directory $(Agent.TempDirectory)/TestResults
-    displayName: Build and test
+  - pwsh: ./samples/Build-Release.ps1 -Revision $env:SOURCE_REVISION -OutputPath '$(Build.ArtifactStagingDirectory)/release'
+    displayName: Test, enforce coverage, and build immutable release
+    env:
+      SOURCE_REVISION: $(Build.SourceVersion)
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
       testResultsFormat: VSTest
-      testResultsFiles: $(Agent.TempDirectory)/TestResults/*.trx
+      testResultsFiles: $(Build.ArtifactStagingDirectory)/release/test-results/**/*.trx
       failTaskOnFailedTests: true
   - task: PublishCodeCoverageResults@2
     inputs:
-      summaryFileLocation: $(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml
+      summaryFileLocation: $(Build.ArtifactStagingDirectory)/release/test-results/**/coverage.cobertura.xml
       failIfCoverageEmpty: true
-  - pwsh: ./samples/Test-Coverage.ps1 -CoverageFile (Get-ChildItem '$(Agent.TempDirectory)/TestResults' -Filter coverage.cobertura.xml -Recurse | Select-Object -First 1 -ExpandProperty FullName)
-    displayName: Enforce line coverage gate
-  - script: dotnet publish samples/DevOps.Api/DevOps.Api.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/api /p:UseAppHost=false
-    displayName: Package tested revision
-  - publish: $(Build.ArtifactStagingDirectory)/api
+  - publish: $(Build.ArtifactStagingDirectory)/release
     artifact: todo-api
